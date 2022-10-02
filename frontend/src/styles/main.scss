@@ -1,0 +1,51 @@
+@use '_variables' as v;
+
+body {
+    height: 99vh;
+    margin: 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    height: 100%;
+}
+
+#page-container {
+    height: 100%;
+    display: 'flex'; 
+    flex-direction: 'column';
+    color: v.$main-color;
+
+    #row-1 {
+        height: 50px;
+    }
+    
+    #row-2 {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        height: calc(99vh - 50px);
+    }
+    
+    #column-1 {
+        width: 17%;
+        border: solid;
+    }
+    
+    #column-2 {
+        width: 70%;
+        border: solid;
+    }
+    
+    #column-3 {
+        width: 12%;
+        border: solid;
+    }
+    
+    #renderer-frame {
+        width: 100%;
+        height: 100%
+    }
+}
