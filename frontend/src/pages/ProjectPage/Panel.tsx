@@ -1,14 +1,14 @@
 import React from "react";
 import { observer } from "mobx-react-lite"
-import { useProjectStore } from "../../providers/projectProvider";
+import { useRootStore } from "../../providers/rootProvider";
 
 export const Panel: React.FC = observer(() => {
-    const projectStore = useProjectStore()
+    const projectStore = useRootStore()?.getProjectStore()
 
     return (
         <>
         { 
-            projectStore?.allElements.map(item => <p>{item}</p>)
+            projectStore?.getProjects().map(item => <p>{item.name}</p>)
         }
         </>
     )
