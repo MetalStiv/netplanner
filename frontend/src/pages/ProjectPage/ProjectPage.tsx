@@ -1,5 +1,5 @@
 import Frame from 'react-frame-component'
-import '../../styles/main.scss';
+
 import { Panel } from './Panel';
 
 const ProjectPage: React.FC = () => {

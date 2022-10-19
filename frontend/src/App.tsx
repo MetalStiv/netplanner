@@ -9,19 +9,21 @@ import {
 import { RootProvider } from "./providers/rootProvider";
 import { createRootStore } from "./stores/rootStore";
 import { useLocalObservable } from 'mobx-react-lite';
+import './styles/global.scss';
+import './styles/fonts.scss';
 
 const App: React.FC = () => {
   useLocalObservable(createRootStore)
 
   return (
     <RootProvider>
-      <div className="App" style={{height: '100%'}}>
+      <div className="App" style={{ height: '100%' }}>
         <Router>
-            <Routes>
-              <Route path="/" element={<LoginPage />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/project" element={<ProjectPage />} />
-            </Routes>
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/project" element={<ProjectPage />} />
+          </Routes>
         </Router>
       </div>
     </RootProvider>
