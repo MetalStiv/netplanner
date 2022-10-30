@@ -1,0 +1,26 @@
+global using System;
+global using System.ComponentModel.DataAnnotations;
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.Extensions.Hosting;
+global using System.Collections.Generic;
+global using System.Linq;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.Security.Claims;
+global using System.Text;
+global using Microsoft.IdentityModel.Tokens;
+global using System.IdentityModel.Tokens.Jwt;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.AspNetCore.Authorization;
+global using System.Security.Cryptography;
+global using BCrypt.Net;
+global using MailKit;
+global using MailKit.Security;
+global using MailKit.Net.Smtp;
+global using MimeKit;
+
+global using UserMicroservice.Services.TokenService;
+global using UserMicroservice.Services.MailService;
+global using UserMicroservice.Services.UserRepositoryService;
+global using UserMicroservice.Dto;
+global using UserMicroservice.Model;

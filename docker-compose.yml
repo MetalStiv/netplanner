@@ -1,0 +1,54 @@
+version: '3.1'
+
+networks:
+    netplanner_network:
+        external: true
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+    networks:
+      - netplanner_network
+    volumes:
+      - ~/volumes/Netplanner/mongodb:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    networks:
+      - netplanner_network
+
+  user-microservice:
+    image: metalstiv/user_microservice:1.0
+    restart: always
+    ports:
+      - 7065:7065
+      - 5108:5108
+    environment:
+      ASPNETCORE_HTTPS_PORT: https://+:7065
+      ASPNETCORE_URLS: http://+:5108
+      DB_CONNECTION_STRING: mongodb://root:example@mongo:27017
+      DB_NAME: userdb
+      DB_USER_COLLECTION_NAME: users
+      MAIL_NAME: netplaner@yandex.com
+      MAIL_DISPLAY_NAME: Netplanner
+      MAIL_PASSWORD: appmecniptnrogny
+      MAIL_HOST: smtp.yandex.ru
+      MAIL_PORT: 465
+      JWT_KEY: secrete12345!!!jfkhdgkhskdfhgsdhfghslkdfjhlgw
+      JWT_ISSUER: http://localhost:5108
+      DOMAIN: http://localhost:5108
+    networks:
+      - netplanner_network
