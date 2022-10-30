@@ -7,9 +7,9 @@ export const Panel: React.FC = observer(() => {
 
     return (
         <>
-        { 
-            projectStore?.getProjects().map(item => <p>{item.name}</p>)
-        }
+            {
+                projectStore?.getProjects().map(item => <p>{item.name}qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq</p>)
+            }
         </>
     )
 })
