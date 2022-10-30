@@ -1,0 +1,66 @@
+@font-face {
+    font-family: 'Manrope';
+    src: local('Manrope Bold'), local('Manrope-Bold'),
+        url('../assets/fonts/Manrope-Bold.woff2') format('woff2'),
+        url('../assets/fonts/Manrope-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: local('Manrope Semibold'), local('Manrope-Semibold'),
+        url('../assets/fonts/Manrope-Semibold.woff2') format('woff2'),
+        url('../assets/fonts/Manrope-Semibold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: local('Manrope Regular'), local('Manrope-Regular'),
+        url('../assets/fonts/Manrope-Regular.woff2') format('woff2'),
+        url('../assets/fonts/Manrope-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: local('Manrope Light'), local('Manrope-Light'),
+        url('../assets/fonts/Manrope-Light.woff2') format('woff2'),
+        url('../assets/fonts/Manrope-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: local('Manrope Thin'), local('Manrope-Thin'),
+        url('../assets/fonts/Manrope-Thin.woff2') format('woff2'),
+        url('../assets/fonts/Manrope-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: local('Manrope Medium'), local('Manrope-Medium'),
+        url('../assets/fonts/Manrope-Medium.woff2') format('woff2'),
+        url('../assets/fonts/Manrope-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: local('Manrope ExtraBold'), local('Manrope-ExtraBold'),
+        url('../assets/fonts/Manrope-ExtraBold.woff2') format('woff2'),
+        url('../assets/fonts/Manrope-ExtraBold.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+
+body {
+    font-family: "Manrope", sans-serif;
+}
