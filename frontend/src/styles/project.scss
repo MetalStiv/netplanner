@@ -1,0 +1,76 @@
+@use '_variables' as v;
+@use 'global' as g;
+
+#projectPage {
+    main {
+
+        #leftPanelBar {
+            .content {
+                // &::-webkit-resizer {
+                //     height: 300px;
+                //     border: 2px solid black;
+                //     background: red;
+                // }
+
+
+                // max-width: 25%;
+                // min-width: 10%;
+                // width: 17%;
+                // resize: horizontal;
+                overflow-x: scroll;
+                // border-right: 1px solid black;
+                background-color: #fff;
+            }
+
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            display:flex;
+            align-items:stretch;
+            border-right:1px solid v.$black;
+        }
+
+        #workspace {
+            .canvas {
+                width: 500px;
+                height: 300px;
+                margin: 0 auto;
+                background-color: #fff;
+            }
+
+            width: 100%;
+            background-color: #ccc;
+        }
+
+        #rightPanelBar {
+            .content {
+                overflow-x: scroll;
+                background-color: #fff;
+            }
+
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display:flex;
+            align-items:stretch;
+            border-left:1px solid v.$black;
+        }
+
+        .divider {
+            cursor: col-resize;
+            width: 3px;
+            background-color: #fff;
+        }
+
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    height: 100vh;
+    display: flex;
+    align-items: stretch;
+    position: relative;
+}

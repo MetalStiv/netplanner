@@ -9,6 +9,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+    <div id='plug'>
+      <p>К сожалению, наше приложение не рассчитано на ваш размер дисплея</p>
+    </div>
     <App />
   </React.StrictMode>
 );

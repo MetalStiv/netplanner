@@ -1,20 +1,10 @@
 @use '_variables' as v;
+@use 'global' as g;
 
 #loginPage {
     header {
         .container {
             .nav-bar {
-
-                p,
-                a {
-                    margin: 0;
-                    font-weight: 600;
-                    font-size: 14px;
-                    line-height: 140%;
-                    letter-spacing: 0.1em;
-                    color: v.$black;
-                }
-
                 .logo-block {
                     .logo {
                         img {
@@ -24,26 +14,55 @@
                         margin-right:24px;
                     }
 
+                    p {
+                        font-weight: 600;
+                        font-size: 14px;
+                        line-height: 20px;
+                        letter-spacing: 0.1em;
+                    }
+
                     display: flex;
                     align-items:center;
                 }
 
                 .nav-block {
-                    a {
-                        margin-right: 24px;
-                        text-decoration: none;
+                    li.react-tabs__tab {
+                        display: inline-block;
+                        position: static;
+                        list-style: none;
+                        padding: 0;
+                        cursor: pointer;
+                        font-weight: 600;
+                        font-size: 14px;
+                        line-height: 20px;
+                        color: v.$black;
+                        outline: none;
+                        margin-right: 16px;
+                        padding-bottom: 8px;
+                        border-bottom: 2px solid transparent
+                    }
+
+                    li.react-tabs__tab--selected {
+                        border-color: #1561d3;
+                    }
+
+                    ul {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        width: 100%;
+                        padding: 0;
                     }
 
                     display: flex;
-                    align-items:center;
-                    justify-content: space-between;
+                    align-items: center;
                     width:50%;
                     max-width: 870px;
                 }
 
                 .lang-block {
                     button {
-                        @include v.button-default;
+                        @include g.button-default;
                     }
 
                     display: flex;
@@ -65,10 +84,7 @@
                     max-width: 100%;
                     height: auto;
                     max-height: 670px;
-
                 }
-
-                //background: url(/assets/images/login-image.webp) center/cover no-repeat;
 
                 width: 55%;
                 max-height:600px;
@@ -76,7 +92,7 @@
                 text-align: center;
             }
 
-            .form-block {
+            .content-block {
                 h1 {
                     font-size: 40px;
                     line-height: 48px;
@@ -262,6 +278,15 @@
 
     }
 
-    height:100vh;
+    @media all and (max-height: 805px) {
+        .image-block {
+            img {
+                width: 70% !important;
+            }
+        }
+    }
+
+    height: 100vh;
+
     background-color:#F7F9FA;
 }
