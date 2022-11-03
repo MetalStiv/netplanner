@@ -44,7 +44,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
     };
 });
- 
+builder.Services.AddCors();
+
 await using var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -53,6 +54,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
 
 app.MapPost("/register", [AllowAnonymous] async (HttpContext http,
     IUserRepositoryService userRepositoryService,

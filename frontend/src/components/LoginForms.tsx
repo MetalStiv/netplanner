@@ -5,6 +5,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
 import * as Yup from "yup";
+import { userMicroservice } from "../common/microservices";
 
 interface ISignInForm {
     userName: string,
@@ -26,14 +27,20 @@ const LoginForms: React.FC = () => {
             password: '',
         },
         onSubmit: async (values: ISignInForm) => {
-            let userName: string = await new Promise<string>((resolve, reject) => {
-                setTimeout(() => resolve(values.userName), 300)
-            })
+            // let userName: string = await new Promise<string>((resolve, reject) => {
+            //     setTimeout(() => resolve(values.userName), 300)
+            // })
+            const res = await userMicroservice.post('login', {
+                Email: values.userName,
+                Password: values.password
+            });
+            const data = await res.data;
             let user: IUser = {
-                guid: userName,
-                name: userName
+                name: 'test',
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken
             }
-            alert('signIn')
+            console.log(user);
             userStore?.setData(user)
             navigate('/home')
         },
@@ -56,22 +63,17 @@ const LoginForms: React.FC = () => {
             passwordConfirmation: '',
         },
         onSubmit: async (values: IRegisterForm) => {
-            let userName: string = await new Promise<string>((resolve, reject) => {
-                setTimeout(() => resolve(values.userName), 300)
-            })
-            let user: IUser = {
-                guid: userName,
-                name: userName
-            }
+            const res = await userMicroservice.post('register', {
+                Email: values.userName,
+                Password: values.password
+            });
             alert('register')
-            userStore?.setData(user)
-            navigate('/home')
         },
         validationSchema: Yup.object({
             userName: Yup.string()
                 .required('It is required field')
                 .min(3, 'At least 3 symbols')
-                .max(10, 'It is more then 10 symbols'),
+                .max(40, 'It is more then 40 symbols'),
             password: Yup.string()
                 .required('It is required field')
                 .min(4, 'At least 4 symbols')

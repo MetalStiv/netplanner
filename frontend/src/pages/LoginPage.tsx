@@ -1,16 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useFormik } from 'formik';
+import { useFormik } from "formik";
 import { useRootStore } from "../providers/rootProvider";
 import * as Yup from "yup";
 import IUser from "../model/IUser";
-import '../styles/login.scss';
-import bmstuIcon from '../assets/images/bmstu-icon.svg';
-import loginImage from '../assets/images/login-image.webp';
+import "../styles/login.scss";
+import bmstuIcon from "../assets/images/bmstu-icon.svg";
+import loginImage from "../assets/images/login-image.webp";
 import LoginForms from "../components/LoginForms";
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-
-
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 const LoginPage: React.FC = () => {
     return (

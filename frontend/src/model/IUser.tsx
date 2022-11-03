@@ -1,6 +1,7 @@
 interface IUser {
-    guid: string,
     name: string,
+    accessToken: string,
+    refreshToken: string
 }
 
 export default IUser
