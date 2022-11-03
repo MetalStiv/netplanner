@@ -1,5 +1,5 @@
 interface IProject {
-    name: string;
+    name?: string;
 }
 
 export default IProject;

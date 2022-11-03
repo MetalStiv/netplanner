@@ -1,0 +1,133 @@
+@use '_variables' as v;
+
+#userPage {
+    
+    .leftMenu{
+        .iconUser{
+            position: absolute;
+            width: 72px;
+            height: 72px;
+            left: 24px;
+            top: 57px;
+            background: url(../assets/images/Ellipse.png);
+        }
+        .frame{
+            .rectangle{
+                position: absolute;
+                width: 80px;
+                right: 20px;
+                bottom: 50px;
+                height: 51px;
+                background: #F7F9FA;
+                border-radius: 10px;
+            }
+            .book{
+                cursor: pointer;
+                top:50px;
+                bottom:  50px;
+                width: 32px;
+                height: 32px;
+                flex: none;
+                order: 2;
+                left: 24px;
+                flex-grow: 0;
+                background: url(../assets/images/book.svg);
+                
+            }
+            .rectangle:hover{
+                
+            }
+       
+           
+            .work{
+                cursor: pointer;
+                top:50px;
+                bottom:  50px;
+                width: 32px;
+                height: 32px;
+                flex: none;
+                order: 2;
+                flex-grow: 0;
+                background: url(../assets/images/Work.svg);
+                
+            }
+            .setting{
+                cursor: pointer;
+                top:50px;
+                bottom:  50px;
+                width: 32px;
+                height: 32px;
+                flex: none;
+                order: 2;
+                flex-grow: 0;
+                background: url(../assets/images/Setting.svg);
+            }
+            top: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 70px;
+
+            position: absolute;
+            width: 32px;
+            height: 236px;
+            left: 44px;
+           
+        }
+        .logout{
+            cursor: pointer;
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            left: 44px;
+            bottom: 20px;
+            background: url(../assets/images/Logout.svg);
+        }
+        position: fixed;
+        width: 120px;
+        height: 100vh;
+        left: 0px;
+        top: 0px;
+        background: #FFFFFF;
+    }
+
+    .startMenu{
+      
+        .text{
+            position: absolute;
+            text-align: center;
+            width: 800px;
+            height: 48px;
+            top: 40%;
+            left: 28%;
+            font-weight:700;
+            font-size: 40px;
+            text-transform: uppercase;
+            color: #292C33;
+        }
+        
+        button{
+            
+            position: absolute;
+            width: 148px;
+            height: 51px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 40px;
+            cursor: pointer;
+            background: #176DEA;
+            border:none;
+            color: #FFFFFF;
+            border-radius: 15px;
+        }
+        left: 120px;
+        height: 100vh;
+        
+    }
+    main{
+        background-color:#F7F9FA;  
+    }
+    
+}

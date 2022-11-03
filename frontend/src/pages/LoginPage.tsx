@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
 import { useRootStore } from "../providers/rootProvider";
@@ -8,6 +8,7 @@ import '../styles/login.scss';
 import bmstuIcon from '../assets/images/bmstu-icon.svg';
 import loginImage from '../assets/images/login-image.webp';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import {lang} from '../languages/lang.js'
 
 interface ISignInForm {
     userName: string,
@@ -20,8 +21,15 @@ interface IRegisterForm {
 }
 
 const LoginPage: React.FC = () => {
+    const [language, setLanguage] = useState("ru")
     const navigate = useNavigate()
     const userStore = useRootStore()?.getUserStore()
+
+    type ObjectKey = keyof typeof lang.lang;
+    
+        const lang_property = language as ObjectKey;
+        console.log(lang.lang[lang_property])
+    
 
     const signIn = useFormik({
         initialValues: {
@@ -97,17 +105,20 @@ const LoginPage: React.FC = () => {
                             <div className="logo">
                                 <img src={bmstuIcon} alt="МГТУ им. Н.Э. Баумана" />
                             </div>
-                            <p className="tagline">FROM ENGINEERS<br />TO ENGINEERS</p>
+                            <p className="tagline">{lang.slog[lang_property].first}<br />{lang.slog[lang_property].second}</p>
                         </div>
                         <div className="nav-block">
                             <a href="#" rel="nofollow" target="_blank">Use Netplanner</a>
-                            <a href="#" rel="nofollow" target="_blank">About the project</a>
+                            <a href="#" rel="nofollow" target="_blank">{lang.aboutTheProject[lang_property]}</a>
                             <a href="#" rel="nofollow" target="_blank">Rates</a>
-                            <a href="#" rel="nofollow" target="_blank">Contact with developers</a>
+                            <a href="#" rel="nofollow" target="_blank">{lang.contactWithDevelopers[lang_property]}</a>
                         </div>
                         <div className="lang-block">
-                            <button>RU</button>
-                            <button>EN</button>
+                            
+                            <button onClick={()=>setLanguage('ru')}>{lang.lang[lang_property].l_ru}</button>
+                        
+                            
+                            <button onClick={()=>setLanguage('en')}>{lang.lang[lang_property].l_en}</button>
                         </div>
                     </div>
                 </div>
@@ -121,8 +132,8 @@ const LoginPage: React.FC = () => {
                         <h1>NETPLANNER</h1>
                         <Tabs>
                             <TabList>
-                                <Tab>Sign in</Tab>
-                                <Tab>Register</Tab>
+                                <Tab>{lang.sigIn[lang_property]}</Tab>
+                                <Tab>{lang.register[lang_property]}</Tab>
                             </TabList>
 
                             <TabPanel>
@@ -136,7 +147,7 @@ const LoginPage: React.FC = () => {
                                                 onChange={signIn.handleChange}
                                                 value={signIn.values.userName}
                                             />
-                                            <label htmlFor="userName">UserName</label>
+                                            <label htmlFor="userName">{lang.login[lang_property]}</label>
                                         </div>
 
                                         {signIn.touched.userName && signIn.errors.userName && (
@@ -152,17 +163,17 @@ const LoginPage: React.FC = () => {
                                                 onChange={signIn.handleChange}
                                                 value={signIn.values.password}
                                             />
-                                            <label htmlFor="password">Password</label>
+                                            <label htmlFor="password">{lang.password[lang_property]}</label>
                                         </div>
                                         <div>
                                             {signIn.touched.password && signIn.errors.password && (
                                                 <small>{signIn.errors.password}</small>
                                             )}
                                         </div>
-                                        <a href="" rel="nofollow">Forgot password?</a>
+                                        <a href="" rel="nofollow">{lang.forgotPassword[lang_property]}</a>
                                     </div>
                                     <div style={{ textAlign: 'center', paddingTop: 48 }}>
-                                        <button className="btn btn-blue" type="submit">LET'S START</button>
+                                        <button className="btn btn-blue" type="submit">{lang.buttonStart[lang_property]}</button>
                                     </div>
                                 </form>
                             </TabPanel>
@@ -177,7 +188,7 @@ const LoginPage: React.FC = () => {
                                                 onChange={register.handleChange}
                                                 value={register.values.userName}
                                             />
-                                            <label htmlFor="userName">UserName</label>
+                                            <label htmlFor="userName">{lang.login[lang_property]}</label>
                                         </div>
 
                                         {register.touched.userName && register.errors.userName && (
@@ -193,7 +204,7 @@ const LoginPage: React.FC = () => {
                                                 onChange={register.handleChange}
                                                 value={register.values.password}
                                             />
-                                            <label htmlFor="password">Password</label>
+                                            <label htmlFor="password">{lang.password[lang_property]}</label>
                                         </div>
 
                                         {register.touched.password && register.errors.password && (
@@ -209,7 +220,7 @@ const LoginPage: React.FC = () => {
                                                 onChange={register.handleChange}
                                                 value={register.values.passwordConfirmation}
                                             />
-                                            <label htmlFor="passwordConfirmation">Password again</label>
+                                            <label htmlFor="passwordConfirmation">{lang.passwordAgain[lang_property]}</label>
                                         </div>
 
                                         {register.touched.passwordConfirmation && register.errors.passwordConfirmation && (
@@ -217,7 +228,7 @@ const LoginPage: React.FC = () => {
                                         )}
                                     </div>
                                     <div style={{ textAlign: 'center' }}>
-                                        <button className="btn btn-blue" type="submit">LET'S START</button>
+                                        <button className="btn btn-blue" type="submit">{lang.buttonStart[lang_property]}</button>
                                     </div>
                                 </form>
                             </TabPanel>
