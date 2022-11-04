@@ -1,4 +1,4 @@
-import HomePage from "./pages/HomePage";
+import UserPage from "./pages/UserPage";
 import LoginPage from "./pages/LoginPage";
 import ProjectPage from "./pages/ProjectPage/ProjectPage";
 import {
@@ -14,15 +14,16 @@ import './styles/fonts.scss';
 
 const App: React.FC = () => {
   useLocalObservable(createRootStore)
+  
 
   return (
     <RootProvider>
       <div className="App" style={{ height: '100%' }}>
         <Router>
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/" element={<ProjectPage />} />
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/home" element={<UserPage />} />
+            <Route path="/project" element={<ProjectPage />} />
           </Routes>
         </Router>
       </div>
