@@ -37,16 +37,18 @@ public record User
     {
         this.Email = email;
         this.Name = email;
-        // this.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
         this.Salt = Convert.ToBase64String(RandomNumberGenerator.GetBytes(128 / 8));
         this.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password + this.Salt);
         this.Verified = false; 
 
-        var randomNumber = new byte[32];
-        using (var rng = RandomNumberGenerator.Create())
+        const string pool = "abcdefghijklmnopqrstuvwxyz0123456789";
+        var rnd = new Random();
+        var builder = new StringBuilder();
+        for (var i = 0; i < 16; i++)
         {
-            rng.GetBytes(randomNumber);
-            this.VerificationCode = Convert.ToBase64String(randomNumber);
+            var c = pool[rnd.Next(0, pool.Length)];
+            builder.Append(c);
         }
+        this.VerificationCode = builder.ToString();
     }
 }
