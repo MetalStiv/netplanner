@@ -1,9 +1,9 @@
 enum Shapes {
-    Rect,
-    Circle,
-    Line,
-    Polyline,
-    Ellipse,
-    Point,
+    Rect = 'Rect',
+    Circle = 'Circle',
+    Ellipse = 'Ellipse',
+    Point = 'Point',
+    Line = 'Line',
+    Polyline = 'Polyline',
 }
-export default Shapes;
+export default Shapes
