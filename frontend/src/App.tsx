@@ -1,4 +1,4 @@
-import UserPage from "./pages/UserPage";
+import UserPage from "./pages/UserPage/UserPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import ProjectPage from "./pages/ProjectPage/ProjectPage";
 import {
