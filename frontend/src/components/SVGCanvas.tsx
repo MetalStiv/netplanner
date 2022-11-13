@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect, LegacyRef } from 'react';
+import React from 'react';
 import SVGElemsCreator from '../model/shapes/SVGElemsCreator';
 import { useRootStore } from '../providers/rootProvider';
 

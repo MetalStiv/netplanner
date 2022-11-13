@@ -7,8 +7,9 @@ public class MyTokenService : ITokenService
     {
         var claims = new[]
         {
+            new Claim("Id", user.Id ?? string.Empty),
             new Claim("Email", user.Email),
-            new Claim("Id", user.Id ?? string.Empty)
+            new Claim("Name", user.Name ?? string.Empty)
         };
  
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));

@@ -7,10 +7,11 @@ import './styles/global.scss';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <div id='plug'>
-      <p>К сожалению, наше приложение не рассчитано на ваш размер дисплея</p>
+      <p>К сожалению, приложение не рассчитано на ваш размер дисплея</p>
     </div>
     <App />
   </React.StrictMode>

@@ -1,4 +1,3 @@
-import Frame from 'react-frame-component'
 //import { Container, Section, Bar } from "react-simple-resizer";
 import {
     ResizeContent,
@@ -17,12 +16,10 @@ import '../../styles/project.scss';
 import { Panel } from './Panel';
 // import Ellipse from '../../model/shapes/Ellipse';
 // import Rect from '../../model/shapes/Rect';
-import React, { MouseEventHandler, ReactNode, ReactSVGElement, useEffect, useId, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import SVGCanvas from '../../components/SVGCanvas';
-import IShape from '../../model/shapes/IShape';
 import SVGElemsCreator from '../../model/shapes/SVGElemsCreator';
 import Shapes from '../../model/shapes/Shapes';
-import { generateKey } from 'crypto';
 
 const ProjectPage: React.FC = () => {
 

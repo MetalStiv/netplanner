@@ -1,11 +1,10 @@
-import React,{useState} from "react";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from 'formik';
-import {lang} from '../languages/lang.js'
-import '../styles/user.scss';
+import React from "react";
+import "../styles/user.scss";
 import Project from "../module/projectCard/Project";
+import { useRootStore } from "../providers/rootProvider";
 
 const UserPage: React.FC = () => {
+    const userStore = useRootStore()?.getUserStore()
 
     return (
         <div id="userPage">

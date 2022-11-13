@@ -1,20 +1,31 @@
 import ILanguage from "./ILanguage";
 
 export const ru: ILanguage = {
-    register: "Регистрация",
-    sigIn: "Авторизация",
-    rates: "",
-    aboutIn: "",
-    contactWithDevelopers: "Связь с разработчиками",
-    password: "Пароль",
-    passwordAgain: "Повторите пароль",
-    login: "Логин",
-    forgotPassword: "Забыли пароль?",
-    buttonStart: "НАЧНЕМ!",
-    aboutTheProject: "О проекте",
-    slog: 
-    {
-        first: "ИНЖЕНЕРАМИ",
-        second: "ДЛЯ ИНЖЕНЕРОВ"
+    loginPage: {
+        rates: "Тарифы",
+        aboutIn: "",
+        contactWithDevelopers: "Связь с разработчиками",
+        login: "Вход в систему",
+        aboutTheProject: "О проекте",
+        slog: 
+        {
+            first: "ИНЖЕНЕРАМИ",
+            second: "ДЛЯ ИНЖЕНЕРОВ"
+        },
+        userForm: {
+            forgotPassword: "Забыли пароль?",
+            buttonStart: "НАЧНЕМ!",
+            buttonRegister: "ЗАРЕГИСТРИРОВАТЬСЯ",
+            register: "Регистрация",
+            signIn: "Авторизация",
+            password: "Пароль",
+            passwordConfirmation: "Повторите пароль",
+            requiredError: "Поле обязательно для ввода",
+            emailError: "Некорректный email адрес",
+            toLongEmailError: "Введено более 40 символов",
+            toShortPassword: "Введено менее 4 символов",
+            toLongPasswordError: "Введено более 20 символов",
+            passwordsDoesNotMatch: "Пароли не совпадают"
+        }
     }
 }

@@ -1,20 +1,31 @@
 import ILanguage from "./ILanguage"
 
 export const eng: ILanguage = {
-    register: "Register",
-    sigIn: "Sign in",
-    rates: "",
-    aboutIn: "",
-    contactWithDevelopers: "Contact with developers",
-    password: "Password",
-    passwordAgain: "Password again",
-    login: "User name",
-    forgotPassword: "Forgot password?",
-    buttonStart: "LET'S START",
-    aboutTheProject: "About the project",
-    slog: 
-    {
-        first: "FROM ENGINEERS",
-        second: "TO ENGINEERS"
+    loginPage: {
+        rates: "Rates",
+        aboutIn: "",
+        contactWithDevelopers: "Contact with developers",
+        login: "Login",
+        aboutTheProject: "About the project",
+        slog: 
+        {
+            first: "FROM ENGINEERS",
+            second: "TO ENGINEERS"
+        },
+        userForm: {
+            forgotPassword: "Forgot password?",
+            buttonStart: "LET'S START",
+            buttonRegister: "REGISTER",
+            register: "Register",
+            signIn: "Sign in",
+            password: "Password",
+            passwordConfirmation: "Password again",
+            requiredError: "It is required field",
+            emailError: "Invalid email address",
+            toLongEmailError: "It is more then 40 symbols",
+            toShortPassword: "It is less then 4 symbols",
+            toLongPasswordError: "It is more then 20 symbols",
+            passwordsDoesNotMatch: "Passwords does not match"
+        }
     }
 }

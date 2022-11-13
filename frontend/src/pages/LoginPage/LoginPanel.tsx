@@ -1,99 +1,94 @@
-import React, { useState, useEffect } from 'react';
-import IUser from '../model/IUser'
-import { useRootStore } from '../providers/rootProvider';
+import React, { useEffect } from 'react';
+import IUser from "../../model/IUser";
+import { useRootStore } from "../../providers/rootProvider";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
 import * as Yup from "yup";
-import { userMicroservice } from "../common/microservices";
+import { userMicroservice } from "../../common/axiosMicroservices";
+import { login, ISignInForm} from "../../common/login";
+import text, { Language } from "../../languages/language";
 
-interface ISignInForm {
-    userName: string,
-    password: string,
+interface ILoginPanelProps {
+    language: Language;
 }
+
 interface IRegisterForm {
-    userName: string,
+    email: string,
     password: string,
     passwordConfirmation: string
 }
 
-const LoginForms: React.FC = () => {
+const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
     const navigate = useNavigate()
     const userStore = useRootStore()?.getUserStore()
 
     const signIn = useFormik({
         initialValues: {
-            userName: '',
+            email: '',
             password: '',
         },
         onSubmit: async (values: ISignInForm) => {
-            // let userName: string = await new Promise<string>((resolve, reject) => {
-            //     setTimeout(() => resolve(values.userName), 300)
-            // })
-            const res = await userMicroservice.post('login', {
-                Email: values.userName,
-                Password: values.password
-            });
-            const data = await res.data;
-            let user: IUser = {
-                name: 'test',
-                accessToken: data.accessToken,
-                refreshToken: data.refreshToken
-            }
-            console.log(user);
+            const user: IUser = await login(values);
             userStore?.setData(user)
             navigate('/home')
         },
         validationSchema: Yup.object({
-            userName: Yup.string()
-                .required('It is required field')
-                .min(3, 'At least 3 symbols')
-                .max(10, 'It is more then 10 symbols'),
+            email: Yup.string()
+                .required(text[props.language].loginPage.userForm.requiredError)
+                .email(text[props.language].loginPage.userForm.emailError)
+                .max(40, text[props.language].loginPage.userForm.toLongEmailError),
             password: Yup.string()
-                .required('It is required field')
-                .min(4, 'At least 4 symbols')
-                .max(12, 'It is more then 12 symbols'),
+                .required(text[props.language].loginPage.userForm.requiredError)
+                .min(4, text[props.language].loginPage.userForm.toShortPassword)
+                .max(20, text[props.language].loginPage.userForm.toLongPasswordError),
         })
     })
 
     const register = useFormik({
         initialValues: {
-            userName: '',
+            email: '',
             password: '',
             passwordConfirmation: '',
         },
         onSubmit: async (values: IRegisterForm) => {
-            const res = await userMicroservice.post('register', {
-                Email: values.userName,
-                Password: values.password
+            await userMicroservice.post('register', {
+                email: values.email,
+                password: values.password
             });
-            alert('register')
         },
         validationSchema: Yup.object({
-            userName: Yup.string()
-                .required('It is required field')
-                .min(3, 'At least 3 symbols')
-                .max(40, 'It is more then 40 symbols'),
+            email: Yup.string()
+                .required(text[props.language].loginPage.userForm.requiredError)
+                .email(text[props.language].loginPage.userForm.emailError)
+                .max(40, text[props.language].loginPage.userForm.toLongEmailError),
             password: Yup.string()
-                .required('It is required field')
-                .min(4, 'At least 4 symbols')
-                .max(12, 'It is more then 12 symbols'),
+                .required(text[props.language].loginPage.userForm.requiredError)
+                .min(4, text[props.language].loginPage.userForm.toShortPassword)
+                .max(20, text[props.language].loginPage.userForm.toLongPasswordError),
             passwordConfirmation: Yup.string()
-                .test('passwords-match', 'Passwords must match', function (value: string | undefined, context) {
-                    return context.parent.password === value
+                .test('passwords-match', 
+                    text[props.language].loginPage.userForm.passwordsDoesNotMatch, 
+                    function (value: string | undefined, context) {
+                        return context.parent.password === value
                 })
             //так можно сделать любую проверку, но в данном случае проще записать так: 
             // .oneOf([Yup.ref('password'), null], 'Passwords must match')
         })
     })
 
+    useEffect(() => {
+        signIn.validateForm();
+        register.validateForm();
+    }, [props]);
+
     return (
         <>
             <h1>NETPLANNER</h1>
             <Tabs>
                 <TabList>
-                    <Tab>Sign in</Tab>
-                    <Tab>Register</Tab>
+                    <Tab>{text[props.language].loginPage.userForm.signIn}</Tab>
+                    <Tab>{text[props.language].loginPage.userForm.register}</Tab>
                 </TabList>
 
                 <TabPanel>
@@ -101,19 +96,19 @@ const LoginForms: React.FC = () => {
                         <div className="form-input-block">
                             <div className="form-input">
                                 <input
-                                    id="userName"
-                                    name="userName"
+                                    id="email"
+                                    name="email"
                                     type="text"
                                     onChange={signIn.handleChange}
-                                    value={signIn.values.userName}
+                                    value={signIn.values.email}
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
-                                <label htmlFor="userName">UserName</label>
+                                <label htmlFor="email">Email</label>
                             </div>
 
-                            {signIn.touched.userName && signIn.errors.userName && (
-                                <small>{signIn.errors.userName}</small>
+                            {signIn.touched.email && signIn.errors.email && (
+                                <small>{signIn.errors.email}</small>
                             )}
                         </div>
                         <div className="form-input-block">
@@ -127,17 +122,19 @@ const LoginForms: React.FC = () => {
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
-                                <label htmlFor="password">Password</label>
+                                <label htmlFor="password">{text[props.language].loginPage.userForm.password}</label>
                             </div>
                             <div>
                                 {signIn.touched.password && signIn.errors.password && (
                                     <small>{signIn.errors.password}</small>
                                 )}
                             </div>
-                            <a href="" rel="nofollow">Forgot password?</a>
+                            <a href="" rel="nofollow">{text[props.language].loginPage.userForm.forgotPassword}</a>
                         </div>
                         <div style={{ textAlign: 'center', paddingTop: 48 }}>
-                            <button className="btn btn-blue" type="submit">LET'S START</button>
+                            <button className="btn btn-blue" type="submit">
+                                {text[props.language].loginPage.userForm.buttonStart}
+                            </button>
                         </div>
                     </form>
                 </TabPanel>
@@ -146,19 +143,19 @@ const LoginForms: React.FC = () => {
                         <div className="form-input-block">
                             <div className="form-input">
                                 <input
-                                    id="userName"
-                                    name="userName"
+                                    id="email"
+                                    name="email"
                                     type="text"
                                     onChange={register.handleChange}
-                                    value={register.values.userName}
+                                    value={register.values.email}
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
-                                <label htmlFor="userName">UserName</label>
+                                <label htmlFor="email">Email</label>
                             </div>
 
-                            {register.touched.userName && register.errors.userName && (
-                                <small>{register.errors.userName}</small>
+                            {register.touched.email && register.errors.email && (
+                                <small>{register.errors.email}</small>
                             )}
                         </div>
                         <div className="form-input-block">
@@ -172,7 +169,7 @@ const LoginForms: React.FC = () => {
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
-                                <label htmlFor="password">Password</label>
+                                <label htmlFor="password">{text[props.language].loginPage.userForm.password}</label>
                             </div>
 
                             {register.touched.password && register.errors.password && (
@@ -190,7 +187,9 @@ const LoginForms: React.FC = () => {
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
-                                <label htmlFor="passwordConfirmation">Password again</label>
+                                <label htmlFor="passwordConfirmation">{
+                                    text[props.language].loginPage.userForm.passwordConfirmation}
+                                </label>
                             </div>
 
                             {register.touched.passwordConfirmation && register.errors.passwordConfirmation && (
@@ -198,7 +197,9 @@ const LoginForms: React.FC = () => {
                             )}
                         </div>
                         <div style={{ textAlign: 'center' }}>
-                            <button className="btn btn-blue" type="submit">LET'S START</button>
+                            <button className="btn btn-blue" type="submit">
+                                {text[props.language].loginPage.userForm.buttonRegister}
+                            </button>
                         </div>
                     </form>
                 </TabPanel>
@@ -207,4 +208,4 @@ const LoginForms: React.FC = () => {
     )
 }
 
-export default LoginForms;
+export default LoginPanel;

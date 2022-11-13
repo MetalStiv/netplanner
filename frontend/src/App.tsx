@@ -1,5 +1,5 @@
 import UserPage from "./pages/UserPage";
-import LoginPage from "./pages/LoginPage";
+import LoginPage from "./pages/LoginPage/LoginPage";
 import ProjectPage from "./pages/ProjectPage/ProjectPage";
 import {
   BrowserRouter as Router,
@@ -14,7 +14,6 @@ import './styles/fonts.scss';
 
 const App: React.FC = () => {
   useLocalObservable(createRootStore)
-  
 
   return (
     <RootProvider>

@@ -98,13 +98,13 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http,
 
     await userRepositoryService.UpdateAsync(user);
 
-    await http.Response.WriteAsJsonAsync(new { 
+    await http.Response.WriteAsJsonAsync(new {
         accessToken = accessToken, 
         refreshToken = refreshToken });
     return;
 });
 
-app.MapGet("/refreshToken", [AllowAnonymous] async (HttpContext http, 
+app.MapPost("/refreshToken", [AllowAnonymous] async (HttpContext http, 
     ITokenService tokenService, 
     IUserRepositoryService userRepositoryService) => {
     var tokenApiDto = await http.Request.ReadFromJsonAsync<TokenApiDto>();
