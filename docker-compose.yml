@@ -36,6 +36,8 @@ services:
     ports:
       - 7065:7065
       - 5108:5108
+    volumes:
+      - ./RsaKeys:/app/RsaKeys
     environment:
       ASPNETCORE_HTTPS_PORT: https://+:7065
       ASPNETCORE_URLS: http://+:5108
@@ -47,7 +49,8 @@ services:
       MAIL_PASSWORD: appmecniptnrogny
       MAIL_HOST: smtp.yandex.ru
       MAIL_PORT: 465
-      JWT_KEY: secrete12345!!!jfkhdgkhskdfhgsdhfghslkdfjhlgw
+      JWT_PRIVATE_KEY: /app/RsaKeys/private.pem
+      JWT_PUBLIC_KEY: /app/RsaKeys/public.pem
       JWT_ISSUER: http://localhost:5108
       DOMAIN: http://localhost:5108
     networks:

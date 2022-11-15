@@ -11,6 +11,15 @@
           "lib/net6.0/BCrypt.Net-Next.dll": {}
         }
       },
+      "DerConverter/3.0.0.82": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/DerConverter.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/DerConverter.dll": {}
+        }
+      },
       "DnsClient/1.6.1": {
         "type": "package",
         "dependencies": {
@@ -249,6 +258,18 @@
           }
         }
       },
+      "PemUtils/3.0.0.82": {
+        "type": "package",
+        "dependencies": {
+          "DerConverter": "3.0.0.82"
+        },
+        "compile": {
+          "lib/netstandard2.0/PemUtils.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/PemUtils.dll": {}
+        }
+      },
       "Portable.BouncyCastle/1.9.0": {
         "type": "package",
         "compile": {
@@ -434,6 +455,20 @@
         "lib/netstandard2.1/BCrypt.Net-Next.dll",
         "lib/netstandard2.1/BCrypt.Net-Next.xml",
         "readme.md"
+      ]
+    },
+    "DerConverter/3.0.0.82": {
+      "sha512": "6x9+tHjO7IqGtgLlPAc6P1gKGmSl4s5c35M2g6DoOWHWY5RRYRX5LioXD8347Uf4VIuNGoYvRowKiJFHhkkFRA==",
+      "type": "package",
+      "path": "derconverter/3.0.0.82",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "derconverter.3.0.0.82.nupkg.sha512",
+        "derconverter.nuspec",
+        "lib/net451/DerConverter.dll",
+        "lib/net471/DerConverter.dll",
+        "lib/netstandard2.0/DerConverter.dll"
       ]
     },
     "DnsClient/1.6.1": {
@@ -862,6 +897,20 @@
         "runtimes/win/native/mongocrypt.dll"
       ]
     },
+    "PemUtils/3.0.0.82": {
+      "sha512": "LtsJ8LPfBN65+/ONfkJg8ZqcAxm59xRy4o5ocn2m4mAYo0EmmVslZ4SwcAViwfYDPL08Hu/vBbO2qamhtadeyQ==",
+      "type": "package",
+      "path": "pemutils/3.0.0.82",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net451/PemUtils.dll",
+        "lib/net471/PemUtils.dll",
+        "lib/netstandard2.0/PemUtils.dll",
+        "pemutils.3.0.0.82.nupkg.sha512",
+        "pemutils.nuspec"
+      ]
+    },
     "Portable.BouncyCastle/1.9.0": {
       "sha512": "eZZBCABzVOek+id9Xy04HhmgykF0wZg9wpByzrWN7q8qEI0Qen9b7tfd7w8VA3dOeesumMG7C5ZPy0jk7PSRHw==",
       "type": "package",
@@ -1244,8 +1293,8 @@
       "MailKit >= 3.4.2",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 6.0.10",
       "MimeKit >= 3.4.2",
-      "MongoDB.Bson >= 2.18.0",
-      "MongoDB.Driver >= 2.18.0"
+      "MongoDB.Driver >= 2.18.0",
+      "PemUtils >= 3.0.0.82"
     ]
   },
   "packageFolders": {
@@ -1301,13 +1350,13 @@
             "target": "Package",
             "version": "[3.4.2, )"
           },
-          "MongoDB.Bson": {
-            "target": "Package",
-            "version": "[2.18.0, )"
-          },
           "MongoDB.Driver": {
             "target": "Package",
             "version": "[2.18.0, )"
+          },
+          "PemUtils": {
+            "target": "Package",
+            "version": "[3.0.0.82, )"
           }
         },
         "imports": [

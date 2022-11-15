@@ -18,6 +18,7 @@ global using MailKit;
 global using MailKit.Security;
 global using MailKit.Net.Smtp;
 global using MimeKit;
+global using PemUtils;
 
 global using UserMicroservice.Services.TokenService;
 global using UserMicroservice.Services.MailService;

@@ -1,20 +1,12 @@
 var builder = WebApplication.CreateBuilder(args);
 
 var dbSettings = new UserDBSettings(
-    // builder.Configuration["UserDB:ConnectionString"],
-    // builder.Configuration["UserDB:DatabaseName"],
-    // builder.Configuration["UserDB:UsersCollectionName"]
     Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? "",
     Environment.GetEnvironmentVariable("DB_NAME") ?? "",
     Environment.GetEnvironmentVariable("DB_USER_COLLECTION_NAME") ?? ""
 );
 
 var mailSettings = new MailSettings(
-    // builder.Configuration["MailServer:Mail"],
-    // builder.Configuration["MailServer:DatabaseName"],
-    // builder.Configuration["MailServer:Password"],
-    // builder.Configuration["MailServer:Host"],
-    // Int32.Parse(builder.Configuration["MailServer:Port"])
     Environment.GetEnvironmentVariable("MAIL_NAME") ?? "",
     Environment.GetEnvironmentVariable("MAIL_DISPLAY_NAME") ?? "",
     Environment.GetEnvironmentVariable("MAIL_PASSWORD") ?? "",
@@ -23,11 +15,12 @@ var mailSettings = new MailSettings(
 );
 
 var jwtSettings = new JwtSettings(
-    Environment.GetEnvironmentVariable("JWT_KEY") ?? "",
+    Environment.GetEnvironmentVariable("JWT_PRIVATE_KEY") ?? "",
+    Environment.GetEnvironmentVariable("JWT_PUBLIC_KEY") ?? "",
     Environment.GetEnvironmentVariable("JWT_ISSUER") ?? ""
 );
 
-builder.Services.AddSingleton<ITokenService>(new MyTokenService());
+builder.Services.AddSingleton<ITokenService>(new RsaTokenService(jwtSettings));
 builder.Services.AddSingleton<IUserRepositoryService>(new MongoDBUserRepositoryService(dbSettings));
 builder.Services.AddSingleton<UserMicroservice.Services.MailService.IMailService>(new MyMailService(mailSettings));
 builder.Services.AddAuthorization();
@@ -41,7 +34,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings.Issuer,
         ValidAudience = jwtSettings.Issuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+        IssuerSigningKey = jwtSettings.PublicKey,
     };
 });
 builder.Services.AddCors();
@@ -93,7 +86,7 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http,
         return;
     }
  
-    var accessToken = tokenService.GenerateAccessToken(jwtSettings, user);
+    var accessToken = tokenService.GenerateAccessToken(user);
     var refreshToken = tokenService.GenerateRefreshToken(user);
 
     await userRepositoryService.UpdateAsync(user);
@@ -114,8 +107,7 @@ app.MapPost("/refreshToken", [AllowAnonymous] async (HttpContext http,
         return;
     }
     
-    var principal = tokenService.GetPrincipalFromExpiredToken(tokenApiDto.AccessToken, 
-        jwtSettings.Key);
+    var principal = tokenService.GetPrincipalFromExpiredToken(tokenApiDto.AccessToken);
     if (principal.Identities == null)
     {
         http.Response.StatusCode = 401;
@@ -135,7 +127,7 @@ app.MapPost("/refreshToken", [AllowAnonymous] async (HttpContext http,
         http.Response.StatusCode = 401;
         return;
     }
-    var newAccessToken = tokenService.GenerateAccessToken(jwtSettings, user);
+    var newAccessToken = tokenService.GenerateAccessToken(user);
     var newRefreshToken = tokenService.GenerateRefreshToken(user);
 
     await userRepositoryService.UpdateAsync(user);

@@ -1,5 +1,6 @@
+!#/bin/bash
 docker-compose down
+./genRsaKeys.sh
 docker rmi metalstiv/user_microservice:1.0
-echo "Image has been removed"
 docker build -t metalstiv/user_microservice:1.0 ./UserMicroservice
 docker-compose up -d

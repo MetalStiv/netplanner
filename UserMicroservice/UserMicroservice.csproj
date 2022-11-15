@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />
     <PackageReference Include="MimeKit" Version="3.4.2" />
     <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+    <PackageReference Include="PemUtils" Version="3.0.0.82" />
   </ItemGroup>
 
 </Project>

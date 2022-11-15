@@ -54,13 +54,13 @@
               "target": "Package",
               "version": "[3.4.2, )"
             },
-            "MongoDB.Bson": {
-              "target": "Package",
-              "version": "[2.18.0, )"
-            },
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[2.18.0, )"
+            },
+            "PemUtils": {
+              "target": "Package",
+              "version": "[3.0.0.82, )"
             }
           },
           "imports": [

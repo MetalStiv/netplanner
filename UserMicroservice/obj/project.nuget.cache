@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "/yQ24/+j3d3lw6IIoAdQQ5iIQsnGqMnA041AgFLVu4PRxcLEY49kT7UnDRqnd1vRJpVu/PZdNW8nX8mPeeXEMg==",
+  "dgSpecHash": "MWM2m8k+qLpSbY+WiGKn3JGwtTjhSBoDUhXdbqlHAo2fZfWP3DGqDAtSe5uRLYzQ+d1bXUPEdBemyB/uDrPgIQ==",
   "success": true,
   "projectFilePath": "/home/metalstiv/Projects/netplanner/UserMicroservice/UserMicroservice.csproj",
   "expectedPackageFiles": [
     "/home/metalstiv/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
+    "/home/metalstiv/.nuget/packages/derconverter/3.0.0.82/derconverter.3.0.0.82.nupkg.sha512",
     "/home/metalstiv/.nuget/packages/dnsclient/1.6.1/dnsclient.1.6.1.nupkg.sha512",
     "/home/metalstiv/.nuget/packages/mailkit/3.4.2/mailkit.3.4.2.nupkg.sha512",
     "/home/metalstiv/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/6.0.10/microsoft.aspnetcore.authentication.jwtbearer.6.0.10.nupkg.sha512",
@@ -22,6 +23,7 @@
     "/home/metalstiv/.nuget/packages/mongodb.driver/2.18.0/mongodb.driver.2.18.0.nupkg.sha512",
     "/home/metalstiv/.nuget/packages/mongodb.driver.core/2.18.0/mongodb.driver.core.2.18.0.nupkg.sha512",
     "/home/metalstiv/.nuget/packages/mongodb.libmongocrypt/1.6.0/mongodb.libmongocrypt.1.6.0.nupkg.sha512",
+    "/home/metalstiv/.nuget/packages/pemutils/3.0.0.82/pemutils.3.0.0.82.nupkg.sha512",
     "/home/metalstiv/.nuget/packages/portable.bouncycastle/1.9.0/portable.bouncycastle.1.9.0.nupkg.sha512",
     "/home/metalstiv/.nuget/packages/sharpcompress/0.30.1/sharpcompress.0.30.1.nupkg.sha512",
     "/home/metalstiv/.nuget/packages/snappier/1.0.0/snappier.1.0.0.nupkg.sha512",
