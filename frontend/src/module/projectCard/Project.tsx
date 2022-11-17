@@ -1,9 +1,9 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import IProject from "../../model/IProject";
 import './project.scss';
 
-const Project: React.FC = ({name}: IProject)=>{
-    return(
+const Project = (project: IProject) => {
+    return (
         <div className="project">
 
         </div>

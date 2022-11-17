@@ -1,25 +1,35 @@
-import React, { useState } from 'react';
-//import { useRootStore } from '../providers/rootProvider';
-import Circle from '../../model/shapes/Circle';
-import Line from '../../model/shapes/Line';
-import Polyline from '../../model/shapes/Polyline';
-import Point from '../../model/shapes/Point';
-import Ellipse from '../../model/shapes/Ellipse';
-import Rect from '../../model/shapes/Rect';
-import { IShapeProps, IShape } from '../../model/shapes/IShape';
-import { IElemProps } from '../../pages/ProjectPage/ProjectPage'
+import React, { useEffect, useState } from 'react';
+import { useRootStore } from '../../providers/rootProvider';
+import { IShapeProps, IShape } from '../../model/IShape';
+import { IElemProps, IDraggableElemProps } from '../../pages/ProjectPage/ProjectPage'
+import IShapeCreator from '../../model/IShapeCreator';
+import Circle, { CircleCreator } from '../../model/primitives/Circle';
 
 interface SVGCanvasProps {
     width: number,
     height: number,
+    creatorOnDrop: IShapeCreator | null,
     getCursorCoordsCallback: (cursorCoords: { x: number, y: number }) => void,
-    getClickedElemPropsCallback: (elemProps: IElemProps) => void,
+    getClickedElemConfigCallback: (elemProps: IElemProps) => void,
+
+    //getDraggableElemConfigCallback: (elemProps: IDraggableElemProps) => void,
     //objects: Array<IShape>,
     //onClickHandler?: (e: React.MouseEvent<SVGElement>) => void,
     //onMouseDownHandler: (e: React.MouseEvent<SVGGeometryElement>) => void,
 }
 
-const SVGCanvas = ({ width, height, getCursorCoordsCallback, getClickedElemPropsCallback }: SVGCanvasProps) => {
+const SVGCanvas = ({ width, height, creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
+
+    //let svgChildren = useRootStore()!.getProjectStore().getProjects().at(0)!.renderedShapes!;
+    const [svgChildren, setSVGChildren] = useState<Array<IShape>>(
+        useRootStore()!.getProjectStore().getProjects().at(0)!.renderedShapes!
+    );
+    // useEffect(() => {
+    //     return function () {
+    //         useRootStore()!.getProjectStore().getProjects().at(0)!.setShapes!(svgChildren);
+    //     }
+    // }, []);
+
     //const userStore = useRootStore()?.getUserStore()
 
     // function getSVGCoords(el: { x: number, y: number }) {
@@ -36,13 +46,13 @@ const SVGCanvas = ({ width, height, getCursorCoordsCallback, getClickedElemProps
 
     function moveSVGAt(elemID: string, toSVGCoords: { x: number, y: number }, shift?: { x: number, y: number }) {
         setSVGChildren(svgChildren.map(item => {
-            if (item.elemProps.id === elemID) {
-                let newData: IShapeProps = JSON.parse(JSON.stringify(item.elemProps));
-                newData.startCoords = {
+            if (item.config.id === elemID) {
+                let newData: IShapeProps = JSON.parse(JSON.stringify(item.config));
+                newData.graphical.startCoords = {
                     x: Math.trunc(toSVGCoords.x - (shift ? shift.x : 0)),
                     y: Math.trunc(toSVGCoords.y - (shift ? shift.y : 0)),
                 }
-                item.elemProps = newData;
+                item.config = newData;
                 return item;
             } else {
                 return item;
@@ -68,82 +78,9 @@ const SVGCanvas = ({ width, height, getCursorCoordsCallback, getClickedElemProps
         }
     }
 
-    const genID = (len: number) => {
-        return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(len).toString().replace('.', ''));
-    }
-
-    const [svgChildren, setSVGChildren] = useState<Array<IShape>>(
-        [
-            new Rect({
-                id: `rect-${genID(10)}`,
-                startCoords: {
-                    x: 250,
-                    y: 250,
-                },
-                sizes: {
-                    w: 15,
-                    h: 10
-                }
-            }),
-            new Circle({
-                id: `circle-${genID(10)}`,
-                startCoords: {
-                    x: 200,
-                    y: 200,
-                },
-                r: 10,
-                stroke: 'red',
-                fill: 'blue',
-            }),
-            new Line({
-                id: `line-${genID(10)}`,
-                startCoords: {
-                    x: 15,
-                    y: 35,
-                },
-                endCoords: {
-                    x: 253,
-                    y: 150
-                }
-            }),
-
-            new Polyline({
-                id: `polyline${genID(10)}`,
-                startCoords: {
-                    x: 2,
-                    y: 3,
-                },
-                points: [[15, 80], [120, 65], [50, 16], [25, 25]],
-                stroke: 'green'
-            }),
-
-            new Point({
-                id: `point-${genID(10)}`,
-                startCoords: {
-                    x: 274,
-                    y: 183
-                },
-                r: 1
-            }),
-
-            new Ellipse({
-                id: `ellipse-${genID(10)}`,
-                startCoords: {
-                    x: 174,
-                    y: 123
-                },
-                rDif: {
-                    rx: 150,
-                    ry: 25,
-                },
-                fill: 'yellow'
-            }),
-        ]);
-
-
     const svgClickHandler = (e: React.MouseEvent<SVGElement>) => {
         const svg = e.currentTarget as SVGSVGElement;
-        const NS = svg.getAttribute('xmlns');
+        //const NS = svg.getAttribute('xmlns');
         const pt = svg.createSVGPoint();
 
         // pass event coordinates
@@ -151,9 +88,9 @@ const SVGCanvas = ({ width, height, getCursorCoordsCallback, getClickedElemProps
         pt.y = e.clientY;
 
         // transform to SVG coordinates
-        const svgP = pt.matrixTransform(svg.getScreenCTM()!.inverse());
+        //const svgP = pt.matrixTransform(svg.getScreenCTM()!.inverse());
 
-        console.log('SVGclick')
+        //console.log('SVGclick')
         // svgChildren.push(
         //     new Rect({
         //         id: `rect${genID(10)}`,
@@ -181,7 +118,7 @@ const SVGCanvas = ({ width, height, getCursorCoordsCallback, getClickedElemProps
         const svgP = pt.matrixTransform(svgCanvas.getScreenCTM()!.inverse());
         svgP.x = Math.trunc(svgP.x);
         svgP.y = Math.trunc(svgP.y);
-        console.log(svgP)
+        //console.log(svgP)
         return svgP;
     }
 
@@ -192,20 +129,32 @@ const SVGCanvas = ({ width, height, getCursorCoordsCallback, getClickedElemProps
 
     const svgSelect = (e: React.MouseEvent<SVGGeometryElement>) => {
         const curObj = svgChildren.find(item => {
-            if (item.elemProps.id === e.currentTarget.id) {
+            if (item.config.id === e.currentTarget.id) {
                 return item;
             }
         });
-        const elemProps: IElemProps = {
-            type: curObj!.elemProps.type!,
+        const config: IElemProps = {
+            type: curObj!.type,
             size: { w: Math.round(e.currentTarget.getBBox().width), h: Math.round(e.currentTarget.getBBox().height) },
-            coords: curObj!.elemProps.startCoords,
+            coords: curObj!.config.graphical.startCoords,
         }
-        getClickedElemPropsCallback(elemProps);
+        getClickedElemConfigCallback(config);
+    }
+
+    const onDropHandler = (e: React.MouseEvent) => {
+        const dropCoords = transformOuterCoordsToSVGCoords({
+            x: e.pageX,
+            y: e.pageY,
+        })
+        const newShape = creatorOnDrop?.create() || new Circle({ graphical: { startCoords: { x: 0, y: 0 }, r: 10 } });
+        newShape.config.graphical.startCoords = dropCoords;
+
+        setSVGChildren([...svgChildren, newShape]);
+        //console.log(dropCoords)
     }
 
     return (
-        <div id="canvas" style={{ width: width, height: height }}>
+        <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()} style={{ width: width, height: height }}>
             <svg viewBox={`0 0 ${width} ${height}`} onClick={svgClickHandler} onMouseMoveCapture={onMousemoveCaptureHandler} xmlns="http://www.w3.org/2000/svg">
                 {svgChildren.map((el: IShape) => el.render(svgDragNDrop, svgSelect))}
             </svg>

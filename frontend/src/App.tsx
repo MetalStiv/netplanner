@@ -20,9 +20,9 @@ const App: React.FC = () => {
       <div className="App" style={{ height: '100%' }}>
         <Router>
           <Routes>
-            <Route path="/" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/home" element={<UserPage />} />
-            <Route path="/project" element={<ProjectPage />} />
+            <Route path="/" element={<ProjectPage />} />
           </Routes>
         </Router>
       </div>
