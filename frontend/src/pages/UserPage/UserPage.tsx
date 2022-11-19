@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
 import '../../styles/user.scss';
@@ -17,66 +17,66 @@ const UserPage: React.FC = () => {
     return (
         <div id="userPage">
             <Tabs>
-            <div className="main">  
-                <div className="leftMenu"></div>
-                <div className="rightMenu"> 
-                    <TabPanel> 
-                        <div className="startMenu">
-                            
-                            <div className="text">Start a new project</div>
-                            <button type="submit">+</button>
-                            <Project/>
-                            
-                        </div>
-                    </TabPanel>
-                        
-                    <TabPanel></TabPanel>
-                    <TabPanel>
+                <div className="main">
+                    <div className="leftMenu"></div>
+                    <div className="rightMenu">
+                        <TabPanel>
+                            <div className="startMenu">
 
-                        <SettingPage/>
-                    
-                    </TabPanel>
-                
-                </div>
+                                <div className="text">Start a new project</div>
+                                <button type="submit">+</button>
+                                {/* <Project /> */}
 
-            </div>
-
-            <div className="leftContent">
-
-                <div className="iconUser">
-                    <img src={icoImage} alt='Icon'/>
-                </div>
-                
-                
-                <div className="frame">
-                    <TabList>
-                        <Tab>
-                            <div className="rectangle">
-                                <img src={workImage} alt='Work'/> 
                             </div>
-                        </Tab>
-                        <Tab> 
-                            <div className="rectangle">
-                                <img src={bookImage} alt='Book'/> 
-                            </div>
-                        </Tab>   
-                        <Tab>  
-                            <div className="rectangle">
-                                <img src={settingImage} alt='Setting'/> 
-                            </div>
-                        </Tab>
-                    </TabList> 
-                </div>
-                
-                
-                    <div onClick={()=>navigate('/')} className="logout">
-                        <img src={logoutImage} alt='Logout'/> 
+                        </TabPanel>
+
+                        <TabPanel></TabPanel>
+                        <TabPanel>
+
+                            <SettingPage />
+
+                        </TabPanel>
+
                     </div>
-            </div>
+
+                </div>
+
+                <div className="leftContent">
+
+                    <div className="iconUser">
+                        <img src={icoImage} alt='Icon' />
+                    </div>
+
+
+                    <div className="frame">
+                        <TabList>
+                            <Tab>
+                                <div className="rectangle">
+                                    <img src={workImage} alt='Work' />
+                                </div>
+                            </Tab>
+                            <Tab>
+                                <div className="rectangle">
+                                    <img src={bookImage} alt='Book' />
+                                </div>
+                            </Tab>
+                            <Tab>
+                                <div className="rectangle">
+                                    <img src={settingImage} alt='Setting' />
+                                </div>
+                            </Tab>
+                        </TabList>
+                    </div>
+
+
+                    <div onClick={() => navigate('/')} className="logout">
+                        <img src={logoutImage} alt='Logout' />
+                    </div>
+                </div>
             </Tabs>
         </div>
-        
-        
+
+
     );
 }
 export default UserPage;

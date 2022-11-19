@@ -1,32 +1,35 @@
 @use '_variables' as v;
 
 #userPage {
-    .main{
+    .main {
         display: flex;
-        background-color: v.$fon;  
+        background-color: v.$background;
         flex-direction: row;
         height: 100vh;
-        
-        .leftMenu{
+
+        .leftMenu {
             width: 120px;
             margin-right: 20px;
             background: #FFFFFF;
         }
-        .rightMenu{
+
+        .rightMenu {
             width: 100%;
             margin-left: 20px;
             border: 1px solid aqua;
-            .startMenu{
+
+            .startMenu {
                 width: 100%;
                 height: 100vh;
                 overflow-x: hidden;
                 overflow-y: auto;
             }
-            
+
         }
-        
-    } 
-    .leftContent{
+
+    }
+
+    .leftContent {
         li.react-tabs__tab {
             display: inline-block;
             position: static;
@@ -38,6 +41,7 @@
             outline: none;
             margin-left: -20px;
         }
+
         position: fixed;
         width: 120px;
         height: 100vh;
@@ -48,12 +52,14 @@
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
-        .iconUser{
+
+        .iconUser {
             width: 72px;
             height: 72px;
-            
+
         }
-        .frame{
+
+        .frame {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -61,10 +67,10 @@
             gap: 70px;
             left: 20px;
             right: 20px;
-            
-            .rectangle{
+
+            .rectangle {
                 cursor: pointer;
-                bottom:  50px;
+                bottom: 50px;
                 background-color: #FFFFFF;
                 border-radius: 10px;
                 width: 80px;
@@ -73,16 +79,18 @@
                 justify-content: center;
                 align-items: center;
             }
-            .rectangle:active{
-                background-color: #F7F9FA;
+
+            .rectangle:active {
+                background-color: v.$background;
             }
-            .rectangle:hover{
-                background-color: #F7F9FA;
+
+            .rectangle:hover {
+                background-color: v.$background;
             }
-            
+
         }
-    
-        .logout{
+
+        .logout {
             width: 80px;
             height: 51px;
             cursor: pointer;
@@ -91,27 +99,29 @@
             align-items: center;
             background-color: #FFFFFF;
             border-radius: 10px;
-            
+
         }
-        .logout:hover{
-            background-color: #F7F9FA;
+
+        .logout:hover {
+            background-color: v.$background;
         }
-        
+
     }
-    .text{
+
+    .text {
         position: absolute;
         text-align: center;
         width: 800px;
         height: 48px;
         top: 40%;
         left: 28%;
-        font-weight:700;
+        font-weight: 700;
         font-size: 40px;
         text-transform: uppercase;
         color: #292C33;
     }
-    
-    button{
+
+    button {
         position: absolute;
         width: 148px;
         height: 51px;
@@ -120,8 +130,8 @@
         left: 50%;
         font-size: 40px;
         cursor: pointer;
-        background: #176DEA;
-        border:none;
+        background: v.$lightblue;
+        border: none;
         color: #FFFFFF;
         border-radius: 15px;
     }

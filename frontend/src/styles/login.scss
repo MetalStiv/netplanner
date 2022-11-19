@@ -43,7 +43,7 @@
                     }
 
                     li.react-tabs__tab--selected {
-                        border-color: #1561d3;
+                        border-color: v.$blue;
                     }
 
                     ul {
@@ -63,6 +63,12 @@
                 .lang-block {
                     button {
                         @include g.button-default;
+                        cursor: pointer;
+                    }
+
+                    .current {
+                        border-bottom: 2px solid v.$blue;
+                        transition: border-bottom .2s;
                     }
 
                     display: flex;
@@ -125,8 +131,8 @@
                 }
 
                 .react-tabs__tab--selected {
-                    border-color: #176DEA;
-                    color: #176DEA;
+                    border-color: v.$lightblue;
+                    color: v.$lightblue;
                 }
 
                 .react-tabs__tab:focus {
@@ -193,14 +199,14 @@
                         top: 50%;
                         transform: translateY(-70%);
                         font-size: 16px;
-                        color: #A2A2B0;
+                        color: v.$gray;
                         transition: top .2s, font-size .2s;
                     }
 
                     input {
                         &:focus {
-                            color: #444;
-                            border-color: #176DEA;
+                            color: v.$dark;
+                            border-color: v.$lightblue;
                             outline: 0;
                         }
 
@@ -217,10 +223,10 @@
                         font-size: 1rem;
                         font-weight: 400;
                         line-height: 1.5;
-                        color: #7d7878;
+                        color: v.$darkgray;
                         background-color: transparent;
                         border: none;
-                        border-bottom: 2px solid #C2C2CB;
+                        border-bottom: 2px solid v.$lightgray;
                         transition: border-color .2s;
                     }
 
@@ -229,13 +235,13 @@
 
                 .btn {
                     &:hover {
-                        color: #444;
+                        color: v.$dark;
                         text-decoration: none
                     }
 
                     display: inline-block;
                     font-weight: 700;
-                    color: #444;
+                    color: v.$dark;
                     text-align: center;
                     background-color: transparent;
                     border: 1px solid transparent;
@@ -251,12 +257,12 @@
 
                 .btn-blue {
                     &:hover {
-                        background: linear-gradient(0deg, #1561d3, #1563d9);
+                        background: linear-gradient(0deg, v.$blue, v.$blue);
                         color: #fff;
                         transition: background .2s
                     }
 
-                    background: linear-gradient(0deg, #176DEA, #176DEA);
+                    background: linear-gradient(0deg, v.$lightblue, v.$lightblue);
                     color: #fff;
                     padding:16px 76px;
                     border-radius:5px;
@@ -287,6 +293,5 @@
     }
 
     height: 100vh;
-
-    background-color:#F7F9FA;
+    background-color:v.$background;
 }

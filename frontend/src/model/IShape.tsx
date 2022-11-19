@@ -1,13 +1,16 @@
-import Shapes from "./Shapes";
+
+export interface IShapeGraphicalProps {
+    startCoords: { x: number, y: number }
+}
 
 export interface IShapeProps {
-    id: string,
-    startCoords: { x: number, y: number },
-    type?: Shapes,
+    id?: string,
+    graphical: IShapeGraphicalProps
 }
 
 export interface IShape {
-    elemProps: IShapeProps,
+    type: string,
+    config: IShapeProps,
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void): JSX.Element;
     //     id: string;
     //     coords: { x: number; y: number; };

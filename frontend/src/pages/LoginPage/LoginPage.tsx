@@ -8,7 +8,7 @@ import text, { Language, languages } from "../../languages/language";
 
 const LoginPage: React.FC = () => {
     const [language, setLanguage] = useState<Language>(() => {
-        const defaultLang: Language = "en"; 
+        const defaultLang: Language = "en";
         const data = localStorage.getItem("language");
         const lang = languages.filter(l => l === data)[0]
         return lang || defaultLang;
@@ -36,11 +36,11 @@ const LoginPage: React.FC = () => {
                                 </TabList>
                             </div>
                             <div className="lang-block">
-                                <button onClick={() => {
+                                <button className={language === "ru" ? "current" : ""} onClick={() => {
                                     localStorage.setItem("language", "ru");
                                     setLanguage("ru");
                                 }}>RU</button>
-                                <button onClick={() => {
+                                <button className={language === "en" ? "current" : ""} onClick={() => {
                                     localStorage.setItem("language", "en");
                                     setLanguage("en");
                                 }}>EN</button>

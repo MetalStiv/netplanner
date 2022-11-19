@@ -1,15 +1,15 @@
 @use '_variables' as v;
 
 #settingPage {
-    .main{
-        .leftMenu{
+    .main {
+        .leftMenu {
             width: 120px;
             height: 100vh;
             margin: 20px;
             background: #FFFFFF;
         }
-        .settingMenu 
-        {   
+
+        .settingMenu {
             width: 100%;
             overflow-x: hidden;
             overflow-y: auto;
@@ -17,16 +17,17 @@
             margin-bottom: 10px;
             margin-right: 10px;
             border-radius: 15px;
-            background-color:#FFFFFF;
-            box-shadow: 0px 20px 34px rgba(85, 82, 95, 0.06);  
+            background-color: #FFFFFF;
+            box-shadow: 0px 20px 34px rgba(85, 82, 95, 0.06);
         }
+
         display: flex;
-        background-color: v.$fon;  
+        background-color: v.$background;
         flex-direction: row;
         height: 100vh;
     }
 
-    .leftContent{
+    .leftContent {
         position: fixed;
         width: 120px;
         height: 100vh;
@@ -37,12 +38,14 @@
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
-        .iconUser{
+
+        .iconUser {
             width: 72px;
             height: 72px;
-            
+
         }
-        .frame{
+
+        .frame {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -50,23 +53,24 @@
             gap: 70px;
             left: 20px;
             right: 20px;
-            
-            .rectangle{
+
+            .rectangle {
                 cursor: pointer;
-                bottom:  50px;
-                background-color: #F7F9FA;
+                bottom: 50px;
+                background-color: v.$background;
                 border-radius: 10px;
                 width: 80px;
                 height: 51px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                
+
             }
-            .rectangle_white{
-                
+
+            .rectangle_white {
+
                 cursor: pointer;
-                bottom:  50px;
+                bottom: 50px;
                 background-color: #FFFFFF;
                 border-radius: 10px;
                 width: 80px;
@@ -75,13 +79,14 @@
                 justify-content: center;
                 align-items: center;
             }
-            .rectangle_white:hover{
-                background-color: #F7F9FA;
+
+            .rectangle_white:hover {
+                background-color: v.$background;
             }
-            
+
         }
-      
-        .logout{
+
+        .logout {
             width: 80px;
             height: 51px;
             cursor: pointer;
@@ -90,11 +95,12 @@
             align-items: center;
             background-color: #FFFFFF;
             border-radius: 10px;
-            
+
         }
-        .logout:hover{
-            background-color: #F7F9FA;
+
+        .logout:hover {
+            background-color: v.$background;
         }
-        
+
     }
 }
