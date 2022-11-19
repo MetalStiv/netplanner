@@ -15,7 +15,12 @@ const PagesPanel: React.FC = () => {
     return (
         <div id="pagesPanel">
             <div className="collapse-panel" data-hidden={!collapsePanelIsOpen}>
-                <p aria-expanded={collapsePanelIsOpen} onClick={() => setCollapsePanelIsOpen(!collapsePanelIsOpen)} className="collapsedPanel-head btn">{currentPage}</p>
+                <p 
+                    aria-expanded={collapsePanelIsOpen} 
+                    onClick={() => setCollapsePanelIsOpen(!collapsePanelIsOpen)} 
+                    className="collapsedPanel-head btn">
+                        {currentPage}
+                </p>
                 <Collapse isOpened={collapsePanelIsOpen}>
                     <div>
                         <p className='collapseItem' onClick={(e) => pageButtonClickHandler(e)}>Page 1</p>

@@ -26,7 +26,14 @@ const ShapesPanel = ({ getCreatorOnDragCallback }: IShapesPanelProps) => {
                         <Dropdown title={group.title}>
                             <ul className='collapse-group'>
                                 {group.shapes.map(function (creator, i) {
-                                    return <li key={creator.type + i} className='collapse-item' draggable data-type={creator.type} onDragStart={() => getCreatorOnDragCallback(creator)}>{creator.type}</li>
+                                    return <li 
+                                        key={creator.type + i} 
+                                        className='collapse-item' 
+                                        draggable 
+                                        data-type={creator.type} 
+                                        onDragStart={() => getCreatorOnDragCallback(creator)}>
+                                            {creator.type}
+                                        </li>
                                 })}
                             </ul>
                         </Dropdown>

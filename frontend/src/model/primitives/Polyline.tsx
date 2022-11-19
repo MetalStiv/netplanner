@@ -40,7 +40,8 @@ class Polyline implements IShape {
         this.config.id = `${this.type}-${this.genID(10)}`;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
         let pathStr: string = '';
         this.config.graphical.points.forEach(el => pathStr = pathStr + ' l' + el.join(' '));
         return <path
@@ -52,9 +53,10 @@ class Polyline implements IShape {
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
-            d={`M ${this.config.graphical.startCoords.x}, ${this.config.graphical.startCoords?.y}
-            ${pathStr}
-            `}
+            d={
+                `M ${this.config.graphical.startCoords.x}, ${this.config.graphical.startCoords?.y}
+                ${pathStr}`
+            }
         />
         //this.elemProps.points.unshift([this.elemProps.startCoords.x, this.elemProps.startCoords.y]);
         //return <polyline id={this.elemProps.id} key={this.elemProps.id} points={this.elemProps.points?.join(' ')} pathLength={this.elemProps.pathLength} stroke={this.elemProps.stroke ?? 'black'} fill={this.elemProps.fill ?? 'none'} onDragStart={(e) => e.preventDefault} onMouseDown={handlerMouseDown} />;

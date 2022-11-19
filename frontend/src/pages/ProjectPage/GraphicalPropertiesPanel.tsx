@@ -1,6 +1,3 @@
-//import React, { useState } from 'react';
-//import { useRootStore } from '../providers/rootProvider';
-
 interface IGraphicalPropertiesPanelProps {
     elemGraphProps: {
         coords: {
@@ -15,7 +12,6 @@ interface IGraphicalPropertiesPanelProps {
 }
 
 const GraphicalPropertiesPanel = (props: IGraphicalPropertiesPanelProps) => {
-
     return (
         <div id="graphicalPropertiesPanel">
             <p className="panel-title">

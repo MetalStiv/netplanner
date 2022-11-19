@@ -3,6 +3,11 @@ import { IAuthTokens, TokenRefreshRequest, applyAuthTokenInterceptor, getAccessT
 
 const USER_BASE_URL = "http://localhost:5108/";
 
+export const userCleanMicroservice = axios.create({
+    baseURL: USER_BASE_URL,
+    timeout: 2000
+});
+
 export const userMicroservice = axios.create({
     baseURL: USER_BASE_URL,
     timeout: 2000

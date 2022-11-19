@@ -30,7 +30,8 @@ class Point implements IShape {
         this.config.id = `${this.type}-${this.genID(10)}`;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
         return <path
             id={this.config.id}
             key={this.config.id}
@@ -42,10 +43,10 @@ class Point implements IShape {
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-        M ${this.config.graphical.startCoords.x},${this.config.graphical.startCoords.y + this.config.graphical.r} 
-        a ${this.config.graphical.r},${this.config.graphical.r} 0 1,1 ${this.config.graphical.r * 2},0 
-        a ${this.config.graphical.r},${this.config.graphical.r} 0 1,1 -${this.config.graphical.r * 2},0
-        `} />
+                M ${this.config.graphical.startCoords.x},${this.config.graphical.startCoords.y + this.config.graphical.r} 
+                a ${this.config.graphical.r},${this.config.graphical.r} 0 1,1 ${this.config.graphical.r * 2},0 
+                a ${this.config.graphical.r},${this.config.graphical.r} 0 1,1 -${this.config.graphical.r * 2},0
+            `} />
 
         //<circle id={this.elemProps.id} key={this.elemProps.id} cx={this.elemProps.startCoords?.x} cy={this.elemProps.startCoords?.y} r={this.elemProps.r ?? 1} pathLength={this.elemProps.pathLength ?? 0} stroke={this.elemProps.stroke ?? 'black'} fill={this.elemProps.fill ?? 'black'} onDragStart={(e) => e.preventDefault} onMouseDown={handlerMouseDown} />;
     }

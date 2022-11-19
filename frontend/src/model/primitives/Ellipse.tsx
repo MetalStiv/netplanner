@@ -46,7 +46,8 @@ class Ellipse implements IShape {
         this.config.id = `${this.type}-${this.genID(10)}`;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
         return <path
             id={this.config.id}
             key={this.config.id}
@@ -57,12 +58,13 @@ class Ellipse implements IShape {
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-            M ${this.config.graphical.startCoords.x + this.config.graphical.rDif.rx},${this.config.graphical.startCoords.y}
-            a ${this.config.graphical.rDif.rx},${this.config.graphical.rDif.ry}
-            0
-            1,0
-            1,0
-            z
+                M ${this.config.graphical.startCoords.x + 
+                    this.config.graphical.rDif.rx},${this.config.graphical.startCoords.y}
+                a ${this.config.graphical.rDif.rx},${this.config.graphical.rDif.ry}
+                0
+                1,0
+                1,0
+                z
             `}
         />
         // M - левая координата

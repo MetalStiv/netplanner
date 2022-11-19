@@ -1,4 +1,3 @@
-
 export interface IShapeGraphicalProps {
     startCoords: { x: number, y: number }
 }
@@ -11,7 +10,8 @@ export interface IShapeProps {
 export interface IShape {
     type: string,
     config: IShapeProps,
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void): JSX.Element;
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void): JSX.Element;
     //     id: string;
     //     coords: { x: number; y: number; };
     //     sizes?: { w: number; h: number; } | undefined;

@@ -135,7 +135,10 @@ const SVGCanvas = ({ width, height, creatorOnDrop, getCursorCoordsCallback, getC
         });
         const config: IElemProps = {
             type: curObj!.type,
-            size: { w: Math.round(e.currentTarget.getBBox().width), h: Math.round(e.currentTarget.getBBox().height) },
+            size: { 
+                w: Math.round(e.currentTarget.getBBox().width),
+                h: Math.round(e.currentTarget.getBBox().height)
+            },
             coords: curObj!.config.graphical.startCoords,
         }
         getClickedElemConfigCallback(config);
@@ -146,7 +149,8 @@ const SVGCanvas = ({ width, height, creatorOnDrop, getCursorCoordsCallback, getC
             x: e.pageX,
             y: e.pageY,
         })
-        const newShape = creatorOnDrop?.create() || new Circle({ graphical: { startCoords: { x: 0, y: 0 }, r: 10 } });
+        const newShape = creatorOnDrop?.create() 
+            || new Circle({ graphical: { startCoords: { x: 0, y: 0 }, r: 10 } });
         newShape.config.graphical.startCoords = dropCoords;
 
         setSVGChildren([...svgChildren, newShape]);
@@ -154,8 +158,13 @@ const SVGCanvas = ({ width, height, creatorOnDrop, getCursorCoordsCallback, getC
     }
 
     return (
-        <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()} style={{ width: width, height: height }}>
-            <svg viewBox={`0 0 ${width} ${height}`} onClick={svgClickHandler} onMouseMoveCapture={onMousemoveCaptureHandler} xmlns="http://www.w3.org/2000/svg">
+        <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()} 
+            style={{ width: width, height: height }}>
+            <svg 
+                viewBox={`0 0 ${width} ${height}`} 
+                onClick={svgClickHandler} 
+                onMouseMoveCapture={onMousemoveCaptureHandler} 
+                xmlns="http://www.w3.org/2000/svg">
                 {svgChildren.map((el: IShape) => el.render(svgDragNDrop, svgSelect))}
             </svg>
         </div>

@@ -1,5 +1,5 @@
 import { setAuthTokens, clearAuthTokens } from "axios-jwt";
-import { userMicroservice } from "./axiosMicroservices";
+import { userCleanMicroservice } from "./axiosMicroservices";
 import IUser from "../model/IUser";
 import jwt_decode from "jwt-decode";
 
@@ -15,7 +15,7 @@ interface IJwtData {
 }
 
 export const login = async (params: ISignInForm): Promise<IUser> => {
-  const response = await userMicroservice.post('login', params)
+  const response = await userCleanMicroservice.post('login', params)
 
   setAuthTokens({
     accessToken: response.data.accessToken,

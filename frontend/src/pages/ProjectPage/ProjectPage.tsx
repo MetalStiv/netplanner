@@ -83,7 +83,13 @@ const ProjectPage: React.FC = () => {
                     {/* <Frame id='renderer-frame'>
                     </Frame> */}
 
-                    <SVGCanvas width={workspaceSizes.w} height={workspaceSizes.h} getCursorCoordsCallback={cursorCoordsCallback} getClickedElemConfigCallback={clickedElemPropsCallback} creatorOnDrop={currentCreator} />
+                    <SVGCanvas 
+                        width={workspaceSizes.w} 
+                        height={workspaceSizes.h} 
+                        getCursorCoordsCallback={cursorCoordsCallback} 
+                        getClickedElemConfigCallback={clickedElemPropsCallback} 
+                        creatorOnDrop={currentCreator} 
+                    />
 
                 </section>
                 <aside id="rightPanelBar">
@@ -93,7 +99,12 @@ const ProjectPage: React.FC = () => {
                                 <ObjectPropertiesPanel elemProps={selectedElemProps} />
                             </div>
                             <div style={{ minHeight: 150 }}>
-                                <GraphicalPropertiesPanel elemGraphProps={{ coords: selectedElemProps?.coords, size: selectedElemProps?.size }} />
+                                <GraphicalPropertiesPanel 
+                                    elemGraphProps={{ 
+                                        coords: selectedElemProps?.coords, 
+                                        size: selectedElemProps?.size 
+                                    }} 
+                                />
                             </div>
                         </VerticalPageSplit>
                     </div>

@@ -12,17 +12,6 @@ class PrimitivesGroup implements IPrimitivesGroup {
         this.shapes = objArray;
     }
 
-    // render() {
-    //     return (
-    //         <ul>
-    //             {this.shapes.map(function (group) {
-    //                 return (
-    //                     <Dropdown shapesGroup={group} />
-    //                 );
-    //             })}
-    //         </ul>
-    //     )
-    // }
 }
 
 

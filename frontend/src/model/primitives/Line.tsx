@@ -43,7 +43,8 @@ class Line implements IShape {
         this.config.id = `${this.type}-${this.genID(10)}`;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
         return <path
             id={this.config.id}
             key={this.config.id}
