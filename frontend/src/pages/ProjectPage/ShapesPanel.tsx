@@ -11,29 +11,23 @@ interface IShapesPanelProps {
 const ShapesPanel = ({ getCreatorOnDragCallback }: IShapesPanelProps) => {
     const projectStore = useRootStore()!.getProjectStore();
 
-    // const onDragStartHandler = (creator: IShapeCreator) => {
-    //     // const elemProps: IDraggableElemProps = {
-    //     //     type: e.currentTarget.dataset.type!
-    //     // }
-    //     getDraggableElemCallback(creator)
-    // }
     return (
         <div id="shapesPanel">
             <p className="panel-title">Shapes</p>
             <div>
-                {projectStore.getProjects().at(0)?.shapesGroups!.map(function (group) {
+                {projectStore.getProjects().at(0)?.shapesGroups!.map(function (group, i) {
                     return (
-                        <Dropdown title={group.title}>
+                        <Dropdown key={group.title + i} title={group.title}>
                             <ul className='collapse-group'>
                                 {group.shapes.map(function (creator, i) {
-                                    return <li 
-                                        key={creator.type + i} 
-                                        className='collapse-item' 
-                                        draggable 
-                                        data-type={creator.type} 
+                                    return <li
+                                        key={creator.type + i}
+                                        className='collapse-item'
+                                        draggable
+                                        data-type={creator.type}
                                         onDragStart={() => getCreatorOnDragCallback(creator)}>
-                                            {creator.type}
-                                        </li>
+                                        {creator.type}
+                                    </li>
                                 })}
                             </ul>
                         </Dropdown>

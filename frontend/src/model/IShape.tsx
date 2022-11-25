@@ -10,7 +10,9 @@ export interface IShapeProps {
 export interface IShape {
     type: string,
     config: IShapeProps,
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+    isVisible: boolean,
+    zIndex: number,
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void): JSX.Element;
     //     id: string;
     //     coords: { x: number; y: number; };

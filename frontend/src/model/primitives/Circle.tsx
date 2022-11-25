@@ -1,3 +1,4 @@
+import { threadId } from "worker_threads";
 import IShape, { IShapeProps, IShapeGraphicalProps } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 
@@ -10,6 +11,7 @@ export interface ICircleProps extends IShapeProps {
     fill?: string,
     pathLength?: number,
     graphical: ICircleGraphicalProps,
+    zIndex?: number,
 }
 
 export class CircleCreator implements IShapeCreator {
@@ -22,7 +24,7 @@ export class CircleCreator implements IShapeCreator {
                     y: 0,
                 },
                 r: 15,
-            },
+            }
         });
     }
 }
@@ -30,6 +32,8 @@ export class CircleCreator implements IShapeCreator {
 class Circle implements IShape {
     type: string = 'Circle';
     config: ICircleProps;
+    isVisible: boolean = true;
+    zIndex: number = 0;
 
     private genID = (len: number) => {
         return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(len).toString().replace('.', ''));
@@ -38,6 +42,7 @@ class Circle implements IShape {
     constructor(obj: ICircleProps) {
         this.config = obj;
         this.config.id = `${this.type}-${this.genID(10)}`;
+        this.zIndex = obj.zIndex ?? 0;
     }
 
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
@@ -47,6 +52,7 @@ class Circle implements IShape {
             data-type={this.type}
             stroke={this.config.stroke}
             fill={this.config.fill}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.zIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}

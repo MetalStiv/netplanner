@@ -14,6 +14,7 @@ interface IRectProps extends IShapeProps {
     stroke?: string,
     fill?: string,
     pathLength?: number,
+    zIndex?: number,
 }
 
 export class RectCreator implements IShapeCreator {
@@ -26,8 +27,8 @@ export class RectCreator implements IShapeCreator {
                     y: 0
                 },
                 sizes: {
-                    w: 15,
-                    h: 10,
+                    w: 45,
+                    h: 30,
                 }
             },
         });
@@ -37,6 +38,8 @@ export class RectCreator implements IShapeCreator {
 class Rect implements IShape {
     type: string = 'Rectangle';
     config: IRectProps;
+    isVisible: boolean = true;
+    zIndex: number = 0;
 
     genID = (len: number) => {
         return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(len).toString().replace('.', ''));
@@ -45,9 +48,10 @@ class Rect implements IShape {
     constructor(obj: IRectProps) {
         this.config = obj;
         this.config.id = `${this.type}-${this.genID(10)}`;
+        this.zIndex = obj.zIndex ?? 0;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
         return <path
             id={this.config.id}
@@ -55,6 +59,7 @@ class Rect implements IShape {
             data-type={this.type}
             stroke={this.config.stroke ?? 'black'}
             fill={this.config.fill ?? 'black'}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.zIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}

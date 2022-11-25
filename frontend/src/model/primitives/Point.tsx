@@ -12,7 +12,7 @@ export class PointCreator implements IShapeCreator {
                     y: 0
                 },
                 r: 2,
-            },
+            }
         });
     }
 }
@@ -20,17 +20,20 @@ export class PointCreator implements IShapeCreator {
 class Point implements IShape {
     type: string = 'Point';
     config: ICircleProps;
+    isVisible: boolean = true;
+    zIndex: number = 0;
 
     private genID = (len: number) => {
         return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(len).toString().replace('.', ''));
     }
 
-    constructor(obj: ICircleProps,) {
+    constructor(obj: ICircleProps) {
         this.config = obj;
         this.config.id = `${this.type}-${this.genID(10)}`;
+        this.zIndex = obj.zIndex ?? 0;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
         return <path
             id={this.config.id}
@@ -39,6 +42,7 @@ class Point implements IShape {
             stroke={this.config.stroke ?? 'black'}
             strokeWidth={this.config.graphical.r ?? 2}
             fill={this.config.fill ?? 'black'}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.zIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}

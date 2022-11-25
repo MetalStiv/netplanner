@@ -1,9 +1,93 @@
 @use '_variables' as v;
 @use 'global' as g;
 
-#projectPage {
-    main {
+$headerHeight: 56px;
 
+#projectPage {
+    header {
+        #header-navbar {
+            .options {
+                button {
+                    @include g.button-default;
+                    font-size: 16px;
+                    color: #ffffff;
+                    cursor: pointer;
+                }
+
+                max-width: 50%;
+            }
+
+            .users-data {
+                .left-part {
+                    .users {
+                        .user-image {
+                            img {
+                                width: 38px;
+                                height: 38px;
+                            }
+
+                            display: flex;
+                        }
+
+                        margin-right: 60px;
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    .share-btn {
+                        @include g.button-default;
+                        background-color: v.$lightblue;
+                        border-radius: 40px;
+                        color: #fff;
+                        cursor: pointer;
+                        padding: 8px 24px;
+                    }
+
+                    display: flex;
+                    align-items: center;
+                    margin-right:40px;
+                }
+
+                .current-user {
+                    .name {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        font-size: 16px;
+                        color: #ffffff;
+                        text-align: right;
+                        margin-right: 18px;
+                    }
+
+                    .user-image {
+                        width: 38px;
+                        height: 38px;
+                    }
+
+                    display: flex;
+                    align-items: center;
+                    max-width:50%;
+                }
+
+                max-width: 50%;
+                min-width:30%;
+                width:30%;
+                display: flex;
+                align-items:center;
+                justify-content: space-between;
+            }
+
+            background-color: v.$dark;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding:4px 40px;
+        }
+
+        max-height: $headerHeight;
+    }
+
+    main {
         #leftPanelBar {
             .content {
                 #shapesPanel {
@@ -50,6 +134,7 @@
                                     line-height: 18px;
                                     padding: 10px;
                                     display: block;
+                                    cursor: move;
                                 }
 
                                 padding: 0;
@@ -183,6 +268,7 @@
                         }
 
                         .layer-title {
+                            font-size: 14px;
                             color: #6B6B70;
                         }
 
@@ -336,9 +422,9 @@
             bottom: 0;
             display:flex;
             align-items:stretch;
-            width:300px;
-            min-width: 300px;
-            max-width:300px;
+            width:250px;
+            min-width: 250px;
+            max-width:250px;
             border-left:1px solid v.$black;
         }
 
@@ -359,10 +445,9 @@
         display: flex;
         align-items: stretch;
         width: 100%;
+        height:100%;
+        position: relative;
     }
 
-    height: 100vh;
-    display: flex;
-    align-items: stretch;
-    position: relative;
+    height: calc(100vh - $headerHeight);
 }

@@ -10,6 +10,7 @@ interface IPolylineProps extends IShapeProps {
     pathLength?: number,
     stroke?: string,
     fill?: string,
+    zIndex?: number,
 }
 
 export class PolylineCreator implements IShapeCreator {
@@ -30,6 +31,8 @@ export class PolylineCreator implements IShapeCreator {
 class Polyline implements IShape {
     type: string = 'Polyline';
     config: IPolylineProps;
+    isVisible: boolean = true;
+    zIndex: number = 0;
 
     private genID = (len: number) => {
         return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(len).toString().replace('.', ''));
@@ -38,9 +41,10 @@ class Polyline implements IShape {
     constructor(obj: IPolylineProps) {
         this.config = obj;
         this.config.id = `${this.type}-${this.genID(10)}`;
+        this.zIndex = obj.zIndex ?? 0;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
         let pathStr: string = '';
         this.config.graphical.points.forEach(el => pathStr = pathStr + ' l' + el.join(' '));
@@ -50,6 +54,7 @@ class Polyline implements IShape {
             data-type={this.type}
             stroke={this.config.stroke ?? 'black'}
             fill={this.config.fill ?? 'transparent'}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.zIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}

@@ -25,6 +25,10 @@ import '../../styles/project.scss';
 import React, { useState, useCallback } from 'react';
 import SVGCanvas from './SVGCanvas';
 import IShapeCreator from '../../model/IShapeCreator';
+import HeaderNavbar from './HeaderNavbar';
+import IShape from '../../model/IShape';
+import { useRootStore } from '../../providers/rootProvider';
+import Layer, { ILayer } from '../../model/Layer';
 
 export interface IElemProps {
     type: string,
@@ -42,7 +46,13 @@ const ProjectPage: React.FC = () => {
     const [canvasCursorCoords, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [selectedElemProps, setSelectedElemProps] = useState<IElemProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
+    const [layers, setLayers] = useState<ILayer[]>(
+        useRootStore()!.getProjectStore().getProjects().at(0)!.pages?.at(0)!.getLayers()
+    );
 
+    const layersCallback = useCallback((layers: ILayer[]) => {
+        setLayers(layers);
+    }, []);
 
     const cursorCoordsCallback = useCallback((cursorCoords: { x: number, y: number }) => {
         //setCanvasCursorCoords(cursorCoords);
@@ -59,11 +69,11 @@ const ProjectPage: React.FC = () => {
     return (
         <div id="projectPage">
             <header>
-
+                <HeaderNavbar />
             </header>
             <main>
                 <aside id="leftPanelBar">
-                    <ResizePanel initialWidth={300} minWidth={150} maxWidth={400}>
+                    <ResizePanel initialWidth={250} minWidth={150} maxWidth={400}>
                         <ResizeContent className='content'>
                             <VerticalPageSplit resize={Limit} heights={['50%', '50%']}>
                                 <div style={{ minHeight: 150 }}>
@@ -71,7 +81,7 @@ const ProjectPage: React.FC = () => {
                                 </div>
                                 <div style={{ minHeight: 150 }}>
                                     <PagesPanel />
-                                    <LayersPanel />
+                                    <LayersPanel layersSet={layers} updateLayersCallback={layersCallback} />
                                 </div>
                             </VerticalPageSplit>
                         </ResizeContent>
@@ -83,12 +93,14 @@ const ProjectPage: React.FC = () => {
                     {/* <Frame id='renderer-frame'>
                     </Frame> */}
 
-                    <SVGCanvas 
-                        width={workspaceSizes.w} 
-                        height={workspaceSizes.h} 
-                        getCursorCoordsCallback={cursorCoordsCallback} 
-                        getClickedElemConfigCallback={clickedElemPropsCallback} 
-                        creatorOnDrop={currentCreator} 
+                    <SVGCanvas
+                        layersSet={layers}
+                        updateLayersCallback={layersCallback}
+                        width={workspaceSizes.w}
+                        height={workspaceSizes.h}
+                        getCursorCoordsCallback={cursorCoordsCallback}
+                        getClickedElemConfigCallback={clickedElemPropsCallback}
+                        creatorOnDrop={currentCreator}
                     />
 
                 </section>
@@ -99,11 +111,11 @@ const ProjectPage: React.FC = () => {
                                 <ObjectPropertiesPanel elemProps={selectedElemProps} />
                             </div>
                             <div style={{ minHeight: 150 }}>
-                                <GraphicalPropertiesPanel 
-                                    elemGraphProps={{ 
-                                        coords: selectedElemProps?.coords, 
-                                        size: selectedElemProps?.size 
-                                    }} 
+                                <GraphicalPropertiesPanel
+                                    elemGraphProps={{
+                                        coords: selectedElemProps?.coords,
+                                        size: selectedElemProps?.size
+                                    }}
                                 />
                             </div>
                         </VerticalPageSplit>
