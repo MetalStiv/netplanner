@@ -5,7 +5,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
 import * as Yup from "yup";
-import { userMicroservice } from "../../common/axiosMicroservices";
+import { userCleanMicroservice } from "../../common/axiosMicroservices";
 import { login, ISignInForm} from "../../common/login";
 import text, { Language } from "../../languages/language";
 
@@ -52,7 +52,7 @@ const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
             passwordConfirmation: '',
         },
         onSubmit: async (values: IRegisterForm) => {
-            await userMicroservice.post('register', {
+            await userCleanMicroservice.post('register', {
                 email: values.email,
                 password: values.password
             });

@@ -17,6 +17,7 @@ global using BCrypt.Net;
 global using MailKit;
 global using MailKit.Security;
 global using MailKit.Net.Smtp;
+global using MimeKit.Utils;
 global using MimeKit;
 global using PemUtils;
 
