@@ -5,10 +5,11 @@ import { IElemProps, IDraggableElemProps } from '../../pages/ProjectPage/Project
 import IShapeCreator from '../../model/IShapeCreator';
 import Circle, { CircleCreator } from '../../model/primitives/Circle';
 import Layer, { ILayer } from '../../model/Layer';
+import Page, { IPage } from '../../model/Page';
 
 interface SVGCanvasProps {
-    layersSet: ILayer[],
-    updateLayersCallback: (layers: ILayer[]) => void,
+    currentPage: IPage,
+    updatePageCallback: (page: IPage) => void,
     width: number,
     height: number,
     creatorOnDrop: IShapeCreator | null,
@@ -16,7 +17,7 @@ interface SVGCanvasProps {
     getClickedElemConfigCallback: (elemProps: IElemProps) => void,
 }
 
-const SVGCanvas = ({ layersSet, updateLayersCallback, width, height, creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
+const SVGCanvas = ({ currentPage, updatePageCallback, width, height, creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
 
     //let svgChildren = useRootStore()!.getProjectStore().getProjects().at(0)!.renderedShapes!;
 
@@ -34,8 +35,8 @@ const SVGCanvas = ({ layersSet, updateLayersCallback, width, height, creatorOnDr
     //const userStore = useRootStore()?.getUserStore()
 
     function moveSVGAt(elemID: string, toSVGCoords: { x: number, y: number }, shift?: { x: number, y: number }) {
-        updateLayersCallback(layersSet.map(layer => {
-            layer.elems.map(item => {
+        currentPage.setLayers(currentPage.getLayers().map(layer => {
+            layer.elems = layer.getElems().map(item => {
                 if (item.config.id === elemID) {
                     let newData: IShapeProps = JSON.parse(JSON.stringify(item.config));
                     newData.graphical.startCoords = {
@@ -43,11 +44,14 @@ const SVGCanvas = ({ layersSet, updateLayersCallback, width, height, creatorOnDr
                         y: Math.trunc(toSVGCoords.y - (shift ? shift.y : 0)),
                     }
                     item.config = newData;
+                    //console.log(item)
                 }
                 return item;
             })
             return layer;
-        }))
+        }));
+
+        updatePageCallback(currentPage);
     }
 
     const svgDragNDrop = (e: React.MouseEvent<SVGGeometryElement>) => {
@@ -119,8 +123,8 @@ const SVGCanvas = ({ layersSet, updateLayersCallback, width, height, creatorOnDr
 
     const svgSelect = (e: React.MouseEvent<SVGGeometryElement>) => {
         let curObj: IShape | undefined;
-        layersSet.forEach(layer => {
-            curObj = layer.elems.find(item => {
+        currentPage.getLayers().forEach(layer => {
+            curObj = layer.getElems().find(item => {
                 if (item.config.id === e.currentTarget.id) {
                     return item;
                 }
@@ -147,13 +151,13 @@ const SVGCanvas = ({ layersSet, updateLayersCallback, width, height, creatorOnDr
             || new Circle({ graphical: { startCoords: { x: 0, y: 0 }, r: 10 } });
         newShape.config.graphical.startCoords = dropCoords;
 
-        updateLayersCallback(layersSet.map(layer => {
+        currentPage.setLayers(currentPage.layers.map(layer => {
             if (layer.isCurrent) {
                 layer.addElem(newShape);
             }
             return layer;
-        }
-        ));
+        }));
+        updatePageCallback(currentPage);
         //console.log(dropCoords)
     }
 
@@ -165,7 +169,7 @@ const SVGCanvas = ({ layersSet, updateLayersCallback, width, height, creatorOnDr
                 onClick={svgClickHandler}
                 onMouseMoveCapture={onMousemoveCaptureHandler}
                 xmlns="http://www.w3.org/2000/svg">
-                {layersSet.map((layer: ILayer) => layer.getElems().map(el => el.render(svgDragNDrop, svgSelect)))}
+                {currentPage.getLayers().map((layer: ILayer) => layer.getElems().map(el => el.render(svgDragNDrop, svgSelect)))}
             </svg>
         </div>
     )

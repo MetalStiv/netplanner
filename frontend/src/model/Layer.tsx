@@ -11,8 +11,6 @@ export interface ILayer {
     getElems(): IShape[],
     setElems(shapes: IShape[]): void,
     addElem(shape: IShape): void,
-    //render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
-    //handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void): JSX.Element;
 }
 
 class Layer implements ILayer {
@@ -24,7 +22,7 @@ class Layer implements ILayer {
     isCurrent: boolean;
 
     constructor(layersCount: number, shapes: IShape[]) {
-        this.id = parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(12).toString().replace('.', ''));
+        this.id = this.genID();
         this.title = `Layer${layersCount > 0 ? '_' + layersCount : ''}`;
         this.zIndex = layersCount + 1;
         this.elems = shapes;
@@ -32,6 +30,10 @@ class Layer implements ILayer {
         this.isCurrent = true;
     }
 
+
+    genID() {
+        return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(12).toString().replace('.', ''));
+    }
     changeVisible(val: boolean) {
         this.isVisible = val;
         this.elems.forEach(item => {

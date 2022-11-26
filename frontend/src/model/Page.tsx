@@ -1,3 +1,4 @@
+import { isTemplateMiddle } from "typescript";
 import Layer from "./Layer";
 import ILayer from "./Layer";
 
@@ -9,6 +10,7 @@ export interface IPage {
     getLayers(): ILayer[],
     setLayers(layers: ILayer[]): void,
     addLayer(): void,
+    setCurrentLayer(layerID: number): void,
     //render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
     //handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void): JSX.Element;
 }
@@ -26,6 +28,18 @@ class Page implements IPage {
         this.isCurrent = true;
     }
 
+    setCurrentLayer(layerID: number) {
+        this.layers.forEach(item => {
+            if (item.id === layerID) {
+                item.isCurrent = true;
+            }
+            else {
+                if (item.isCurrent) {
+                    item.isCurrent = false;
+                }
+            }
+        })
+    }
     getLayers() {
         return this.layers;
     }

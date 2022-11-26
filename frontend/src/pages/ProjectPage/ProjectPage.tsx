@@ -22,13 +22,13 @@ import '../../styles/project.scss';
 
 //import { Panel } from './Panel';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useReducer } from 'react';
 import SVGCanvas from './SVGCanvas';
 import IShapeCreator from '../../model/IShapeCreator';
 import HeaderNavbar from './HeaderNavbar';
-import IShape from '../../model/IShape';
 import { useRootStore } from '../../providers/rootProvider';
-import Layer, { ILayer } from '../../model/Layer';
+import { IPage } from '../../model/Page';
+import Project, { IProject } from '../../model/Project';
 
 export interface IElemProps {
     type: string,
@@ -46,12 +46,42 @@ const ProjectPage: React.FC = () => {
     const [canvasCursorCoords, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [selectedElemProps, setSelectedElemProps] = useState<IElemProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
-    const [layers, setLayers] = useState<ILayer[]>(
-        useRootStore()!.getProjectStore().getProjects().at(0)!.pages?.at(0)!.getLayers()
+    const [project, setProject] = useState<IProject>(
+        useRootStore()!.getProjectStore().getProjects().at(0)!
     );
 
-    const layersCallback = useCallback((layers: ILayer[]) => {
-        setLayers(layers);
+    // function projectReducer(state:IProject, action:IProject) {
+    //     switch (action.type) {
+    //       case 'updatePages':
+    //         //return {count: state.count + 1};
+    //       case 'updateLayer':
+    //         // return {count: state.count - 1};
+    //       default:
+    //         return state
+    //    }
+    // }
+
+    // const [project, projectDispatch] = useReducer(
+    //     projectReducer,
+    //     useRootStore()!.getProjectStore().getProjects().at(0)!
+    // )
+
+    const pageObjCallback = useCallback((page: IPage) => {
+        let newProject: IProject = new Project(0, [], []);
+        newProject.copy(project);
+        newProject.setPages(newProject.getPages().map(pageItem => {
+            if (pageItem.id === page.id) {
+                pageItem = page;
+            }
+            return pageItem;
+        }))
+        setProject(newProject);
+    }, []);
+
+    const projectObjCallback = useCallback((project: IProject) => {
+        let newProject: IProject = new Project(0, [], []);
+        newProject.copy(project);
+        setProject(newProject);
     }, []);
 
     const cursorCoordsCallback = useCallback((cursorCoords: { x: number, y: number }) => {
@@ -80,8 +110,8 @@ const ProjectPage: React.FC = () => {
                                     <ShapesPanel getCreatorOnDragCallback={draggableElemCallback} />
                                 </div>
                                 <div style={{ minHeight: 150 }}>
-                                    <PagesPanel />
-                                    <LayersPanel layersSet={layers} updateLayersCallback={layersCallback} />
+                                    <PagesPanel currentProject={project} updateProjectCallback={projectObjCallback} />
+                                    <LayersPanel currentPage={project.getCurrentPage()} updatePageCallback={pageObjCallback} />
                                 </div>
                             </VerticalPageSplit>
                         </ResizeContent>
@@ -94,8 +124,8 @@ const ProjectPage: React.FC = () => {
                     </Frame> */}
 
                     <SVGCanvas
-                        layersSet={layers}
-                        updateLayersCallback={layersCallback}
+                        currentPage={project.getCurrentPage()}
+                        updatePageCallback={pageObjCallback}
                         width={workspaceSizes.w}
                         height={workspaceSizes.h}
                         getCursorCoordsCallback={cursorCoordsCallback}
