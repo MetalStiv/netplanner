@@ -85,7 +85,7 @@ const ProjectPage: React.FC = () => {
     }, []);
 
     const cursorCoordsCallback = useCallback((cursorCoords: { x: number, y: number }) => {
-        //setCanvasCursorCoords(cursorCoords);
+        setCanvasCursorCoords(cursorCoords);
     }, []);
 
     const draggableElemCallback = useCallback((creator: IShapeCreator) => {
