@@ -16,8 +16,8 @@ const ObjectPropertiesPanel = ({ elemProps }: IObjectPropertiesPanelProps) => {
                 <span>Object properties</span>
                 <div className="plus" onClick={() => alert()}>
                     <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 6.5H11" stroke="#6B6B70" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M6 11.5V1.5" stroke="#6B6B70" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M1 6.5H11" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M6 11.5V1.5" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </div>
             </p>

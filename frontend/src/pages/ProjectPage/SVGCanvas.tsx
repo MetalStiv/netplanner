@@ -4,26 +4,28 @@ import { IShapeProps, IShape } from '../../model/IShape';
 import { IElemProps, IDraggableElemProps } from '../../pages/ProjectPage/ProjectPage'
 import IShapeCreator from '../../model/IShapeCreator';
 import Circle, { CircleCreator } from '../../model/primitives/Circle';
+import Layer, { ILayer } from '../../model/Layer';
+import Page, { IPage } from '../../model/Page';
 
 interface SVGCanvasProps {
+    currentPage: IPage,
+    updatePageCallback: (page: IPage) => void,
     width: number,
     height: number,
     creatorOnDrop: IShapeCreator | null,
     getCursorCoordsCallback: (cursorCoords: { x: number, y: number }) => void,
     getClickedElemConfigCallback: (elemProps: IElemProps) => void,
-
-    //getDraggableElemConfigCallback: (elemProps: IDraggableElemProps) => void,
-    //objects: Array<IShape>,
-    //onClickHandler?: (e: React.MouseEvent<SVGElement>) => void,
-    //onMouseDownHandler: (e: React.MouseEvent<SVGGeometryElement>) => void,
 }
 
-const SVGCanvas = ({ width, height, creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
+const SVGCanvas = ({ currentPage, updatePageCallback, width, height, creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
 
     //let svgChildren = useRootStore()!.getProjectStore().getProjects().at(0)!.renderedShapes!;
-    const [svgChildren, setSVGChildren] = useState<Array<IShape>>(
-        useRootStore()!.getProjectStore().getProjects().at(0)!.renderedShapes!
-    );
+
+    // const [svgChildren, setSVGChildren] = useState<ILayer[]>(
+    //     //useRootStore()!.getProjectStore().getProjects().at(0)!.pages?.at(0)!.layers.at(0)!.elems!
+    //     useRootStore()!.getProjectStore().getProjects().at(0)!.pages?.at(0)!.getLayers()
+    // );
+
     // useEffect(() => {
     //     return function () {
     //         useRootStore()!.getProjectStore().getProjects().at(0)!.setShapes!(svgChildren);
@@ -32,32 +34,24 @@ const SVGCanvas = ({ width, height, creatorOnDrop, getCursorCoordsCallback, getC
 
     //const userStore = useRootStore()?.getUserStore()
 
-    // function getSVGCoords(el: { x: number, y: number }) {
-    //     var parentRect = document.getElementById('canvas')?.getBoundingClientRect();
-
-    //     return transformOuterCoordsToSVGCoords(
-    //         {
-    //             x: el.x - parentRect!.left,
-    //             y: el.y - parentRect!.top
-    //         }
-    //     )
-    // }
-
-
     function moveSVGAt(elemID: string, toSVGCoords: { x: number, y: number }, shift?: { x: number, y: number }) {
-        setSVGChildren(svgChildren.map(item => {
-            if (item.config.id === elemID) {
-                let newData: IShapeProps = JSON.parse(JSON.stringify(item.config));
-                newData.graphical.startCoords = {
-                    x: Math.trunc(toSVGCoords.x - (shift ? shift.x : 0)),
-                    y: Math.trunc(toSVGCoords.y - (shift ? shift.y : 0)),
+        currentPage.setLayers(currentPage.getLayers().map(layer => {
+            layer.elems = layer.getElems().map(item => {
+                if (item.config.id === elemID) {
+                    let newData: IShapeProps = JSON.parse(JSON.stringify(item.config));
+                    newData.graphical.startCoords = {
+                        x: Math.trunc(toSVGCoords.x - (shift ? shift.x : 0)),
+                        y: Math.trunc(toSVGCoords.y - (shift ? shift.y : 0)),
+                    }
+                    item.config = newData;
+                    //console.log(item)
                 }
-                item.config = newData;
                 return item;
-            } else {
-                return item;
-            }
-        }))
+            })
+            return layer;
+        }));
+
+        updatePageCallback(currentPage);
     }
 
     const svgDragNDrop = (e: React.MouseEvent<SVGGeometryElement>) => {
@@ -128,14 +122,17 @@ const SVGCanvas = ({ width, height, creatorOnDrop, getCursorCoordsCallback, getC
     }
 
     const svgSelect = (e: React.MouseEvent<SVGGeometryElement>) => {
-        const curObj = svgChildren.find(item => {
-            if (item.config.id === e.currentTarget.id) {
-                return item;
-            }
+        let curObj: IShape | undefined;
+        currentPage.getLayers().forEach(layer => {
+            curObj = layer.getElems().find(item => {
+                if (item.config.id === e.currentTarget.id) {
+                    return item;
+                }
+            })
         });
         const config: IElemProps = {
             type: curObj!.type,
-            size: { 
+            size: {
                 w: Math.round(e.currentTarget.getBBox().width),
                 h: Math.round(e.currentTarget.getBBox().height)
             },
@@ -149,23 +146,30 @@ const SVGCanvas = ({ width, height, creatorOnDrop, getCursorCoordsCallback, getC
             x: e.pageX,
             y: e.pageY,
         })
-        const newShape = creatorOnDrop?.create() 
+
+        const newShape = creatorOnDrop?.create()
             || new Circle({ graphical: { startCoords: { x: 0, y: 0 }, r: 10 } });
         newShape.config.graphical.startCoords = dropCoords;
 
-        setSVGChildren([...svgChildren, newShape]);
+        currentPage.setLayers(currentPage.layers.map(layer => {
+            if (layer.isCurrent) {
+                layer.addElem(newShape);
+            }
+            return layer;
+        }));
+        updatePageCallback(currentPage);
         //console.log(dropCoords)
     }
 
     return (
-        <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()} 
+        <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()}
             style={{ width: width, height: height }}>
-            <svg 
-                viewBox={`0 0 ${width} ${height}`} 
-                onClick={svgClickHandler} 
-                onMouseMoveCapture={onMousemoveCaptureHandler} 
+            <svg
+                viewBox={`0 0 ${width} ${height}`}
+                onClick={svgClickHandler}
+                onMouseMoveCapture={onMousemoveCaptureHandler}
                 xmlns="http://www.w3.org/2000/svg">
-                {svgChildren.map((el: IShape) => el.render(svgDragNDrop, svgSelect))}
+                {currentPage.getLayers().map((layer: ILayer) => layer.getElems().map(el => el.render(svgDragNDrop, svgSelect)))}
             </svg>
         </div>
     )

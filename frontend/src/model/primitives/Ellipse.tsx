@@ -13,6 +13,7 @@ interface IEllipseProps extends IShapeProps {
     stroke?: string,
     fill?: string,
     pathLength?: number,
+    zIndex?: number,
 }
 
 export class EllipseCreator implements IShapeCreator {
@@ -36,6 +37,8 @@ export class EllipseCreator implements IShapeCreator {
 class Ellipse implements IShape {
     type: string = 'Ellipse';
     config: IEllipseProps;
+    isVisible: boolean = true;
+    zIndex: number = 0;
 
     private genID = (len: number) => {
         return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(len).toString().replace('.', ''));
@@ -44,9 +47,10 @@ class Ellipse implements IShape {
     constructor(obj: IEllipseProps) {
         this.config = obj;
         this.config.id = `${this.type}-${this.genID(10)}`;
+        this.zIndex = obj.zIndex ?? 0;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
         return <path
             id={this.config.id}
@@ -54,12 +58,13 @@ class Ellipse implements IShape {
             data-type={this.type}
             stroke={this.config.stroke ?? 'black'}
             fill={this.config.fill ?? 'black'}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.zIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-                M ${this.config.graphical.startCoords.x + 
-                    this.config.graphical.rDif.rx},${this.config.graphical.startCoords.y}
+                M ${this.config.graphical.startCoords.x +
+                this.config.graphical.rDif.rx},${this.config.graphical.startCoords.y}
                 a ${this.config.graphical.rDif.rx},${this.config.graphical.rDif.ry}
                 0
                 1,0
