@@ -12,6 +12,7 @@ import Rect, { RectCreator } from "../model/primitives/Rect";
 import Layer from "../model/Layer";
 import Project from "../model/Project";
 import Page from "../model/Page";
+import PolygonsGroup from "../model/primitives/PolygonsGroup";
 
 const projectsSymbol: unique symbol = Symbol()
 
@@ -26,12 +27,14 @@ export const createProjectStore = () => {
             new Project(
                 0,
                 [
-                    new PrimitivesGroup([
+                    new PolygonsGroup([
                         new CircleCreator(),
-                        new LineCreator(),
                         new EllipseCreator(),
-                        new PolylineCreator(),
                         new RectCreator(),
+                    ]),
+                    new PrimitivesGroup([
+                        new LineCreator(),
+                        new PolylineCreator(),
                         new PointCreator(),
                     ])
                 ],
@@ -42,78 +45,78 @@ export const createProjectStore = () => {
                             new Layer(
                                 0,
                                 [
-                                    new Rect({
-                                        graphical: {
-                                            startCoords: {
-                                                x: 250,
-                                                y: 250,
-                                            },
-                                            sizes: {
-                                                w: 15,
-                                                h: 10
-                                            }
-                                        },
-                                    }),
-                                    new Circle({
-                                        graphical: {
-                                            startCoords: {
-                                                x: 200,
-                                                y: 200,
-                                            },
-                                            r: 10,
-                                        },
-                                        stroke: 'red',
-                                        fill: 'blue',
-                                    }),
-                                    new Line({
-                                        graphical: {
-                                            startCoords: {
-                                                x: 15,
-                                                y: 35,
-                                            },
-                                            endCoords: {
-                                                x: 253,
-                                                y: 150
-                                            }
-                                        },
+                                    //     new Rect({
+                                    //         graphical: {
+                                    //             startCoords: {
+                                    //                 x: 250,
+                                    //                 y: 250,
+                                    //             },
+                                    //             sizes: {
+                                    //                 w: 15,
+                                    //                 h: 10
+                                    //             }
+                                    //         },
+                                    //     }),
+                                    //     new Circle({
+                                    //         graphical: {
+                                    //             startCoords: {
+                                    //                 x: 200,
+                                    //                 y: 200,
+                                    //             },
+                                    //             r: 10,
+                                    //         },
+                                    //         stroke: 'red',
+                                    //         fill: 'blue',
+                                    //     }),
+                                    //     new Line({
+                                    //         graphical: {
+                                    //             startCoords: {
+                                    //                 x: 15,
+                                    //                 y: 35,
+                                    //             },
+                                    //             endCoords: {
+                                    //                 x: 253,
+                                    //                 y: 150
+                                    //             }
+                                    //         },
 
-                                    }),
+                                    //     }),
 
-                                    new Polyline({
-                                        graphical: {
-                                            startCoords: {
-                                                x: 2,
-                                                y: 3,
-                                            },
-                                            points: [[15, 80], [120, 65], [50, 16], [25, 25]],
-                                        },
-                                        stroke: 'green'
-                                    }),
+                                    //     new Polyline({
+                                    //         graphical: {
+                                    //             startCoords: {
+                                    //                 x: 2,
+                                    //                 y: 3,
+                                    //             },
+                                    //             points: [[15, 80], [120, 65], [50, 16], [25, 25]],
+                                    //         },
+                                    //         stroke: 'green'
+                                    //     }),
 
-                                    new Point({
-                                        graphical: {
-                                            startCoords: {
-                                                x: 274,
-                                                y: 183
-                                            },
-                                            r: 1,
-                                        },
-                                    }),
+                                    //     new Point({
+                                    //         graphical: {
+                                    //             startCoords: {
+                                    //                 x: 274,
+                                    //                 y: 183
+                                    //             },
+                                    //             r: 1,
+                                    //         },
+                                    //     }),
 
-                                    new Ellipse({
-                                        graphical: {
-                                            startCoords: {
-                                                x: 174,
-                                                y: 123
-                                            },
-                                            rDif: {
-                                                rx: 150,
-                                                ry: 25,
-                                            },
-                                        },
+                                    //     new Ellipse({
+                                    //         graphical: {
+                                    //             startCoords: {
+                                    //                 x: 174,
+                                    //                 y: 123
+                                    //             },
+                                    //             rDif: {
+                                    //                 rx: 150,
+                                    //                 ry: 25,
+                                    //             },
+                                    //         },
 
-                                        fill: 'yellow'
-                                    }),
+                                    //         fill: 'yellow'
+                                    //     }),
                                 ] as IShape[])
                         ] as ILayer[])
                 ] as IPage[])

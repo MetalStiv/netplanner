@@ -1,9 +1,9 @@
 import IShape from "./IShape";
 import IShapeCreator from "./IShapeCreator";
 
-interface IShapesGroup {
+interface IGeometryGroup {
     title: string,
     shapes: IShapeCreator[],
     //render(): JSX.Element,
 }
-export default IShapesGroup;
+export default IGeometryGroup;

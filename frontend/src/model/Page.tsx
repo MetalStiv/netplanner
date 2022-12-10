@@ -11,8 +11,8 @@ export interface IPage {
     setLayers(layers: ILayer[]): void,
     addLayer(): void,
     setCurrentLayer(layerID: number): void,
-    //render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
-    //handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void): JSX.Element;
+    copy: (project: IPage) => void,
+    copyLayers: (pages: ILayer[]) => void,
 }
 
 class Page implements IPage {
@@ -38,6 +38,20 @@ class Page implements IPage {
                     item.isCurrent = false;
                 }
             }
+        })
+    }
+    copy(page: IPage) {
+        this.id = page.id;
+        this.title = page.title;
+        this.copyLayers(page.getLayers())
+        //this.layers = page.layers;
+        this.isCurrent = page.isCurrent;
+    }
+    copyLayers(layers: ILayer[]) {
+        this.layers = layers.map(layer => {
+            let newLayer = new Layer(0, []);
+            newLayer.copy(layer);
+            return newLayer;
         })
     }
     getLayers() {

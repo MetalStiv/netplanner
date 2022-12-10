@@ -1,19 +1,19 @@
-import IShape, { IShapeGraphicalProps, IShapeProps } from "../IShape";
+import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 
 interface IRectGraphicalProps extends IShapeGraphicalProps {
-    sizes: { w: number, h: number, },
+    //sizes: { w: number, h: number, },
+    w: IGraphProp,
+    h: IGraphProp,
+    fill?: IGraphProp,
+    stroke?: IGraphProp,
+    rx?: IGraphProp,
+    ry?: IGraphProp,
+    pathLength?: number,
 }
 
 interface IRectProps extends IShapeProps {
     graphical: IRectGraphicalProps
-    rDif?: {
-        rx: number,
-        ry: number
-    },
-    stroke?: string,
-    fill?: string,
-    pathLength?: number,
     zIndex?: number,
 }
 
@@ -22,14 +22,36 @@ export class RectCreator implements IShapeCreator {
     create() {
         return new Rect({
             graphical: {
-                startCoords: {
-                    x: 0,
-                    y: 0
+                x: {
+                    label: 'X',
+                    value: '0',
+                    isReadable: false,
                 },
-                sizes: {
-                    w: 45,
-                    h: 30,
-                }
+                y: {
+                    label: 'Y',
+                    value: '0',
+                    isReadable: false,
+                },
+                w: {
+                    label: 'Width',
+                    value: '45',
+                    isReadable: false,
+                },
+                h: {
+                    label: 'Height',
+                    value: '30',
+                    isReadable: false,
+                },
+                fill: {
+                    label: 'Fill',
+                    value: `#000000`,
+                    isReadable: true,
+                },
+                stroke: {
+                    label: 'Stroke',
+                    value: `#000000`,
+                    isReadable: true,
+                },
             },
         });
     }
@@ -57,17 +79,17 @@ class Rect implements IShape {
             id={this.config.id}
             key={this.config.id}
             data-type={this.type}
-            stroke={this.config.stroke ?? 'black'}
-            fill={this.config.fill ?? 'black'}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.zIndex }}
+            stroke={this.config.graphical.stroke?.value ?? 'black'}
+            fill={this.config.graphical.fill?.value ?? 'black'}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={
-                `M${this.config.graphical.startCoords?.x} ${this.config.graphical.startCoords?.y} 
-                h ${this.config.graphical.sizes?.w ?? 15}
-                v ${this.config.graphical.sizes?.h ?? 10}
-                h -${this.config.graphical.sizes?.w ?? 15}
+                `M${this.config.graphical.x.value} ${this.config.graphical.y.value} 
+                h ${this.config.graphical.w.value ?? 15}
+                v ${this.config.graphical.h.value ?? 10}
+                h -${this.config.graphical.w.value ?? 15}
                 Z`
             }
         />

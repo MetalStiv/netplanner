@@ -39,10 +39,12 @@ const SVGCanvas = ({ currentPage, updatePageCallback, width, height, creatorOnDr
             layer.elems = layer.getElems().map(item => {
                 if (item.config.id === elemID) {
                     let newData: IShapeProps = JSON.parse(JSON.stringify(item.config));
-                    newData.graphical.startCoords = {
-                        x: Math.trunc(toSVGCoords.x - (shift ? shift.x : 0)),
-                        y: Math.trunc(toSVGCoords.y - (shift ? shift.y : 0)),
-                    }
+                    // newData.graphical.startCoords = {
+                    //     x: Math.trunc(toSVGCoords.x - (shift ? shift.x : 0)),
+                    //     y: Math.trunc(toSVGCoords.y - (shift ? shift.y : 0)),
+                    // }
+                    newData.graphical.x.value = Math.trunc(toSVGCoords.x - (shift ? shift.x : 0)).toString();
+                    newData.graphical.y.value = Math.trunc(toSVGCoords.y - (shift ? shift.y : 0)).toString();
                     item.config = newData;
                     //console.log(item)
                 }
@@ -123,12 +125,13 @@ const SVGCanvas = ({ currentPage, updatePageCallback, width, height, creatorOnDr
 
     const svgSelect = (e: React.MouseEvent<SVGGeometryElement>) => {
         let curObj: IShape | undefined;
-        currentPage.getLayers().forEach(layer => {
+        currentPage.getLayers().some(layer => {
             curObj = layer.getElems().find(item => {
                 if (item.config.id === e.currentTarget.id) {
                     return item;
                 }
             })
+            return typeof (curObj) !== 'undefined' ? true : false;
         });
         const config: IElemProps = {
             type: curObj!.type,
@@ -136,7 +139,8 @@ const SVGCanvas = ({ currentPage, updatePageCallback, width, height, creatorOnDr
                 w: Math.round(e.currentTarget.getBBox().width),
                 h: Math.round(e.currentTarget.getBBox().height)
             },
-            coords: curObj!.config.graphical.startCoords,
+            graphProps: curObj!.config.graphical,
+            //coords: curObj!.config.graphical.startCoords,
         }
         getClickedElemConfigCallback(config);
     }
@@ -146,17 +150,19 @@ const SVGCanvas = ({ currentPage, updatePageCallback, width, height, creatorOnDr
             x: e.pageX,
             y: e.pageY,
         })
+        const newShape: IShape = creatorOnDrop!.create();
+        //|| new Circle({ graphical: { startCoords: { x: 0, y: 0 }, r: { label: 'Radius', value: '10' } } });
+        newShape.config.graphical.x.value = dropCoords.x.toString();
+        newShape.config.graphical.y.value = dropCoords.y.toString();
 
-        const newShape = creatorOnDrop?.create()
-            || new Circle({ graphical: { startCoords: { x: 0, y: 0 }, r: 10 } });
-        newShape.config.graphical.startCoords = dropCoords;
-
-        currentPage.setLayers(currentPage.layers.map(layer => {
+        currentPage.setLayers(currentPage.getLayers().map(layer => {
             if (layer.isCurrent) {
                 layer.addElem(newShape);
             }
             return layer;
         }));
+        //currentPage = { ...currentPage }
+
         updatePageCallback(currentPage);
         //console.log(dropCoords)
     }

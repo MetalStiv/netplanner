@@ -29,11 +29,13 @@ import HeaderNavbar from './HeaderNavbar';
 import { useRootStore } from '../../providers/rootProvider';
 import { IPage } from '../../model/Page';
 import Project, { IProject } from '../../model/Project';
+import { IShapeGraphicalProps } from '../../model/IShape';
 
 export interface IElemProps {
     type: string,
     size: { w: number, h: number },
-    coords: { x: number, y: number },
+    graphProps: IShapeGraphicalProps,
+    //coords: { x: number, y: number },
 }
 
 export interface IDraggableElemProps {
@@ -78,10 +80,9 @@ const ProjectPage: React.FC = () => {
         setProject(newProject);
     }, []);
 
-    const projectObjCallback = useCallback((project: IProject) => {
-        let newProject: IProject = new Project(0, [], []);
-        newProject.copy(project);
-        setProject(newProject);
+    const pagesArrCallback = useCallback((pages: IPage[]) => {
+        project.setPages(pages);
+        setProject(project);
     }, []);
 
     const cursorCoordsCallback = useCallback((cursorCoords: { x: number, y: number }) => {
@@ -110,7 +111,7 @@ const ProjectPage: React.FC = () => {
                                     <ShapesPanel getCreatorOnDragCallback={draggableElemCallback} />
                                 </div>
                                 <div style={{ minHeight: 150 }}>
-                                    <PagesPanel currentProject={project} updateProjectCallback={projectObjCallback} />
+                                    <PagesPanel currentProject={project} updateProjectCallback={pagesArrCallback} />
                                     <LayersPanel currentPage={project.getCurrentPage()} updatePageCallback={pageObjCallback} />
                                 </div>
                             </VerticalPageSplit>
@@ -141,12 +142,7 @@ const ProjectPage: React.FC = () => {
                                 <ObjectPropertiesPanel elemProps={selectedElemProps} />
                             </div>
                             <div style={{ minHeight: 150 }}>
-                                <GraphicalPropertiesPanel
-                                    elemGraphProps={{
-                                        coords: selectedElemProps?.coords,
-                                        size: selectedElemProps?.size
-                                    }}
-                                />
+                                <GraphicalPropertiesPanel elemProps={selectedElemProps} />
                             </div>
                         </VerticalPageSplit>
                     </div>

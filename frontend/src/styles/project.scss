@@ -219,10 +219,13 @@ $headerHeight: 56px;
                     }
 
                     .ReactCollapse--content {
-                        .collapseItem {
+
+                        .collapseItem,
+                        #addPage-btn {
                             padding: 8px 24px;
                             cursor: pointer;
                         }
+
 
                         background-color: #fff;
                         box-shadow: 0px 0px 8px rgba(166, 171, 189, 0.24),

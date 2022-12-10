@@ -1,17 +1,20 @@
+import { IGraphProp } from "../../model/IShape";
+import { IElemProps } from "./ProjectPage";
+
 interface IGraphicalPropertiesPanelProps {
-    elemGraphProps: {
-        coords: {
-            x: number,
-            y: number,
-        } | undefined,
-        size: {
-            w: number,
-            h: number,
-        } | undefined,
-    }
+    // graphicalConfig: IShapeGraphicalProps | undefined,
+    // size: {
+    //     w: number,
+    //     h: number,
+    // } | undefined,
+    elemProps: IElemProps | null,
 }
 
-const GraphicalPropertiesPanel = (props: IGraphicalPropertiesPanelProps) => {
+interface IGraphProps {
+    [index: string]: IGraphProp;
+}
+
+const GraphicalPropertiesPanel = ({ elemProps }: IGraphicalPropertiesPanelProps) => {
     return (
         <div id="graphicalPropertiesPanel">
             <p className="panel-title">
@@ -20,19 +23,39 @@ const GraphicalPropertiesPanel = (props: IGraphicalPropertiesPanelProps) => {
             <div className="">
                 <div className="property">
                     <p className='property-title'>X</p>
-                    <p className='property-value'>{props.elemGraphProps.coords?.x ?? 0}</p>
+                    <p className='property-value'>{elemProps?.graphProps.x.value ?? 0}</p>
                 </div>
                 <div className="property">
                     <p className='property-title'>Y:</p>
-                    <p className='property-value'>{props.elemGraphProps.coords?.y ?? 0}</p>
+                    <p className='property-value'>{elemProps?.graphProps.y.value ?? 0}</p>
                 </div>
                 <div className="property">
                     <p className='property-title'>X len</p>
-                    <p className='property-value'>{props.elemGraphProps.size?.w ?? 0}</p>
+                    <p className='property-value'>{elemProps?.size?.w ?? 0}</p>
                 </div>
                 <div className="property">
                     <p className='property-title'>Y len</p>
-                    <p className='property-value'>{props.elemGraphProps.size?.h ?? 0}</p>
+                    <p className='property-value'>{elemProps?.size?.h ?? 0}</p>
+                </div>
+                <div className="">
+                    {
+                        elemProps && Object.values(elemProps.graphProps)
+                            .filter((item: IGraphProp) => {
+                                return item.isReadable ? true : false;
+                            })
+                            .map((item: IGraphProp, i) => {
+                                return <div key={item.value + item.label + i} className="property">
+                                    <p className='property-title'>{item.label}</p>
+                                    <p className='property-value'>{item.value}</p>
+                                </div>
+                            })
+                    }
+                    {/* {elemProps?.graphProps.otherPropertiesView?.map(prop => {
+                        return <div className="property">
+                            <p className='property-title'>{prop.title}</p>
+                            <p className='property-value'>{prop.value}</p>
+                        </div>
+                    })} */}
                 </div>
             </div>
 

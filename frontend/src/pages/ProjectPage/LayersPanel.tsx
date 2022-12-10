@@ -29,6 +29,7 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                 <span>Layers</span>
                 <div className="plus" onClick={() => {
                     currentPage.addLayer();
+                    //currentPage = { ...currentPage }
                     updatePageCallback(currentPage);
                 }
                 }>
@@ -49,6 +50,7 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                                 }
                                 return item;
                             }))
+                            //currentPage = { ...currentPage }
                             updatePageCallback(currentPage);
                             layer.isCurrent = true;
                         }}>
@@ -60,6 +62,7 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                                     }
                                     return item;
                                 }))
+                                //currentPage = { ...currentPage }
                                 updatePageCallback(currentPage);
                             }}>
                                 {layer.isVisible ? visibleIcon : invisibleIcon}

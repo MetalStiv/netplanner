@@ -1,6 +1,8 @@
 import Page from "./Page";
 import IPage from "./Page";
-import IShapesGroup from "./IShapesGroup";
+import IShapesGroup from "./IGeometryGroup";
+import Layer, { ILayer } from "./Layer";
+import IShape from "./IShape";
 
 export interface IProject {
     id: number,
@@ -9,7 +11,7 @@ export interface IProject {
     pages?: IPage[],
     setPages: (page: Array<IPage>) => void,
     getPages: () => IPage[],
-    addPage: (page: IPage) => void,
+    addPage: () => void,
     getCurrentPage: () => IPage,
     setCurrentPage: (pageID: number) => void,
     copy: (project: IProject) => void,
@@ -36,7 +38,16 @@ class Project implements IProject {
         this.id = project.id;
         this.title = project.title;
         this.shapesGroups = project.shapesGroups ?? [];
-        this.pages = project.pages ?? [];
+        this.copyPages(project.getPages());
+        // this.pages = project.pages ?? [];
+    }
+
+    copyPages(pages: IPage[]) {
+        this.pages = pages.map(page => {
+            let newPage = new Page(0, []);
+            newPage.copy(page);
+            return newPage;
+        })
     }
 
     setCurrentPage(pageID: number) {
@@ -54,9 +65,10 @@ class Project implements IProject {
     getCurrentPage() {
         return this.pages.find(page => {
             if (page.isCurrent) {
-                return page;
+                return true;
             }
-        })!
+            return false;
+        }) || this.getPages()[0]
     }
     getPages() {
         return this.pages;
@@ -70,7 +82,7 @@ class Project implements IProject {
                 page.isCurrent = false;
             }
         })
-        this.pages = [...this.pages, new Page(this.pages.length, [])];
+        this.pages = [...this.pages, new Page(this.pages.length, [new Layer(0, [] as IShape[])] as ILayer[])];
     }
 }
 

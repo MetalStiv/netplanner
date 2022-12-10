@@ -7,11 +7,26 @@ export class PointCreator implements IShapeCreator {
     create() {
         return new Point({
             graphical: {
-                startCoords: {
-                    x: 0,
-                    y: 0
+                x: {
+                    label: 'X',
+                    value: '0',
+                    isReadable: false,
                 },
-                r: 2,
+                y: {
+                    label: 'Y',
+                    value: '0',
+                    isReadable: false,
+                },
+                r: {
+                    label: 'Radius',
+                    value: '2',
+                    isReadable: true,
+                },
+                fill: {
+                    label: 'Fill',
+                    value: `#000000`,
+                    isReadable: true,
+                },
             }
         });
     }
@@ -39,17 +54,17 @@ class Point implements IShape {
             id={this.config.id}
             key={this.config.id}
             data-type={this.type}
-            stroke={this.config.stroke ?? 'black'}
-            strokeWidth={this.config.graphical.r ?? 2}
-            fill={this.config.fill ?? 'black'}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.zIndex }}
+            stroke={this.config.graphical.stroke?.value ?? 'black'}
+            strokeWidth={this.config.graphical.r.value ?? 2}
+            fill={this.config.graphical.fill?.value ?? 'black'}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-                M ${this.config.graphical.startCoords.x},${this.config.graphical.startCoords.y + this.config.graphical.r} 
-                a ${this.config.graphical.r},${this.config.graphical.r} 0 1,1 ${this.config.graphical.r * 2},0 
-                a ${this.config.graphical.r},${this.config.graphical.r} 0 1,1 -${this.config.graphical.r * 2},0
+                M ${this.config.graphical.x.value},${(+this.config.graphical.y.value) + (+this.config.graphical.r.value)} 
+                a ${this.config.graphical.r.value},${this.config.graphical.r.value} 0 1,1 ${(+this.config.graphical.r.value) * 2},0 
+                a ${this.config.graphical.r.value},${this.config.graphical.r.value} 0 1,1 -${(+this.config.graphical.r.value) * 2},0
             `} />
 
         //<circle id={this.elemProps.id} key={this.elemProps.id} cx={this.elemProps.startCoords?.x} cy={this.elemProps.startCoords?.y} r={this.elemProps.r ?? 1} pathLength={this.elemProps.pathLength ?? 0} stroke={this.elemProps.stroke ?? 'black'} fill={this.elemProps.fill ?? 'black'} onDragStart={(e) => e.preventDefault} onMouseDown={handlerMouseDown} />;

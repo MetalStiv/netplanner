@@ -1,15 +1,15 @@
-import IShape, { IShapeGraphicalProps, IShapeProps } from "../IShape";
+import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 
 interface IPolylineGraphicalProps extends IShapeGraphicalProps {
-    points: Array<[number, number]>,
+    points: [number, number][],
+    pathLength?: IGraphProp,
+    stroke?: IGraphProp,
+    fill?: IGraphProp,
 }
 
 interface IPolylineProps extends IShapeProps {
     graphical: IPolylineGraphicalProps,
-    pathLength?: number,
-    stroke?: string,
-    fill?: string,
     zIndex?: number,
 }
 
@@ -18,11 +18,22 @@ export class PolylineCreator implements IShapeCreator {
     create() {
         return new Polyline({
             graphical: {
-                startCoords: {
-                    x: 0,
-                    y: 0
+                x: {
+                    label: 'X',
+                    value: '0',
+                    isReadable: false,
+                },
+                y: {
+                    label: 'Y',
+                    value: '0',
+                    isReadable: false,
                 },
                 points: [[15, -30], [40, 45], [50, -70]],
+                stroke: {
+                    label: 'Stroke',
+                    value: `#000000`,
+                    isReadable: true,
+                },
             },
         });
     }
@@ -52,14 +63,14 @@ class Polyline implements IShape {
             id={this.config.id ?? ''}
             key={this.config.id ?? ''}
             data-type={this.type}
-            stroke={this.config.stroke ?? 'black'}
-            fill={this.config.fill ?? 'transparent'}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.zIndex }}
+            stroke={this.config.graphical.stroke?.value ?? 'black'}
+            fill={this.config.graphical.fill?.value ?? 'transparent'}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={
-                `M ${this.config.graphical.startCoords.x}, ${this.config.graphical.startCoords?.y}
+                `M ${this.config.graphical.x.value}, ${this.config.graphical.y.value}
                 ${pathStr}`
             }
         />

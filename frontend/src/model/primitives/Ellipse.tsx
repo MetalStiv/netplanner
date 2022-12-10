@@ -1,18 +1,15 @@
-import IShape, { IShapeGraphicalProps, IShapeProps } from "../IShape";
+import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 
 interface IEllipseGraphicalProps extends IShapeGraphicalProps {
-    rDif: {
-        rx: number,
-        ry: number,
-    }
+    stroke?: IGraphProp,
+    fill?: IGraphProp,
+    rx: IGraphProp,
+    ry: IGraphProp,
 }
 
 interface IEllipseProps extends IShapeProps {
     graphical: IEllipseGraphicalProps,
-    stroke?: string,
-    fill?: string,
-    pathLength?: number,
     zIndex?: number,
 }
 
@@ -21,13 +18,35 @@ export class EllipseCreator implements IShapeCreator {
     create() {
         return new Ellipse({
             graphical: {
-                startCoords: {
-                    x: 0,
-                    y: 0
+                x: {
+                    label: 'X',
+                    value: '0',
+                    isReadable: false,
                 },
-                rDif: {
-                    rx: 30,
-                    ry: 20,
+                y: {
+                    label: 'Y',
+                    value: '0',
+                    isReadable: false,
+                },
+                rx: {
+                    label: 'Radius X',
+                    value: '30',
+                    isReadable: true,
+                },
+                ry: {
+                    label: 'Radius Y',
+                    value: '20',
+                    isReadable: true,
+                },
+                fill: {
+                    label: 'Fill',
+                    value: `#000000`,
+                    isReadable: true,
+                },
+                stroke: {
+                    label: 'Stroke',
+                    value: `#000000`,
+                    isReadable: true,
                 },
             },
         });
@@ -56,16 +75,16 @@ class Ellipse implements IShape {
             id={this.config.id}
             key={this.config.id}
             data-type={this.type}
-            stroke={this.config.stroke ?? 'black'}
-            fill={this.config.fill ?? 'black'}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.zIndex }}
+            stroke={this.config.graphical.stroke?.value ?? 'black'}
+            fill={this.config.graphical.fill?.value ?? 'black'}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-                M ${this.config.graphical.startCoords.x +
-                this.config.graphical.rDif.rx},${this.config.graphical.startCoords.y}
-                a ${this.config.graphical.rDif.rx},${this.config.graphical.rDif.ry}
+                M ${(+this.config.graphical.x.value) +
+                (+this.config.graphical.rx.value)},${this.config.graphical.y.value}
+                a ${this.config.graphical.rx.value},${this.config.graphical.ry.value}
                 0
                 1,0
                 1,0

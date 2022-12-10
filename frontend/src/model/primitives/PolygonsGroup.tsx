@@ -1,11 +1,11 @@
 import IShape, { IShapeProps } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
-import IShapesGroup from "../IGeometryGroup"
+import IGeometryGroup from "../IGeometryGroup"
 
-interface IPrimitivesGroup extends IShapesGroup { }
+interface IPolygonsGroup extends IGeometryGroup { }
 
-class PrimitivesGroup implements IPrimitivesGroup {
-    title: string = 'Primitives';
+class PolygonsGroup implements IPolygonsGroup {
+    title: string = 'Polygons';
     shapes: IShapeCreator[] = [];
 
     constructor(objArray: IShapeCreator[]) {
@@ -15,4 +15,4 @@ class PrimitivesGroup implements IPrimitivesGroup {
 }
 
 
-export default PrimitivesGroup;
+export default PolygonsGroup;

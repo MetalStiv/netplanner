@@ -1,17 +1,26 @@
 export interface IShapeGraphicalProps {
-    startCoords: { x: number, y: number }
+    //startCoords: { x: number, y: number },
+    x: IGraphProp,
+    y: IGraphProp
+    //otherPropertiesView?: { title: string, value: string }[],
+}
+
+export interface IGraphProp {
+    label: string,
+    value: string,
+    isReadable: boolean,
 }
 
 export interface IShapeProps {
     id?: string,
-    graphical: IShapeGraphicalProps
+    graphical: IShapeGraphicalProps,
+    zIndex?: number,
 }
 
 export interface IShape {
     type: string,
     config: IShapeProps,
     isVisible: boolean,
-    zIndex: number,
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void): JSX.Element;
     //     id: string;

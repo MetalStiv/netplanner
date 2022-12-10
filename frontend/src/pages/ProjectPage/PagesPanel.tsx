@@ -1,11 +1,12 @@
 import { useState } from 'react';
 //import { useRootStore } from '../../providers/rootProvider';
 import { Collapse } from 'react-collapse';
+import { IPage } from '../../model/Page';
 import { IProject } from '../../model/Project';
 
 interface IPagesPanelProps {
     currentProject: IProject,
-    updateProjectCallback: (page: IProject) => void,
+    updateProjectCallback: (pages: IPage[]) => void,
 }
 
 const PagesPanel = ({ currentProject, updateProjectCallback }: IPagesPanelProps) => {
@@ -26,9 +27,15 @@ const PagesPanel = ({ currentProject, updateProjectCallback }: IPagesPanelProps)
                             return <p key={page.id} className='collapseItem' onClick={() => {
                                 setCollapsePanelIsOpen(false);
                                 currentProject.setCurrentPage(page.id);
-                                updateProjectCallback(currentProject);
+                                updateProjectCallback(currentProject.getPages());
                             }}>{page.title}</p>
                         })}
+                        <p id="addPage-btn" onClick={() => {
+                            currentProject.addPage();
+                            updateProjectCallback(currentProject.getPages());
+                            setCollapsePanelIsOpen(false);
+                        }
+                        }>Add page</p>
                     </div>
                 </Collapse>
             </div>

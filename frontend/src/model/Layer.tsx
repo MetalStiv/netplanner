@@ -7,10 +7,12 @@ export interface ILayer {
     elems: IShape[],
     isVisible: boolean,
     isCurrent: boolean,
+    genID(): number;
     changeVisible(val: boolean): void,
     getElems(): IShape[],
     setElems(shapes: IShape[]): void,
     addElem(shape: IShape): void,
+    copy(layer: ILayer): void,
 }
 
 class Layer implements ILayer {
@@ -24,12 +26,19 @@ class Layer implements ILayer {
     constructor(layersCount: number, shapes: IShape[]) {
         this.id = this.genID();
         this.title = `Layer${layersCount > 0 ? '_' + layersCount : ''}`;
-        this.zIndex = layersCount + 1;
+        this.zIndex = layersCount * 1000;
         this.elems = shapes;
         this.isVisible = true;
         this.isCurrent = true;
     }
 
+
+    copy(layer: ILayer) {
+        this.id = layer.id;
+        this.title = layer.title;
+        this.setElems(layer.getElems());
+        this.isCurrent = layer.isCurrent;
+    }
 
     genID() {
         return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(12).toString().replace('.', ''));
@@ -47,7 +56,7 @@ class Layer implements ILayer {
         this.elems = shapes;
     }
     addElem(shape: IShape) {
-        shape.zIndex = this.zIndex;
+        shape.config.zIndex = this.zIndex + this.elems.length;
         this.elems = [...this.elems, shape];
     }
 }
