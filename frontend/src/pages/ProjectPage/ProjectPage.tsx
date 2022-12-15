@@ -1,4 +1,3 @@
-import Frame from 'react-frame-component'
 import {
     ResizeContent,
     //ResizeHandleLeft,
@@ -22,7 +21,7 @@ import '../../styles/project.scss';
 
 //import { Panel } from './Panel';
 
-import React, { useState, useCallback, useReducer } from 'react';
+import React, { useState, useCallback, useReducer, useRef, useEffect } from 'react';
 import SVGCanvas from './SVGCanvas';
 import IShapeCreator from '../../model/IShapeCreator';
 import HeaderNavbar from './HeaderNavbar';
@@ -30,6 +29,7 @@ import { useRootStore } from '../../providers/rootProvider';
 import { IPage } from '../../model/Page';
 import Project, { IProject } from '../../model/Project';
 import { IShapeGraphicalProps } from '../../model/IShape';
+import ICanvasConfig, { Portrait } from "../../common/canvasConfig";
 
 export interface IElemProps {
     type: string,
@@ -43,14 +43,21 @@ export interface IDraggableElemProps {
 }
 
 const ProjectPage: React.FC = () => {
-
-    const [workspaceSizes, setWorkspaceSizes] = useState<{ w: number, h: number }>({ w: 1024, h: 512 });
     const [canvasCursorCoords, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [selectedElemProps, setSelectedElemProps] = useState<IElemProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
     const [project, setProject] = useState<IProject>(
         useRootStore()!.getProjectStore().getProjects().at(0)!
     );
+    const [scale, setScale] = useState<number>(1.0);
+    const [orientation, setOrientation] = useState<ICanvasConfig>(Portrait);
+
+    const workspaceDivRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        workspaceDivRef.current!.scrollTop = orientation.a4Height*Math.floor(orientation.heightInSheets/2)-150;
+        workspaceDivRef.current!.scrollLeft = orientation.a4Width*Math.floor(orientation.widthInSheets/2)-150;
+    }, [orientation])
 
     // function projectReducer(state:IProject, action:IProject) {
     //     switch (action.type) {
@@ -104,7 +111,7 @@ const ProjectPage: React.FC = () => {
             </header>
             <main>
                 <aside id="leftPanelBar">
-                    <ResizePanel initialWidth={250} minWidth={150} maxWidth={400}>
+                    <ResizePanel initialWidth={250} minWidth={150} maxWidth={400} >
                         <ResizeContent className='content'>
                             <VerticalPageSplit resize={Limit} heights={['50%', '50%']}>
                                 <div style={{ minHeight: 150 }}>
@@ -121,20 +128,19 @@ const ProjectPage: React.FC = () => {
                 </aside>
 
                 <section id="workspace">
-                    {/* <Frame id='renderer-frame'>
-                    </Frame> */}
-
-                    <SVGCanvas
-                        currentPage={project.getCurrentPage()}
-                        updatePageCallback={pageObjCallback}
-                        width={workspaceSizes.w}
-                        height={workspaceSizes.h}
-                        getCursorCoordsCallback={cursorCoordsCallback}
-                        getClickedElemConfigCallback={clickedElemPropsCallback}
-                        creatorOnDrop={currentCreator}
-                    />
-
+                    <div style={{width: 1347, height: 910, marginLeft: 250, overflow: "scroll"}} ref={workspaceDivRef}>
+                        <SVGCanvas
+                            currentPage={project.getCurrentPage()}
+                            updatePageCallback={pageObjCallback}
+                            canvasConfig={orientation}
+                            scale={scale}
+                            getCursorCoordsCallback={cursorCoordsCallback}
+                            getClickedElemConfigCallback={clickedElemPropsCallback}
+                            creatorOnDrop={currentCreator}
+                        />
+                    </div>
                 </section>
+
                 <aside id="rightPanelBar">
                     <div className="content">
                         <VerticalPageSplit resize={Limit}>
@@ -147,6 +153,15 @@ const ProjectPage: React.FC = () => {
                         </VerticalPageSplit>
                     </div>
                 </aside>
+
+                <div style={{
+                        position: 'fixed',  
+                        top: '95%',
+                        left:'82%'
+                    }}>
+                    <button onClick={() => setScale(scale => scale > 0.1 ? scale-0.1 : scale)}>-</button>
+                    <button onClick={() => setScale(scale => scale+0.1)}>+</button>
+                </div>
             </main>
         </div>
     );

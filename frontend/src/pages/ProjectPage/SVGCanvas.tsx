@@ -6,18 +6,20 @@ import IShapeCreator from '../../model/IShapeCreator';
 import Circle, { CircleCreator } from '../../model/primitives/Circle';
 import Layer, { ILayer } from '../../model/Layer';
 import Page, { IPage } from '../../model/Page';
+import ICanvasConfig from '../../common/canvasConfig';
 
 interface SVGCanvasProps {
     currentPage: IPage,
     updatePageCallback: (page: IPage) => void,
-    width: number,
-    height: number,
+    canvasConfig: ICanvasConfig,
+    scale: number,
     creatorOnDrop: IShapeCreator | null,
     getCursorCoordsCallback: (cursorCoords: { x: number, y: number }) => void,
     getClickedElemConfigCallback: (elemProps: IElemProps) => void,
 }
 
-const SVGCanvas = ({ currentPage, updatePageCallback, width, height, creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
+const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale, 
+    creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
 
     //let svgChildren = useRootStore()!.getProjectStore().getProjects().at(0)!.renderedShapes!;
 
@@ -169,13 +171,86 @@ const SVGCanvas = ({ currentPage, updatePageCallback, width, height, creatorOnDr
 
     return (
         <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()}
-            style={{ width: width, height: height }}>
+            style={{ width: canvasConfig.canvasWidth*scale, height: canvasConfig.canvasHeight*scale }}>
             <svg
-                viewBox={`0 0 ${width} ${height}`}
+                style={{backgroundColor: canvasConfig.sheetFillColor}}
+                viewBox={`0 0 ${canvasConfig.canvasWidth} ${canvasConfig.canvasHeight}`}
                 onClick={svgClickHandler}
                 onMouseMoveCapture={onMousemoveCaptureHandler}
                 xmlns="http://www.w3.org/2000/svg">
-                {currentPage.getLayers().map((layer: ILayer) => layer.getElems().map(el => el.render(svgDragNDrop, svgSelect)))}
+                {
+                    Array.from(Array(Math.floor(canvasConfig.canvasWidth/canvasConfig.subgridStep*scale)).keys()).map(gridLine => 
+                        <path stroke={canvasConfig.subgridColor} 
+                            key={'vertical_subgrid_'+gridLine}
+                            strokeWidth={1}
+                            vectorEffect="non-scaling-stroke"
+                            d={
+                                `M ${gridLine*canvasConfig.subgridStep/scale} 0 ${gridLine*canvasConfig.subgridStep/scale} ${canvasConfig.canvasHeight}`
+                            }
+                        />
+                    )
+                }
+                {
+                    Array.from(Array(Math.floor(canvasConfig.canvasHeight/canvasConfig.subgridStep*scale)).keys()).map(gridLine => 
+                        <path stroke={canvasConfig.subgridColor} 
+                            key={'horizontal_subgrid_'+gridLine}
+                            strokeWidth={1}
+                            vectorEffect="non-scaling-stroke"
+                            d={
+                                `M 0 ${gridLine*canvasConfig.subgridStep/scale} ${canvasConfig.canvasWidth} ${gridLine*canvasConfig.subgridStep/scale}`
+                            }
+                        />
+                    )
+                }
+                {
+                    Array.from(Array(Math.ceil(canvasConfig.canvasWidth/canvasConfig.gridStep*scale)).keys()).map(gridLine => 
+                        <path stroke={canvasConfig.gridColor} 
+                            key={'vertical_grid_'+gridLine}
+                            strokeWidth={1}
+                            vectorEffect="non-scaling-stroke"
+                            d={
+                                `M ${gridLine*canvasConfig.gridStep/scale} 0 ${gridLine*canvasConfig.gridStep/scale} ${canvasConfig.canvasHeight}`
+                            }
+                        />
+                    )
+                }
+                {
+                    Array.from(Array(Math.ceil(canvasConfig.canvasHeight/canvasConfig.gridStep*scale)).keys()).map(gridLine => 
+                        <path stroke={canvasConfig.gridColor} 
+                            key={'horizontal_grid_'+gridLine}
+                            strokeWidth={1}
+                            vectorEffect="non-scaling-stroke"
+                            d={
+                                `M  0 ${gridLine*canvasConfig.gridStep/scale} ${canvasConfig.canvasWidth} ${gridLine*canvasConfig.gridStep/scale}`
+                            }
+                        />
+                    )
+                }
+                { 
+                    Array.from(Array(canvasConfig.a4Height).keys()).map(sheet => 
+                        <path stroke={canvasConfig.sheetStrokeColor}
+                            key={'horizontal_sheet_separator_'+sheet}
+                            strokeWidth={1}
+                            vectorEffect="non-scaling-stroke"
+                            d={
+                                `M 0 ${sheet*canvasConfig.a4Height} ${canvasConfig.canvasWidth} ${sheet*canvasConfig.a4Height}`
+                            }
+                        />
+                    )
+                }
+                { 
+                    Array.from(Array(canvasConfig.a4Width).keys()).map(sheet => 
+                        <path stroke={canvasConfig.sheetStrokeColor} 
+                            key={'vertical_sheet_separator_'+sheet}
+                            strokeWidth={1}
+                            vectorEffect="non-scaling-stroke"
+                            d={
+                                `M ${sheet*canvasConfig.a4Width} 0 ${sheet*canvasConfig.a4Width} ${canvasConfig.canvasHeight}`
+                            }
+                        />
+                    )
+                }
+                { currentPage.getLayers().map((layer: ILayer) => layer.getElems().map(el => el.render(svgDragNDrop, svgSelect))) }
             </svg>
         </div>
     )
