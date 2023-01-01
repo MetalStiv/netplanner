@@ -1,5 +1,5 @@
 import { IPage } from '../../model/Page';
-//import { useRootStore } from '../../providers/rootProvider';
+import { useState } from 'react';
 
 interface ILayersPanelProps {
     currentPage: IPage,
@@ -7,7 +7,8 @@ interface ILayersPanelProps {
 }
 
 const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => {
-    //const projectStore = useRootStore()!.getProjectStore();
+    const [editNameMode, setEditNameMode] = useState<boolean[]>(new Array(currentPage.getLayers().length).fill(false));
+    const [title, setTitle] = useState<string>("");
 
     const visibleIcon = <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M11.6849 9C11.6849 10.485 10.4849 11.685 8.99994 11.685C7.51494 11.685 6.31494 10.485 6.31494 9C6.31494 7.515 7.51494 6.315 8.99994 6.315C10.4849 6.315 11.6849 7.515 11.6849 9Z" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -23,17 +24,35 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
         <path d="M16.5 1.5L10.8975 7.1025" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>;
 
+
+    const changeTitleHandler = (el: HTMLInputElement, layerIndex: number, layerID: number) => {
+        setEditNameMode(editNameMode.map((item, index) => {
+            return index === layerIndex ? false : item;
+        }));
+
+        currentPage.setLayers(currentPage.getLayers().map(item => {
+            if (item.id === layerID && el.value.length) {
+                item.title = el.value;
+            }
+            return item;
+        }))
+        setTitle("");
+    }
+
+    const inputTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTitle((e.target as HTMLInputElement).value);
+    }
+
+
     return (
         <div id="layersPanel">
             <p className="panel-title">
                 <span>Layers</span>
                 <div className="plus" onClick={() => {
                     currentPage.addLayer();
-                    //currentPage = { ...currentPage }
                     updatePageCallback(currentPage);
-                }
-                }>
-
+                    setEditNameMode([...new Array(editNameMode.length).fill(false), true]);
+                }}>
                     <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 6.5H11" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         <path d="M6 11.5V1.5" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -45,12 +64,11 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                     <div key={layer.title + i} className="layer-container">
                         <div className={`layer${layer.isCurrent ? ' current' : ''}`} onClick={function () {
                             currentPage.setLayers(currentPage.getLayers().map(item => {
-                                if (item.isCurrent == true) {
+                                if (item.isCurrent) {
                                     item.isCurrent = false;
                                 }
                                 return item;
                             }))
-                            //currentPage = { ...currentPage }
                             updatePageCallback(currentPage);
                             layer.isCurrent = true;
                         }}>
@@ -62,12 +80,22 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                                     }
                                     return item;
                                 }))
-                                //currentPage = { ...currentPage }
                                 updatePageCallback(currentPage);
                             }}>
                                 {layer.isVisible ? visibleIcon : invisibleIcon}
                             </div>
-                            <span className='layer-title'>{layer.title}</span>
+                            <span style={{ display: editNameMode[i] ? 'none' : 'inline' }} className='layer-title' onDoubleClick={() => {
+                                setEditNameMode(editNameMode.map((item, index) => {
+                                    return index === i ? true : item;
+                                }));
+                            }}>{layer.title}</span>
+                            {
+                                editNameMode[i] && <input className='change-name-input' autoFocus={true} type="text" onBlur={e => changeTitleHandler(e.target, i, layer.id)} value={title} onChange={inputTitle} onKeyDown={e => {
+                                    if (e.keyCode === 13) {
+                                        changeTitleHandler(e.target, i, layer.id);
+                                    }
+                                }} />
+                            }
                         </div>
                     </div>
                 ))}

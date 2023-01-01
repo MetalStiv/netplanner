@@ -273,6 +273,16 @@ $headerHeight: 56px;
                         .layer-title {
                             font-size: 14px;
                             color: #6B6B70;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        input.change-name-input {
+                            border: none;
+                            outline: none;
+                            background-color: transparent;
+                            color: #ffffff;
                         }
 
                         display: flex;
