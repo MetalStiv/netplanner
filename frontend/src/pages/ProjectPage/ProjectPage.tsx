@@ -55,8 +55,8 @@ const ProjectPage: React.FC = () => {
     const workspaceDivRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        workspaceDivRef.current!.scrollTop = orientation.a4Height*Math.floor(orientation.heightInSheets/2)-150;
-        workspaceDivRef.current!.scrollLeft = orientation.a4Width*Math.floor(orientation.widthInSheets/2)-150;
+        workspaceDivRef.current!.scrollTop = orientation.a4Height * Math.floor(orientation.heightInSheets / 2) - 150;
+        workspaceDivRef.current!.scrollLeft = orientation.a4Width * Math.floor(orientation.widthInSheets / 2) - 150;
     }, [orientation])
 
     // function projectReducer(state:IProject, action:IProject) {
@@ -128,7 +128,7 @@ const ProjectPage: React.FC = () => {
                 </aside>
 
                 <section id="workspace">
-                    <div style={{width: 1347, height: 910, marginLeft: 250, overflow: "scroll"}} ref={workspaceDivRef}>
+                    <div className="canvas-container" ref={workspaceDivRef}>
                         <SVGCanvas
                             currentPage={project.getCurrentPage()}
                             updatePageCallback={pageObjCallback}
@@ -155,12 +155,12 @@ const ProjectPage: React.FC = () => {
                 </aside>
 
                 <div style={{
-                        position: 'fixed',  
-                        top: '95%',
-                        left:'82%'
-                    }}>
-                    <button onClick={() => setScale(scale => scale > 0.1 ? scale-0.1 : scale)}>-</button>
-                    <button onClick={() => setScale(scale => scale+0.1)}>+</button>
+                    position: 'fixed',
+                    top: '95%',
+                    left: '82%'
+                }}>
+                    <button onClick={() => setScale(scale => scale > 0.1 ? scale - 0.1 : scale)}>-</button>
+                    <button onClick={() => setScale(scale => scale + 0.1)}>+</button>
                 </div>
             </main>
         </div>

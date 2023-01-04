@@ -7,8 +7,10 @@ interface ILayersPanelProps {
 }
 
 const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => {
-    const [editNameMode, setEditNameMode] = useState<boolean[]>(new Array(currentPage.getLayers().length).fill(false));
+    const [editingLayerIndex, setEditingLayerIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
+
+    const [draggableLayerIndex, setDraggableLayerIndex] = useState<number>(-1);
 
     const visibleIcon = <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M11.6849 9C11.6849 10.485 10.4849 11.685 8.99994 11.685C7.51494 11.685 6.31494 10.485 6.31494 9C6.31494 7.515 7.51494 6.315 8.99994 6.315C10.4849 6.315 11.6849 7.515 11.6849 9Z" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -25,10 +27,8 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
     </svg>;
 
 
-    const changeTitleHandler = (el: HTMLInputElement, layerIndex: number, layerID: number) => {
-        setEditNameMode(editNameMode.map((item, index) => {
-            return index === layerIndex ? false : item;
-        }));
+    const changeTitleHandler = (el: HTMLInputElement, layerID: number) => {
+        setEditingLayerIndex(-1);
 
         currentPage.setLayers(currentPage.getLayers().map(item => {
             if (item.id === layerID && el.value.length) {
@@ -43,6 +43,40 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
         setTitle((e.target as HTMLInputElement).value);
     }
 
+    const layerOnDropHandler = (e: any, layerZIndex: number) => {
+        e.stopPropagation();
+        let draggableLayerID = +e.dataTransfer.getData("id");
+        let draggableLayerZindex = currentPage.getLayers().find(item => item.id === draggableLayerID ? true : false)!.zIndex;
+
+        currentPage.setLayers(currentPage.getLayers().map(layerItem => {
+            if (layerItem.id === draggableLayerID) {
+                if (draggableLayerZindex < layerZIndex) {
+                    layerItem.zIndex = layerZIndex;
+                }
+                if (draggableLayerZindex > layerZIndex) {
+                    layerItem.zIndex = layerZIndex + 1000;
+                }
+            }
+            return layerItem;
+        }))
+        currentPage.setLayers(currentPage.getLayers().map(layerItem => {
+            // если перемещаем слой сверху вниз
+            if (draggableLayerZindex < layerZIndex) {
+                if (layerItem.zIndex > draggableLayerZindex && layerItem.zIndex <= layerZIndex && layerItem.id !== draggableLayerID) {
+                    layerItem.zIndex -= 1000;
+                }
+            }
+            // снизу вверх
+            if (draggableLayerZindex > layerZIndex) {
+                if (layerItem.zIndex > layerZIndex && layerItem.zIndex < draggableLayerZindex && layerItem.id !== draggableLayerID) {
+                    layerItem.zIndex += 1000;
+                }
+            }
+            return layerItem;
+        }))
+        console.log(currentPage.getLayers())
+    }
+
 
     return (
         <div id="layersPanel">
@@ -51,7 +85,6 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                 <div className="plus" onClick={() => {
                     currentPage.addLayer();
                     updatePageCallback(currentPage);
-                    setEditNameMode([...new Array(editNameMode.length).fill(false), true]);
                 }}>
                     <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 6.5H11" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -60,43 +93,68 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                 </div>
             </p>
             <div className="">
-                {currentPage.getLayers().map((layer, i) => (
+                {currentPage.getLayers().slice().sort((first, second) => first.zIndex - second.zIndex).map((layer, i) => (
                     <div key={layer.title + i} className="layer-container">
-                        <div className={`layer${layer.isCurrent ? ' current' : ''}`} onClick={function () {
-                            currentPage.setLayers(currentPage.getLayers().map(item => {
-                                if (item.isCurrent) {
-                                    item.isCurrent = false;
-                                }
-                                return item;
-                            }))
-                            updatePageCallback(currentPage);
-                            layer.isCurrent = true;
-                        }}>
-                            <div className='layer-icon' onClick={function (e) {
-                                e.stopPropagation();
+                        <div className={`dropzone top${draggableLayerIndex !== -1 && layer.zIndex === 0 && draggableLayerIndex !== 0 ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, -1000)} onDragOver={e => e.preventDefault()} ></div>
+
+                        <div className={`layer${layer.isCurrent ? ' current' : ''}`}
+                            onClick={function () {
                                 currentPage.setLayers(currentPage.getLayers().map(item => {
-                                    if (item.id === layer.id) {
-                                        item.changeVisible(!item.isVisible);
+                                    if (item.isCurrent) {
+                                        item.isCurrent = false;
                                     }
                                     return item;
                                 }))
                                 updatePageCallback(currentPage);
-                            }}>
+                                layer.isCurrent = true;
+                            }}
+                            draggable
+                            onDragStart={e => {
+                                console.log(currentPage.getLayers().slice())
+                                setDraggableLayerIndex(i);
+                                e.currentTarget.style.opacity = '0.5';
+
+                                e.dataTransfer.effectAllowed = 'move';
+                                e.dataTransfer.setData("id", '' + layer.id);
+                            }} onDragEnd={e => {
+                                setDraggableLayerIndex(-1);
+                                e.currentTarget.style.opacity = '1';
+                            }} >
+                            <div className='layer-icon'
+                                onClick={function (e) {
+                                    e.stopPropagation();
+                                    currentPage.setLayers(currentPage.getLayers().map(item => {
+                                        if (item.id === layer.id) {
+                                            item.changeVisible(!item.isVisible);
+                                        }
+                                        return item;
+                                    }))
+                                    updatePageCallback(currentPage);
+                                }}>
                                 {layer.isVisible ? visibleIcon : invisibleIcon}
                             </div>
-                            <span style={{ display: editNameMode[i] ? 'none' : 'inline' }} className='layer-title' onDoubleClick={() => {
-                                setEditNameMode(editNameMode.map((item, index) => {
-                                    return index === i ? true : item;
-                                }));
-                            }}>{layer.title}</span>
+                            <span style={{ display: editingLayerIndex === i ? 'none' : 'inline' }}
+                                className='layer-title'
+                                onDoubleClick={() => {
+                                    setEditingLayerIndex(i);
+                                }}>{layer.title}</span>
                             {
-                                editNameMode[i] && <input className='change-name-input' autoFocus={true} type="text" onBlur={e => changeTitleHandler(e.target, i, layer.id)} value={title} onChange={inputTitle} onKeyDown={e => {
-                                    if (e.keyCode === 13) {
-                                        changeTitleHandler(e.target, i, layer.id);
-                                    }
-                                }} />
+                                (editingLayerIndex === i) && <input
+                                    className='change-name-input'
+                                    autoFocus={true}
+                                    type="text"
+                                    onBlur={e => changeTitleHandler(e.target, layer.id)}
+                                    value={title}
+                                    onChange={inputTitle}
+                                    onKeyDown={e => {
+                                        if (e.keyCode === 13) {
+                                            changeTitleHandler(e.target, layer.id);
+                                        }
+                                    }} />
                             }
                         </div>
+
+                        <div className={`dropzone${draggableLayerIndex !== -1 && draggableLayerIndex !== i ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, layer.zIndex)} onDragOver={e => e.preventDefault()} ></div>
                     </div>
                 ))}
             </div>

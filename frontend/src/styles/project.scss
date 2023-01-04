@@ -257,52 +257,115 @@ $headerHeight: 56px;
                     }
 
                     .layer-container {
-                        padding: 7px 0;
-                        border-bottom: 1px solid #F3F3F3;
-                    }
+                        .layer {
+                            .layer-icon {
+                                display: flex;
+                                align-items: center;
+                                margin-right: 5px;
+                                padding: 5px;
+                                cursor: pointer;
+                            }
 
-                    .layer {
-                        .layer-icon {
+                            .layer-title {
+                                font-size: 14px;
+                                color: #6B6B70;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+
+                            input.change-name-input {
+                                border: none;
+                                outline: none;
+                                background-color: transparent;
+                                color: #ffffff;
+                            }
+
                             display: flex;
                             align-items: center;
-                            margin-right: 5px;
-                            padding: 5px;
-                            cursor: pointer;
+                            padding:10px 18px;
+                            background-color: #fff;
+                            transition: background-color .1s;
                         }
 
-                        .layer-title {
-                            font-size: 14px;
-                            color: #6B6B70;
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
+                        .layer.current {
+                            .layer-icon>svg path {
+                                stroke: #fff !important;
+                            }
+
+                            .layer-title {
+                                color: #fff;
+                            }
+
+                            background-color: #434345;
+                            transition: background-color .1s;
                         }
 
-                        input.change-name-input {
-                            border: none;
-                            outline: none;
-                            background-color: transparent;
-                            color: #ffffff;
+                        .dropzone {
+                            &.active {
+                                &::after {
+                                    content: "";
+                                    width: 100%;
+                                    height: 40px;
+                                    //padding: 0 40px;
+                                    position: absolute;
+                                    top: -20px;
+                                    left: 0;
+                                    right: 0;
+                                    z-index: 100;
+                                }
+
+                                //display: block;
+                                border-color: v.$gray;
+                            }
+
+                            &.top {
+                                top: 0;
+                            }
+
+                            //position:absolute;
+                            position:relative;
+                            //left:0;
+                            //right:0;
+                            //bottom:-10px;
+                            border:1px solid transparent;
+                            //height:40px;
+                            //background-color: transparent;
+                            //background-color: rgba(#ccc, 0.7);
+                            //border-radius: 10px;
+                            //display: none;
                         }
 
-                        display: flex;
-                        align-items: center;
-                        padding:10px 18px;
-                        background-color: #fff;
-                        transition: background-color .1s;
-                    }
+                        // .dropzone-top {
+                        //     &.active {
+                        //         display: block;
+                        //     }
 
-                    .layer.current {
-                        .layer-icon>svg path {
-                            stroke: #fff !important;
-                        }
+                        //     &::after {
+                        //         content: "";
+                        //         width: 200px;
+                        //         height: 40px;
+                        //         padding: 0 40px;
+                        //         //position: absolute;
+                        //         top: -20px;
+                        //     }
 
-                        .layer-title {
-                            color: #fff;
-                        }
+                        //     position:absolute;
+                        //     left:0;
+                        //     right:0;
+                        //     top:-10px;
+                        //     height:4px;
+                        //     border:2px solid v.$black;
+                        //     //background-color: transparent;
+                        //     background-color: rgba(#ccc, 0.7);
+                        //     border-radius: 10px;
+                        //     padding: 0 20px;
+                        //     display: none;
+                        // }
 
-                        background-color: #434345;
-                        transition: background-color .1s;
+                        //padding: 7px 0;
+                        border-bottom: 1px solid #F3F3F3;
+                        position: relative;
                     }
 
                     padding: 10px 0;
@@ -330,11 +393,22 @@ $headerHeight: 56px;
         }
 
         #workspace {
-            #canvas {
-                width: 500px;
-                height: 300px;
-                margin: 0 auto;
-                background-color: #fff;
+            .canvas-container {
+                #canvas {
+                    width: 500px;
+                    height: 300px;
+                    margin: 0 auto;
+                    background-color: #fff;
+                }
+
+                width: 100%;
+                height: 100%;
+                overflow: scroll;
+
+                &::-webkit-scrollbar {
+                    width: 0;
+                    height: 0;
+                }
             }
 
             width: 100%;

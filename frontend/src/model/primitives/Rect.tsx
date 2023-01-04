@@ -14,7 +14,7 @@ interface IRectGraphicalProps extends IShapeGraphicalProps {
 
 interface IRectProps extends IShapeProps {
     graphical: IRectGraphicalProps
-    zIndex?: number,
+    zIndex: number,
 }
 
 export class RectCreator implements IShapeCreator {
@@ -53,6 +53,7 @@ export class RectCreator implements IShapeCreator {
                     isReadable: true,
                 },
             },
+            zIndex: 0,
         });
     }
 }
@@ -74,14 +75,15 @@ class Rect implements IShape {
     }
 
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
+        layerZIndex: number) {
         return <path
             id={this.config.id}
             key={this.config.id}
             data-type={this.type}
             stroke={this.config.graphical.stroke?.value ?? 'black'}
             fill={this.config.graphical.fill?.value ?? 'black'}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex }}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
