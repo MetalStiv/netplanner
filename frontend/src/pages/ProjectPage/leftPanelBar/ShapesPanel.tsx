@@ -1,8 +1,8 @@
 import React from 'react';
-import { useRootStore } from '../../providers/rootProvider';
-import Dropdown from '../../components/Dropdown';
-import { IDraggableElemProps } from './ProjectPage';
-import IShapeCreator from '../../model/IShapeCreator';
+import { useRootStore } from '../../../providers/rootProvider';
+import Dropdown from '../../../components/Dropdown';
+import { IDraggableElemProps } from '../ProjectPage';
+import IShapeCreator from '../../../model/IShapeCreator';
 
 interface IShapesPanelProps {
     getCreatorOnDragCallback: (elemType: IShapeCreator) => void,
@@ -25,7 +25,10 @@ const ShapesPanel = ({ getCreatorOnDragCallback }: IShapesPanelProps) => {
                                         className='collapse-item'
                                         draggable
                                         data-type={creator.type}
-                                        onDragStart={() => getCreatorOnDragCallback(creator)}>
+                                        onDragStart={e => {
+                                            getCreatorOnDragCallback(creator);
+                                            e.dataTransfer.setData("draggableElement", 'shape');
+                                        }}>
                                         {creator.type}
                                     </li>
                                 })}

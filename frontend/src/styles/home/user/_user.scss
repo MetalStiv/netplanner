@@ -1,16 +1,14 @@
-@use '_variables' as v;
-
 #userPage {
     .main {
         display: flex;
-        background-color: v.$background;
+        background-color: $background;
         flex-direction: row;
         height: 100vh;
 
         .leftMenu {
             width: 120px;
             margin-right: 20px;
-            background: #FFFFFF;
+            background: $white;
         }
 
         .rightMenu {
@@ -37,7 +35,7 @@
             padding: 0;
             cursor: pointer;
             line-height: 20px;
-            color: v.$black;
+            color: $black;
             outline: none;
             margin-left: -20px;
         }
@@ -47,7 +45,7 @@
         height: 100vh;
         left: 0px;
         top: 0px;
-        background: #FFFFFF;
+        background: $white;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -71,7 +69,7 @@
             .rectangle {
                 cursor: pointer;
                 bottom: 50px;
-                background-color: #FFFFFF;
+                background-color: $white;
                 border-radius: 10px;
                 width: 80px;
                 height: 51px;
@@ -81,11 +79,11 @@
             }
 
             .rectangle:active {
-                background-color: v.$background;
+                background-color: $background;
             }
 
             .rectangle:hover {
-                background-color: v.$background;
+                background-color: $background;
             }
 
         }
@@ -97,13 +95,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #FFFFFF;
+            background-color: $white;
             border-radius: 10px;
 
         }
 
         .logout:hover {
-            background-color: v.$background;
+            background-color: $background;
         }
 
     }
@@ -130,9 +128,9 @@
         left: 50%;
         font-size: 40px;
         cursor: pointer;
-        background: v.$lightblue;
+        background: $lightblue;
         border: none;
-        color: #FFFFFF;
+        color: $white;
         border-radius: 15px;
     }
 }

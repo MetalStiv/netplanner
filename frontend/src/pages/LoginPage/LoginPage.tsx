@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/login.scss";
+import "../../styles/login/index.scss";
 import bmstuIcon from "../../assets/images/bmstu-icon.svg";
 import loginImage from "../../assets/images/login-image.webp";
 import LoginPanel from "./LoginPanel";

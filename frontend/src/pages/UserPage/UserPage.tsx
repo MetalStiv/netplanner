@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
-import '../../styles/user.scss';
+import '../../styles/home/index.scss';
 import Project from "../../module/projectCard/Project";
 import workImage from '../../assets/images/Work.svg';
 import bookImage from '../../assets/images/Book.png';

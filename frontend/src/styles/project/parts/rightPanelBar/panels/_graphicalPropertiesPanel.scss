@@ -1,0 +1,33 @@
+#graphicalPropertiesPanel {
+    .panel-title {
+        color: $bluegray;
+        font-size: 16px;
+        line-height: 19px;
+        border-bottom: 1px solid $bluegray;
+        padding: 0 8px 4px;
+        margin: 0 14px 20px;
+    }
+
+    .property {
+        .property-title {
+            width: 50%;
+            color: $bluegray;
+        }
+
+        .property-value {
+            width: 50%;
+            color: $bluegray;
+        }
+
+        font-size: 12px;
+        color:#6B6B70;
+        display: flex;
+        align-items: center;
+        padding:10px 18px;
+        border-bottom: 1px solid $lightpink;
+        background-color: $white;
+        transition: background-color .1s;
+    }
+
+    padding: 10px 0;
+}

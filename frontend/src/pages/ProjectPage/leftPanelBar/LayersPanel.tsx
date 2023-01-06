@@ -1,4 +1,4 @@
-import { IPage } from '../../model/Page';
+import { IPage } from '../../../model/Page';
 import { useState } from 'react';
 
 interface ILayersPanelProps {
@@ -8,9 +8,8 @@ interface ILayersPanelProps {
 
 const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => {
     const [editingLayerIndex, setEditingLayerIndex] = useState<number>(-1);
-    const [title, setTitle] = useState<string>("");
-
     const [draggableLayerIndex, setDraggableLayerIndex] = useState<number>(-1);
+    const [title, setTitle] = useState<string>("");
 
     const visibleIcon = <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M11.6849 9C11.6849 10.485 10.4849 11.685 8.99994 11.685C7.51494 11.685 6.31494 10.485 6.31494 9C6.31494 7.515 7.51494 6.315 8.99994 6.315C10.4849 6.315 11.6849 7.515 11.6849 9Z" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -45,6 +44,9 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
 
     const layerOnDropHandler = (e: any, layerZIndex: number) => {
         e.stopPropagation();
+        if (e.dataTransfer.getData("draggableElement") !== 'layer') {
+            return;
+        }
         let draggableLayerID = +e.dataTransfer.getData("id");
         let draggableLayerZindex = currentPage.getLayers().find(item => item.id === draggableLayerID ? true : false)!.zIndex;
 
@@ -74,7 +76,9 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
             }
             return layerItem;
         }))
-        console.log(currentPage.getLayers())
+        setDraggableLayerIndex(-1);
+        updatePageCallback(currentPage);
+        //console.log(currentPage.getLayers())
     }
 
 
@@ -82,20 +86,21 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
         <div id="layersPanel">
             <p className="panel-title">
                 <span>Layers</span>
-                <div className="plus" onClick={() => {
+                <span className="plus" onClick={() => {
                     currentPage.addLayer();
                     updatePageCallback(currentPage);
+                    setEditingLayerIndex(currentPage.getLayers().length - 1);
                 }}>
                     <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 6.5H11" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         <path d="M6 11.5V1.5" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                </div>
+                </span>
             </p>
             <div className="">
                 {currentPage.getLayers().slice().sort((first, second) => first.zIndex - second.zIndex).map((layer, i) => (
                     <div key={layer.title + i} className="layer-container">
-                        <div className={`dropzone top${draggableLayerIndex !== -1 && layer.zIndex === 0 && draggableLayerIndex !== 0 ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, -1000)} onDragOver={e => e.preventDefault()} ></div>
+                        <div className={`dropzone top${draggableLayerIndex !== -1 && i === 0 && draggableLayerIndex !== 0 ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, -1000)} onDragOver={e => e.preventDefault()} ></div>
 
                         <div className={`layer${layer.isCurrent ? ' current' : ''}`}
                             onClick={function () {
@@ -115,6 +120,7 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                                 e.currentTarget.style.opacity = '0.5';
 
                                 e.dataTransfer.effectAllowed = 'move';
+                                e.dataTransfer.setData("draggableElement", 'layer');
                                 e.dataTransfer.setData("id", '' + layer.id);
                             }} onDragEnd={e => {
                                 setDraggableLayerIndex(-1);

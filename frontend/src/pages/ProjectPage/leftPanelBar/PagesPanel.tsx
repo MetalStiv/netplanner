@@ -1,8 +1,8 @@
 import { useState } from 'react';
 //import { useRootStore } from '../../providers/rootProvider';
 import { Collapse } from 'react-collapse';
-import { IPage } from '../../model/Page';
-import { IProject } from '../../model/Project';
+import { IPage } from '../../../model/Page';
+import { IProject } from '../../../model/Project';
 
 interface IPagesPanelProps {
     currentProject: IProject,

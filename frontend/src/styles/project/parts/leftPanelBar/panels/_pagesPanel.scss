@@ -1,0 +1,65 @@
+#pagesPanel {
+    .collapse-panel {
+        position: relative;
+        overflow: visible;
+    }
+
+    .ReactCollapse--collapse {
+        position: absolute;
+        top: 55px;
+        left: 0;
+        right: 0;
+        z-index: 100;
+    }
+
+    .collapsedPanel-head {
+        &::before {
+            content: '';
+            position: absolute;
+            right: 24px;
+            top: 35%;
+            transform: rotate(-45deg);
+            width: 6px;
+            height: 6px;
+            border-bottom: 2px solid $dark;
+            border-right: 2px solid $dark;
+            transition: .3s;
+        }
+
+        position: relative;
+        padding:16px 24px;
+        font-size: 16px;
+        line-height: 19px;
+        color: $bluegray;
+        cursor: pointer;
+    }
+
+    .collapse-panel[data-hidden="false"] {
+        .collapsedPanel-head {
+            &::before {
+                transform: rotate(45deg) !important;
+                transition: .3s;
+            }
+        }
+
+        .ReactCollapse--collapse {
+            transition: height .3s;
+        }
+    }
+
+    .ReactCollapse--content {
+
+        .collapseItem,
+        #addPage-btn {
+            padding: 8px 24px;
+            cursor: pointer;
+        }
+
+        background-color: $white;
+        box-shadow: 0px 0px 8px rgba(166, 171, 189, 0.24),
+        0px 6px 6px rgba(166, 171, 189, 0.4);
+        border-radius: 8px;
+    }
+
+    border-bottom: 2px solid $dark;
+}

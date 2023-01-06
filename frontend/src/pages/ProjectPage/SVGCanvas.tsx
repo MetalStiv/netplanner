@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useRootStore } from '../../providers/rootProvider';
+import React from 'react';
 import { IShapeProps, IShape } from '../../model/IShape';
-import { IElemProps, IDraggableElemProps } from '../../pages/ProjectPage/ProjectPage'
+import { IElemProps } from '../../pages/ProjectPage/ProjectPage'
 import IShapeCreator from '../../model/IShapeCreator';
-import Circle, { CircleCreator } from '../../model/primitives/Circle';
-import Layer, { ILayer } from '../../model/Layer';
-import Page, { IPage } from '../../model/Page';
+import { ILayer } from '../../model/Layer';
+import { IPage } from '../../model/Page';
 import ICanvasConfig from '../../common/canvasConfig';
 
 interface SVGCanvasProps {
@@ -122,16 +120,14 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
 
     const onMousemoveCaptureHandler = (e: React.MouseEvent<SVGElement>) => {
         const SVGCursorCoords = transformOuterCoordsToSVGCoords({ x: e.pageX, y: e.pageY });
-        getCursorCoordsCallback(SVGCursorCoords);
+        //getCursorCoordsCallback(SVGCursorCoords);
     }
 
     const svgSelect = (e: React.MouseEvent<SVGGeometryElement>) => {
         let curObj: IShape | undefined;
         currentPage.getLayers().some(layer => {
             curObj = layer.getElems().find(item => {
-                if (item.config.id === e.currentTarget.id) {
-                    return item;
-                }
+                return item.config.id === e.currentTarget.id;
             })
             return typeof (curObj) !== 'undefined' ? true : false;
         });
@@ -147,7 +143,10 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
         getClickedElemConfigCallback(config);
     }
 
-    const onDropHandler = (e: React.MouseEvent) => {
+    const onDropHandler = (e: any) => {
+        if (e.dataTransfer.getData("draggableElement") !== 'shape') {
+            return;
+        }
         const dropCoords = transformOuterCoordsToSVGCoords({
             x: e.pageX,
             y: e.pageY,
@@ -170,6 +169,7 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
         //console.log(dropCoords)
     }
 
+    console.log(currentPage);
     return (
         <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()}
             style={{ width: canvasConfig.canvasWidth * scale, height: canvasConfig.canvasHeight * scale }}>
@@ -252,7 +252,6 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
                     )
                 }
                 {currentPage.getLayers().map((layer: ILayer) => layer.getElems().map(el => {
-                    //el.config.zIndex = el.config.zIndex! + layer.zIndex;
                     return el.render(svgDragNDrop, svgSelect, layer.zIndex);
                 }))}
             </svg>
