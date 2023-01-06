@@ -2,6 +2,7 @@ import axios from "axios";
 import { IAuthTokens, TokenRefreshRequest, applyAuthTokenInterceptor, getAccessToken } from "axios-jwt";
 
 const USER_BASE_URL = "http://localhost:5108/";
+const PROJECT_BASE_URL = "http://localhost:5109/";
 
 export const userCleanMicroservice = axios.create({
     baseURL: USER_BASE_URL,
@@ -10,6 +11,11 @@ export const userCleanMicroservice = axios.create({
 
 export const userMicroservice = axios.create({
     baseURL: USER_BASE_URL,
+    timeout: 2000
+});
+
+export const projectMicroservice = axios.create({
+    baseURL: PROJECT_BASE_URL,
     timeout: 2000
 });
 
@@ -26,6 +32,12 @@ const requestRefresh: TokenRefreshRequest = async (refreshToken: string): Promis
 }
 
 applyAuthTokenInterceptor(userMicroservice, {
+    requestRefresh,
+    header: "Authorization",
+    headerPrefix: "Bearer "
+})
+
+applyAuthTokenInterceptor(projectMicroservice, {
     requestRefresh,
     header: "Authorization",
     headerPrefix: "Bearer "

@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFormik } from 'formik';
 import '../../styles/user.scss';
 import Project from "../../module/projectCard/Project";
 import workImage from '../../assets/images/Work.svg';
@@ -10,9 +9,32 @@ import logoutImage from '../../assets/images/Logout.svg';
 import icoImage from '../../assets/images/Ellipse.png';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import SettingPage from "./Settings";
+import { projectMicroservice } from "../../common/axiosMicroservices";
+import IProjectMeta from "../../model/IProjectMeta";
+import ProjectPanel from "./ProjectPanel";
 
 const UserPage: React.FC = () => {
     const navigate = useNavigate()
+    const [projects, setProjects] = useState<IProjectMeta[]>([])
+
+    const getProjects = async () => {
+        let projects = await projectMicroservice.get('getProjects')
+        if (projects.status === 200){
+            setProjects(projects.data)
+        }
+    }
+
+    const addProject = async () => {
+        let projects = await projectMicroservice.post('addProject')
+        if (projects.status !== 200){
+            alert(projects.statusText)
+        }
+        getProjects()
+    }
+
+    useEffect(() => {
+        getProjects()
+    }, [])
 
     return (
         <div id="userPage">
@@ -21,13 +43,13 @@ const UserPage: React.FC = () => {
                     <div className="leftMenu"></div>
                     <div className="rightMenu">
                         <TabPanel>
-                            <div className="startMenu">
-
-                                <div className="text">Start a new project</div>
-                                <button type="submit">+</button>
-                                {/* <Project /> */}
-
-                            </div>
+                            {
+                                projects.length === 0 ? <div className="startMenu">
+                                        <div className="text">Start a new project</div>
+                                        <button type="submit" onClick={addProject}>+</button>
+                                    </div>
+                                    : projects.map(p => <ProjectPanel projectMeta={p} />)
+                            }
                         </TabPanel>
 
                         <TabPanel></TabPanel>
@@ -75,8 +97,6 @@ const UserPage: React.FC = () => {
                 </div>
             </Tabs>
         </div>
-
-
     );
 }
 export default UserPage;

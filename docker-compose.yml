@@ -5,20 +5,29 @@ networks:
         external: true
 
 services:
-  mongo:
+  mongo-userdb:
     image: mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-    ports:
-      - 27017:27017
     networks:
       - netplanner_network
     volumes:
-      - ~/volumes/Netplanner/mongodb:/data/db
+      - ~/volumes/Netplanner/mongo-userdb:/data/db
 
-  mongo-express:
+  mongo-projectdb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - netplanner_network
+    volumes:
+      - ~/volumes/Netplanner/mongo-projectdb:/data/db
+
+  mongo-express-userdb:
     image: mongo-express
     restart: always
     ports:
@@ -26,7 +35,19 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo-userdb:27017/
+    networks:
+      - netplanner_network
+
+  mongo-express-projectdb:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo-projectdb:27017/
     networks:
       - netplanner_network
 
@@ -37,11 +58,11 @@ services:
       - 7065:7065
       - 5108:5108
     volumes:
-      - ./RsaKeys:/app/RsaKeys
+      - ./RsaKeys:/app/RsaKeys:ro
     environment:
       ASPNETCORE_HTTPS_PORT: https://+:7065
       ASPNETCORE_URLS: http://+:5108
-      DB_CONNECTION_STRING: mongodb://root:example@mongo:27017
+      DB_CONNECTION_STRING: mongodb://root:example@mongo-userdb:27017
       DB_NAME: userdb
       DB_USER_COLLECTION_NAME: users
       MAIL_NAME: netplaner@yandex.com
@@ -50,6 +71,27 @@ services:
       MAIL_HOST: smtp.yandex.ru
       MAIL_PORT: 465
       JWT_PRIVATE_KEY: /app/RsaKeys/private.pem
+      JWT_PUBLIC_KEY: /app/RsaKeys/public.pem
+      JWT_ISSUER: http://localhost:5108
+      DOMAIN: http://localhost:5108
+    networks:
+      - netplanner_network
+    
+  project-microservice:
+    image: metalstiv/project_microservice:1.0
+    restart: always
+    ports:
+      - 7066:7066
+      - 5109:5109
+    volumes:
+      - ./RsaKeys/public.pem:/app/RsaKeys/public.pem:ro
+    environment:
+      ASPNETCORE_HTTPS_PORT: https://+:7066
+      ASPNETCORE_URLS: http://+:5109
+      DB_CONNECTION_STRING: mongodb://root:example@mongo-projectdb:27017
+      DB_NAME: projectdb
+      DB_PROJECT_META_COLLECTION_NAME: meta
+      DB_PROJECT_COLLECTION_NAME: projects
       JWT_PUBLIC_KEY: /app/RsaKeys/public.pem
       JWT_ISSUER: http://localhost:5108
       DOMAIN: http://localhost:5108

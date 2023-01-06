@@ -1,5 +1,5 @@
 {
-  "FilePath": "/home/metalstiv/Projects/netplanner/UserMicroservice/UserMicroservice.csproj",
+  "FilePath": "/home/metalstiv/Projects/netplanner/ProjectMicroservice/ProjectMicroservice.csproj",
   "Configuration": {
     "ConfigurationName": "MVC-3.0",
     "LanguageVersion": "6.0",
@@ -16295,7 +16295,7 @@
     ],
     "CSharpLanguageVersion": 1000
   },
-  "RootNamespace": "UserMicroservice",
+  "RootNamespace": "ProjectMicroservice",
   "Documents": [],
   "SerializationFormat": "0.2"
 }
