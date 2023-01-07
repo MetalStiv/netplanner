@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../styles/user.scss';
-import Project from "../../module/projectCard/Project";
+import { useRootStore } from "../../providers/rootProvider";
 import workImage from '../../assets/images/Work.svg';
 import bookImage from '../../assets/images/Book.png';
 import settingImage from '../../assets/images/Setting.svg';
@@ -10,19 +10,19 @@ import icoImage from '../../assets/images/Ellipse.png';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import SettingPage from "./Settings";
 import { projectMicroservice } from "../../common/axiosMicroservices";
-import IProjectMeta from "../../model/IProjectMeta";
 import ProjectPanel from "./ProjectPanel";
+import { TProjectsMetaStore } from "../../stores/projectsMetsStore";
 
 const UserPage: React.FC = () => {
-    const navigate = useNavigate()
-    const [projects, setProjects] = useState<IProjectMeta[]>([])
+    const navigate = useNavigate();
+    const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
 
-    const getProjects = async () => {
+    const getProjects = useCallback(async () => {
         let projects = await projectMicroservice.get('getProjects')
         if (projects.status === 200){
-            setProjects(projects.data)
+            projectsMetaStore?.setData(projects.data)
         }
-    }
+    }, [projectsMetaStore])
 
     const addProject = async () => {
         let projects = await projectMicroservice.post('addProject')
@@ -34,7 +34,7 @@ const UserPage: React.FC = () => {
 
     useEffect(() => {
         getProjects()
-    }, [])
+    }, [getProjects])
 
     return (
         <div id="userPage">
@@ -44,11 +44,11 @@ const UserPage: React.FC = () => {
                     <div className="rightMenu">
                         <TabPanel>
                             {
-                                projects.length === 0 ? <div className="startMenu">
+                                projectsMetaStore?.getData().length === 0 ? <div className="startMenu">
                                         <div className="text">Start a new project</div>
                                         <button type="submit" onClick={addProject}>+</button>
                                     </div>
-                                    : projects.map(p => <ProjectPanel projectMeta={p} />)
+                                    : projectsMetaStore?.getData().map(p => <ProjectPanel projectMeta={p} />)
                             }
                         </TabPanel>
 
