@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import '../../styles/user.scss';
+import "../../styles/home/index.scss";
 import { useRootStore } from "../../providers/rootProvider";
 import workImage from '../../assets/images/Work.svg';
 import bookImage from '../../assets/images/Book.png';

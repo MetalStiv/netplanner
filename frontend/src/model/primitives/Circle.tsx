@@ -11,7 +11,7 @@ interface ICircleGraphicalProps extends IShapeGraphicalProps {
 export interface ICircleProps extends IShapeProps {
     //pathLength?: number,
     graphical: ICircleGraphicalProps,
-    zIndex?: number,
+    zIndex: number,
 }
 
 export class CircleCreator implements IShapeCreator {
@@ -58,7 +58,7 @@ export class CircleCreator implements IShapeCreator {
                 // },
                 // ],
             },
-
+            zIndex: 0,
         });
     }
 }
@@ -78,14 +78,14 @@ class Circle implements IShape {
         this.config.zIndex = obj.zIndex ?? 0;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void, layerZIndex: number) {
         return <path
             id={this.config.id}
             key={this.config.id}
             data-type={this.type}
             stroke={this.config.graphical.stroke?.value}
             fill={this.config.graphical.fill?.value}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex }}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}

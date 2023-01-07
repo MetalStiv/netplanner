@@ -1,0 +1,76 @@
+#shapesPanel {
+    .panel-title {
+        color: $bluegray;
+        font-size: 16px;
+        line-height: 19px;
+        border-bottom: 1px solid $bluegray;
+        padding: 0 8px;
+        margin-bottom: 20px;
+    }
+
+    .collapse-panel {
+        .collapsedPanel-head {
+            &::before {
+                content: '';
+                position: absolute;
+                left: 10px;
+                top: 35%;
+                transform: rotate(-45deg);
+                width: 6px;
+                height: 6px;
+                border-bottom: 2px solid $dark;
+                border-right: 2px solid $dark;
+                transition: .3s;
+            }
+
+            position:relative;
+            padding: 10px 0 10px 32px;
+            border-bottom: 1px solid $lightpink;
+            cursor:pointer;
+        }
+
+        p {
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 18px;
+        }
+
+        .ReactCollapse--content {
+            .collapse-group {
+                .collapse-item {
+                    font-size: 12px;
+                    line-height: 18px;
+                    padding: 10px;
+                    display: block;
+                    cursor: move;
+                }
+
+                padding: 0;
+                display:block;
+            }
+
+            padding-left: 24px;
+        }
+    }
+
+    .collapse-panel[data-hidden="true"] {
+        .ReactCollapse--collapse {
+            transition: height .3s;
+        }
+    }
+
+    .collapse-panel[data-hidden="false"] {
+        .collapsedPanel-head {
+            &::before {
+                transform: rotate(45deg) !important;
+                transition: .3s;
+            }
+        }
+
+        .ReactCollapse--collapse {
+            transition: height .3s;
+        }
+    }
+
+    padding: 10px 14px;
+}

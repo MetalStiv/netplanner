@@ -22,7 +22,8 @@ export interface IShape {
     config: IShapeProps,
     isVisible: boolean,
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void): JSX.Element;
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
+        layerZIndex: number): JSX.Element;
     //     id: string;
     //     coords: { x: number; y: number; };
     //     sizes?: { w: number; h: number; } | undefined;

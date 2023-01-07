@@ -10,7 +10,7 @@ interface IPolylineGraphicalProps extends IShapeGraphicalProps {
 
 interface IPolylineProps extends IShapeProps {
     graphical: IPolylineGraphicalProps,
-    zIndex?: number,
+    zIndex: number,
 }
 
 export class PolylineCreator implements IShapeCreator {
@@ -35,6 +35,7 @@ export class PolylineCreator implements IShapeCreator {
                     isReadable: true,
                 },
             },
+            zIndex: 0,
         });
     }
 }
@@ -56,7 +57,8 @@ class Polyline implements IShape {
     }
 
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
+        layerZIndex: number) {
         let pathStr: string = '';
         this.config.graphical.points.forEach(el => pathStr = pathStr + ' l' + el.join(' '));
         return <path
@@ -65,7 +67,7 @@ class Polyline implements IShape {
             data-type={this.type}
             stroke={this.config.graphical.stroke?.value ?? 'black'}
             fill={this.config.graphical.fill?.value ?? 'transparent'}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex }}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}

@@ -1,5 +1,5 @@
-import { IGraphProp } from "../../model/IShape";
-import { IElemProps } from "./ProjectPage";
+import { IGraphProp } from "../../../model/IShape";
+import { IElemProps } from "../ProjectPage";
 
 interface IGraphicalPropertiesPanelProps {
     // graphicalConfig: IShapeGraphicalProps | undefined,

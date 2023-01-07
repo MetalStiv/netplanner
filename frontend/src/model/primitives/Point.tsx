@@ -27,7 +27,8 @@ export class PointCreator implements IShapeCreator {
                     value: `#000000`,
                     isReadable: true,
                 },
-            }
+            },
+            zIndex: 0,
         });
     }
 }
@@ -49,7 +50,8 @@ class Point implements IShape {
     }
 
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void) {
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
+        layerZIndex: number) {
         return <path
             id={this.config.id}
             key={this.config.id}
@@ -57,7 +59,7 @@ class Point implements IShape {
             stroke={this.config.graphical.stroke?.value ?? 'black'}
             strokeWidth={this.config.graphical.r.value ?? 2}
             fill={this.config.graphical.fill?.value ?? 'black'}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex }}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}

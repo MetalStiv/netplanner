@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useRootStore } from '../../providers/rootProvider';
+import React from 'react';
 import { IShapeProps, IShape } from '../../model/IShape';
-import { IElemProps, IDraggableElemProps } from '../../pages/ProjectPage/ProjectPage'
+import { IElemProps } from '../../pages/ProjectPage/ProjectPage'
 import IShapeCreator from '../../model/IShapeCreator';
-import Circle, { CircleCreator } from '../../model/primitives/Circle';
-import Layer, { ILayer } from '../../model/Layer';
-import Page, { IPage } from '../../model/Page';
+import { ILayer } from '../../model/Layer';
+import { IPage } from '../../model/Page';
 import ICanvasConfig from '../../common/canvasConfig';
 
 interface SVGCanvasProps {
@@ -18,7 +16,7 @@ interface SVGCanvasProps {
     getClickedElemConfigCallback: (elemProps: IElemProps) => void,
 }
 
-const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale, 
+const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
     creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
 
     //let svgChildren = useRootStore()!.getProjectStore().getProjects().at(0)!.renderedShapes!;
@@ -122,16 +120,14 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
 
     const onMousemoveCaptureHandler = (e: React.MouseEvent<SVGElement>) => {
         const SVGCursorCoords = transformOuterCoordsToSVGCoords({ x: e.pageX, y: e.pageY });
-        getCursorCoordsCallback(SVGCursorCoords);
+        //getCursorCoordsCallback(SVGCursorCoords);
     }
 
     const svgSelect = (e: React.MouseEvent<SVGGeometryElement>) => {
         let curObj: IShape | undefined;
         currentPage.getLayers().some(layer => {
             curObj = layer.getElems().find(item => {
-                if (item.config.id === e.currentTarget.id) {
-                    return item;
-                }
+                return item.config.id === e.currentTarget.id;
             })
             return typeof (curObj) !== 'undefined' ? true : false;
         });
@@ -147,7 +143,10 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
         getClickedElemConfigCallback(config);
     }
 
-    const onDropHandler = (e: React.MouseEvent) => {
+    const onDropHandler = (e: any) => {
+        if (e.dataTransfer.getData("draggableElement") !== 'shape') {
+            return;
+        }
         const dropCoords = transformOuterCoordsToSVGCoords({
             x: e.pageX,
             y: e.pageY,
@@ -163,94 +162,98 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
             }
             return layer;
         }));
+        console.log(currentPage.getLayers())
         //currentPage = { ...currentPage }
 
         updatePageCallback(currentPage);
         //console.log(dropCoords)
     }
 
+    console.log(currentPage);
     return (
         <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()}
-            style={{ width: canvasConfig.canvasWidth*scale, height: canvasConfig.canvasHeight*scale }}>
+            style={{ width: canvasConfig.canvasWidth * scale, height: canvasConfig.canvasHeight * scale }}>
             <svg
-                style={{backgroundColor: canvasConfig.sheetFillColor}}
+                style={{ backgroundColor: canvasConfig.sheetFillColor }}
                 viewBox={`0 0 ${canvasConfig.canvasWidth} ${canvasConfig.canvasHeight}`}
                 onClick={svgClickHandler}
                 onMouseMoveCapture={onMousemoveCaptureHandler}
                 xmlns="http://www.w3.org/2000/svg">
                 {
-                    Array.from(Array(Math.floor(canvasConfig.canvasWidth/canvasConfig.subgridStep*scale)).keys()).map(gridLine => 
-                        <path stroke={canvasConfig.subgridColor} 
-                            key={'vertical_subgrid_'+gridLine}
+                    Array.from(Array(Math.floor(canvasConfig.canvasWidth / canvasConfig.subgridStep * scale)).keys()).map(gridLine =>
+                        <path stroke={canvasConfig.subgridColor}
+                            key={'vertical_subgrid_' + gridLine}
                             strokeWidth={1}
                             vectorEffect="non-scaling-stroke"
                             d={
-                                `M ${gridLine*canvasConfig.subgridStep/scale} 0 ${gridLine*canvasConfig.subgridStep/scale} ${canvasConfig.canvasHeight}`
+                                `M ${gridLine * canvasConfig.subgridStep / scale} 0 ${gridLine * canvasConfig.subgridStep / scale} ${canvasConfig.canvasHeight}`
                             }
                         />
                     )
                 }
                 {
-                    Array.from(Array(Math.floor(canvasConfig.canvasHeight/canvasConfig.subgridStep*scale)).keys()).map(gridLine => 
-                        <path stroke={canvasConfig.subgridColor} 
-                            key={'horizontal_subgrid_'+gridLine}
+                    Array.from(Array(Math.floor(canvasConfig.canvasHeight / canvasConfig.subgridStep * scale)).keys()).map(gridLine =>
+                        <path stroke={canvasConfig.subgridColor}
+                            key={'horizontal_subgrid_' + gridLine}
                             strokeWidth={1}
                             vectorEffect="non-scaling-stroke"
                             d={
-                                `M 0 ${gridLine*canvasConfig.subgridStep/scale} ${canvasConfig.canvasWidth} ${gridLine*canvasConfig.subgridStep/scale}`
+                                `M 0 ${gridLine * canvasConfig.subgridStep / scale} ${canvasConfig.canvasWidth} ${gridLine * canvasConfig.subgridStep / scale}`
                             }
                         />
                     )
                 }
                 {
-                    Array.from(Array(Math.ceil(canvasConfig.canvasWidth/canvasConfig.gridStep*scale)).keys()).map(gridLine => 
-                        <path stroke={canvasConfig.gridColor} 
-                            key={'vertical_grid_'+gridLine}
+                    Array.from(Array(Math.ceil(canvasConfig.canvasWidth / canvasConfig.gridStep * scale)).keys()).map(gridLine =>
+                        <path stroke={canvasConfig.gridColor}
+                            key={'vertical_grid_' + gridLine}
                             strokeWidth={1}
                             vectorEffect="non-scaling-stroke"
                             d={
-                                `M ${gridLine*canvasConfig.gridStep/scale} 0 ${gridLine*canvasConfig.gridStep/scale} ${canvasConfig.canvasHeight}`
+                                `M ${gridLine * canvasConfig.gridStep / scale} 0 ${gridLine * canvasConfig.gridStep / scale} ${canvasConfig.canvasHeight}`
                             }
                         />
                     )
                 }
                 {
-                    Array.from(Array(Math.ceil(canvasConfig.canvasHeight/canvasConfig.gridStep*scale)).keys()).map(gridLine => 
-                        <path stroke={canvasConfig.gridColor} 
-                            key={'horizontal_grid_'+gridLine}
+                    Array.from(Array(Math.ceil(canvasConfig.canvasHeight / canvasConfig.gridStep * scale)).keys()).map(gridLine =>
+                        <path stroke={canvasConfig.gridColor}
+                            key={'horizontal_grid_' + gridLine}
                             strokeWidth={1}
                             vectorEffect="non-scaling-stroke"
                             d={
-                                `M  0 ${gridLine*canvasConfig.gridStep/scale} ${canvasConfig.canvasWidth} ${gridLine*canvasConfig.gridStep/scale}`
+                                `M  0 ${gridLine * canvasConfig.gridStep / scale} ${canvasConfig.canvasWidth} ${gridLine * canvasConfig.gridStep / scale}`
                             }
                         />
                     )
                 }
-                { 
-                    Array.from(Array(canvasConfig.a4Height).keys()).map(sheet => 
+                {
+                    Array.from(Array(canvasConfig.a4Height).keys()).map(sheet =>
                         <path stroke={canvasConfig.sheetStrokeColor}
-                            key={'horizontal_sheet_separator_'+sheet}
+                            key={'horizontal_sheet_separator_' + sheet}
                             strokeWidth={1}
                             vectorEffect="non-scaling-stroke"
                             d={
-                                `M 0 ${sheet*canvasConfig.a4Height} ${canvasConfig.canvasWidth} ${sheet*canvasConfig.a4Height}`
+                                `M 0 ${sheet * canvasConfig.a4Height} ${canvasConfig.canvasWidth} ${sheet * canvasConfig.a4Height}`
                             }
                         />
                     )
                 }
-                { 
-                    Array.from(Array(canvasConfig.a4Width).keys()).map(sheet => 
-                        <path stroke={canvasConfig.sheetStrokeColor} 
-                            key={'vertical_sheet_separator_'+sheet}
+                {
+                    Array.from(Array(canvasConfig.a4Width).keys()).map(sheet =>
+                        <path stroke={canvasConfig.sheetStrokeColor}
+                            key={'vertical_sheet_separator_' + sheet}
                             strokeWidth={1}
                             vectorEffect="non-scaling-stroke"
                             d={
-                                `M ${sheet*canvasConfig.a4Width} 0 ${sheet*canvasConfig.a4Width} ${canvasConfig.canvasHeight}`
+                                `M ${sheet * canvasConfig.a4Width} 0 ${sheet * canvasConfig.a4Width} ${canvasConfig.canvasHeight}`
                             }
                         />
                     )
                 }
-                { currentPage.getLayers().map((layer: ILayer) => layer.getElems().map(el => el.render(svgDragNDrop, svgSelect))) }
+                {currentPage.getLayers().map((layer: ILayer) => layer.getElems().map(el => {
+                    return el.render(svgDragNDrop, svgSelect, layer.zIndex);
+                }))}
             </svg>
         </div>
     )

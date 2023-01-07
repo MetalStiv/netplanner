@@ -11,17 +11,17 @@ import {
 } from 'react-page-split';
 import 'react-page-split/style.css';
 
-import ShapesPanel from './ShapesPanel';
-import PagesPanel from './PagesPanel';
-import LayersPanel from './LayersPanel';
-import ObjectPropertiesPanel from './ObjectPropertiesPanel';
-import GraphicalPropertiesPanel from './GraphicalPropertiesPanel';
+import ShapesPanel from './leftPanelBar/ShapesPanel';
+import PagesPanel from './leftPanelBar/PagesPanel';
+import LayersPanel from './leftPanelBar/LayersPanel';
+import ObjectPropertiesPanel from './rightPanelBar/ObjectPropertiesPanel';
+import GraphicalPropertiesPanel from './rightPanelBar/GraphicalPropertiesPanel';
 
-import '../../styles/project.scss';
+import '../../styles/project/index.scss';
 
 //import { Panel } from './Panel';
 
-import React, { useState, useCallback, useReducer, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import SVGCanvas from './SVGCanvas';
 import IShapeCreator from '../../model/IShapeCreator';
 import HeaderNavbar from './HeaderNavbar';
@@ -52,28 +52,12 @@ const ProjectPage: React.FC = () => {
     const [scale, setScale] = useState<number>(1.0);
     const [orientation, setOrientation] = useState<ICanvasConfig>(Portrait);
 
-    const workspaceDivRef = useRef<HTMLDivElement>(null)
+    const workspaceDivRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        workspaceDivRef.current!.scrollTop = orientation.a4Height*Math.floor(orientation.heightInSheets/2)-150;
-        workspaceDivRef.current!.scrollLeft = orientation.a4Width*Math.floor(orientation.widthInSheets/2)-150;
+        workspaceDivRef.current!.scrollTop = orientation.a4Height * Math.floor(orientation.heightInSheets / 2) - 150;
+        workspaceDivRef.current!.scrollLeft = orientation.a4Width * Math.floor(orientation.widthInSheets / 2) - 150;
     }, [orientation])
-
-    // function projectReducer(state:IProject, action:IProject) {
-    //     switch (action.type) {
-    //       case 'updatePages':
-    //         //return {count: state.count + 1};
-    //       case 'updateLayer':
-    //         // return {count: state.count - 1};
-    //       default:
-    //         return state
-    //    }
-    // }
-
-    // const [project, projectDispatch] = useReducer(
-    //     projectReducer,
-    //     useRootStore()!.getProjectStore().getProjects().at(0)!
-    // )
 
     const pageObjCallback = useCallback((page: IPage) => {
         let newProject: IProject = new Project(0, [], []);
@@ -128,7 +112,7 @@ const ProjectPage: React.FC = () => {
                 </aside>
 
                 <section id="workspace">
-                    <div style={{width: 1347, height: 910, marginLeft: 250, overflow: "scroll"}} ref={workspaceDivRef}>
+                    <div className="canvas-container" ref={workspaceDivRef}>
                         <SVGCanvas
                             currentPage={project.getCurrentPage()}
                             updatePageCallback={pageObjCallback}
@@ -155,12 +139,12 @@ const ProjectPage: React.FC = () => {
                 </aside>
 
                 <div style={{
-                        position: 'fixed',  
-                        top: '95%',
-                        left:'82%'
-                    }}>
-                    <button onClick={() => setScale(scale => scale > 0.1 ? scale-0.1 : scale)}>-</button>
-                    <button onClick={() => setScale(scale => scale+0.1)}>+</button>
+                    position: 'fixed',
+                    top: '95%',
+                    left: '82%'
+                }}>
+                    <button onClick={() => setScale(scale => scale > 0.1 ? scale - 0.1 : scale)}>-</button>
+                    <button onClick={() => setScale(scale => scale + 0.1)}>+</button>
                 </div>
             </main>
         </div>

@@ -56,7 +56,7 @@ class Layer implements ILayer {
         this.elems = shapes;
     }
     addElem(shape: IShape) {
-        shape.config.zIndex = this.zIndex + this.elems.length;
+        shape.config.zIndex = this.elems.length;
         this.elems = [...this.elems, shape];
     }
 }

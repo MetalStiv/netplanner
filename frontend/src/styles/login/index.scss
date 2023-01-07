@@ -1,5 +1,5 @@
-@use '_variables' as v;
-@use 'global' as g;
+@import '../../common/styles/variables';
+@import '../../common/styles/global.scss';
 
 #loginPage {
     header {
@@ -35,7 +35,7 @@
                         font-weight: 600;
                         font-size: 14px;
                         line-height: 20px;
-                        color: v.$black;
+                        color: $black;
                         outline: none;
                         margin-right: 16px;
                         padding-bottom: 8px;
@@ -43,7 +43,7 @@
                     }
 
                     li.react-tabs__tab--selected {
-                        border-color: v.$blue;
+                        border-color: $blue;
                     }
 
                     ul {
@@ -62,12 +62,12 @@
 
                 .lang-block {
                     button {
-                        @include g.button-default;
+                        @include button-default;
                         cursor: pointer;
                     }
 
                     .current {
-                        border-bottom: 2px solid v.$blue;
+                        border-bottom: 2px solid $blue;
                         transition: border-bottom .2s;
                     }
 
@@ -119,7 +119,7 @@
 
                 .react-tabs__tab {
                     display: inline-block;
-                    border-bottom: 5px solid #ffffff;
+                    border-bottom: 5px solid $white;
                     bottom: -1px;
                     position: relative;
                     list-style: none;
@@ -131,8 +131,8 @@
                 }
 
                 .react-tabs__tab--selected {
-                    border-color: v.$lightblue;
-                    color: v.$lightblue;
+                    border-color: $lightblue;
+                    color: $lightblue;
                 }
 
                 .react-tabs__tab:focus {
@@ -199,14 +199,14 @@
                         top: 50%;
                         transform: translateY(-70%);
                         font-size: 16px;
-                        color: v.$gray;
+                        color: $gray;
                         transition: top .2s, font-size .2s;
                     }
 
                     input {
                         &:focus {
-                            color: v.$dark;
-                            border-color: v.$lightblue;
+                            color: $dark;
+                            border-color: $lightblue;
                             outline: 0;
                         }
 
@@ -223,10 +223,10 @@
                         font-size: 1rem;
                         font-weight: 400;
                         line-height: 1.5;
-                        color: v.$darkgray;
+                        color: $darkgray;
                         background-color: transparent;
                         border: none;
-                        border-bottom: 2px solid v.$lightgray;
+                        border-bottom: 2px solid $lightgray;
                         transition: border-color .2s;
                     }
 
@@ -235,13 +235,13 @@
 
                 .btn {
                     &:hover {
-                        color: v.$dark;
+                        color: $dark;
                         text-decoration: none
                     }
 
                     display: inline-block;
                     font-weight: 700;
-                    color: v.$dark;
+                    color: $dark;
                     text-align: center;
                     background-color: transparent;
                     border: 1px solid transparent;
@@ -257,13 +257,13 @@
 
                 .btn-blue {
                     &:hover {
-                        background: linear-gradient(0deg, v.$blue, v.$blue);
-                        color: #fff;
+                        background: linear-gradient(0deg, $blue, $blue);
+                        color: $white;
                         transition: background .2s
                     }
 
-                    background: linear-gradient(0deg, v.$lightblue, v.$lightblue);
-                    color: #fff;
+                    background: linear-gradient(0deg, $lightblue, $lightblue);
+                    color: $white;
                     padding:16px 76px;
                     border-radius:5px;
                     font-weight: 600;
@@ -281,7 +281,6 @@
             align-items:center;
             padding: 0px 100px;
         }
-
     }
 
     @media all and (max-height: 805px) {
@@ -293,5 +292,5 @@
     }
 
     height: 100vh;
-    background-color:v.$background;
+    background-color:$background;
 }
