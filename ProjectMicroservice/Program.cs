@@ -68,5 +68,26 @@ app.MapGet("/getProjects", [Authorize] async (HttpContext http,
         return;
     }
 );
+
+app.MapPost("/removeProject", [Authorize] async (HttpContext http, 
+    ITokenService tokenService,
+    IProjectRepositoryService projectRepositoryService) => {
+        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+        var userId = tokenService.GetUserIdFromToken(token);
+
+        var projectIdDto = await http.Request.ReadFromJsonAsync<ProjectIdDto>();
+        var project = await projectRepositoryService.GetProjectByIdAsync(projectIdDto!.Id);
+
+        if (project.OwnerId != userId)
+        {
+            http.Response.StatusCode = 401;
+            return;
+        }
+
+        await projectRepositoryService.RemoveAsync(projectIdDto!.Id);
+        http.Response.StatusCode = 200;
+        return;
+    }
+);
  
 await app.RunAsync();

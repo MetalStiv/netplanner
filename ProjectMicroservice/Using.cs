@@ -19,3 +19,4 @@ global using PemUtils;
 global using ProjectMicroservice.Services.ProjectRepositoryService;
 global using ProjectMicroservice.Services.TokenService;
 global using ProjectMicroservice.Model;
+global using ProjectMicroservice.Dto;

@@ -6,7 +6,7 @@
         height: 100vh;
 
         .leftMenu {
-            width: 120px;
+            width: 6%;
             margin-right: 20px;
             background: $white;
         }
@@ -14,7 +14,6 @@
         .rightMenu {
             width: 100%;
             margin-left: 20px;
-            border: 1px solid aqua;
 
             .startMenu {
                 width: 100%;
@@ -22,9 +21,7 @@
                 overflow-x: hidden;
                 overflow-y: auto;
             }
-
         }
-
     }
 
     .leftContent {
@@ -40,21 +37,33 @@
             margin-left: -20px;
         }
 
+        li.react-tabs__tab--selected > .rectangle {
+            background-color: $background;
+        }
+
         position: fixed;
-        width: 120px;
+        width: 6%;
         height: 100vh;
         left: 0px;
         top: 0px;
         background: $white;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
+
+        .iconFrame {
+            position: absolute;
+            margin-top: 87%;
+            margin-left: 12%;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid $blue;
+            width: 70%;
+            height: 8%;
+        }
 
         .iconUser {
             width: 72px;
             height: 72px;
-
+            margin-top: 90%;
+            margin-left: 15%;
         }
 
         .frame {
@@ -62,7 +71,6 @@
             flex-direction: column;
             align-items: flex-start;
             padding: 0px;
-            gap: 70px;
             left: 20px;
             right: 20px;
 
@@ -76,10 +84,11 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                margin-top: 70%;
             }
 
-            .rectangle:active {
-                background-color: $background;
+            .first-rectangle {
+                margin-top: 130%;
             }
 
             .rectangle:hover {
@@ -97,40 +106,13 @@
             align-items: center;
             background-color: $white;
             border-radius: 10px;
-
+            margin-top: 280%;
+            margin-left: 15%;
         }
 
         .logout:hover {
             background-color: $background;
         }
 
-    }
-
-    .text {
-        position: absolute;
-        text-align: center;
-        width: 800px;
-        height: 48px;
-        top: 40%;
-        left: 28%;
-        font-weight: 700;
-        font-size: 40px;
-        text-transform: uppercase;
-        color: #292C33;
-    }
-
-    button {
-        position: absolute;
-        width: 148px;
-        height: 51px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        font-size: 40px;
-        cursor: pointer;
-        background: $lightblue;
-        border: none;
-        color: $white;
-        border-radius: 15px;
     }
 }

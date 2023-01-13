@@ -9,9 +9,8 @@ import logoutImage from '../../assets/images/Logout.svg';
 import icoImage from '../../assets/images/Ellipse.png';
 
 
-const SettingPage: React.FC = () => {
+const SettingsTab: React.FC = () => {
     const navigate = useNavigate()
-
 
     return (
         <div id="settingPage">
@@ -52,4 +51,4 @@ const SettingPage: React.FC = () => {
 
     );
 }
-export default SettingPage;
+export default SettingsTab;

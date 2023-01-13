@@ -19,14 +19,24 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
             GetCollection<Project>(projectDBSettings.ProjectCollectionName);
     }
 
-    public async Task AddAsync(ProjectMeta newProjectMeta){
-        await _projectMetaCollection.InsertOneAsync(newProjectMeta);
-        await _projectCollection.InsertOneAsync(new Project(newProjectMeta.Id!));
-    }
+    public async Task AddAsync(ProjectMeta newProjectMeta) =>
+        await Task.WhenAll(
+            _projectMetaCollection.InsertOneAsync(newProjectMeta), 
+            _projectCollection.InsertOneAsync(new Project(newProjectMeta.Id!))
+        );
 
     public async Task UpdateAsync(ProjectMeta projectMetaToUpdate) =>
         await _projectMetaCollection
             .ReplaceOneAsync(p => p.Id == projectMetaToUpdate.Id, projectMetaToUpdate);
+
+    public async Task RemoveAsync(string projectId) => 
+        await Task.WhenAll(
+             _projectMetaCollection.DeleteOneAsync(p => p.Id == projectId),
+             _projectCollection.DeleteOneAsync(p => p.Id == projectId)
+        );
+
+    public async Task<ProjectMeta> GetProjectByIdAsync(string projectId) =>
+        await _projectMetaCollection.Find(p => p.Id == projectId).SingleAsync();
 
     public async Task<List<ProjectMeta>?> GetProjectsAsync(string userId) =>
         await (await _projectMetaCollection.FindAsync(p => p.OwnerId == userId)).ToListAsync();
