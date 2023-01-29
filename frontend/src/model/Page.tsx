@@ -1,30 +1,33 @@
-import { isTemplateMiddle } from "typescript";
-import Layer from "./Layer";
-import ILayer from "./Layer";
+import Layer, { ILayer } from "./Layer";
 
-export interface IPage {
-    id: number,
-    title: string,
-    layers: ILayer[],
-    isCurrent: boolean,
-    getLayers(): ILayer[],
-    setLayers(layers: ILayer[]): void,
-    addLayer(): void,
-    setCurrentLayer(layerID: number): void,
-    copy: (project: IPage) => void,
-    copyLayers: (pages: ILayer[]) => void,
-}
+// export interface Page {
+//     id: number,
+//     title: string,
+//     layers: ILayer[],
+//     isCurrent: boolean,
+//     getLayers(): ILayer[],
+//     addLayer(title?: string): void,
+//     setLayers(layers: ILayer[]): void,
+//     setCurrentLayer(layerID: number): void,
+//     titleUniqueization(title: string): string,
 
-class Page implements IPage {
+//     _genID(length: number): number,
+
+//     //copy: (project: Page) => void,
+//     //copyLayers: (pages: ILayer[]) => void,
+// }
+
+class Page implements Page {
     id: number;
     title: string;
     layers: ILayer[];
     isCurrent: boolean;
 
-    constructor(pagesCount: number, layers: ILayer[]) {
-        this.id = parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(12).toString().replace('.', ''));
-        this.title = `Page ${pagesCount + 1}`;
-        this.layers = layers;
+    constructor(pagesCount: number, title: string = "Page") {
+        this.id = this._genID(12);
+        //this.title = `Page ${pagesCount + 1}`;
+        this.title = title;
+        this.layers = [new Layer(0)] as ILayer[];
         this.isCurrent = true;
     }
 
@@ -40,33 +43,53 @@ class Page implements IPage {
             }
         })
     }
-    copy(page: IPage) {
-        this.id = page.id;
-        this.title = page.title;
-        this.copyLayers(page.getLayers())
-        //this.layers = page.layers;
-        this.isCurrent = page.isCurrent;
-    }
-    copyLayers(layers: ILayer[]) {
-        this.layers = layers.map(layer => {
-            let newLayer = new Layer(0, []);
-            newLayer.copy(layer);
-            return newLayer;
-        })
-    }
+    // copy(page: Page) {
+    //     this.id = page.id;
+    //     this.title = page.title;
+    //     this.copyLayers(page.getLayers())
+    //     //this.layers = page.layers;
+    //     this.isCurrent = page.isCurrent;
+    // }
+    // copyLayers(layers: ILayer[]) {
+    //     this.layers = layers.map(layer => {
+    //         let newLayer = new Layer(0, []);
+    //         newLayer.copy(layer);
+    //         return newLayer;
+    //     })
+    // }
     getLayers() {
         return this.layers;
     }
     setLayers(layers: ILayer[]) {
         this.layers = layers;
     }
-    addLayer() {
-        this.layers.forEach(item => {
+    addLayer(title: string = "Layer") {
+        this.getLayers().forEach(item => {
             if (item.isCurrent) {
                 item.isCurrent = false;
             }
         });
-        this.layers = [...this.layers, new Layer(this.layers.length, [])];
+        this.layers = [...this.getLayers(), new Layer(this.layers.length, this.titleUniqueization(title))];
+    }
+
+    private _genID(length: number) {
+        return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(length).toString().replace('.', ''))
+    }
+
+    titleUniqueization(title: string, renamingItemID?: number) {
+        let copyIndex = 0;
+        while (true) {
+            if (this.getLayers().find(item => item.id !== renamingItemID && item.title === (title + (copyIndex === 0 ? '' : `_${copyIndex}`)))) {
+                copyIndex++;
+            }
+            else {
+                break;
+            }
+        }
+        if (copyIndex > 0) {
+            title += `_${copyIndex}`;
+        }
+        return title;
     }
 }
 

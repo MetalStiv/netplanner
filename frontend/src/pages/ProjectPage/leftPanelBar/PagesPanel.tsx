@@ -1,15 +1,15 @@
 import { useState } from 'react';
 //import { useRootStore } from '../../providers/rootProvider';
 import { Collapse } from 'react-collapse';
-import { IPage } from '../../../model/Page';
+import Page from '../../../model/Page';
 import { IProject } from '../../../model/Project';
 
-interface IPagesPanelProps {
+interface PagesPanelProps {
     currentProject: IProject,
-    updateProjectCallback: (pages: IPage[]) => void,
+    updateProjectCallback: (pages: Page[]) => void,
 }
 
-const PagesPanel = ({ currentProject, updateProjectCallback }: IPagesPanelProps) => {
+const PagesPanel = ({ currentProject, updateProjectCallback }: PagesPanelProps) => {
     const [collapsePanelIsOpen, setCollapsePanelIsOpen] = useState<boolean>(false);
 
     return (

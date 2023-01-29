@@ -26,7 +26,7 @@ import SVGCanvas from './SVGCanvas';
 import IShapeCreator from '../../model/IShapeCreator';
 import HeaderNavbar from './HeaderNavbar';
 import { useRootStore } from '../../providers/rootProvider';
-import { IPage } from '../../model/Page';
+import Page from '../../model/Page';
 import Project, { IProject } from '../../model/Project';
 import { IShapeGraphicalProps } from '../../model/IShape';
 import ICanvasConfig, { Portrait } from "../../common/canvasConfig";
@@ -59,10 +59,10 @@ const ProjectPage: React.FC = () => {
         workspaceDivRef.current!.scrollLeft = orientation.a4Width * Math.floor(orientation.widthInSheets / 2) - 150;
     }, [orientation])
 
-    const pageObjCallback = useCallback((page: IPage) => {
-        let newProject: IProject = new Project(0, [], []);
-        newProject.copy(project);
-        newProject.setPages(newProject.getPages().map(pageItem => {
+    const pageObjCallback = useCallback((page: Page) => {
+        let newProject: IProject = new Project(project.shapesGroups!, project.title);
+        //newProject.copy(project);
+        newProject.setPages(project.getPages().map((pageItem: Page) => {
             if (pageItem.id === page.id) {
                 pageItem = page;
             }
@@ -71,7 +71,7 @@ const ProjectPage: React.FC = () => {
         setProject(newProject);
     }, []);
 
-    const pagesArrCallback = useCallback((pages: IPage[]) => {
+    const pagesArrCallback = useCallback((pages: Page[]) => {
         project.setPages(pages);
         setProject(project);
     }, []);

@@ -1,5 +1,4 @@
 import Page from "./Page";
-import IPage from "./Page";
 import IShapesGroup from "./IGeometryGroup";
 import Layer, { ILayer } from "./Layer";
 import IShape from "./IShape";
@@ -8,47 +7,46 @@ export interface IProject {
     id: number,
     title: string,
     shapesGroups?: IShapesGroup[],
-    pages?: IPage[],
-    setPages: (page: Array<IPage>) => void,
-    getPages: () => IPage[],
+    pages?: Page[],
+    setPages: (page: Page[]) => void,
+    getPages: () => Page[],
     addPage: () => void,
-    getCurrentPage: () => IPage,
+    getCurrentPage: () => Page,
     setCurrentPage: (pageID: number) => void,
-    copy: (project: IProject) => void,
+    //copy: (project: IProject) => void,
 }
 
 class Project implements IProject {
     id: number;
     title: string;
     shapesGroups: IShapesGroup[];
-    pages: IPage[];
+    pages: Page[];
+    isCurrent: boolean;
 
-    constructor(projectsCount: number, shapesGroups: IShapesGroup[], pages: IPage[]) {
-        this.id = this.generateID();
-        this.title = `Project${projectsCount > 0 ? ' ' + projectsCount : ''}`;
+    constructor(shapesGroups: IShapesGroup[], title: string = "Project") {
+        this.id = this._genID(12);
+        //this.title = `Project${projectsCount > 0 ? ' ' + projectsCount : ''}`;
+        this.title = title;
         this.shapesGroups = shapesGroups;
-        this.pages = pages;
+        this.pages = [new Page(0)] as Page[];
+        this.isCurrent = true;
     }
 
-    private generateID() {
-        return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(12).toString().replace('.', ''));
-    }
+    // copy(project: IProject) {
+    //     this.id = project.id;
+    //     this.title = project.title;
+    //     this.shapesGroups = project.shapesGroups ?? [];
+    //     //this.copyPages(project.getPages());
+    //     // this.pages = project.pages ?? [];
+    // }
 
-    copy(project: IProject) {
-        this.id = project.id;
-        this.title = project.title;
-        this.shapesGroups = project.shapesGroups ?? [];
-        this.copyPages(project.getPages());
-        // this.pages = project.pages ?? [];
-    }
-
-    copyPages(pages: IPage[]) {
-        this.pages = pages.map(page => {
-            let newPage = new Page(0, []);
-            newPage.copy(page);
-            return newPage;
-        })
-    }
+    // copyPages(pages: Page[]) {
+    //     this.pages = pages.map(page => {
+    //         let newPage = new Page(0);
+    //         newPage.copy(page);
+    //         return newPage;
+    //     })
+    // }
 
     setCurrentPage(pageID: number) {
         this.pages.forEach(item => {
@@ -63,7 +61,7 @@ class Project implements IProject {
         })
     }
     getCurrentPage() {
-        return this.pages.find(page => {
+        return this.getPages().find(page => {
             if (page.isCurrent) {
                 return true;
             }
@@ -73,16 +71,36 @@ class Project implements IProject {
     getPages() {
         return this.pages;
     }
-    setPages(pages: IPage[]) {
+    setPages(pages: Page[]) {
         this.pages = pages;
     }
-    addPage() {
+    addPage(title: string = "Page") {
         this.pages.forEach(page => {
             if (page.isCurrent) {
                 page.isCurrent = false;
             }
         })
-        this.pages = [...this.pages, new Page(this.pages.length, [new Layer(0, [] as IShape[])] as ILayer[])];
+        this.setPages([...this.pages, new Page(this.pages.length, this._titleUniqueization(title))]);
+    }
+
+    private _genID(length: number) {
+        return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(length).toString().replace('.', ''));
+    }
+
+    private _titleUniqueization(title: string) {
+        let copyIndex = 0;
+        while (true) {
+            if (this.getPages().find(item => item.title === (title + (copyIndex === 0 ? '' : `_${copyIndex}`)))) {
+                copyIndex++;
+            }
+            else {
+                break;
+            }
+        }
+        if (copyIndex > 0) {
+            title += `_${copyIndex}`;
+        }
+        return title;
     }
 }
 

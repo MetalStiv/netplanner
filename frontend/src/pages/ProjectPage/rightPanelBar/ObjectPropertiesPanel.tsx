@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IElemProps } from '../ProjectPage'
 //import { useRootStore } from '../providers/rootProvider';
 interface IObjectPropertiesPanelProps {

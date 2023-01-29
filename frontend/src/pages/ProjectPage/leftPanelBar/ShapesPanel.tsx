@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRootStore } from '../../../providers/rootProvider';
 import Dropdown from '../../../components/Dropdown';
-import { IDraggableElemProps } from '../ProjectPage';
+//import { IDraggableElemProps } from '../ProjectPage';
 import IShapeCreator from '../../../model/IShapeCreator';
 
 interface IShapesPanelProps {

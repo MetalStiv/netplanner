@@ -1,9 +1,9 @@
-import { IPage } from '../../../model/Page';
+import Page from '../../../model/Page';
 import { useState } from 'react';
 
 interface ILayersPanelProps {
-    currentPage: IPage,
-    updatePageCallback: (page: IPage) => void,
+    currentPage: Page,
+    updatePageCallback: (page: Page) => void,
 }
 
 const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => {
@@ -25,17 +25,21 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
         <path d="M16.5 1.5L10.8975 7.1025" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>;
 
-
     const changeTitleHandler = (el: HTMLInputElement, layerID: number) => {
         setEditingLayerIndex(-1);
+        let newTitle = el.value.trim();
 
-        currentPage.setLayers(currentPage.getLayers().map(item => {
-            if (item.id === layerID && el.value.length) {
-                item.title = el.value;
-            }
-            return item;
-        }))
-        setTitle("");
+        if (newTitle.length) {
+            newTitle = currentPage.titleUniqueization(newTitle, layerID);
+
+            currentPage.setLayers(currentPage.getLayers().map(item => {
+                if (item.id === layerID) {
+                    item.title = newTitle;
+                }
+                return item;
+            }))
+            setTitle("");
+        }
     }
 
     const inputTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +119,6 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                             }}
                             draggable
                             onDragStart={e => {
-                                console.log(currentPage.getLayers().slice())
                                 setDraggableLayerIndex(i);
                                 e.currentTarget.style.opacity = '0.5';
 
@@ -143,6 +146,7 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                                 className='layer-title'
                                 onDoubleClick={() => {
                                     setEditingLayerIndex(i);
+                                    setTitle(layer.title);
                                 }}>{layer.title}</span>
                             {
                                 (editingLayerIndex === i) && <input

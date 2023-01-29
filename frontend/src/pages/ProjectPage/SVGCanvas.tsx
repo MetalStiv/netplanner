@@ -3,12 +3,12 @@ import { IShapeProps, IShape } from '../../model/IShape';
 import { IElemProps } from '../../pages/ProjectPage/ProjectPage'
 import IShapeCreator from '../../model/IShapeCreator';
 import { ILayer } from '../../model/Layer';
-import { IPage } from '../../model/Page';
+import Page from '../../model/Page';
 import ICanvasConfig from '../../common/canvasConfig';
 
 interface SVGCanvasProps {
-    currentPage: IPage,
-    updatePageCallback: (page: IPage) => void,
+    currentPage: Page,
+    updatePageCallback: (page: Page) => void,
     canvasConfig: ICanvasConfig,
     scale: number,
     creatorOnDrop: IShapeCreator | null,
@@ -119,7 +119,7 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
     }
 
     const onMousemoveCaptureHandler = (e: React.MouseEvent<SVGElement>) => {
-        const SVGCursorCoords = transformOuterCoordsToSVGCoords({ x: e.pageX, y: e.pageY });
+        //const SVGCursorCoords = transformOuterCoordsToSVGCoords({ x: e.pageX, y: e.pageY });
         //getCursorCoordsCallback(SVGCursorCoords);
     }
 
@@ -162,7 +162,7 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
             }
             return layer;
         }));
-        console.log(currentPage.getLayers())
+        //console.log(currentPage.getLayers())
         //currentPage = { ...currentPage }
 
         updatePageCallback(currentPage);

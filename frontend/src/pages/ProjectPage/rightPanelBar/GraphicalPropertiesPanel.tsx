@@ -10,9 +10,9 @@ interface IGraphicalPropertiesPanelProps {
     elemProps: IElemProps | null,
 }
 
-interface IGraphProps {
-    [index: string]: IGraphProp;
-}
+// interface IGraphProps {
+//     [index: string]: IGraphProp;
+// }
 
 const GraphicalPropertiesPanel = ({ elemProps }: IGraphicalPropertiesPanelProps) => {
     return (
