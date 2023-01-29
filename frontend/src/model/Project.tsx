@@ -13,6 +13,7 @@ export interface IProject {
     addPage: () => void,
     getCurrentPage: () => Page,
     setCurrentPage: (pageID: number) => void,
+    titleUniqueization: (title: string, renamingItemID?: number) => string,
     //copy: (project: IProject) => void,
 }
 
@@ -80,17 +81,17 @@ class Project implements IProject {
                 page.isCurrent = false;
             }
         })
-        this.setPages([...this.pages, new Page(this.pages.length, this._titleUniqueization(title))]);
+        this.setPages([...this.pages, new Page(this.pages.length, this.titleUniqueization(title))]);
     }
 
     private _genID(length: number) {
         return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(length).toString().replace('.', ''));
     }
 
-    private _titleUniqueization(title: string) {
+    titleUniqueization(title: string, renamingItemID?: number) {
         let copyIndex = 0;
         while (true) {
-            if (this.getPages().find(item => item.title === (title + (copyIndex === 0 ? '' : `_${copyIndex}`)))) {
+            if (this.getPages().find(item => item.id !== renamingItemID && item.title === (title + (copyIndex === 0 ? '' : `_${copyIndex}`)))) {
                 copyIndex++;
             }
             else {

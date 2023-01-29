@@ -11,6 +11,29 @@ interface PagesPanelProps {
 
 const PagesPanel = ({ currentProject, updateProjectCallback }: PagesPanelProps) => {
     const [collapsePanelIsOpen, setCollapsePanelIsOpen] = useState<boolean>(false);
+    const [editingPageIndex, setEditingPageIndex] = useState<number>(-1);
+    const [title, setTitle] = useState<string>("");
+
+    const changeTitleHandler = (el: HTMLInputElement, pageID: number) => {
+        setEditingPageIndex(-1);
+        let newTitle = el.value.trim();
+
+        if (newTitle.length) {
+            newTitle = currentProject.titleUniqueization(newTitle, pageID);
+
+            currentProject.setPages(currentProject.getPages().map(item => {
+                if (item.id === pageID) {
+                    item.title = newTitle;
+                }
+                return item;
+            }))
+            setTitle("");
+        }
+    }
+
+    const inputTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTitle((e.target as HTMLInputElement).value);
+    }
 
     return (
         <div id="pagesPanel">
@@ -23,12 +46,37 @@ const PagesPanel = ({ currentProject, updateProjectCallback }: PagesPanelProps) 
                 </p>
                 <Collapse isOpened={collapsePanelIsOpen}>
                     <div>
-                        {currentProject.getPages().map(page => {
-                            return <p key={page.id} className='collapseItem' onClick={() => {
+                        {currentProject.getPages().map((page, i) => {
+                            return <div key={page.id} className='collapseItem' onClick={() => {
                                 setCollapsePanelIsOpen(false);
                                 currentProject.setCurrentPage(page.id);
                                 updateProjectCallback(currentProject.getPages());
-                            }}>{page.title}</p>
+                            }}>
+
+                                <span style={{ display: editingPageIndex === i ? 'none' : 'inline', cursor: "text" }}
+                                    className='page-title'
+                                    onClick={e => e.stopPropagation()}
+                                    onDoubleClick={e => {
+                                        e.stopPropagation();
+                                        setEditingPageIndex(i);
+                                        setTitle(page.title);
+                                    }}>{page.title}</span>
+                                {
+                                    (editingPageIndex === i) && <input
+                                        className='change-name-input'
+                                        autoFocus={true}
+                                        onClick={e => e.stopPropagation()}
+                                        type="text"
+                                        onBlur={e => changeTitleHandler(e.target, page.id)}
+                                        value={title}
+                                        onChange={inputTitle}
+                                        onKeyDown={e => {
+                                            if (e.keyCode === 13) {
+                                                changeTitleHandler(e.target, page.id);
+                                            }
+                                        }} />
+                                }
+                            </div>
                         })}
                         <p id="addPage-btn" onClick={() => {
                             currentProject.addPage();
