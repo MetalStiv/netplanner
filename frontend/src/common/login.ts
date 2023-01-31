@@ -16,6 +16,9 @@ interface IJwtData {
 
 export const login = async (params: ISignInForm): Promise<IUser> => {
   const response = await userCleanMicroservice.post('login', params)
+  if (response.status !== 200){
+    throw new Error(response.status.toString())
+  }
 
   setAuthTokens({
     accessToken: response.data.accessToken,

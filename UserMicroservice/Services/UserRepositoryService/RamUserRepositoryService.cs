@@ -19,4 +19,7 @@ public class RamUserRepositoryService : IUserRepositoryService
 
     public async Task<User?> GetByEmailAsync(string email) =>
         await Task.Run(() => _users.FirstOrDefault<User>(x => x.Email == email));
+
+    public async Task<User?> GetByIdAsync(string id) =>
+        await Task.Run(() => _users.FirstOrDefault<User>(x => x.Id == id));
 }

@@ -23,4 +23,7 @@ public class MongoDBUserRepositoryService : IUserRepositoryService
 
     public async Task<User?> GetByEmailAsync(string email) =>
         await _usersCollection.Find(x => x.Email == email).FirstOrDefaultAsync();
+
+    public async Task<User?> GetByIdAsync(string id) =>
+        await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 }

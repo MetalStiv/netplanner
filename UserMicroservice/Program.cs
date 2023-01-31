@@ -59,6 +59,13 @@ app.MapPost("/register", [AllowAnonymous] async (HttpContext http,
             return;
         }
         var user = new User(loginDto.Email, loginDto.Password);
+        
+        if (userRepositoryService.GetByEmailAsync(user.Email) != null)
+        {
+            http.Response.StatusCode = 520;
+            return;
+        }
+
         await userRepositoryService.AddAsync(user);
         await mailService.SendAuthMailAsync(user);
         return;
@@ -71,19 +78,19 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http,
         var loginDto = await http.Request.ReadFromJsonAsync<LoginDto>();
         if (loginDto == null)
         {
-            http.Response.StatusCode = 401;
+            http.Response.StatusCode = 500;
             return;
         }
         var user = await userRepositoryService.GetByEmailAsync(loginDto.Email);
         if (user == null || !user.Verified)
         {
-            http.Response.StatusCode = 401;
+            http.Response.StatusCode = 520;
             return;
         }
 
         if (!BCrypt.Net.BCrypt.Verify(loginDto.Password + user.Salt, user.PasswordHash))
         {
-            http.Response.StatusCode = 401;
+            http.Response.StatusCode = 521;
             return;
         }
     
@@ -105,7 +112,7 @@ app.MapPost("/refreshToken", [AllowAnonymous] async (HttpContext http,
         var tokenApiDto = await http.Request.ReadFromJsonAsync<TokenApiDto>();
         if (tokenApiDto == null)
         {
-            http.Response.StatusCode = 401;
+            http.Response.StatusCode = 500;
             return;
         }
         
@@ -151,13 +158,13 @@ app.MapGet("/verify", [AllowAnonymous] async (HttpContext http,
         var user = await userRepositoryService.GetByEmailAsync(verificationApiDto.Email);
         if (user == null)
         {
-            http.Response.StatusCode = 401;
+            http.Response.StatusCode = 500;
             return;
         }
 
         if (user.VerificationCode != verificationApiDto.Code)
         {
-            http.Response.StatusCode = 401;
+            http.Response.StatusCode = 520;
             return;
         }
 
@@ -173,6 +180,24 @@ app.MapGet("/verify", [AllowAnonymous] async (HttpContext http,
     }
 );
  
-app.MapGet("/doaction", (Func<string>)([Authorize]() => "Action Succeeded"));
+app.MapGet("/getUsersByIds", ([Authorize] async (HttpContext http,
+    IUserRepositoryService userRepositoryService) => {
+        var userIdsDto = new UserIdsDto(http.Request.Query["ids[]"]);
+
+        var userDtos = new List<UserDto>();
+        foreach (var id in userIdsDto.Ids)
+        {
+            var user = await userRepositoryService.GetByIdAsync(id);
+            if (user == null){
+                http.Response.StatusCode = 520;
+                return;
+            }
+            userDtos.Add(new UserDto(user.Id!, user.Name));
+        }
+
+        await http.Response.WriteAsJsonAsync(userDtos);
+        return;
+    })
+);
  
 await app.RunAsync();
