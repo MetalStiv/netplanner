@@ -17,7 +17,7 @@ import LayersPanel from './leftPanelBar/LayersPanel';
 import ObjectPropertiesPanel from './rightPanelBar/ObjectPropertiesPanel';
 import GraphicalPropertiesPanel from './rightPanelBar/GraphicalPropertiesPanel';
 
-import '../../styles/project/index.scss';
+//import '../../styles/project/index.scss';
 
 //import { Panel } from './Panel';
 

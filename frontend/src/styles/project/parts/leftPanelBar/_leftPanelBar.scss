@@ -1,6 +1,12 @@
+$pages-panel-height: 53px;
+
 #leftPanelBar {
     .content {
         @import "panels";
+
+        .react-page-split__panel {
+            overflow-y: hidden;
+        }
 
         .react-page-split__divider--vertical {
             cursor: row-resize;

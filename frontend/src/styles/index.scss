@@ -1,7 +1,7 @@
-@import '../common/styles/variables';
-@import '../common/styles/global.scss';
+@import './common/fonts.scss';
+@import './common/variables';
+@import './common/global.scss';
 
 @import "login";
 @import "project";
-@import "setting";
-@import "user";
+@import "home";

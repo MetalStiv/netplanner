@@ -88,20 +88,22 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
 
     return (
         <div id="layersPanel">
-            <p className="panel-title">
-                <span>Layers</span>
-                <span className="plus" onClick={() => {
-                    currentPage.addLayer();
-                    updatePageCallback(currentPage);
-                    setEditingLayerIndex(currentPage.getLayers().length - 1);
-                }}>
-                    <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 6.5H11" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M6 11.5V1.5" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </span>
-            </p>
-            <div className="">
+            <div className="panel-title-container">
+                <p className="panel-title">
+                    <span>Layers</span>
+                    <span className="plus" onClick={() => {
+                        currentPage.addLayer();
+                        updatePageCallback(currentPage);
+                        setEditingLayerIndex(currentPage.getLayers().length - 1);
+                    }}>
+                        <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 6.5H11" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M6 11.5V1.5" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </span>
+                </p>
+            </div>
+            <div className="panel-content">
                 {currentPage.getLayers().slice().sort((first, second) => first.zIndex - second.zIndex).map((layer, i) => (
                     <div key={layer.title + i} className="layer-container">
                         <div className={`dropzone top${draggableLayerIndex !== -1 && i === 0 && draggableLayerIndex !== 0 ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, -1000)} onDragOver={e => e.preventDefault()} ></div>

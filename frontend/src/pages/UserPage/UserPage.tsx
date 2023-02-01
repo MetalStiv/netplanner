@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/home/index.scss";
+//import "../../styles/home/index.scss";
 import workImage from '../../assets/images/Work.svg';
 import bookImage from '../../assets/images/Book.png';
 import settingImage from '../../assets/images/Setting.svg';
@@ -33,7 +33,7 @@ const UserPage: React.FC = () => {
 
                 <div className="leftContent">
                     <div className="iconFrame"></div>
-                    
+
                     <div className="iconUser">
                         <img src={icoImage} alt='Icon' />
                     </div>
