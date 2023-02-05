@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Collapse } from 'react-collapse';
 import Page from '../../../model/Page';
 import { IProject } from '../../../model/Project';
+import { useClickAndDoubleClickHandler } from '../../../common/customHooks/clickHandler';
 
 interface PagesPanelProps {
     currentProject: IProject,
@@ -13,6 +14,21 @@ const PagesPanel = ({ currentProject, updateProjectCallback }: PagesPanelProps) 
     const [collapsePanelIsOpen, setCollapsePanelIsOpen] = useState<boolean>(false);
     const [editingPageIndex, setEditingPageIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
+    const titleClickHandler = useClickAndDoubleClickHandler(
+        (e, page) => {
+            selectPageHandler(page.id);
+        },
+        (e, page, i) => {
+            setEditingPageIndex(i);
+            setTitle(page.title);
+        });
+
+
+    function selectPageHandler(pageID: number) {
+        setCollapsePanelIsOpen(false);
+        currentProject.setCurrentPage(pageID);
+        updateProjectCallback(currentProject.getPages());
+    }
 
     const changeTitleHandler = (el: HTMLInputElement, pageID: number) => {
         setEditingPageIndex(-1);
@@ -47,20 +63,14 @@ const PagesPanel = ({ currentProject, updateProjectCallback }: PagesPanelProps) 
                 <Collapse isOpened={collapsePanelIsOpen}>
                     <div>
                         {currentProject.getPages().map((page, i) => {
-                            return <div key={page.id} className='collapseItem' onClick={() => {
-                                setCollapsePanelIsOpen(false);
-                                currentProject.setCurrentPage(page.id);
-                                updateProjectCallback(currentProject.getPages());
-                            }}>
-
+                            return <div key={page.id} className='collapseItem' onClick={() => selectPageHandler(page.id)}>
                                 <span style={{ display: editingPageIndex === i ? 'none' : 'inline', cursor: "text" }}
                                     className='page-title'
-                                    onClick={e => e.stopPropagation()}
-                                    onDoubleClick={e => {
+                                    onClick={(e) => {
                                         e.stopPropagation();
-                                        setEditingPageIndex(i);
-                                        setTitle(page.title);
-                                    }}>{page.title}</span>
+                                        titleClickHandler(e, page, i);
+                                    }}
+                                >{page.title}</span>
                                 {
                                     (editingPageIndex === i) && <input
                                         className='change-name-input'
@@ -81,7 +91,7 @@ const PagesPanel = ({ currentProject, updateProjectCallback }: PagesPanelProps) 
                         <p id="addPage-btn" onClick={() => {
                             currentProject.addPage();
                             updateProjectCallback(currentProject.getPages());
-                            setCollapsePanelIsOpen(false);
+                            setEditingPageIndex(currentProject.getPages().length - 1);
                         }
                         }>Add page</p>
                     </div>
