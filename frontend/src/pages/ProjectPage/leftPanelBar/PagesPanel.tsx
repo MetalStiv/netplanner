@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { Collapse } from 'react-collapse';
 import Page from '../../../model/Page';
 import { IProject } from '../../../model/Project';
-import { useClickAndDoubleClickHandler } from '../../../common/customHooks/clickHandler';
+import { useClickAndDoubleClickHandler } from '../../../common/customHooks/useClickAndDoubleClickHandler.ts';
 
 interface PagesPanelProps {
     currentProject: IProject,
-    updateProjectCallback: (pages: Page[]) => void,
+    //updateProjectCallback: (pages: Page[]) => void,
 }
 
-const PagesPanel = ({ currentProject, updateProjectCallback }: PagesPanelProps) => {
+const PagesPanel = ({ currentProject }: PagesPanelProps) => {
     const [collapsePanelIsOpen, setCollapsePanelIsOpen] = useState<boolean>(false);
     const [editingPageIndex, setEditingPageIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
@@ -27,7 +27,8 @@ const PagesPanel = ({ currentProject, updateProjectCallback }: PagesPanelProps) 
     function selectPageHandler(pageID: number) {
         setCollapsePanelIsOpen(false);
         currentProject.setCurrentPage(pageID);
-        updateProjectCallback(currentProject.getPages());
+        console.log(currentProject.getCurrentPage())
+        //updateProjectCallback(currentProject.getPages());
     }
 
     const changeTitleHandler = (el: HTMLInputElement, pageID: number) => {
@@ -90,7 +91,7 @@ const PagesPanel = ({ currentProject, updateProjectCallback }: PagesPanelProps) 
                         })}
                         <p id="addPage-btn" onClick={() => {
                             currentProject.addPage();
-                            updateProjectCallback(currentProject.getPages());
+                            //updateProjectCallback(currentProject.getPages());
                             setEditingPageIndex(currentProject.getPages().length - 1);
                         }
                         }>Add page</p>

@@ -3,10 +3,10 @@ import { useState } from 'react';
 
 interface ILayersPanelProps {
     currentPage: Page,
-    updatePageCallback: (page: Page) => void,
+    //updatePageCallback: (page: Page) => void,
 }
 
-const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => {
+const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
     const [editingLayerIndex, setEditingLayerIndex] = useState<number>(-1);
     const [draggableLayerIndex, setDraggableLayerIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
@@ -81,7 +81,7 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
             return layerItem;
         }))
         setDraggableLayerIndex(-1);
-        updatePageCallback(currentPage);
+        //updatePageCallback(currentPage);
         //console.log(currentPage.getLayers())
     }
 
@@ -93,7 +93,7 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                     <span>Layers</span>
                     <span className="plus" onClick={() => {
                         currentPage.addLayer();
-                        updatePageCallback(currentPage);
+                        //updatePageCallback(currentPage);
                         setEditingLayerIndex(currentPage.getLayers().length - 1);
                     }}>
                         <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -116,7 +116,7 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                                     }
                                     return item;
                                 }))
-                                updatePageCallback(currentPage);
+                                //updatePageCallback(currentPage);
                                 layer.isCurrent = true;
                             }}
                             draggable
@@ -140,7 +140,7 @@ const LayersPanel = ({ currentPage, updatePageCallback }: ILayersPanelProps) => 
                                         }
                                         return item;
                                     }))
-                                    updatePageCallback(currentPage);
+                                    //updatePageCallback(currentPage);
                                 }}>
                                 {layer.isVisible ? visibleIcon : invisibleIcon}
                             </div>

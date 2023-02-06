@@ -8,7 +8,7 @@ import ICanvasConfig from '../../common/canvasConfig';
 
 interface SVGCanvasProps {
     currentPage: Page,
-    updatePageCallback: (page: Page) => void,
+    //updatePageCallback: (page: Page) => void,
     canvasConfig: ICanvasConfig,
     scale: number,
     creatorOnDrop: IShapeCreator | null,
@@ -16,7 +16,7 @@ interface SVGCanvasProps {
     getClickedElemConfigCallback: (elemProps: IElemProps) => void,
 }
 
-const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
+const SVGCanvas = ({ currentPage, canvasConfig, scale,
     creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
 
     //let svgChildren = useRootStore()!.getProjectStore().getProjects().at(0)!.renderedShapes!;
@@ -53,7 +53,7 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
             return layer;
         }));
 
-        updatePageCallback(currentPage);
+        //updatePageCallback(currentPage);
     }
 
     const svgDragNDrop = (e: React.MouseEvent<SVGGeometryElement>) => {
@@ -165,7 +165,7 @@ const SVGCanvas = ({ currentPage, updatePageCallback, canvasConfig, scale,
         //console.log(currentPage.getLayers())
         //currentPage = { ...currentPage }
 
-        updatePageCallback(currentPage);
+        //updatePageCallback(currentPage);
         //console.log(dropCoords)
     }
 

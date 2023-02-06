@@ -43,11 +43,12 @@ export interface IDraggableElemProps {
 }
 
 const ProjectPage: React.FC = () => {
+
     const [canvasCursorCoords, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [selectedElemProps, setSelectedElemProps] = useState<IElemProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
-    const [project, setProject] = useState<IProject>(
-        useRootStore()!.getProjectStore().getProjects().at(0)!
+    const [currentProject, setCurrentProject] = useState<IProject>(
+        useRootStore()!.getProjectStore().getCurrentProject()
     );
     const [scale, setScale] = useState<number>(1.0);
     const [orientation, setOrientation] = useState<ICanvasConfig>(Portrait);
@@ -57,24 +58,30 @@ const ProjectPage: React.FC = () => {
     useEffect(() => {
         workspaceDivRef.current!.scrollTop = orientation.a4Height * Math.floor(orientation.heightInSheets / 2) - 150;
         workspaceDivRef.current!.scrollLeft = orientation.a4Width * Math.floor(orientation.widthInSheets / 2) - 150;
-    }, [orientation])
+    }, [orientation]);
+    useEffect(() => {
+        let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
+        newProject.setPages(currentProject.getPages());
+        setCurrentProject(newProject);
+    }, [currentProject]);
 
-    const pageObjCallback = useCallback((page: Page) => {
-        let newProject: IProject = new Project(project.shapesGroups!, project.title);
-        //newProject.copy(project);
-        newProject.setPages(project.getPages().map((pageItem: Page) => {
-            if (pageItem.id === page.id) {
-                pageItem = page;
-            }
-            return pageItem;
-        }))
-        setProject(newProject);
-    }, []);
+    // const pageObjCallback = useCallback((page: Page) => {
+    //     let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
+    //     //newProject.copy(project);
+    //     newProject.setPages(currentProject.getPages().map((pageItem: Page) => {
+    //         if (pageItem.id === page.id) {
+    //             pageItem = page;
+    //         }
+    //         return pageItem;
+    //     }))
+    //     //setCurrentProject(newProject);
+    // }, [currentProject]);
 
-    const pagesArrCallback = useCallback((pages: Page[]) => {
-        project.setPages(pages);
-        setProject(project);
-    }, []);
+    // const pagesArrCallback = useCallback((pages: Page[]) => {
+    //     console.log(currentProject.getPages(), pages);
+    //     //project.setPages(pages);
+    //     //setCurrentProject(currentProject);
+    // }, [currentProject]);
 
     const cursorCoordsCallback = useCallback((cursorCoords: { x: number, y: number }) => {
         setCanvasCursorCoords(cursorCoords);
@@ -102,8 +109,10 @@ const ProjectPage: React.FC = () => {
                                     <ShapesPanel getCreatorOnDragCallback={draggableElemCallback} />
                                 </div>
                                 <div style={{ minHeight: 150 }}>
-                                    <PagesPanel currentProject={project} updateProjectCallback={pagesArrCallback} />
-                                    <LayersPanel currentPage={project.getCurrentPage()} updatePageCallback={pageObjCallback} />
+                                    {/* <PagesPanel currentProject={currentProject} updateProjectCallback={pagesArrCallback} />
+                                    <LayersPanel currentPage={currentProject.getCurrentPage()} updatePageCallback={pageObjCallback} /> */}
+                                    <PagesPanel currentProject={currentProject} />
+                                    <LayersPanel currentPage={currentProject.getCurrentPage()} />
                                 </div>
                             </VerticalPageSplit>
                         </ResizeContent>
@@ -114,8 +123,8 @@ const ProjectPage: React.FC = () => {
                 <section id="workspace">
                     <div className="canvas-container" ref={workspaceDivRef}>
                         <SVGCanvas
-                            currentPage={project.getCurrentPage()}
-                            updatePageCallback={pageObjCallback}
+                            currentPage={currentProject.getCurrentPage()}
+                            //updatePageCallback={pageObjCallback}
                             canvasConfig={orientation}
                             scale={scale}
                             getCursorCoordsCallback={cursorCoordsCallback}
