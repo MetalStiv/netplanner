@@ -6,17 +6,20 @@ const PROJECT_BASE_URL = "http://localhost:5109/";
 
 export const userCleanMicroservice = axios.create({
     baseURL: USER_BASE_URL,
-    timeout: 2000
+    timeout: 2000,
+    validateStatus: () => true
 });
 
 export const userMicroservice = axios.create({
     baseURL: USER_BASE_URL,
-    timeout: 2000
+    timeout: 2000,
+    validateStatus: () => true
 });
 
 export const projectMicroservice = axios.create({
     baseURL: PROJECT_BASE_URL,
-    timeout: 2000
+    timeout: 2000,
+    validateStatus: () => true
 });
 
 const requestRefresh: TokenRefreshRequest = async (refreshToken: string): Promise<IAuthTokens | string> => {

@@ -1,3 +1,7 @@
+@import '../common/fonts.scss';
+@import '../common/variables';
+@import '../common/global.scss';
+
 #loginPage {
     header {
         .container {
@@ -187,6 +191,10 @@
                     }
 
                     margin-bottom:16px;
+                }
+
+                small {
+                    color: red;
                 }
 
                 .form-input {

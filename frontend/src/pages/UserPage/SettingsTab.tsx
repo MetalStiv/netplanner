@@ -7,10 +7,11 @@ import bookImage from '../../assets/images/book.svg';
 import settingImage from '../../assets/images/Setting.svg';
 import logoutImage from '../../assets/images/Logout.svg';
 import icoImage from '../../assets/images/Ellipse.png';
-
+import useLanguage from "../../common/customHooks/useLanguage";
 
 const SettingsTab: React.FC = () => {
     const navigate = useNavigate()
+    const [, , switchLanguage, langText] = useLanguage();
 
     return (
         <div id="settingPage">
@@ -23,6 +24,9 @@ const SettingsTab: React.FC = () => {
                         <img src={icoImage} alt='Icon' />
                     </div>
 
+                    <p>{langText.userPage.projectTab.defaultName}</p>
+                    <button onClick={() => switchLanguage("en")}>Eng</button>
+                    <button onClick={() => switchLanguage("ru")}>Rus</button>
                 </div>
 
             </div>

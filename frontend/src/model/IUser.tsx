@@ -1,6 +1,6 @@
 interface IUser {
     id: string,
-    email: string,
+    email?: string,
     name: string,
     avatarbase64?: string,
 }
