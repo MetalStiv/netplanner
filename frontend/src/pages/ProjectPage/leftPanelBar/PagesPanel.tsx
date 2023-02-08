@@ -1,6 +1,7 @@
 import { useState } from 'react';
 //import { useRootStore } from '../../providers/rootProvider';
 import { Collapse } from 'react-collapse';
+import { useClickAndDoubleClickHandler } from '../../../common/customHooks/useClickAndDoubleClickHandler';
 import Page from '../../../model/Page';
 import { IProject } from '../../../model/Project';
 import { useClickAndDoubleClickHandler } from '../../../common/customHooks/useClickAndDoubleClickHandler.ts';

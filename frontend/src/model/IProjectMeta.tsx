@@ -3,7 +3,8 @@ interface IProjectMeta {
     name: string,
     ownerId: string,
     subscriberIds: string[],
-    creationTime: string
+    creationTime: string,
+    hide: boolean
 }
 
 export default IProjectMeta;

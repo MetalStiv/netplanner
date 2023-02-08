@@ -22,7 +22,22 @@ interface ILanguage {
             toLongEmailError: string,
             toShortPassword: string,
             toLongPasswordError: string,
-            passwordsDoesNotMatch: string
+            passwordsDoesNotMatch: string,
+            registrationEmailError: string,
+            invalidUserError: string,
+            passwordError: string
+        }
+    },
+    userPage: {
+        projectTab: {
+            defaultName: string,
+            justCreated: string,
+            owner: string,
+            modified: string,
+            startNewProject: string,
+            deleteProjectQuestion: string,
+            delete: string,
+            cancel: string
         }
     }
 }

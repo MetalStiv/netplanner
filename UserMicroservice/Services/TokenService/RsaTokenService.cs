@@ -43,7 +43,7 @@ public class RsaTokenService : ITokenService
         {
             ValidateAudience = false, 
             ValidateIssuer = false,
-            ValidateIssuerSigningKey = true,
+            ValidateIssuerSigningKey = false,
             IssuerSigningKey = _settings.PublicKey,
             ValidateLifetime = false
         };

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import IUser from "../../model/IUser";
 import { useRootStore } from "../../providers/rootProvider";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -7,11 +7,7 @@ import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { userCleanMicroservice } from "../../common/axiosMicroservices";
 import { login, ISignInForm} from "../../common/login";
-import text, { Language } from "../../languages/language";
-
-interface ILoginPanelProps {
-    language: Language;
-}
+import useLanguage from '../../common/customHooks/useLanguage';
 
 interface IRegisterForm {
     email: string,
@@ -19,9 +15,13 @@ interface IRegisterForm {
     passwordConfirmation: string
 }
 
-const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
-    const navigate = useNavigate()
-    const userStore = useRootStore()?.getUserStore()
+const LoginPanel: React.FC = () => {
+    const navigate = useNavigate();
+    const [, , , langText] = useLanguage();
+    const userStore = useRootStore()?.getUserStore();
+    const [registrationEmailError, setRegistrationEmailError] = useState<boolean>(false);
+    const [invalidUserError, setinvalidUserError] = useState<boolean>(false);
+    const [passwordError, setPasswordError] = useState<boolean>(false);
 
     const signIn = useFormik({
         initialValues: {
@@ -29,19 +29,30 @@ const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
             password: '',
         },
         onSubmit: async (values: ISignInForm) => {
-            const user: IUser = await login(values);
-            userStore?.setData(user)
-            navigate('/home')
+            try{
+                const user: IUser = await login(values);
+                userStore?.setData(user)
+                navigate('/home')
+            }
+            catch(e){
+                const errorCode = (e as Error).message;
+                if (errorCode === "520"){
+                    setinvalidUserError(true)
+                }
+                if (errorCode === "521"){
+                    setPasswordError(true)
+                }
+            }
         },
         validationSchema: Yup.object({
             email: Yup.string()
-                .required(text[props.language].loginPage.userForm.requiredError)
-                .email(text[props.language].loginPage.userForm.emailError)
-                .max(40, text[props.language].loginPage.userForm.toLongEmailError),
+                .required(langText.loginPage.userForm.requiredError)
+                .email(langText.loginPage.userForm.emailError)
+                .max(40, langText.loginPage.userForm.toLongEmailError),
             password: Yup.string()
-                .required(text[props.language].loginPage.userForm.requiredError)
-                .min(4, text[props.language].loginPage.userForm.toShortPassword)
-                .max(20, text[props.language].loginPage.userForm.toLongPasswordError),
+                .required(langText.loginPage.userForm.requiredError)
+                .min(4, langText.loginPage.userForm.toShortPassword)
+                .max(20, langText.loginPage.userForm.toLongPasswordError),
         })
     })
 
@@ -52,23 +63,26 @@ const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
             passwordConfirmation: '',
         },
         onSubmit: async (values: IRegisterForm) => {
-            await userCleanMicroservice.post('register', {
+            let res = await userCleanMicroservice.post('register', {
                 email: values.email,
                 password: values.password
             });
+            if (res.status === 520){
+                setRegistrationEmailError(true)
+            }
         },
         validationSchema: Yup.object({
             email: Yup.string()
-                .required(text[props.language].loginPage.userForm.requiredError)
-                .email(text[props.language].loginPage.userForm.emailError)
-                .max(40, text[props.language].loginPage.userForm.toLongEmailError),
+                .required(langText.loginPage.userForm.requiredError)
+                .email(langText.loginPage.userForm.emailError)
+                .max(40, langText.loginPage.userForm.toLongEmailError),
             password: Yup.string()
-                .required(text[props.language].loginPage.userForm.requiredError)
-                .min(4, text[props.language].loginPage.userForm.toShortPassword)
-                .max(20, text[props.language].loginPage.userForm.toLongPasswordError),
+                .required(langText.loginPage.userForm.requiredError)
+                .min(4, langText.loginPage.userForm.toShortPassword)
+                .max(20, langText.loginPage.userForm.toLongPasswordError),
             passwordConfirmation: Yup.string()
                 .test('passwords-match', 
-                    text[props.language].loginPage.userForm.passwordsDoesNotMatch, 
+                    langText.loginPage.userForm.passwordsDoesNotMatch, 
                     function (value: string | undefined, context) {
                         return context.parent.password === value
                 })
@@ -80,15 +94,15 @@ const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
     useEffect(() => {
         signIn.validateForm();
         register.validateForm();
-    }, [props]);
+    }, []);
 
     return (
         <>
             <h1>NETPLANNER</h1>
             <Tabs>
                 <TabList>
-                    <Tab>{text[props.language].loginPage.userForm.signIn}</Tab>
-                    <Tab>{text[props.language].loginPage.userForm.register}</Tab>
+                    <Tab>{langText.loginPage.userForm.signIn}</Tab>
+                    <Tab>{langText.loginPage.userForm.register}</Tab>
                 </TabList>
 
                 <TabPanel>
@@ -99,7 +113,11 @@ const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
                                     id="email"
                                     name="email"
                                     type="text"
-                                    onChange={signIn.handleChange}
+                                    onChange={e => {
+                                        setinvalidUserError(false)
+                                        setPasswordError(false)
+                                        signIn.handleChange(e)
+                                    }}
                                     value={signIn.values.email}
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
@@ -117,23 +135,32 @@ const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
                                     id="password"
                                     name="password"
                                     type="password"
-                                    onChange={signIn.handleChange}
+                                    onChange={e => {
+                                        setPasswordError(false)
+                                        signIn.handleChange(e)
+                                    }}
                                     value={signIn.values.password}
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
-                                <label htmlFor="password">{text[props.language].loginPage.userForm.password}</label>
+                                <label htmlFor="password">{langText.loginPage.userForm.password}</label>
                             </div>
                             <div>
                                 {signIn.touched.password && signIn.errors.password && (
                                     <small>{signIn.errors.password}</small>
                                 )}
                             </div>
-                            <a href="" rel="nofollow">{text[props.language].loginPage.userForm.forgotPassword}</a>
+                            <a href="" rel="nofollow">{langText.loginPage.userForm.forgotPassword}</a>
                         </div>
+                        {
+                            invalidUserError && <small>{langText.loginPage.userForm.invalidUserError}</small>
+                        }
+                        {
+                            passwordError && <small>{langText.loginPage.userForm.passwordError}</small>
+                        }
                         <div style={{ textAlign: 'center', paddingTop: 48 }}>
                             <button className="btn btn-blue" type="submit">
-                                {text[props.language].loginPage.userForm.buttonStart}
+                                {langText.loginPage.userForm.buttonStart}
                             </button>
                         </div>
                     </form>
@@ -146,7 +173,10 @@ const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
                                     id="email"
                                     name="email"
                                     type="text"
-                                    onChange={register.handleChange}
+                                    onChange={e => {
+                                        setRegistrationEmailError(false)
+                                        register.handleChange(e)
+                                    }}
                                     value={register.values.email}
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
@@ -169,7 +199,7 @@ const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
-                                <label htmlFor="password">{text[props.language].loginPage.userForm.password}</label>
+                                <label htmlFor="password">{langText.loginPage.userForm.password}</label>
                             </div>
 
                             {register.touched.password && register.errors.password && (
@@ -188,7 +218,7 @@ const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
                                 <label htmlFor="passwordConfirmation">{
-                                    text[props.language].loginPage.userForm.passwordConfirmation}
+                                    langText.loginPage.userForm.passwordConfirmation}
                                 </label>
                             </div>
 
@@ -196,9 +226,12 @@ const LoginPanel: React.FC<ILoginPanelProps> = (props) => {
                                 <small>{register.errors.passwordConfirmation}</small>
                             )}
                         </div>
+                        {
+                            registrationEmailError && <small>{langText.loginPage.userForm.registrationEmailError}</small>
+                        }
                         <div style={{ textAlign: 'center' }}>
                             <button className="btn btn-blue" type="submit">
-                                {text[props.language].loginPage.userForm.buttonRegister}
+                                {langText.loginPage.userForm.buttonRegister}
                             </button>
                         </div>
                     </form>

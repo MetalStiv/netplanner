@@ -25,7 +25,22 @@ export const eng: ILanguage = {
             toLongEmailError: "It is more then 40 symbols",
             toShortPassword: "It is less then 4 symbols",
             toLongPasswordError: "It is more then 20 symbols",
-            passwordsDoesNotMatch: "Passwords does not match"
+            passwordsDoesNotMatch: "Passwords does not match",
+            registrationEmailError: "Email is already used",
+            invalidUserError: "User doesn't registred",
+            passwordError: "Wrong password"
+        }
+    },
+    userPage: {
+        projectTab: {
+            defaultName: "New project",
+            justCreated: "Just created",
+            owner: "Owner",
+            modified: "Modified",
+            startNewProject: "Start a new project",
+            deleteProjectQuestion: "Are you shure you want to delete project",
+            delete: "Delete",
+            cancel: "Cancel"
         }
     }
 }
