@@ -7,6 +7,7 @@ import { observer } from "mobx-react-lite";
 import { projectMicroservice } from "../../../common/axiosMicroservices";
 import { TProjectsMetaStore } from "../../../stores/projectsMetsStore";
 import useLanguage from "../../../common/customHooks/useLanguage";
+import { useNavigate } from "react-router-dom";
 
 interface IProjectCardProps {
     projectId: string;
@@ -15,6 +16,7 @@ interface IProjectCardProps {
 const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
     const [, , , langText] = useLanguage();
+    const navigate = useNavigate();
     
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(projectsMetaStore.getById(projectId)!.name);
@@ -129,6 +131,10 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                     questionTextPartOne={langText.userPage.projectTab.deleteProjectQuestion}
                     questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
                     action={removeProject} />
+                
+                <button onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}>
+                    To project
+                </button>
             </div>
         </div>
     )

@@ -30,6 +30,10 @@ import Page from '../../model/Page';
 import Project, { IProject } from '../../model/Project';
 import { IShapeGraphicalProps } from '../../model/IShape';
 import ICanvasConfig, { Portrait } from "../../common/canvasConfig";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import AlertDialog from "../../components/AlertDialog";
+import { projectMicroservice } from "../../common/axiosMicroservices";
+import Loader from "../../components/Loader";
 
 export interface IElemProps {
     type: string,
@@ -43,7 +47,9 @@ export interface IDraggableElemProps {
 }
 
 const ProjectPage: React.FC = () => {
-
+    const [params] = useSearchParams();
+    const navigate = useNavigate();
+    
     const [canvasCursorCoords, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [selectedElemProps, setSelectedElemProps] = useState<IElemProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
@@ -51,19 +57,38 @@ const ProjectPage: React.FC = () => {
         useRootStore()!.getProjectStore().getCurrentProject()
     );
     const [scale, setScale] = useState<number>(1.0);
-    const [orientation, setOrientation] = useState<ICanvasConfig>(Portrait);
+    const [orientation,] = useState<ICanvasConfig>(Portrait);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [projectUpdateError, setProjectUpdateError] = useState<boolean>(false);
 
     const workspaceDivRef = useRef<HTMLDivElement>(null);
+
+    const updateProject = useCallback(async () => {
+        setLoading(true)
+        await new Promise(r => setTimeout(r, 2000));
+        let project = await projectMicroservice.get('getProjectContent', {
+            params: {
+                id: params.get('id')
+            }
+        })
+        if (project.status === 520){
+            setProjectUpdateError(true);
+        }
+        setLoading(false)
+    }, [setProjectUpdateError])
 
     useEffect(() => {
         workspaceDivRef.current!.scrollTop = orientation.a4Height * Math.floor(orientation.heightInSheets / 2) - 150;
         workspaceDivRef.current!.scrollLeft = orientation.a4Width * Math.floor(orientation.widthInSheets / 2) - 150;
-    }, [orientation]);
+    }, [orientation, workspaceDivRef]);
+    // useEffect(() => {
+    //     let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
+    //     newProject.setPages(currentProject.getPages());
+    //     setCurrentProject(newProject);
+    // }, [currentProject, setCurrentProject]);
     useEffect(() => {
-        let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
-        newProject.setPages(currentProject.getPages());
-        setCurrentProject(newProject);
-    }, [currentProject]);
+        updateProject()
+    }, [updateProject])
 
     // const pageObjCallback = useCallback((page: Page) => {
     //     let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
@@ -97,6 +122,15 @@ const ProjectPage: React.FC = () => {
 
     return (
         <div id="projectPage">
+            {
+                loading && <Loader />
+            }
+            <AlertDialog 
+                    btnText="Ok" 
+                    text={`You are not allowed to project!`}
+                    isShown={projectUpdateError}
+                    onClose={() => navigate('/home')}
+            />
             <header>
                 <HeaderNavbar />
             </header>

@@ -169,7 +169,7 @@ const SVGCanvas = ({ currentPage, canvasConfig, scale,
         //console.log(dropCoords)
     }
 
-    console.log(currentPage);
+    // console.log(currentPage);
     return (
         <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()}
             style={{ width: canvasConfig.canvasWidth * scale, height: canvasConfig.canvasHeight * scale }}>
