@@ -49,14 +49,14 @@ export interface IDraggableElemProps {
 const ProjectPage: React.FC = () => {
     const [params] = useSearchParams();
     const navigate = useNavigate();
-    
+
     const [canvasCursorCoords, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [selectedElemProps, setSelectedElemProps] = useState<IElemProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
     const [currentProject, setCurrentProject] = useState<IProject>(
         useRootStore()!.getProjectStore().getCurrentProject()
     );
-    const [scale, setScale] = useState<number>(1.0);
+    const [scale, setScale] = useState<number>(1);
     const [orientation,] = useState<ICanvasConfig>(Portrait);
     const [loading, setLoading] = useState<boolean>(false);
     const [projectUpdateError, setProjectUpdateError] = useState<boolean>(false);
@@ -71,7 +71,7 @@ const ProjectPage: React.FC = () => {
                 id: params.get('id')
             }
         })
-        if (project.status === 520){
+        if (project.status === 520) {
             setProjectUpdateError(true);
         }
         setLoading(false)
@@ -81,32 +81,14 @@ const ProjectPage: React.FC = () => {
         workspaceDivRef.current!.scrollTop = orientation.a4Height * Math.floor(orientation.heightInSheets / 2) - 150;
         workspaceDivRef.current!.scrollLeft = orientation.a4Width * Math.floor(orientation.widthInSheets / 2) - 150;
     }, [orientation, workspaceDivRef]);
-    // useEffect(() => {
-    //     let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
-    //     newProject.setPages(currentProject.getPages());
-    //     setCurrentProject(newProject);
-    // }, [currentProject, setCurrentProject]);
     useEffect(() => {
-        updateProject()
-    }, [updateProject])
-
-    // const pageObjCallback = useCallback((page: Page) => {
-    //     let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
-    //     //newProject.copy(project);
-    //     newProject.setPages(currentProject.getPages().map((pageItem: Page) => {
-    //         if (pageItem.id === page.id) {
-    //             pageItem = page;
-    //         }
-    //         return pageItem;
-    //     }))
-    //     //setCurrentProject(newProject);
-    // }, [currentProject]);
-
-    // const pagesArrCallback = useCallback((pages: Page[]) => {
-    //     console.log(currentProject.getPages(), pages);
-    //     //project.setPages(pages);
-    //     //setCurrentProject(currentProject);
-    // }, [currentProject]);
+        let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
+        newProject.setPages(currentProject.getPages());
+        setCurrentProject(newProject);
+    }, [currentProject, setCurrentProject]);
+    // useEffect(() => {
+    //     updateProject()
+    // }, [updateProject])
 
     const cursorCoordsCallback = useCallback((cursorCoords: { x: number, y: number }) => {
         setCanvasCursorCoords(cursorCoords);
@@ -125,11 +107,11 @@ const ProjectPage: React.FC = () => {
             {
                 loading && <Loader />
             }
-            <AlertDialog 
-                    btnText="Ok" 
-                    text={`You are not allowed to project!`}
-                    isShown={projectUpdateError}
-                    onClose={() => navigate('/home')}
+            <AlertDialog
+                btnText="Ok"
+                text={`You are not allowed to project!`}
+                isShown={projectUpdateError}
+                onClose={() => navigate('/home')}
             />
             <header>
                 <HeaderNavbar />
@@ -181,13 +163,14 @@ const ProjectPage: React.FC = () => {
                     </div>
                 </aside>
 
-                <div style={{
-                    position: 'fixed',
-                    top: '95%',
-                    left: '82%'
-                }}>
-                    <button onClick={() => setScale(scale => scale > 0.1 ? scale - 0.1 : scale)}>-</button>
-                    <button onClick={() => setScale(scale => scale + 0.1)}>+</button>
+                <div id="scale-slider">
+                    <input type="range"
+                        min={10}
+                        max={200}
+                        step={10}
+                        value={Math.ceil(scale * 100)}
+                        onChange={e => setScale(parseFloat((parseInt(e.target.value) * 0.01).toFixed(1)))}
+                    />
                 </div>
             </main>
         </div>
