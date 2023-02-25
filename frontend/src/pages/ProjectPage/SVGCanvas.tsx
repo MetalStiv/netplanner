@@ -172,14 +172,14 @@ const SVGCanvas = ({ currentPage, canvasConfig, scale,
     // console.log(currentPage);
     return (
         <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()}
-            style={{ width: canvasConfig.canvasWidth * scale, height: canvasConfig.canvasHeight * scale }}>
+            style={{ width: canvasConfig.canvasWidth*scale, height: canvasConfig.canvasHeight*scale }}>
             <svg
                 style={{ backgroundColor: canvasConfig.sheetFillColor }}
                 viewBox={`0 0 ${canvasConfig.canvasWidth} ${canvasConfig.canvasHeight}`}
                 onClick={svgClickHandler}
                 onMouseMoveCapture={onMousemoveCaptureHandler}
                 xmlns="http://www.w3.org/2000/svg">
-                {
+                {/* {
                     Array.from(Array(Math.floor(canvasConfig.canvasWidth / canvasConfig.subgridStep * scale)).keys()).map(gridLine =>
                         <path stroke={canvasConfig.subgridColor}
                             key={'vertical_subgrid_' + gridLine}
@@ -190,8 +190,8 @@ const SVGCanvas = ({ currentPage, canvasConfig, scale,
                             }
                         />
                     )
-                }
-                {
+                } */}
+                {/* {
                     Array.from(Array(Math.floor(canvasConfig.canvasHeight / canvasConfig.subgridStep * scale)).keys()).map(gridLine =>
                         <path stroke={canvasConfig.subgridColor}
                             key={'horizontal_subgrid_' + gridLine}
@@ -226,8 +226,8 @@ const SVGCanvas = ({ currentPage, canvasConfig, scale,
                             }
                         />
                     )
-                }
-                {
+                }*/}
+                {/* {
                     Array.from(Array(canvasConfig.a4Height).keys()).map(sheet =>
                         <path stroke={canvasConfig.sheetStrokeColor}
                             key={'horizontal_sheet_separator_' + sheet}
@@ -250,7 +250,23 @@ const SVGCanvas = ({ currentPage, canvasConfig, scale,
                             }
                         />
                     )
-                }
+                }  */}
+                <path stroke={canvasConfig.gridColor}
+                    key={'vertical_grid_1'}
+                    strokeWidth={1}
+                    vectorEffect="non-scaling-stroke"
+                    d={
+                        `M ${canvasConfig.canvasWidth/2} 0 ${canvasConfig.canvasWidth/2} ${canvasConfig.canvasHeight}`
+                    }
+                />
+                <path stroke={canvasConfig.gridColor}
+                    key={'vertical_grid_1'}
+                    strokeWidth={1}
+                    vectorEffect="non-scaling-stroke"
+                    d={
+                        `M 0 ${canvasConfig.canvasHeight/2} ${canvasConfig.canvasWidth} ${canvasConfig.canvasWidth/2}`
+                    }
+                />
                 {currentPage.getLayers().map((layer: ILayer) => layer.getElems().map(el => {
                     return el.render(svgDragNDrop, svgSelect, layer.zIndex);
                 }))}

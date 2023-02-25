@@ -34,6 +34,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import AlertDialog from "../../components/AlertDialog";
 import { projectMicroservice } from "../../common/axiosMicroservices";
 import Loader from "../../components/Loader";
+import RangeInput from "../../components/RangeInput";
 
 export interface IElemProps {
     type: string,
@@ -56,7 +57,7 @@ const ProjectPage: React.FC = () => {
     const [currentProject, setCurrentProject] = useState<IProject>(
         useRootStore()!.getProjectStore().getCurrentProject()
     );
-    const [scale, setScale] = useState<number>(1.0);
+    const [scale, setScale] = useState<string>('10');
     const [orientation,] = useState<ICanvasConfig>(Portrait);
     const [loading, setLoading] = useState<boolean>(false);
     const [projectUpdateError, setProjectUpdateError] = useState<boolean>(false);
@@ -65,7 +66,7 @@ const ProjectPage: React.FC = () => {
 
     const updateProject = useCallback(async () => {
         setLoading(true)
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 1000));
         let project = await projectMicroservice.get('getProjectContent', {
             params: {
                 id: params.get('id')
@@ -89,6 +90,16 @@ const ProjectPage: React.FC = () => {
     useEffect(() => {
         updateProject()
     }, [updateProject])
+    // useEffect(() => {
+    //     // workspaceDivRef.current!.scrollTo({top: 0, left: 0})
+    //     const oldScale = scale;
+    //     const oldTopScroll = workspaceDivRef.current!.scrollTop;
+    //     const oldLeftScroll = workspaceDivRef.current!.scrollLeft;
+
+    //     workspaceDivRef.current!.scrollTop = (workspaceDivRef.current!.scrollTop/workspaceDivRef.current!.scrollHeight)*parseInt(scale, 10)/100;
+    //     workspaceDivRef.current!.scrollLeft = (workspaceDivRef.current!.scrollLeft/workspaceDivRef.current!.scrollWidth)
+    //         *parseInt(scale, 10)/100;
+    // }, [scale])
 
     // const pageObjCallback = useCallback((page: Page) => {
     //     let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
@@ -119,6 +130,16 @@ const ProjectPage: React.FC = () => {
     const clickedElemPropsCallback = useCallback((elemProps: IElemProps) => {
         setSelectedElemProps(elemProps);
     }, []);
+
+    const onScaleChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+        // const currentTop = workspaceDivRef.current!.scrollTop/workspaceDivRef.current!.scrollHeight;
+        // const currentLeft = workspaceDivRef.current!.scrollLeft/workspaceDivRef.current!.scrollWidth;
+        // const currentTop = workspaceDivRef.current!.scrollTop/workspaceDivRef.current!.scrollHeight;
+        // const currentLeft = workspaceDivRef.current!.scrollLeft/workspaceDivRef.current!.scrollWidth;
+        // setXScroll(currentLeft);
+        // setYScroll(currentTop);
+        setScale(e.currentTarget.value);
+    }, [])
 
     return (
         <div id="projectPage">
@@ -160,7 +181,7 @@ const ProjectPage: React.FC = () => {
                             currentPage={currentProject.getCurrentPage()}
                             //updatePageCallback={pageObjCallback}
                             canvasConfig={orientation}
-                            scale={scale}
+                            scale={parseInt(scale, 10)/100}
                             getCursorCoordsCallback={cursorCoordsCallback}
                             getClickedElemConfigCallback={clickedElemPropsCallback}
                             creatorOnDrop={currentCreator}
@@ -184,10 +205,12 @@ const ProjectPage: React.FC = () => {
                 <div style={{
                     position: 'fixed',
                     top: '95%',
-                    left: '82%'
+                    left: '67%',
+                    width: '300px'
                 }}>
-                    <button onClick={() => setScale(scale => scale > 0.1 ? scale - 0.1 : scale)}>-</button>
-                    <button onClick={() => setScale(scale => scale + 0.1)}>+</button>
+                    <RangeInput min={10} max={1000} value={scale} step={5}
+                        numberInputMin={10} numberInputMax={4000}
+                        onChange={onScaleChange} />
                 </div>
             </main>
         </div>

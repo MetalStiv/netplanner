@@ -1,0 +1,17 @@
+.range-input-container {
+    display: flex;
+    flex-direction: row;
+
+    .range-input {
+        width: 250px;
+    }
+    
+    .scale-input {
+        margin-left: 10px;
+        width: 50px;
+    }
+
+    .percent {
+        margin-left: 5px;
+    }
+}
