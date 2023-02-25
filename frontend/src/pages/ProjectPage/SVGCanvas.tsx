@@ -62,9 +62,12 @@ const SVGCanvas = ({ currentPage, canvasConfig, scale,
             x: e.clientX - cur.getBoundingClientRect().left, // смещение позиции курсора от позиции элемента по x
             y: e.clientY - cur.getBoundingClientRect().top, // по y
         }
+        const curId = e.currentTarget.id;
+        const curRect = e.currentTarget.getBBox();
         function onMouseMove(event: MouseEvent) {
             let toCoords = transformOuterCoordsToSVGCoords({ x: event.pageX, y: event.pageY });
             moveSVGAt(cur.id, toCoords, shift);
+            svgSelect({ id: curId, domRect: curRect });
         }
 
         cur.parentElement!.onmousemove = onMouseMove;
@@ -123,22 +126,23 @@ const SVGCanvas = ({ currentPage, canvasConfig, scale,
         //getCursorCoordsCallback(SVGCursorCoords);
     }
 
-    const svgSelect = (e: React.MouseEvent<SVGGeometryElement>) => {
+    function svgSelect(e: React.MouseEvent<SVGGeometryElement>): void;
+    function svgSelect(e: { id: string, domRect: DOMRect }): void;
+    function svgSelect(e: any): void {
         let curObj: IShape | undefined;
         currentPage.getLayers().some(layer => {
             curObj = layer.getElems().find(item => {
-                return item.config.id === e.currentTarget.id;
+                return item.config.id === (e.currentTarget?.id ?? e.id);
             })
-            return typeof (curObj) !== 'undefined' ? true : false;
+            return typeof (curObj) !== 'undefined';
         });
         const config: IElemProps = {
             type: curObj!.type,
             size: {
-                w: Math.round(e.currentTarget.getBBox().width),
-                h: Math.round(e.currentTarget.getBBox().height)
+                w: Math.round(e.currentTarget?.getBBox().width ?? e.domRect.width),
+                h: Math.round(e.currentTarget?.getBBox().height ?? e.domRect.height)
             },
-            graphProps: curObj!.config.graphical,
-            //coords: curObj!.config.graphical.startCoords,
+            graphProps: curObj!.config.graphical
         }
         getClickedElemConfigCallback(config);
     }
