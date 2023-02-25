@@ -50,14 +50,14 @@ export interface IDraggableElemProps {
 const ProjectPage: React.FC = () => {
     const [params] = useSearchParams();
     const navigate = useNavigate();
-    
+
     const [canvasCursorCoords, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [selectedElemProps, setSelectedElemProps] = useState<IElemProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
     const [currentProject, setCurrentProject] = useState<IProject>(
         useRootStore()!.getProjectStore().getCurrentProject()
     );
-    const [scale, setScale] = useState<string>('10');
+    const [scale, setScale] = useState<number>(100);
     const [orientation,] = useState<ICanvasConfig>(Portrait);
     const [loading, setLoading] = useState<boolean>(false);
     const [projectUpdateError, setProjectUpdateError] = useState<boolean>(false);
@@ -72,7 +72,7 @@ const ProjectPage: React.FC = () => {
                 id: params.get('id')
             }
         })
-        if (project.status === 520){
+        if (project.status === 520) {
             setProjectUpdateError(true);
         }
         setLoading(false)
@@ -82,11 +82,11 @@ const ProjectPage: React.FC = () => {
         workspaceDivRef.current!.scrollTop = orientation.a4Height * Math.floor(orientation.heightInSheets / 2) - 150;
         workspaceDivRef.current!.scrollLeft = orientation.a4Width * Math.floor(orientation.widthInSheets / 2) - 150;
     }, [orientation, workspaceDivRef]);
-    // useEffect(() => {
-    //     let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
-    //     newProject.setPages(currentProject.getPages());
-    //     setCurrentProject(newProject);
-    // }, [currentProject, setCurrentProject]);
+    useEffect(() => {
+        let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
+        newProject.setPages(currentProject.getPages());
+        setCurrentProject(newProject);
+    }, [currentProject, setCurrentProject]);
     useEffect(() => {
         updateProject()
     }, [updateProject])
@@ -138,7 +138,7 @@ const ProjectPage: React.FC = () => {
         // const currentLeft = workspaceDivRef.current!.scrollLeft/workspaceDivRef.current!.scrollWidth;
         // setXScroll(currentLeft);
         // setYScroll(currentTop);
-        setScale(e.currentTarget.value);
+        setScale(parseInt(e.currentTarget.value));
     }, [])
 
     return (
@@ -146,11 +146,11 @@ const ProjectPage: React.FC = () => {
             {
                 loading && <Loader />
             }
-            <AlertDialog 
-                    btnText="Ok" 
-                    text={`You are not allowed to project!`}
-                    isShown={projectUpdateError}
-                    onClose={() => navigate('/home')}
+            <AlertDialog
+                btnText="Ok"
+                text={`You are not allowed to project!`}
+                isShown={projectUpdateError}
+                onClose={() => navigate('/home')}
             />
             <header>
                 <HeaderNavbar />
@@ -181,7 +181,7 @@ const ProjectPage: React.FC = () => {
                             currentPage={currentProject.getCurrentPage()}
                             //updatePageCallback={pageObjCallback}
                             canvasConfig={orientation}
-                            scale={parseInt(scale, 10)/100}
+                            scale={scale/100}
                             getCursorCoordsCallback={cursorCoordsCallback}
                             getClickedElemConfigCallback={clickedElemPropsCallback}
                             creatorOnDrop={currentCreator}
@@ -208,7 +208,7 @@ const ProjectPage: React.FC = () => {
                     left: '67%',
                     width: '300px'
                 }}>
-                    <RangeInput min={10} max={1000} value={scale} step={5}
+                    <RangeInput min={10} max={1000} value={scale.toFixed()} step={5}
                         numberInputMin={10} numberInputMax={4000}
                         onChange={onScaleChange} />
                 </div>

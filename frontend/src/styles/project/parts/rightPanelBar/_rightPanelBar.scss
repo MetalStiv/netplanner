@@ -16,14 +16,14 @@
         width: 100%;
     }
 
-    position: absolute;
-    top: 0;
-    right:0;
-    bottom: 0;
+    // position: absolute;
+    // top: 0;
+    // right:0;
+    // bottom: 0;
     display:flex;
     align-items:stretch;
-    width:250px;
-    min-width: 250px;
-    max-width:250px;
+    width: $rightPanelWidth;
+    min-width: $rightPanelWidth;
+    max-width: $rightPanelWidth;
     border-left:1px solid $black;
 }
