@@ -1,5 +1,15 @@
 #userPage {
+    display: flex;
+    flex-direction: column;
+
+    .menu-bar {
+        background-color: $dark;
+        width: 100wv;
+        flex-basis: 58px; 
+    }
+
     .main {
+        flex-grow: 1;
         display: flex;
         background-color: $background;
         flex-direction: row;

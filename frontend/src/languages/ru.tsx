@@ -41,6 +41,33 @@ export const ru: ILanguage = {
             deleteProjectQuestion: "Вы уверены что хотите удалить проект",
             delete: "Удалить",
             cancel: "Отмена"
+        },
+        settingsTab: {
+            userInfo: {
+                title: "ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ"
+            },
+            balance: {
+                title: "БАЛАНС"
+            },
+            generalSettings: {
+                title: "ОСНОВНЫЕ НАСТРОЙКИ",
+                subtitle: "Настройки",
+                language: "Язык",
+                timezone: "Временная зона",
+                password: "Пароль",
+                change: "Изменить"
+            },
+            personalRate: {
+                title: "ПЕРСОНАЛЬНЫЙ ТАРИФ"
+            },
+            organization: {
+                title: "ВАША ОРГАНИЗАЦИЯ",
+                subtitle: "Организация"
+            },
+            metrics: {
+                title: "МЕТРИКИ",
+                subtitle: "Статистика"
+            }
         }
     }
 }

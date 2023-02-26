@@ -59,8 +59,10 @@ const ProjectsTab: React.FC = observer(() => {
                     <button type="submit" className="add-btn" onClick={addProject}>+</button>
                 </div>
                 : <>
-                    <div className="text text-transformed">{langText.userPage.projectTab.startNewProject}</div>
-                    <button type="submit" className="add-btn add-btn-transformed" onClick={addProject}>+</button>
+                    <div className="startMenu">
+                        <div className="text text-transformed">{langText.userPage.projectTab.startNewProject}</div>
+                        <button type="submit" className="add-btn add-btn-transformed" onClick={addProject}>+</button>
+                    </div>
                     <div id="project-card-container">
                     {
                         projectsMetaStore?.getData().map((p, index) => 

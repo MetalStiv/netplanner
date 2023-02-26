@@ -38,6 +38,33 @@ interface ILanguage {
             deleteProjectQuestion: string,
             delete: string,
             cancel: string
+        },
+        settingsTab: {
+            userInfo: {
+                title: string
+            },
+            balance: {
+                title: string
+            },
+            generalSettings: {
+                title: string,
+                subtitle: string,
+                language: string,
+                timezone: string,
+                password: string,
+                change: string
+            },
+            personalRate: {
+                title: string
+            },
+            organization: {
+                title: string,
+                subtitle: string,
+            },
+            metrics: {
+                title: string,
+                subtitle: string,
+            }
         }
     }
 }

@@ -1,163 +1,65 @@
 #projectsTab {
-    .main {
-        display: flex;
-        background-color: $background;
-        flex-direction: row;
-        height: 100vh;
+    display: flex;
+    background-color: $background;
+    flex-direction: column;
+    height: calc(100vh - 122px);
+    gap: 24px;
 
-        .leftMenu {
-            width: 120px;
-            margin-right: 20px;
-            background: $white;
-        }
-
-        .rightMenu {
-            width: 100%;
-            margin-left: 20px;
-
-            .startMenu {
-                width: 100%;
-                height: 100vh;
-                overflow-x: hidden;
-                overflow-y: auto;
-            }
-
-        }
-
-    }
-
-    .leftContent {
-        li.react-tabs__tab {
-            display: inline-block;
-            position: static;
-            list-style: none;
-            padding: 0;
-            cursor: pointer;
-            line-height: 20px;
+    .startMenu {
+        .text {
+            position: fixed;
+            width: 21%;
+            height: 5%;
+            left: 43%;
+            top: 39%;
+    
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 40px;
+            line-height: 48px;
+    
             color: $black;
-            outline: none;
-            margin-left: -20px;
         }
-
-        position: fixed;
-        width: 120px;
-        height: 100vh;
-        left: 0px;
-        top: 0px;
-        background: $white;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-
-        .iconUser {
-            width: 72px;
-            height: 72px;
-
+    
+        .text-transformed {
+            transform: translate(-67vh, -30vh);
+            transition-duration: 0.5s;
         }
-
-        .frame {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 0px;
-            gap: 70px;
-            left: 20px;
-            right: 20px;
-
-            .rectangle {
-                cursor: pointer;
-                bottom: 50px;
-                background-color: $white;
-                border-radius: 10px;
-                width: 80px;
-                height: 51px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .rectangle:active {
-                background-color: $background;
-            }
-
-            .rectangle:hover {
-                background-color: $background;
-            }
-
-        }
-
-        .logout {
-            width: 80px;
-            height: 51px;
+    
+        .add-btn {
+            position: fixed;
+            width: 8%;
+            top: 50%;
+            left: 50%;
+            font-size: 40px;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: $white;
-            border-radius: 10px;
-
-        }
-
-        .logout:hover {
-            background-color: $background;
-        }
-
-    }
-
-    .text {
-        position: absolute;
-        width: 21%;
-        height: 5%;
-        left: 43%;
-        top: 39%;
-
-        font-family: 'Inter';
-        font-style: normal;
-        font-weight: 700;
-        font-size: 40px;
-        line-height: 48px;
-
-        color: $black;
-    }
-
-    .text-transformed {
-        transform: translate(-67vh, -30vh);
-        transition-duration: 0.5s;
-    }
-
-    .add-btn {
-        position: absolute;
-        width: 8%;
-        top: 50%;
-        left: 50%;
-        font-size: 40px;
-        cursor: pointer;
-        background: $lightblue;
-        border: none;
-        color: $white;
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &:hover {
-            background: linear-gradient(0deg, $blue, $blue);
+            background: $lightblue;
+            border: none;
             color: $white;
-            transition: background .2s
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+    
+            &:hover {
+                background: linear-gradient(0deg, $blue, $blue);
+                color: $white;
+                transition: background .2s
+            }
+        }
+    
+        .add-btn-transformed {
+            transform: translate(-35vh, -41vh);
+            transition-duration: 1.2s;
         }
     }
 
-    .add-btn-transformed {
-        transform: translate(-35vh, -41vh);
-        transition-duration: 1.2s;
-    }
 
     #project-card-container {
-        position: absolute;
+        display: flex;
+        flex-direction: column;
         overflow: auto;
-        left: 8%;
-        top: 17%;
         width: 89%;
         height: 80%;
         background-color: $background;

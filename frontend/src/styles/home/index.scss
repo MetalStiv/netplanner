@@ -1,3 +1,99 @@
 @import "projects";
 @import "settings";
 @import "user";
+
+#userPage {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    background-color: $background;
+
+    .menu-bar {
+        flex-basis: 58px;
+    }
+
+    .main-row {
+        height: calc(100vh - 90px);
+        display: flex;
+        gap: 32px;
+
+        .tab-menu {
+            display: flex;
+            flex-direction: column;
+
+            margin-left: 20px;
+            margin-bottom: 32px;
+            flex-basis: 90px;
+            list-style: none;
+            background: $white;
+            box-shadow: 0px 20px 34px rgba(85, 82, 95, 0.06);
+            border-radius: 15px;
+
+            .logo {
+                margin-top: 82px;
+                margin-left: -15px;
+            }
+
+            li.react-tabs__tab {
+                list-style: none;
+                padding: 0;
+                cursor: pointer;
+                line-height: 20px;
+                color: $black;
+                outline: none;
+                margin-left: -10px;
+                margin-top: 45px;
+            }
+
+            .rectangle {
+                padding-top: 25px;
+                height: 60px;
+
+                .menu-icon path {
+                    stroke: $darkgray;
+                }
+            }
+
+            li.react-tabs__tab--selected > .rectangle {
+                background-color: $lightblue;
+                margin-left: -30px;
+                padding-top: 25px;
+                height: 60px;
+
+                .menu-icon {
+                    margin-left: 28px;
+
+                    path {
+                        stroke: $white;
+                    }
+                }
+            }
+    
+            .logout {
+                width: 80px;
+                height: 51px;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: $white;
+                border-radius: 10px;
+                margin-top: 240%;
+                margin-left: 10%;
+
+                path {
+                    stroke: $darkgray;
+                }
+            }
+    
+            .logout:hover {
+                background-color: $background;
+            }
+        }
+
+        .tab-panel {
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+    }
+}

@@ -1,56 +1,70 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from 'formik';
-//import '../../styles/home/setting/index.scss';
-import workImage from '../../assets/images/Work.svg';
-import bookImage from '../../assets/images/book.svg';
-import settingImage from '../../assets/images/Setting.svg';
-import logoutImage from '../../assets/images/Logout.svg';
-import icoImage from '../../assets/images/Ellipse.png';
+import React from "react";
+import '../../styles/home/settings/index.scss';
 import useLanguage from "../../common/customHooks/useLanguage";
 
 const SettingsTab: React.FC = () => {
-    const navigate = useNavigate()
-    const [, , switchLanguage, langText] = useLanguage();
+    const [language, languages, switchLanguage, langText] = useLanguage();
 
     return (
-        <div id="settingPage">
+        <div id="settingsTab">
             <div className="main">
-                {/* <div className="leftMenu">
-                </div>  */}
-                <div className="settingMenu">
-
-                    <div className="icoImage">
-                        <img src={icoImage} alt='Icon' />
+                <div className="first-row">
+                    <div className="user-info-panel panel">
+                        <div className="panel-data-container">
+                            <div className="title">{langText.userPage.settingsTab.userInfo.title}</div>
+                        </div>
                     </div>
+                    <div className="user-balance-panel panel">
+                        <div className="panel-data-container">
+                            <div className="title">{langText.userPage.settingsTab.balance.title}</div>
+                        </div>
+                    </div>
+                    <div className="user-general-settings-panel panel">
+                        <div className="panel-data-container">
+                            <div className="title">{langText.userPage.settingsTab.generalSettings.title}</div>
+                            <div className="subtitle">{langText.userPage.settingsTab.generalSettings.subtitle}</div>
+                            <div className="panel-row">
+                                <div className="field-name">{langText.userPage.settingsTab.generalSettings.language+":"}</div>
+                                <select value={language}>
+                                {
+                                    languages.map(l => <option onClick={e => switchLanguage(l)}>
+                                        {l}
+                                    </option>)
+                                }
+                                </select>
+                                <div className="field-name">{langText.userPage.settingsTab.generalSettings.timezone+":"}</div>
+                            </div>
+                            <div className="panel-row">
+                                <div className="field-name">{langText.userPage.settingsTab.generalSettings.password}</div>
+                                <div className="change-link">{langText.userPage.settingsTab.generalSettings.change}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <p>{langText.userPage.projectTab.defaultName}</p>
-                    <button onClick={() => switchLanguage("en")}>Eng</button>
-                    <button onClick={() => switchLanguage("ru")}>Rus</button>
+                <div className="second-row">
+                    <div className="user-personal-rate-panel panel">
+                        <div className="panel-data-container">
+                            <div className="title">{langText.userPage.settingsTab.personalRate.title}</div>
+                        </div>
+                    </div>
+                    <div className="sub-column">
+                        <div className="user-organization-panel panel">
+                            <div className="panel-data-container">
+                                <div className="title">{langText.userPage.settingsTab.organization.title}</div>
+                                <div className="subtitle">{langText.userPage.settingsTab.organization.subtitle}</div>
+                            </div>
+                        </div>
+                        <div className="user-metrics-panel panel">
+                            <div className="panel-data-container">
+                                <div className="title">{langText.userPage.settingsTab.metrics.title}</div>
+                                <div className="subtitle">{langText.userPage.settingsTab.metrics.subtitle}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
-            {/* <div className="leftContent">
-                <div className="iconUser">
-                    <img src={icoImage} alt='Icon'/>
-                </div>
-                <div className="frame">
-                    <div onClick={()=>navigate('/home')} className="rectangle_white">
-                        <img src={workImage} alt='Work'/> 
-                    </div>
-                    <div className="rectangle_white">
-                        <img src={bookImage} alt='Book'/> 
-                    </div>    
-                        
-                    <div className="rectangle">
-                        <img src={settingImage} alt='Setting'/> 
-                    </div>
-                       
-                </div>
-                    <div onClick={()=>navigate('/')} className="logout">
-                        <img src={logoutImage} alt='Logout'/> 
-                    </div>
-            </div> */}
         </div>
 
     );

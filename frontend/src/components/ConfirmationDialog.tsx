@@ -62,7 +62,7 @@ const ConfirmationDialog: React.FC<IConfirmationDialogProps> = ({ btnShowText, b
                 transition((style, item) => 
                     item &&
                     <div className="modal">
-                        <div className="container">
+                        <div className="panel-container">
                             <animated.div style={style} className="panel">
                                 <div>{questionTextPartOne+' '+questionTextPartTwo+'?'}</div>
                                 <div className="btn-group">

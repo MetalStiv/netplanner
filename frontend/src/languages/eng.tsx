@@ -41,6 +41,33 @@ export const eng: ILanguage = {
             deleteProjectQuestion: "Are you shure you want to delete project",
             delete: "Delete",
             cancel: "Cancel"
+        },
+        settingsTab: {
+            userInfo: {
+                title: "USER INFO"
+            },
+            balance: {
+                title: "BALANCE"
+            },
+            generalSettings: {
+                title: "GENERAL SETTINGS",
+                subtitle: "Settings",
+                language: "Language",
+                timezone: "Time zone",
+                password: "Password",
+                change: "Change"
+            },
+            personalRate: {
+                title: "YOUR PERSONAL RATE"
+            },
+            organization: {
+                title: "YOUR ORGANIZATION",
+                subtitle: "Organization",
+            },
+            metrics: {
+                title: "METRICS",
+                subtitle: "Statistics",
+            }
         }
     }
 }
