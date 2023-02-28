@@ -9,6 +9,7 @@ interface IProjectsMetaStore {
     setData: (projectsMetaData: IProjectMeta[]) => void,
     updateOrInsert: (newProjectMetaData: IProjectMeta) => void,
     hideById: (id: string) => void,
+    switchMenuById: (id: string) => void,
 }
 
 export const createProjectsMetaStore = () => {
@@ -46,6 +47,10 @@ export const createProjectsMetaStore = () => {
                 hiddenProjectMeta,
                 ...this[projectsMetaSymbol].slice(index+1),
             ]
+        },
+
+        switchMenuById(id: string){
+            this[projectsMetaSymbol].forEach(p => p.id === id ? p.showMenu = !p.showMenu : p.showMenu = false)
         }
     };
 

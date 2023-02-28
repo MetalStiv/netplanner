@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from "react";
 import { useRootStore } from "../../../providers/rootProvider";
-import { TProjectsMetaStore } from "../../../stores/projectsMetsStore";
+import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
 import { projectMicroservice, userMicroservice } from "../../../common/axiosMicroservices";
 import ProjectCard from "./ProjectCard";
 import IProjectMeta from "../../../model/IProjectMeta";
@@ -31,7 +31,7 @@ const ProjectsTab: React.FC = observer(() => {
     const getProjects = useCallback(async () => {
         let projects = await projectMicroservice.get('getProjects')
         if (projects.status === 200){
-            const data = projects.data.map((item: IProjectMeta) => ({...item, "hide": false}));
+            const data = projects.data.map((item: IProjectMeta) => ({...item, "hide": false, "showMenu": false}));
             await getUsers(data)
             projectsMetaStore?.setData(data)
         }

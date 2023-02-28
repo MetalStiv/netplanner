@@ -13,6 +13,7 @@
     height: 100vh;
     overflow: auto;
     z-index: 1;
+    color:rgba(0, 0, 0);
     background-color: rgba(0, 0, 0, 0.5) !important;
 
     .panel-container {
@@ -55,6 +56,7 @@
                     justify-content: center;
 
                     &:hover {
+                        background: $lightblue;
                         color: $white;
                         transition: background .2s
                     }

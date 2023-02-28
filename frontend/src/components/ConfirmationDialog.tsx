@@ -57,7 +57,7 @@ const ConfirmationDialog: React.FC<IConfirmationDialogProps> = ({ btnShowText, b
     
     return (
         <>
-            <button onClick={openModal}>{btnShowText}</button>
+            <div onClick={openModal}>{btnShowText}</div>
             {
                 transition((style, item) => 
                     item &&

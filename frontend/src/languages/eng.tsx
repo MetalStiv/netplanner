@@ -36,10 +36,15 @@ export const eng: ILanguage = {
             defaultName: "New project",
             justCreated: "Just created",
             owner: "Owner",
+            subscribers: "Subscribers",
+            none: "None",
             modified: "Modified",
             startNewProject: "Start a new project",
             deleteProjectQuestion: "Are you shure you want to delete project",
             delete: "Delete",
+            createCheckpoint: "Create checkpoint",
+            restoreFromCheckpoint: "Restore from checkpoint",
+            moveToGroup: "Move to group",
             cancel: "Cancel"
         },
         settingsTab: {

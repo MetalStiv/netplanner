@@ -1,4 +1,4 @@
-import { createProjectsMetaStore, TProjectsMetaStore } from "./projectsMetsStore";
+import { createProjectsMetaStore, TProjectsMetaStore } from "./projectsMetaStore";
 import { createProjectStore, TProjectStore } from "./projectStore"; 
 import { createUsersStore, TUsersStore } from "./usersStore";
 import { createUserStore, TUserStore } from "./userStore"; 

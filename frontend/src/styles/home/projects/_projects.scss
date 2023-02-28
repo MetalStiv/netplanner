@@ -3,12 +3,19 @@
     background-color: $background;
     flex-direction: column;
     height: calc(100vh - 122px);
+    width: calc(100vw - 154px);
     gap: 24px;
+
+    .disabled
+    {
+        pointer-events: none;
+        opacity: 0.7;
+    }
 
     .startMenu {
         .text {
             position: fixed;
-            width: 21%;
+            width: 25%;
             height: 5%;
             left: 43%;
             top: 39%;
@@ -31,7 +38,7 @@
             position: fixed;
             width: 8%;
             top: 50%;
-            left: 50%;
+            left: 52%;
             font-size: 40px;
             cursor: pointer;
             background: $lightblue;
@@ -58,36 +65,44 @@
 
     #project-card-container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         overflow: auto;
-        width: 89%;
-        height: 80%;
+        flex-wrap: wrap;
+        gap: 24px;
+        margin-top: 5vh;
+        width: calc(100vw - 154px);
         background-color: $background;
 
         .project-card {
-            margin-top: 3%;
-            width: 100%;
-            height: 40%;
+            display: flex;
+            width: calc((100vw - 178px)/2);
+            height: 20vh;
             background: $white;
             box-shadow: 0px 20px 34px rgba(85, 82, 95, 0.06);
             border-radius: 15px;
 
             .project-image {
                 background-color: #D9D9D9;
-                width: 18%;
-                height: 90%;
-                margin: 1%;
+                width: calc(20vh - 36px);
+                height: calc(20vh - 36px);
+                margin: 18px;
                 border-radius: 15px;
                 border-image-width: 0px;
+                cursor: pointer;
             }
 
             .base-info {
-                margin-left: 21%;
-                margin-top: -18%;
+                display: flex;
+                flex-direction: column;
+                margin-top: 34px;
+                gap: 6px;
 
-                .modified-info,
-                .owner-info {
-                    color: $gray;
+                .modified-info {
+                    background-color: $easyblue;
+                    width: fit-content;
+                    padding-left: 16px;
+                    padding-right: 16px;
+                    border-radius: 8px;
                 }
 
                 .name-container {
@@ -95,11 +110,10 @@
                     align-items: center;
 
                     .name-info {
-                        margin-top: 1%;
                         font-weight: bold;
                         font-size: 32px;
                         width: fit-content;
-                        max-width: 25%;
+                        max-width: calc((100vw - 178px)/2 - 30vh - 48px);
                         font-family: 'Inter';
                         white-space: nowrap;
                         overflow: hidden;
@@ -111,30 +125,92 @@
                         outline: none;
                         background-color: transparent;
                         font-weight: bold;
-                        margin-top: 1%;
                         font-size: 32px;
-                        width: 25%;
+                        width: calc((100vw - 178px)/2 - 30vh - 48px);
                         font-family: 'Inter';
                     }
     
                     .pencil-icon {
-                        margin-left: 5px;
-                        width: 5%;
-                        margin-top: 18px;
+                        margin-left: 10px;
+                        margin-top: 10px;
                     }
+                }
+
+                .owner-info {
+                    display: flex;
+                    align-items: center;
+                    font-size: 16px;
+                    font-weight: 600;
+
+                    img {
+                        width: 32px;
+                        height: 32px;
+                        margin-left: 16px;
+                        margin-right: 8px;
+                    }
+                }
+
+                .subscribers-info {
+                    font-size: 16px;
+                    font-weight: 600;
                 }
             }
 
-            .separator {
-                border-left: 2px solid $gray;
-                height: 85%;
-                margin-left: 43%;
-                margin-top: -7%;
-            }
+            .menu-icon-group {
+                display: flex;
+                position: relative;
+                margin-left: auto;
+                margin-right: 12px;
+                margin-top: 25px;
 
-            .btn-block {
-                margin-left: 50%;
-                margin-top: -14%;
+                .menu-icon {
+                    margin-right: 16px;
+                    cursor: pointer;
+                }
+
+                .panel-menu-container {
+                    position: absolute;
+                    display: flex;
+                    margin-left: calc((100vw - 178px)/-12);
+                    margin-top: -20px;
+
+                    width: calc((100vw - 178px)/12 + 32px);
+                    height: fit-content;
+
+                    .panel-menu {
+                        background: $dark;
+                        padding: 12px;
+                        box-shadow: 0px 20px 34px rgba(85, 82, 95, 0.06);
+                        border-radius: 15px;
+    
+                        .menu-text {
+                            color: $white;
+                            cursor: pointer;
+                            line-height: normal;
+                            font-size: 14px;
+                            font-weight: 500;
+    
+                            &:hover {
+                                color: $gray;
+                            }
+                        }
+    
+                        .separator {
+                            color: darkgray;
+                            margin-top: 4px;
+                            margin-bottom: 4px;
+                        }
+                    }
+    
+                    .tail {
+                        margin-top: 18px;
+                        width: 0; 
+                        height: 0; 
+                        border-top: 12px solid transparent;
+                        border-bottom: 12px solid transparent;
+                        border-left: 12px solid $dark;
+                    }
+                }
             }
         }
 

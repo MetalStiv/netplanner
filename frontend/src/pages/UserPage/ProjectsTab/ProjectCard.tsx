@@ -5,9 +5,11 @@ import { useRootStore } from "../../../providers/rootProvider";
 import { TUsersStore } from "../../../stores/usersStore";
 import { observer } from "mobx-react-lite";
 import { projectMicroservice } from "../../../common/axiosMicroservices";
-import { TProjectsMetaStore } from "../../../stores/projectsMetsStore";
+import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
 import useLanguage from "../../../common/customHooks/useLanguage";
 import { useNavigate } from "react-router-dom";
+import imageLoadingPlaceholder from '../../../assets/images/image-loading.jpg';
+import defaultAvatar from '../../../assets/images/user-avatar.png';
 
 interface IProjectCardProps {
     projectId: string;
@@ -19,6 +21,7 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
     const navigate = useNavigate();
     
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(projectsMetaStore.getById(projectId)!.name);
     const usersStore: TUsersStore = useRootStore()!.getUsersStore();
 
@@ -49,7 +52,8 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
 
     return (
         <div className={`project-card ${projectsMetaStore.getById(projectId)!.hide ? "project-card-hidden" : "project-card-visible"}`}>
-            <img className="project-image" src="" />
+            <img className="project-image" src={imageLoadingPlaceholder} 
+                onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}/>
             <div className="base-info">
                 <div className="modified-info">{langText.userPage.projectTab.justCreated}</div>
                 {
@@ -120,11 +124,82 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                     </div>
                 }
 
-                <div className="owner-info">{langText.userPage.projectTab.owner + ' ' + usersStore.getData()
-                    .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.name}</div>
+                <div className="owner-info">{langText.userPage.projectTab.owner + ': '}
+                    <img src={defaultAvatar} />
+                    {
+                        usersStore.getData()
+                            .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.name
+                    }
+                </div>
+                <div className="subscribers-info">{langText.userPage.projectTab.subscribers + ': '+
+                    langText.userPage.projectTab.none}</div>
             </div>
-            <div className="separator"></div>
-            <div className="btn-block">
+
+            <div className="menu-icon-group">
+                <div className="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d={"M7 11.5L13 14.5M13 5.5L7 8.5M16 19C14.3431 19 13 17.6569 13 16C13 14.3431 14.3431 "+
+                            " 13 16 13C17.6569 13 19 14.3431 19 16C19 17.6569 17.6569 19 16 19ZM4 13C2.34315 13 1 "+
+                            " 11.6569 1 10C1 8.34315 2.34315 7 4 7C5.65685 7 7 8.34315 7 10C7 11.6569 5.65685 13 "+
+                            " 4 13ZM16 7C14.3431 7 13 5.65685 13 4C13 2.34315 14.3431 1 16 1C17.6569 1 19 2.34315 "+
+                            " 19 4C19 5.65685 17.6569 7 16 7Z"} stroke="#292C33" stroke-width="2" 
+                            stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+
+                <div className="menu-icon" onClick={() => projectsMetaStore.switchMenuById(projectId)}>
+                    <svg width="4" height="17" viewBox="0 0 4 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 "+
+                            " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} fill="#292C33"/>
+                        <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 "+
+                            " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} fill="#292C33"/>
+                        <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 2.07143C3 "+
+                            " 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} fill="#292C33"/>
+                        <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 "+
+                            " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} stroke="#292C33" 
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 "+
+                            " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} stroke="#292C33" 
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 "+
+                            " 2.07143C3 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} stroke="#292C33" 
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+
+                {
+                    projectsMetaStore.getById(projectId)!.showMenu &&
+                        <div className="panel-menu-container">
+                            <div className="panel-menu">
+                                <div className="menu-text disabled">
+                                    {langText.userPage.projectTab.createCheckpoint}
+                                </div>
+                                <hr className="separator" />
+                                <div className="menu-text disabled">
+                                    {langText.userPage.projectTab.restoreFromCheckpoint}
+                                </div>
+                                <hr className="separator" />
+                                <div className="menu-text">
+                                    {langText.userPage.projectTab.moveToGroup}
+                                </div>
+                                <hr className="separator" />
+                                <div className="menu-text">
+                                    <ConfirmationDialog btnShowText={langText.userPage.projectTab.delete} 
+                                        btnAcceptText={langText.userPage.projectTab.delete}
+                                        btnDeclineText={langText.userPage.projectTab.cancel} 
+                                        questionTextPartOne={langText.userPage.projectTab.deleteProjectQuestion}
+                                        questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
+                                        action={removeProject} />
+                                </div>
+                            </div>
+
+                            <div className="tail">
+
+                            </div>
+                        </div>
+                }
+            </div>
+            {/* <div className="btn-block">
                 <ConfirmationDialog btnShowText={langText.userPage.projectTab.delete} 
                     btnAcceptText={langText.userPage.projectTab.delete}
                     btnDeclineText={langText.userPage.projectTab.cancel} 
@@ -135,7 +210,7 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                 <button onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}>
                     To project
                 </button>
-            </div>
+            </div> */}
         </div>
     )
 })

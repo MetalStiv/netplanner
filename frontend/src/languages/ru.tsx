@@ -36,10 +36,15 @@ export const ru: ILanguage = {
             defaultName: "Новый проект",
             justCreated: "Только что создан",
             owner: "Владелец",
+            subscribers: "Подписчики",
+            none: "Нет",
             modified: "Последнее изменение",
             startNewProject: "Создать новый проект",
             deleteProjectQuestion: "Вы уверены что хотите удалить проект",
             delete: "Удалить",
+            createCheckpoint: "Создать резерв",
+            restoreFromCheckpoint: "Востановить из резерва",
+            moveToGroup: "Переместить в группу",
             cancel: "Отмена"
         },
         settingsTab: {

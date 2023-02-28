@@ -33,10 +33,15 @@ interface ILanguage {
             defaultName: string,
             justCreated: string,
             owner: string,
+            subscribers: string,
+            none: string,
             modified: string,
             startNewProject: string,
             deleteProjectQuestion: string,
             delete: string,
+            createCheckpoint: string,
+            restoreFromCheckpoint: string,
+            moveToGroup: string,
             cancel: string
         },
         settingsTab: {
