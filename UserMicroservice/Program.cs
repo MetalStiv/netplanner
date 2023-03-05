@@ -60,7 +60,8 @@ app.MapPost("/register", [AllowAnonymous] async (HttpContext http,
         }
         var user = new User(loginDto.Email, loginDto.Password);
         
-        if (userRepositoryService.GetByEmailAsync(user.Email) != null)
+        var sameUser = await userRepositoryService.GetByEmailAsync(user.Email);
+        if (sameUser != null)
         {
             http.Response.StatusCode = 520;
             return;
@@ -101,7 +102,12 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http,
 
         await http.Response.WriteAsJsonAsync(new {
             accessToken = accessToken, 
-            refreshToken = refreshToken });
+            refreshToken = refreshToken,
+            name = user.Name,
+            email = user.Email,
+            avatarBase64 =  user.AvatarBase64,
+            timeZone = user.TimeZone
+        });
         return;
     }
 );
@@ -124,7 +130,7 @@ app.MapPost("/refreshToken", [AllowAnonymous] async (HttpContext http,
         }
         var claims = principal.Identities.First().Claims.ToList();
 
-        var user = await userRepositoryService.GetByEmailAsync(claims.First(c => c.Type.Equals("Email")).Value);
+        var user = await userRepositoryService.GetByIdAsync(claims.First(c => c.Type.Equals("Id")).Value);
         if (user == null)
         {
             http.Response.StatusCode = 401;
@@ -192,10 +198,69 @@ app.MapGet("/getUsersByIds", ([Authorize] async (HttpContext http,
                 http.Response.StatusCode = 520;
                 return;
             }
-            userDtos.Add(new UserDto(user.Id!, user.Name));
+            userDtos.Add(new UserDto(user.Id!, user.Name, user.AvatarBase64!, user.TimeZone));
         }
 
         await http.Response.WriteAsJsonAsync(userDtos);
+        return;
+    })
+);
+
+app.MapPost("/changeName", ([Authorize] async (HttpContext http,
+    ITokenService tokenService,
+    IUserRepositoryService userRepositoryService) => {
+        var newNameDto = await http.Request.ReadFromJsonAsync<UserNameDto>();
+        if (newNameDto!.name.Length <= 0)
+        {
+            http.Response.StatusCode = 500;
+            return;
+        }
+        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+        var userId = tokenService.GetUserIdFromToken(token);
+
+        var user = await userRepositoryService.GetByIdAsync(userId);
+        user!.Name = newNameDto.name;
+        await userRepositoryService.UpdateAsync(user);
+
+        http.Response.StatusCode = 200;
+        return;
+    })
+);
+
+app.MapPost("/changeAvatar", ([Authorize] async (HttpContext http,
+    ITokenService tokenService,
+    IUserRepositoryService userRepositoryService) => {
+        var newAvatarDto = await http.Request.ReadFromJsonAsync<UserAvatarDto>();
+        if (newAvatarDto!.avatarBase64.Length <= 0)
+        {
+            http.Response.StatusCode = 500;
+            return;
+        }
+        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+        var userId = tokenService.GetUserIdFromToken(token);
+
+        var user = await userRepositoryService.GetByIdAsync(userId);
+        user!.AvatarBase64 = newAvatarDto.avatarBase64;
+        await userRepositoryService.UpdateAsync(user);
+
+        http.Response.StatusCode = 200;
+        return;
+    })
+);
+
+app.MapPost("/changeTimeZone", ([Authorize] async (HttpContext http,
+    ITokenService tokenService,
+    IUserRepositoryService userRepositoryService) => {
+        var newTimezoneDto = await http.Request.ReadFromJsonAsync<UserTimeZoneDto>();
+
+        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+        var userId = tokenService.GetUserIdFromToken(token);
+
+        var user = await userRepositoryService.GetByIdAsync(userId);
+        user!.TimeZone = newTimezoneDto.timeZoneId;
+        await userRepositoryService.UpdateAsync(user);
+
+        http.Response.StatusCode = 200;
         return;
     })
 );

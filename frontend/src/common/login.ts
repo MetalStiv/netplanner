@@ -14,8 +14,17 @@ interface IJwtData {
   Name: string,
 }
 
+interface ILoginResponse {
+  accessToken: string,
+  refreshToken: string,
+  email: string,
+  name: string,
+  avatarBase64: string,
+  timeZone: number
+}
+
 export const login = async (params: ISignInForm): Promise<IUser> => {
-  const response = await userCleanMicroservice.post('login', params)
+  const response = await userCleanMicroservice.post<ILoginResponse>('login', params)
   if (response.status !== 200){
     throw new Error(response.status.toString())
   }
@@ -28,8 +37,10 @@ export const login = async (params: ISignInForm): Promise<IUser> => {
   let decoded: IJwtData = jwt_decode(response.data.accessToken);
   let user: IUser = {
     id: decoded.Id,
-    email: decoded.Email,
-    name: decoded.Name
+    email: response.data.email,
+    name: response.data.name,
+    avatarBase64: response.data.avatarBase64,
+    timeZoneId: response.data.timeZone,
   };
   return user;
 }

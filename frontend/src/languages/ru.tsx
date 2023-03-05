@@ -49,10 +49,12 @@ export const ru: ILanguage = {
         },
         settingsTab: {
             userInfo: {
-                title: "ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ"
+                title: "ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ",
+                changePhoto: "Изменить фото"
             },
             balance: {
-                title: "БАЛАНС"
+                title: "БАЛАНС",
+                history: "История"
             },
             generalSettings: {
                 title: "ОСНОВНЫЕ НАСТРОЙКИ",

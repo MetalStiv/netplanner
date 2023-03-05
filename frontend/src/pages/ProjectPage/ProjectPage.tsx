@@ -26,7 +26,6 @@ import SVGCanvas from './SVGCanvas';
 import IShapeCreator from '../../model/IShapeCreator';
 import HeaderNavbar from './HeaderNavbar';
 import { useRootStore } from '../../providers/rootProvider';
-import Page from '../../model/Page';
 import Project, { IProject } from '../../model/Project';
 import { IShapeGraphicalProps } from '../../model/IShape';
 import ICanvasConfig, { Portrait } from "../../common/canvasConfig";

@@ -14,8 +14,6 @@ public class RsaTokenService : ITokenService
         var claims = new[]
         {
             new Claim("Id", user.Id ?? string.Empty),
-            new Claim("Email", user.Email),
-            new Claim("Name", user.Name ?? string.Empty)
         };
 
         var credentials = new SigningCredentials(_settings.PrivateKey, SecurityAlgorithms.RsaSha256);
@@ -37,6 +35,29 @@ public class RsaTokenService : ITokenService
         }
     }
 
+    public string GetUserIdFromToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false, 
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = _settings.PublicKey,
+            ValidateLifetime = false
+        };
+        SecurityToken securityToken;
+        var principal = new JwtSecurityTokenHandler().ValidateToken(token, tokenValidationParameters, 
+            out securityToken);
+
+        var jwtSecurityToken = securityToken as JwtSecurityToken;
+        if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.RsaSha256, 
+            StringComparison.InvariantCultureIgnoreCase))
+            throw new SecurityTokenException("Invalid token");
+
+        return principal.Identities.First().Claims.ToList()
+            .First(c => c.Type.Equals("Id")).Value;
+    }
+    
     public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
         var tokenValidationParameters = new TokenValidationParameters

@@ -11,6 +11,55 @@
             border-radius: 15px;
         }
 
+        .user-info-panel {
+            display: flex;
+
+            .avatar-container {
+                width: 156px;
+                height: 156px;
+                position: relative;
+                margin-top: 40px;
+                margin-left: 40px;
+                border-radius: 50%;
+                border: 3px solid $lightblue;
+                padding: 6px;
+
+                .avatar {
+                    width: 156px;
+                    height: 156px;
+                    border-radius: 50%;
+                }
+
+                .avatar-overlay {
+                    width: 70px;
+                    height: 70px;
+                    left: 50px;
+                    top: 60px;
+                    position: absolute;
+                    opacity: 0;
+                }
+
+                .avatar-overlay-text {
+                    left: 30px;
+                    top: 30px;
+                    color: $white;
+                    position: absolute;
+                    opacity: 0;
+                }
+
+                &:hover .avatar-overlay{
+                    opacity: 1;
+                }
+                &:hover .avatar-overlay-text{
+                    opacity: 1;
+                }
+
+                &:hover .avatar{
+                    filter: blur(4px);
+                }
+            }
+        }
+
         .panel-data-container {
             display: flex;
             flex-direction: column;
@@ -31,9 +80,69 @@
                 font-weight: bold;
             }
 
+            .name-container {
+                display: flex;
+                align-items: center;
+
+                .user-name {
+                    color: $black;
+                    font-size: 40px;
+                    font-weight: bold;
+                    width: fit-content;
+                    max-width: calc(50vw - 480px);
+                    font-family: 'Inter';
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                
+                .change-name-input {
+                    border: none;
+                    outline: none;
+                    background-color: transparent;
+                    font-weight: bold;
+                    font-size: 40px;
+                    width: calc(50vw - 480px);
+                    font-family: 'Inter';
+                }
+    
+                .pencil-icon {
+                    margin-left: 10px;
+                    margin-top: 10px;
+                    cursor: pointer;
+                }
+            }
+
+            .email-container {
+                display: flex;
+
+                .pencil-icon {
+                    margin-left: 10px;
+                    margin-top: -2px;
+                    cursor: pointer;
+                }
+            }
+
             .field-name {
                 font-weight: 500;
                 font-size: 18px;
+            }
+
+            .field-value {
+                font-weight: normal;
+                font-size: 18px;
+                margin-left: 20px;
+            }
+
+            .balance-field {
+                display: flex;
+                justify-content: center;
+                gap: 16px;
+                margin-left: -48px;
+
+                color: $black;
+                font-size: 40px;
+                font-weight: bold;
             }
 
             .change-link {
@@ -62,6 +171,13 @@
 
             .user-balance-panel {
                 flex: 1 1 20vw;
+
+                .payment-history {
+                    display: flex;
+                    justify-content: center;
+                    gap: 16px;
+                    margin-left: -58px;
+                }
             }
 
             .user-general-settings-panel {

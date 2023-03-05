@@ -46,10 +46,12 @@ interface ILanguage {
         },
         settingsTab: {
             userInfo: {
-                title: string
+                title: string,
+                changePhoto: string
             },
             balance: {
-                title: string
+                title: string,
+                history: string
             },
             generalSettings: {
                 title: string,

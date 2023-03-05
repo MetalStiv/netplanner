@@ -49,10 +49,12 @@ export const eng: ILanguage = {
         },
         settingsTab: {
             userInfo: {
-                title: "USER INFO"
+                title: "USER INFO",
+                changePhoto: "Change photo"
             },
             balance: {
-                title: "BALANCE"
+                title: "BALANCE",
+                history: "History"
             },
             generalSettings: {
                 title: "GENERAL SETTINGS",

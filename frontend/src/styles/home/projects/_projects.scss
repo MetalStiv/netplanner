@@ -3,7 +3,7 @@
     background-color: $background;
     flex-direction: column;
     height: calc(100vh - 122px);
-    width: calc(100vw - 154px);
+    width: calc(100vw - 184px);
     gap: 24px;
 
     .disabled
@@ -147,6 +147,9 @@
                         height: 32px;
                         margin-left: 16px;
                         margin-right: 8px;
+                        border-radius: 50%;
+                        padding: 1px;
+                        border: 1px solid $lightblue;
                     }
                 }
 

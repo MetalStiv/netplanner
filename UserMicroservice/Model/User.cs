@@ -33,10 +33,16 @@ public record User
     [BsonElement("refreshTokenExpiryTime")]
     public DateTime? RefreshTokenExpiryTime { get; set; }
 
+    [BsonElement("avatarBase64")]
+    public string? AvatarBase64 { get; set; }
+
+    [BsonElement("timezoneId")]
+    public int TimeZone { get; set; }
+
     public User(string email, string password)
     {
         this.Email = email;
-        this.Name = email;
+        this.Name = email.Split("@")[0];
         this.Salt = Convert.ToBase64String(RandomNumberGenerator.GetBytes(128 / 8));
         this.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password + this.Salt);
         this.Verified = false; 
@@ -50,5 +56,7 @@ public record User
             builder.Append(c);
         }
         this.VerificationCode = builder.ToString();
+        this.AvatarBase64 = string.Empty;
+        this.TimeZone = 18;
     }
 }

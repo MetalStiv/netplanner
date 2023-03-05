@@ -7,6 +7,7 @@ import IProjectMeta from "../../../model/IProjectMeta";
 import { observer } from "mobx-react-lite";
 import { TUsersStore } from "../../../stores/usersStore";
 import useLanguage from "../../../common/customHooks/useLanguage";
+import IUser from "../../../model/IUser";
 
 const ProjectsTab: React.FC = observer(() => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
@@ -22,14 +23,14 @@ const ProjectsTab: React.FC = observer(() => {
                 project.subscriberIds.forEach(id => userIds.add(id))
             }
         });
-        const users = await userMicroservice.get('getUsersByIds', { params: {ids: Array.from(userIds)}})
+        const users = await userMicroservice.get<IUser[]>('getUsersByIds', { params: {ids: Array.from(userIds)}})
         if (users.status === 200){
             usersStore?.setData(users.data)
         }
     }, [usersStore])
 
     const getProjects = useCallback(async () => {
-        let projects = await projectMicroservice.get('getProjects')
+        let projects = await projectMicroservice.get<IProjectMeta[]>('getProjects')
         if (projects.status === 200){
             const data = projects.data.map((item: IProjectMeta) => ({...item, "hide": false, "showMenu": false}));
             await getUsers(data)
@@ -65,7 +66,7 @@ const ProjectsTab: React.FC = observer(() => {
                     </div>
                     <div id="project-card-container">
                     {
-                        projectsMetaStore?.getData().map((p, index) => 
+                        projectsMetaStore?.getData().map((p) => 
                             <ProjectCard 
                                 projectId={p.id} 
                                 key={`card_${p.id}`} 
