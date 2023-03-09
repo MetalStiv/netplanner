@@ -31,13 +31,18 @@ interface ILanguage {
     userPage: {
         projectTab: {
             defaultName: string,
+            defaultGroupName: string,
             justCreated: string,
             owner: string,
             subscribers: string,
             none: string,
+            projects: string,
             modified: string,
             startNewProject: string,
             deleteProjectQuestion: string,
+            deleteProjectDefinition: string,
+            deleteGroupQuestion: string,
+            deleteGroupDefinition: string,
             delete: string,
             createCheckpoint: string,
             restoreFromCheckpoint: string,

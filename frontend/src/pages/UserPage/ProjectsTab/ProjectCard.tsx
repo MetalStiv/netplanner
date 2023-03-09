@@ -50,7 +50,10 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
     }
 
     return (
-        <div className={`project-card ${projectsMetaStore.getById(projectId)!.hide ? "project-card-hidden" : "project-card-visible"}`}>
+        <div className={`project-card ${projectsMetaStore.getById(projectId)!.hide ? 
+            "project-card-hidden" 
+            : "project-card-visible"}`}
+            onDoubleClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}>
             <img className="project-image" src={imageLoadingPlaceholder} 
                 onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}/>
             <div className="base-info">
@@ -128,10 +131,12 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                         usersStore.getData()
                             .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.avatarBase64
                     } />
-                    {
-                        usersStore.getData()
-                            .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.name
-                    }
+                    <div className="owner-name">
+                        {
+                            usersStore.getData()
+                                .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.name
+                        }
+                    </div>
                 </div>
                 <div className="subscribers-info">{langText.userPage.projectTab.subscribers + ': '+
                     langText.userPage.projectTab.none}</div>
@@ -186,11 +191,12 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                                 </div>
                                 <hr className="separator" />
                                 <div className="menu-text">
-                                    <ConfirmationDialog btnShowText={langText.userPage.projectTab.delete} 
+                                    <ConfirmationDialog showText={langText.userPage.projectTab.delete} 
                                         btnAcceptText={langText.userPage.projectTab.delete}
                                         btnDeclineText={langText.userPage.projectTab.cancel} 
                                         questionTextPartOne={langText.userPage.projectTab.deleteProjectQuestion}
                                         questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
+                                        questionTextPartThree={langText.userPage.projectTab.deleteProjectDefinition}
                                         action={removeProject} />
                                 </div>
                             </div>

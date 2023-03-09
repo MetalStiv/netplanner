@@ -15,17 +15,35 @@ public record ProjectMeta
     [BsonElement("ownerId")]
     public string OwnerId { get; set; }
 
+    [BsonElement("groupId")]
+    public string? GroupId { get; set; }
+
     [BsonElement("subscriberIds")]
     public List<String>? SubscriberIds { get; set; }
 
     [BsonElement("creationTime")]
     public DateTime CreationTime { get; private set; }
 
-    public ProjectMeta(string name, string ownerId)
+    [BsonElement("isGroup")]
+    public bool IsGroup { get; set; }
+
+    private ProjectMeta(string name, string ownerId, string groupId, bool isGroup)
     {
         this.Name = name;
         this.OwnerId = ownerId;
+        this.GroupId = groupId;
         this.CreationTime = DateTime.Now;
         this.SubscriberIds = null;
+        this.IsGroup = isGroup;
+    }
+
+    public static ProjectMeta CreateProjectMeta(string name, string ownerId, string groupId)
+    {
+        return new ProjectMeta(name, ownerId, groupId, false);
+    }
+
+    public static ProjectMeta CreateProjectMetaGroup(string name, string ownerId, string groupId)
+    {
+        return new ProjectMeta(name, ownerId, groupId, true);
     }
 }

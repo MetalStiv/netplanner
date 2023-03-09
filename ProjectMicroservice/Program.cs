@@ -47,9 +47,19 @@ app.MapPost("/addProject", [Authorize] async (HttpContext http,
     IProjectRepositoryService projectRepositoryService) => {
         var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
         var userId = tokenService.GetUserIdFromToken(token);
-        var name = await http.Request.ReadFromJsonAsync<ProjectNameDto>();
+        var projectCreationDto = await http.Request.ReadFromJsonAsync<ProjectCreationDto>();
 
-        var newProjectMeta = new ProjectMeta(name!.Name, userId);
+        ProjectMeta newProjectMeta;
+        if (projectCreationDto!.isGroup)
+        {
+            newProjectMeta = ProjectMeta.CreateProjectMetaGroup(projectCreationDto.Name, 
+                userId,projectCreationDto.GroupId);
+        }
+        else
+        {
+            newProjectMeta = ProjectMeta.CreateProjectMeta(projectCreationDto.Name, 
+                userId,projectCreationDto.GroupId);
+        }
         await projectRepositoryService.AddAsync(newProjectMeta);
 
         await http.Response.WriteAsJsonAsync(newProjectMeta);

@@ -15,10 +15,9 @@
     .startMenu {
         .text {
             position: fixed;
-            width: 25%;
-            height: 5%;
-            left: 43%;
-            top: 39%;
+            width: fit-content;
+            left: 41vw;
+            top: 36vh;
     
             font-family: 'Inter';
             font-style: normal;
@@ -30,35 +29,73 @@
         }
     
         .text-transformed {
-            transform: translate(-67vh, -30vh);
+            transform: translate(-33vw, -27vh);
             transition-duration: 0.5s;
         }
     
-        .add-btn {
+        .add-btn-group {
             position: fixed;
-            width: 8%;
-            top: 50%;
-            left: 52%;
-            font-size: 40px;
-            cursor: pointer;
-            background: $lightblue;
-            border: none;
-            color: $white;
-            border-radius: 15px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-    
-            &:hover {
-                background: linear-gradient(0deg, $blue, $blue);
+            gap: 16px;
+            width: fit-content;
+            height: 5vh;
+            top: 45vh;
+            left: 45vw;
+
+            #add-btn-project {
+                font-size: 40px;
+                cursor: pointer;
+                background: $lightblue;
+                border: none;
                 color: $white;
-                transition: background .2s
+                border-radius: 15px;
+                width: 6vw;
+                height: fill;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &:hover {
+                    background: linear-gradient(0deg, $blue, $blue);
+                    color: $white;
+                    transition: background .2s
+                }
+            }
+
+            #add-btn-group {
+                font-size: 40px;
+                cursor: pointer;
+                background: $background;
+                border: 2px solid $lightblue;
+                border-radius: 15px;
+                width: 6vw;
+                height: fill;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                stroke: $lightblue;
+
+                &:hover {
+                    background: linear-gradient(0deg, $blue, $blue);
+                    stroke: $white;
+                    transition: background .2s
+                }
             }
         }
     
-        .add-btn-transformed {
-            transform: translate(-35vh, -41vh);
+        .add-btn-group-transformed {
+            transform: translate(-10vw, -36vh);
             transition-duration: 1.2s;
+        }
+
+        .group-navigation-button-group {
+            position: fixed;
+            display: flex;
+            gap: 16px;
+            width: fit-content;
+            height: 5vh;
+            top: 10vh;
+            right: 15vw;
         }
     }
 
@@ -72,198 +109,5 @@
         margin-top: 5vh;
         width: calc(100vw - 154px);
         background-color: $background;
-
-        .project-card {
-            display: flex;
-            width: calc((100vw - 178px)/2);
-            height: 20vh;
-            background: $white;
-            box-shadow: 0px 20px 34px rgba(85, 82, 95, 0.06);
-            border-radius: 15px;
-
-            .project-image {
-                background-color: #D9D9D9;
-                width: calc(20vh - 36px);
-                height: calc(20vh - 36px);
-                margin: 18px;
-                border-radius: 15px;
-                border-image-width: 0px;
-                cursor: pointer;
-            }
-
-            .base-info {
-                display: flex;
-                flex-direction: column;
-                margin-top: 34px;
-                gap: 6px;
-
-                .modified-info {
-                    background-color: $easyblue;
-                    width: fit-content;
-                    padding-left: 16px;
-                    padding-right: 16px;
-                    border-radius: 8px;
-                }
-
-                .name-container {
-                    display: flex;
-                    align-items: center;
-
-                    .name-info {
-                        font-weight: bold;
-                        font-size: 32px;
-                        width: fit-content;
-                        max-width: calc((100vw - 178px)/2 - 30vh - 48px);
-                        font-family: 'Inter';
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                    }
-                    
-                    .change-name-input {
-                        border: none;
-                        outline: none;
-                        background-color: transparent;
-                        font-weight: bold;
-                        font-size: 32px;
-                        width: calc((100vw - 178px)/2 - 30vh - 48px);
-                        font-family: 'Inter';
-                    }
-    
-                    .pencil-icon {
-                        margin-left: 10px;
-                        margin-top: 10px;
-                    }
-                }
-
-                .owner-info {
-                    display: flex;
-                    align-items: center;
-                    font-size: 16px;
-                    font-weight: 600;
-
-                    img {
-                        width: 32px;
-                        height: 32px;
-                        margin-left: 16px;
-                        margin-right: 8px;
-                        border-radius: 50%;
-                        padding: 1px;
-                        border: 1px solid $lightblue;
-                    }
-                }
-
-                .subscribers-info {
-                    font-size: 16px;
-                    font-weight: 600;
-                }
-            }
-
-            .menu-icon-group {
-                display: flex;
-                position: relative;
-                margin-left: auto;
-                margin-right: 12px;
-                margin-top: 25px;
-
-                .menu-icon {
-                    margin-right: 16px;
-                    cursor: pointer;
-                }
-
-                .panel-menu-container {
-                    position: absolute;
-                    display: flex;
-                    margin-left: calc((100vw - 178px)/-12);
-                    margin-top: -20px;
-
-                    width: calc((100vw - 178px)/12 + 32px);
-                    height: fit-content;
-
-                    .panel-menu {
-                        background: $dark;
-                        padding: 12px;
-                        box-shadow: 0px 20px 34px rgba(85, 82, 95, 0.06);
-                        border-radius: 15px;
-    
-                        .menu-text {
-                            color: $white;
-                            cursor: pointer;
-                            line-height: normal;
-                            font-size: 14px;
-                            font-weight: 500;
-    
-                            &:hover {
-                                color: $gray;
-                            }
-                        }
-    
-                        .separator {
-                            color: darkgray;
-                            margin-top: 4px;
-                            margin-bottom: 4px;
-                        }
-                    }
-    
-                    .tail {
-                        margin-top: 18px;
-                        width: 0; 
-                        height: 0; 
-                        border-top: 12px solid transparent;
-                        border-bottom: 12px solid transparent;
-                        border-left: 12px solid $dark;
-                    }
-                }
-            }
-        }
-
-        .project-card-visible {
-            animation: fadeIn .3s linear 1 normal running 0s;
-
-            @keyframes fadeIn {
-                0% {
-                    opacity: 0;
-                }
-
-                50% {
-                    opacity: 0.5;
-                }
-
-                100% {
-                    opacity: 1;
-                }
-            }
-        }
-
-        .project-card-hidden {
-            animation: fadeOut .3s linear 1 normal running 0s both;
-            transition: max-height 0.15s ease-out;
-
-            @keyframes fadeOut {
-                0% {
-                    opacity: 1;
-                }
-
-                50% {
-                    opacity: 0.5;
-                }
-
-                100% {
-                    opacity: 0;
-                }
-            }
-        }
-
-        .project-card-hidden ~ .project-card {
-            animation: moveUp .3s linear 1 normal running 0s both;
-            @keyframes moveUp {
-                0% {
-                    top:0;
-                }
-                100% {
-                    top: -1000px;
-                }
-            }
-        }
     }
 }

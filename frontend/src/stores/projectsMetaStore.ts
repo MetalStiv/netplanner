@@ -1,26 +1,34 @@
 import IProjectMeta from "../model/IProjectMeta";
 
 const projectsMetaSymbol: unique symbol = Symbol()
+const currentGroupIdSymbol: unique symbol = Symbol()
 
 interface IProjectsMetaStore {
-    [projectsMetaSymbol]: IProjectMeta[]
+    [projectsMetaSymbol]: IProjectMeta[],
+    [currentGroupIdSymbol]: string | null,
+
     getData: () => IProjectMeta[],
-    getById: (id: string) => IProjectMeta | undefined,
+    getById: (id: string | null) => IProjectMeta | undefined,
     setData: (projectsMetaData: IProjectMeta[]) => void,
     updateOrInsert: (newProjectMetaData: IProjectMeta) => void,
     hideById: (id: string) => void,
     switchMenuById: (id: string) => void,
+
+    getCurrentGroupId: () => string | null,
+    setCurrentGroupId: (id: string | null) => void,
 }
 
 export const createProjectsMetaStore = () => {
     const store: IProjectsMetaStore = {
         [projectsMetaSymbol]: [],
+        [currentGroupIdSymbol]: null,
 
         getData(){
             return this[projectsMetaSymbol];
         },
 
-        getById(id: string){
+        getById(id: string | null){
+            if (!id) return undefined;
             return this[projectsMetaSymbol].find(p => p.id === id)
         },
 
@@ -51,6 +59,14 @@ export const createProjectsMetaStore = () => {
 
         switchMenuById(id: string){
             this[projectsMetaSymbol].forEach(p => p.id === id ? p.showMenu = !p.showMenu : p.showMenu = false)
+        },
+
+        getCurrentGroupId(){
+            return this[currentGroupIdSymbol];
+        },
+
+        setCurrentGroupId(id: string | null){
+            this[currentGroupIdSymbol] = id;
         }
     };
 

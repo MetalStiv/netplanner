@@ -19,21 +19,33 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
             GetCollection<Project>(projectDBSettings.ProjectCollectionName);
     }
 
-    public async Task AddAsync(ProjectMeta newProjectMeta) =>
-        await Task.WhenAll(
-            _projectMetaCollection.InsertOneAsync(newProjectMeta), 
-            _projectCollection.InsertOneAsync(new Project(newProjectMeta.Id!))
-        );
+    public async Task AddAsync(ProjectMeta newProjectMeta)
+    {
+        var tasks = newProjectMeta.IsGroup ? 
+            Task.WhenAll(_projectMetaCollection.InsertOneAsync(newProjectMeta))
+            : Task.WhenAll(
+                _projectMetaCollection.InsertOneAsync(newProjectMeta), 
+                _projectCollection.InsertOneAsync(new Project(newProjectMeta.Id!))
+            );
+        await tasks;
+    }
 
     public async Task UpdateAsync(ProjectMeta projectMetaToUpdate) =>
         await _projectMetaCollection
             .ReplaceOneAsync(p => p.Id == projectMetaToUpdate.Id, projectMetaToUpdate);
 
-    public async Task RemoveAsync(string projectId) => 
+    public async Task RemoveAsync(string projectId)
+    {
+        var removeChildrenTasks = new List<Task>();
+        var children = await _projectMetaCollection.Find(p => p.GroupId == projectId).ToListAsync();
+        children.ForEach(ch => removeChildrenTasks.Add(RemoveAsync(ch.Id!)));
+        await Task.WhenAll(removeChildrenTasks);
+
         await Task.WhenAll(
              _projectMetaCollection.DeleteOneAsync(p => p.Id == projectId),
              _projectCollection.DeleteOneAsync(p => p.Id == projectId)
         );
+    }
 
     public async Task<ProjectMeta> GetProjectByIdAsync(string projectId) =>
         await _projectMetaCollection.Find(p => p.Id == projectId).SingleAsync();

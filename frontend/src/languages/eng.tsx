@@ -34,13 +34,18 @@ export const eng: ILanguage = {
     userPage: {
         projectTab: {
             defaultName: "New project",
+            defaultGroupName: "New group",
             justCreated: "Just created",
             owner: "Owner",
             subscribers: "Subscribers",
             none: "None",
+            projects: "Projects",
             modified: "Modified",
             startNewProject: "Start a new project",
             deleteProjectQuestion: "Are you shure you want to delete project",
+            deleteProjectDefinition: "with all checkpoints",
+            deleteGroupQuestion: "Are you shure you want to delete group",
+            deleteGroupDefinition: "with all data",
             delete: "Delete",
             createCheckpoint: "Create checkpoint",
             restoreFromCheckpoint: "Restore from checkpoint",

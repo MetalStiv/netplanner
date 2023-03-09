@@ -34,17 +34,22 @@ export const ru: ILanguage = {
     userPage: {
         projectTab: {
             defaultName: "Новый проект",
+            defaultGroupName: "Новая группа",
             justCreated: "Только что создан",
             owner: "Владелец",
             subscribers: "Подписчики",
             none: "Нет",
+            projects: "Проекты",
             modified: "Последнее изменение",
             startNewProject: "Создать новый проект",
             deleteProjectQuestion: "Вы уверены что хотите удалить проект",
+            deleteProjectDefinition: "со всеми резервными данными",
+            deleteGroupQuestion: "Вы уверены что хотите удалить группу",
+            deleteGroupDefinition: "со всеми данными",
             delete: "Удалить",
             createCheckpoint: "Создать резерв",
             restoreFromCheckpoint: "Востановить из резерва",
-            moveToGroup: "Переместить в группу",
+            moveToGroup: "Поместить в группу",
             cancel: "Отмена"
         },
         settingsTab: {
