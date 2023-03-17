@@ -2,8 +2,9 @@ import { useState } from 'react';
 //import { useRootStore } from '../../providers/rootProvider';
 import { Collapse } from 'react-collapse';
 import { useClickAndDoubleClickHandler } from '../../../common/customHooks/useClickAndDoubleClickHandler';
-import Page from '../../../model/Page';
+//import Page from '../../../model/Page';
 import { IProject } from '../../../model/Project';
+import useLanguage from "../../../common/customHooks/useLanguage";
 
 interface PagesPanelProps {
     currentProject: IProject,
@@ -14,6 +15,7 @@ const PagesPanel = ({ currentProject }: PagesPanelProps) => {
     const [collapsePanelIsOpen, setCollapsePanelIsOpen] = useState<boolean>(false);
     const [editingPageIndex, setEditingPageIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
+    const [, , , langText] = useLanguage();
     const titleClickHandler = useClickAndDoubleClickHandler(
         (e, page) => {
             selectPageHandler(page.id);
@@ -94,7 +96,7 @@ const PagesPanel = ({ currentProject }: PagesPanelProps) => {
                             //updateProjectCallback(currentProject.getPages());
                             setEditingPageIndex(currentProject.getPages().length - 1);
                         }
-                        }>Add page</p>
+                        }>{langText.projectPage.pagesPanel.addBtn}</p>
                     </div>
                 </Collapse>
             </div>

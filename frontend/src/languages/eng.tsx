@@ -7,7 +7,7 @@ export const eng: ILanguage = {
         contactWithDevelopers: "Contact with developers",
         login: "Login",
         aboutTheProject: "About the project",
-        slog: 
+        slog:
         {
             first: "FROM ENGINEERS",
             second: "TO ENGINEERS"
@@ -42,5 +42,43 @@ export const eng: ILanguage = {
             delete: "Delete",
             cancel: "Cancel"
         }
+    },
+    projectPage: {
+        shapesPanel: {
+            title: "Shapes"
+        },
+        pagesPanel: {
+            addBtn: "Add page"
+        },
+        layersPanel: {
+            title: "Layers",
+        },
+        propertiesPanel: {
+            title: "Object properties",
+            elType: "Element type"
+        },
+        graphPanel: {
+            title: "Graphical properties",
+            width: "X len",
+            height: "Y len",
+        }
+    },
+    projectGroups: {
+        polygons: {
+            label: "Polygons",
+            elements: {
+                circle: "Circle",
+                rect: "Rectangle",
+                ellipse: "Ellipse"
+            }
+        },
+        primitives: {
+            label: "Primitives",
+            elements: {
+                line: "Line",
+                polyline: "Polyline",
+                point: "Point"
+            }
+        },
     }
 }

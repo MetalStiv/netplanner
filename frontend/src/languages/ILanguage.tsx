@@ -39,6 +39,44 @@ interface ILanguage {
             delete: string,
             cancel: string
         }
+    },
+    projectPage: {
+        shapesPanel: {
+            title: string
+        },
+        pagesPanel: {
+            addBtn: string
+        },
+        layersPanel: {
+            title: string
+        },
+        propertiesPanel: {
+            title: string,
+            elType: string
+        }
+        graphPanel: {
+            title: string,
+            width: string,
+            height: string
+        }
+    },
+    projectGroups: {
+        polygons: {
+            label: string,
+            elements: {
+                circle: string,
+                rect: string,
+                ellipse: string
+            }
+        },
+        primitives: {
+            label: string,
+            elements: {
+                line: string,
+                polyline: string,
+                point: string
+            }
+        }
     }
 }
 

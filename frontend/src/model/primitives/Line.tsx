@@ -74,6 +74,7 @@ class Line implements IShape {
             id={this.config.id}
             key={this.config.id}
             data-type={this.type}
+            role="shape"
             stroke={this.config.graphical.stroke?.value ?? 'black'}
             fill={this.config.graphical.fill?.value ?? 'black'}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}

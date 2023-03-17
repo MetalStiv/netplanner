@@ -7,7 +7,7 @@ export const ru: ILanguage = {
         contactWithDevelopers: "Связь с разработчиками",
         login: "Вход в систему",
         aboutTheProject: "О проекте",
-        slog: 
+        slog:
         {
             first: "ИНЖЕНЕРАМИ",
             second: "ДЛЯ ИНЖЕНЕРОВ"
@@ -42,5 +42,43 @@ export const ru: ILanguage = {
             delete: "Удалить",
             cancel: "Отмена"
         }
+    },
+    projectPage: {
+        shapesPanel: {
+            title: "Элементы"
+        },
+        pagesPanel: {
+            addBtn: "Добавить страницу"
+        },
+        layersPanel: {
+            title: "Слои",
+        },
+        propertiesPanel: {
+            title: "Свойства объекта",
+            elType: "Тип элемента"
+        },
+        graphPanel: {
+            title: "Графические свойства",
+            width: "Ширина",
+            height: "Высота",
+        }
+    },
+    projectGroups: {
+        polygons: {
+            label: "Многоугольники",
+            elements: {
+                circle: "Окружность",
+                rect: "Прямоугольник",
+                ellipse: "Эллипс"
+            }
+        },
+        primitives: {
+            label: "Примитивы",
+            elements: {
+                line: "Отрезок",
+                polyline: "Кривая",
+                point: "Точка"
+            }
+        },
     }
 }

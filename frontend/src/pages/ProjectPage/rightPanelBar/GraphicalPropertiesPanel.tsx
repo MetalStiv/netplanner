@@ -1,5 +1,6 @@
 import { IGraphProp } from "../../../model/IShape";
 import { IElemProps } from "../ProjectPage";
+import useLanguage from "../../../common/customHooks/useLanguage";
 
 interface IGraphicalPropertiesPanelProps {
     // graphicalConfig: IShapeGraphicalProps | undefined,
@@ -15,10 +16,12 @@ interface IGraphicalPropertiesPanelProps {
 // }
 
 const GraphicalPropertiesPanel = ({ elemProps }: IGraphicalPropertiesPanelProps) => {
+    const [, , , langText] = useLanguage();
+
     return (
         <div id="graphicalPropertiesPanel">
             <p className="panel-title">
-                <span>Graphical properties</span>
+                <span>{langText.projectPage.graphPanel.title}</span>
             </p>
             <div className="">
                 <div className="property">
@@ -30,11 +33,11 @@ const GraphicalPropertiesPanel = ({ elemProps }: IGraphicalPropertiesPanelProps)
                     <p className='property-value'>{elemProps?.graphProps.y.value ?? 0}</p>
                 </div>
                 <div className="property">
-                    <p className='property-title'>X len</p>
+                    <p className='property-title'>{langText.projectPage.graphPanel.width}</p>
                     <p className='property-value'>{elemProps?.size?.w ?? 0}</p>
                 </div>
                 <div className="property">
-                    <p className='property-title'>Y len</p>
+                    <p className='property-title'>{langText.projectPage.graphPanel.height}</p>
                     <p className='property-value'>{elemProps?.size?.h ?? 0}</p>
                 </div>
                 <div className="">

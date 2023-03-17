@@ -9,13 +9,9 @@ import {
 import { RootProvider } from "./providers/rootProvider";
 import { createRootStore } from "./stores/rootStore";
 import { useLocalObservable } from 'mobx-react-lite';
-import { useEffect } from "react";
 
 const App: React.FC = () => {
   useLocalObservable(createRootStore);
-  useEffect(() => {
-    document.title = 'Netplanner';
-  }, []);
 
   return (
     <RootProvider>

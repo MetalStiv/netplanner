@@ -1,20 +1,101 @@
 #workspace {
     .canvas-container {
         #canvas {
-            width: 500px;
-            height: 300px;
+            width: 100%;
+            height: 100%;
             margin: 0 auto;
             background-color: $white;
+
+            svg {
+                touch-action: none;
+                user-select: none;
+                -webkit-user-select: none;
+                -webkit-touch-callout: none;
+                pointer-events: unset;
+                position: relative;
+                display: block;
+                height: 100%;
+                width: 100%;
+                margin: 0;
+            }
+        }
+
+        #scale-slider {
+            position: fixed;
+            bottom: 3%;
+            right: calc($rightPanelWidth + 2%);
+
+            input {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 100%;
+                height: 4px;
+                border-radius: 50rem;
+                background: $lightgray;
+                outline: none;
+                opacity: 0.7;
+                -webkit-transition: .2s;
+                transition: opacity .2s;
+                cursor: pointer;
+
+                &:hover {
+                    opacity: 1;
+                }
+
+                &::-webkit-slider-thumb,
+                &::-moz-range-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 50%;
+                    background: $blue;
+                    cursor: pointer;
+                }
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    left: 50%;
+                    top: 30%;
+                    transform: translateX(-100%);
+                    width: 2px;
+                    height: 18px;
+                    background-color: $blue;
+                }
+            }
+
+            &::before {
+                content: "10%";
+                position: absolute;
+                left: 0;
+                top: -10px;
+                transform: translateX(-50%);
+            }
+
+            &::after {
+                content: "200%";
+                position: absolute;
+                right: 0;
+                top: -10px;
+                transform: translateX(50%);
+            }
+
         }
 
         width: 100%;
         height: 100%;
-        overflow: scroll;
+
+        overflow:scroll;
 
         &::-webkit-scrollbar {
             width: 0;
             height: 0;
         }
+    }
+
+    &~.react-page-split__divider--horizontal {
+        display: none;
     }
 
     width: 100%;

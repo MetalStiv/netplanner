@@ -1,35 +1,24 @@
-$pages-panel-height: 53px;
-
 #leftPanelBar {
-    .content {
-        @import "panels";
+    @import "panels";
 
-        .react-page-split__panel {
-            overflow-y: hidden;
-        }
-
-        .react-page-split__divider--vertical {
-            cursor: row-resize;
-            height: 1px;
-            border-top: 5px solid $white;
-            border-bottom: 5px solid $white;
-            background: $dark;
-        }
-
-        overflow-x: scroll;
-        background-color: $white;
-        border-right:1px solid $black;
-        width: 100%;
+    .react-page-split__panel {
+        overflow-y: hidden;
     }
 
-    .divider {
-        cursor: col-resize;
-        width: 10px;
-        background-color: transparent;
-        position: relative;
-        left: -5px
+    .react-page-split__divider--vertical {
+        cursor: row-resize;
+        height: 1px;
+        border-top: 4px solid $white;
+        border-bottom: 4px solid $white;
+        background: $dark;
     }
 
+    overflow-x: scroll;
+    background-color: $white;
+    border-right:1px solid $black;
+    min-width: 150px;
+    max-width: 400px;
+    width:400px;
 
     // position: absolute;
     // left: 0;
