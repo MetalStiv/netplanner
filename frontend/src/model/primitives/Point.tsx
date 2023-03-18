@@ -56,6 +56,7 @@ class Point implements IShape {
             id={this.config.id}
             key={this.config.id}
             data-type={this.type}
+            role="shape"
             stroke={this.config.graphical.stroke?.value ?? 'black'}
             strokeWidth={this.config.graphical.r.value ?? 2}
             fill={this.config.graphical.fill?.value ?? 'black'}
@@ -64,7 +65,7 @@ class Point implements IShape {
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-                M ${this.config.graphical.x.value},${(+this.config.graphical.y.value) + (+this.config.graphical.r.value)} 
+                M ${this.config.graphical.x.value},${((+this.config.graphical.y.value) + (+this.config.graphical.r.value))} 
                 a ${this.config.graphical.r.value},${this.config.graphical.r.value} 0 1,1 ${(+this.config.graphical.r.value) * 2},0 
                 a ${this.config.graphical.r.value},${this.config.graphical.r.value} 0 1,1 -${(+this.config.graphical.r.value) * 2},0
             `} />

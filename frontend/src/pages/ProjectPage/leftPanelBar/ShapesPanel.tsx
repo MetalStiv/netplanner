@@ -3,6 +3,7 @@ import { useRootStore } from '../../../providers/rootProvider';
 import Dropdown from '../../../components/Dropdown';
 //import { IDraggableElemProps } from '../ProjectPage';
 import IShapeCreator from '../../../model/IShapeCreator';
+import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
 
 interface IShapesPanelProps {
     getCreatorOnDragCallback: (elemType: IShapeCreator) => void,
@@ -10,10 +11,11 @@ interface IShapesPanelProps {
 
 const ShapesPanel = ({ getCreatorOnDragCallback }: IShapesPanelProps) => {
     const projectStore = useRootStore()!.getProjectStore();
+    const lang: LanguageData | null = useLanguageContext();
 
     return (
         <div id="shapesPanel">
-            <p className="panel-title">Shapes</p>
+            <p className="panel-title">{lang?.langText.projectPage.shapesPanel.title}</p>
             <div>
                 {projectStore.getProjects().at(0)?.shapesGroups!.map(function (group, i) {
                     return (

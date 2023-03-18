@@ -1,11 +1,5 @@
 import {
-    ResizeContent,
-    //ResizeHandleLeft,
-    ResizeHandleRight,
-    ResizePanel,
-} from "react-hook-resize-panel";
-import {
-    //HorizontalPageSplit,
+    HorizontalPageSplit,
     VerticalPageSplit,
     Limit
 } from 'react-page-split';
@@ -34,6 +28,7 @@ import AlertDialog from "../../components/AlertDialog";
 import { projectMicroservice } from "../../common/axiosMicroservices";
 import Loader from "../../components/Loader";
 import RangeInput from "../../components/RangeInput";
+import { LanguageData, useLanguageContext } from '../../providers/languageProvider';
 
 export interface IElemProps {
     type: string,
@@ -56,12 +51,12 @@ const ProjectPage: React.FC = () => {
     const [currentProject, setCurrentProject] = useState<IProject>(
         useRootStore()!.getProjectStore().getCurrentProject()
     );
-    const [scale, setScale] = useState<number>(100);
     const [orientation,] = useState<ICanvasConfig>(Portrait);
     const [loading, setLoading] = useState<boolean>(false);
     const [projectUpdateError, setProjectUpdateError] = useState<boolean>(false);
-
     const workspaceDivRef = useRef<HTMLDivElement>(null);
+
+    const lang: LanguageData | null = useLanguageContext();
 
     const updateProject = useCallback(async () => {
         setLoading(true)
@@ -85,10 +80,7 @@ const ProjectPage: React.FC = () => {
         let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
         newProject.setPages(currentProject.getPages());
         setCurrentProject(newProject);
-    }, [currentProject, setCurrentProject]);
-    useEffect(() => {
-        updateProject()
-    }, [updateProject])
+    }, [currentProject]);
     // useEffect(() => {
     //     // workspaceDivRef.current!.scrollTo({top: 0, left: 0})
     //     const oldScale = scale;
@@ -130,16 +122,6 @@ const ProjectPage: React.FC = () => {
         setSelectedElemProps(elemProps);
     }, []);
 
-    const onScaleChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
-        // const currentTop = workspaceDivRef.current!.scrollTop/workspaceDivRef.current!.scrollHeight;
-        // const currentLeft = workspaceDivRef.current!.scrollLeft/workspaceDivRef.current!.scrollWidth;
-        // const currentTop = workspaceDivRef.current!.scrollTop/workspaceDivRef.current!.scrollHeight;
-        // const currentLeft = workspaceDivRef.current!.scrollLeft/workspaceDivRef.current!.scrollWidth;
-        // setXScroll(currentLeft);
-        // setYScroll(currentTop);
-        setScale(parseInt(e.currentTarget.value));
-    }, [])
-
     return (
         <div id="projectPage">
             {
@@ -147,7 +129,7 @@ const ProjectPage: React.FC = () => {
             }
             <AlertDialog
                 btnText="Ok"
-                text={`You are not allowed to project!`}
+                text={lang!.langText.projectPage.notAllowed}
                 isShown={projectUpdateError}
                 onClose={() => navigate('/home')}
             />
@@ -155,62 +137,44 @@ const ProjectPage: React.FC = () => {
                 <HeaderNavbar />
             </header>
             <main>
-                <aside id="leftPanelBar">
-                    <ResizePanel initialWidth={250} minWidth={150} maxWidth={400} >
-                        <ResizeContent className='content'>
-                            <VerticalPageSplit resize={Limit} heights={['50%', '50%']}>
-                                <div style={{ minHeight: 150 }}>
-                                    <ShapesPanel getCreatorOnDragCallback={draggableElemCallback} />
-                                </div>
-                                <div style={{ minHeight: 150 }}>
-                                    {/* <PagesPanel currentProject={currentProject} updateProjectCallback={pagesArrCallback} />
-                                    <LayersPanel currentPage={currentProject.getCurrentPage()} updatePageCallback={pageObjCallback} /> */}
-                                    <PagesPanel currentProject={currentProject} />
-                                    <LayersPanel currentPage={currentProject.getCurrentPage()} />
-                                </div>
-                            </VerticalPageSplit>
-                        </ResizeContent>
-                        <ResizeHandleRight className='divider' />
-                    </ResizePanel>
-                </aside>
-
-                <section id="workspace">
-                    <div className="canvas-container" ref={workspaceDivRef}>
-                        <SVGCanvas
-                            currentPage={currentProject.getCurrentPage()}
-                            //updatePageCallback={pageObjCallback}
-                            canvasConfig={orientation}
-                            scale={scale/100}
-                            getCursorCoordsCallback={cursorCoordsCallback}
-                            getClickedElemConfigCallback={clickedElemPropsCallback}
-                            creatorOnDrop={currentCreator}
-                        />
-                    </div>
-                </section>
-
-                <aside id="rightPanelBar">
-                    <div className="content">
-                        <VerticalPageSplit resize={Limit}>
+                <HorizontalPageSplit resize={Limit}>
+                    <aside id="leftPanelBar">
+                        <VerticalPageSplit resize={Limit} >
                             <div style={{ minHeight: 150 }}>
-                                <ObjectPropertiesPanel elemProps={selectedElemProps} />
+                                <ShapesPanel getCreatorOnDragCallback={draggableElemCallback} />
                             </div>
                             <div style={{ minHeight: 150 }}>
-                                <GraphicalPropertiesPanel elemProps={selectedElemProps} />
+                                <PagesPanel currentProject={currentProject} />
+                                <LayersPanel currentPage={currentProject.getCurrentPage()} />
                             </div>
                         </VerticalPageSplit>
-                    </div>
-                </aside>
+                    </aside>
 
-                <div style={{
-                    position: 'fixed',
-                    top: '95%',
-                    left: '67%',
-                    width: '300px'
-                }}>
-                    <RangeInput min={10} max={1000} value={scale.toFixed()} step={5}
-                        numberInputMin={10} numberInputMax={4000}
-                        onChange={onScaleChange} />
-                </div>
+                    <section id="workspace">
+                        <div className="canvas-container" ref={workspaceDivRef}>
+                            <SVGCanvas
+                                currentPage={currentProject.getCurrentPage()}
+                                canvasConfig={orientation}
+                                getCursorCoordsCallback={cursorCoordsCallback}
+                                getClickedElemConfigCallback={clickedElemPropsCallback}
+                                creatorOnDrop={currentCreator}
+                            />
+                        </div>
+                    </section>
+
+                    <aside id="rightPanelBar">
+                        <div className="content">
+                            <VerticalPageSplit resize={Limit}>
+                                <div style={{ minHeight: 150 }}>
+                                    <ObjectPropertiesPanel elemProps={selectedElemProps} />
+                                </div>
+                                <div style={{ minHeight: 150 }}>
+                                    <GraphicalPropertiesPanel elemProps={selectedElemProps} />
+                                </div>
+                            </VerticalPageSplit>
+                        </div>
+                    </aside>
+                </HorizontalPageSplit>
             </main>
         </div>
     );

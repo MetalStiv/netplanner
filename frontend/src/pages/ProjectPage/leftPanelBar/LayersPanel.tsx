@@ -1,5 +1,7 @@
 import Page from '../../../model/Page';
 import { useState } from 'react';
+import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
+
 
 interface ILayersPanelProps {
     currentPage: Page,
@@ -10,6 +12,8 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
     const [editingLayerIndex, setEditingLayerIndex] = useState<number>(-1);
     const [draggableLayerIndex, setDraggableLayerIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
+
+    const lang: LanguageData | null = useLanguageContext();
 
     const visibleIcon = <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M11.6849 9C11.6849 10.485 10.4849 11.685 8.99994 11.685C7.51494 11.685 6.31494 10.485 6.31494 9C6.31494 7.515 7.51494 6.315 8.99994 6.315C10.4849 6.315 11.6849 7.515 11.6849 9Z" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -90,7 +94,7 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
         <div id="layersPanel">
             <div className="panel-title-container">
                 <p className="panel-title">
-                    <span>Layers</span>
+                    <span>{lang?.langText.projectPage.layersPanel.title}</span>
                     <span className="plus" onClick={() => {
                         currentPage.addLayer();
                         //updatePageCallback(currentPage);
