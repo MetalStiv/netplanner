@@ -1,6 +1,12 @@
 import ILanguage from "./ILanguage";
 
 export const ru: ILanguage = {
+    headerMenu: {
+        projects: "Проекты",
+        settings: "Настройки",
+        exit: "Выход",
+        searchProject: "Поиск проекта..."
+    },
     loginPage: {
         rates: "Тарифы",
         aboutIn: "",
@@ -33,6 +39,7 @@ export const ru: ILanguage = {
     },
     userPage: {
         projectTab: {
+            searchResult: "Результаты поиска",
             defaultName: "Новый проект",
             defaultGroupName: "Новая группа",
             justCreated: "Только что создан",

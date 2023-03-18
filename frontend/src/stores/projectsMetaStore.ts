@@ -1,11 +1,13 @@
 import IProjectMeta from "../model/IProjectMeta";
 
 const projectsMetaSymbol: unique symbol = Symbol()
-const currentGroupIdSymbol: unique symbol = Symbol()
+const groupPathSymbol: unique symbol = Symbol()
+const searchFilterSymbol: unique symbol = Symbol()
 
 interface IProjectsMetaStore {
     [projectsMetaSymbol]: IProjectMeta[],
-    [currentGroupIdSymbol]: string | null,
+    [searchFilterSymbol]: string | undefined,
+    [groupPathSymbol]: string[],
 
     getData: () => IProjectMeta[],
     getById: (id: string | null) => IProjectMeta | undefined,
@@ -15,13 +17,21 @@ interface IProjectsMetaStore {
     switchMenuById: (id: string) => void,
 
     getCurrentGroupId: () => string | null,
-    setCurrentGroupId: (id: string | null) => void,
+    inGroup: (id: string) => void,
+    outGroup: () => void,
+    toGroup: (id: string | null) => void,
+    getGroups: () => string[],
+    getSearchFilter: () => string | undefined,
+    setSearchFilter: (filter : string | undefined) => void,
+
+    clearStore: () => void,
 }
 
 export const createProjectsMetaStore = () => {
     const store: IProjectsMetaStore = {
         [projectsMetaSymbol]: [],
-        [currentGroupIdSymbol]: null,
+        [groupPathSymbol]: [],
+        [searchFilterSymbol]: undefined,
 
         getData(){
             return this[projectsMetaSymbol];
@@ -62,11 +72,42 @@ export const createProjectsMetaStore = () => {
         },
 
         getCurrentGroupId(){
-            return this[currentGroupIdSymbol];
+            return this[groupPathSymbol].length > 0 ? this[groupPathSymbol][this[groupPathSymbol].length-1] : null;
         },
 
-        setCurrentGroupId(id: string | null){
-            this[currentGroupIdSymbol] = id;
+        inGroup(id: string){
+            this[groupPathSymbol].push(id)
+        },
+
+        outGroup(){
+            this[groupPathSymbol].pop()
+        },
+
+        toGroup(id: string | null){
+            while (this[groupPathSymbol].length > 0){
+                if (this[groupPathSymbol][this[groupPathSymbol].length-1] === id){
+                    break;
+                }
+                this.outGroup()
+            }
+        },
+
+        getGroups(){
+            return this[groupPathSymbol];
+        },
+
+        getSearchFilter(){
+            return this[searchFilterSymbol];
+        },
+
+        setSearchFilter(filter: string | undefined){
+            this[searchFilterSymbol] = filter;
+        },
+
+        clearStore(){
+            this[projectsMetaSymbol] = [];
+            this[groupPathSymbol] = [];
+            this[searchFilterSymbol] = undefined;
         }
     };
 

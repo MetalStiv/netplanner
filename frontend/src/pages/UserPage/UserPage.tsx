@@ -1,17 +1,86 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useRef, useState } from "react";
 import bookImage from '../../assets/images/Book.png';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import SettingsTab from "./SettingsTab";
 import ProjectsTab from "./ProjectsTab/ProjectsTab";
+import useLogout from "../../common/customHooks/useLogout";
+import { observer } from "mobx-react-lite";
+import { useRootStore } from "../../providers/rootProvider";
+import { TUserStore } from "../../stores/userStore";
+import { TProjectsMetaStore } from "../../stores/projectsMetaStore";
+import { LanguageData, useLanguageContext } from "../../providers/languageProvider";
 
-const UserPage: React.FC = () => {
-    const navigate = useNavigate();
+const UserPage: React.FC = observer(() => {
+    const lang: LanguageData | null = useLanguageContext();
+    const logout = useLogout();
+    const userStore: TUserStore = useRootStore()!.getUserStore();
+    const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
+    
+    const [showMenu, setShowMenu] = useState<boolean>(false);
+    const projectsTabRef = useRef<HTMLDivElement>(null);
+    const settingsTabRef = useRef<HTMLDivElement>(null);
 
     return (
         <div id="userPage">
             <div className="menu-bar">
-                In production
+                <div className="search-group">
+                    <input className="search-input" 
+                        placeholder={lang!.langText.headerMenu.searchProject}
+                        value={projectsMetaStore.getSearchFilter()}
+                        onChange={e => projectsMetaStore.setSearchFilter(e.currentTarget.value)}
+                        onKeyDown={e => {
+                            if (e.keyCode === 27) {
+                                projectsMetaStore.setSearchFilter("")
+                            }
+                        }}
+                    />
+                </div>
+                <div className="user-group">
+                    <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        onClick={() => setShowMenu(!showMenu)} style={{cursor: 'pointer'}}>
+                        <path d="M1 1L5.5 5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div className="user-avatar">
+                        <img src={
+                            userStore.getData()?.avatarBase64
+                        } onClick={() => setShowMenu(!showMenu)} style={{cursor: 'pointer'}} />
+                    </div>
+                    <div className="user-name">
+                    {
+                        userStore.getData()?.name
+                    }
+                    </div>
+                    <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        style={{cursor: 'pointer'}}>
+                        <path d={"M11.8572 17.4285C11.0953 18.5714 10.1429 19.1428 9.00005 19.1428C7.8572 19.1428 "+
+                            " 6.90482 18.5714 6.14291 17.4285M14.8109 15.7143H3.18917C2.14727 15.7143 1.30264 "+
+                            " 14.8696 1.30264 13.8277C1.30264 13.4858 1.39557 13.1503 1.57148 12.8571C2.69322 "+
+                            " 10.9875 3.28577 8.84826 3.28577 6.66799V5.42854C3.28577 2.90381 5.33247 0.857109 "+
+                            " 7.8572 0.857109H10.1429C12.6676 0.857109 14.7143 2.90381 14.7143 5.42854V6.66799C14.7143 "+
+                            " 8.84826 15.3069 10.9875 16.4286 12.8571C16.9647 13.7505 16.675 14.9094 15.7816 "+
+                            " 15.4454C15.4884 15.6213 15.1529 15.7143 14.8109 15.7143V15.7143Z"}
+                             stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                
+                { 
+                    showMenu &&
+                        <div className="main-menu">
+                                <div className="panel-menu">
+                                    <div className="menu-text" onClick={() => projectsTabRef.current?.click()}>
+                                        {lang!.langText.headerMenu.projects}
+                                    </div>
+                                    <hr className="separator" />
+                                    <div className="menu-text" onClick={() => settingsTabRef.current?.click()}>
+                                        {lang!.langText.headerMenu.settings}
+                                    </div>
+                                    <hr className="separator" />
+                                    <div className="menu-text" onClick={() => logout()}>
+                                        {lang!.langText.headerMenu.exit}
+                                    </div>
+                                </div>
+                        </div>
+                }
             </div>
             <Tabs>
                 <div className="main-row">
@@ -34,7 +103,7 @@ const UserPage: React.FC = () => {
 
                             <Tab>
                                 <div className="rectangle first-rectangle">
-                                    <div className="menu-icon">
+                                    <div ref={projectsTabRef} className="menu-icon">
                                         <svg width="28" height="27" viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M13.9934 20.2359V16.8533" stroke="#949494" stroke-width="2" 
                                                 stroke-linecap="round" stroke-linejoin="round"/>
@@ -62,7 +131,7 @@ const UserPage: React.FC = () => {
                                 </div>
                             </Tab>
                             <Tab>
-                                <div className="rectangle">
+                                <div ref={settingsTabRef} className="rectangle">
                                     <div className="menu-icon">
                                         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d={"M16.0007 19.9998C18.2098 19.9998 20.0007 18.209 20.0007 15.9998C20.0007 13.7907 "+
@@ -101,7 +170,7 @@ const UserPage: React.FC = () => {
                             </Tab>
                         </TabList>
 
-                        <div onClick={() => navigate('/')} className="logout">
+                        <div onClick={() => logout()} className="logout">
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d={"M20.0214 9.85265V8.60865C20.0214 5.89531 17.8214 3.69531 15.108 3.69531H8.60804C5.89604 "+
                                     " 3.69531 3.69604 5.89531 3.69604 8.60865V23.4486C3.69604 26.162 5.89604 28.362 8.60804 "+
@@ -130,5 +199,6 @@ const UserPage: React.FC = () => {
             </Tabs>
         </div>
     );
-}
+});
+
 export default UserPage;

@@ -1,4 +1,10 @@
 interface ILanguage {
+    headerMenu: {
+        projects: string,
+        settings: string,
+        exit: string,
+        searchProject: string,
+    },
     loginPage: {
         rates: string,
         aboutIn: string,
@@ -30,6 +36,7 @@ interface ILanguage {
     },
     userPage: {
         projectTab: {
+            searchResult: string,
             defaultName: string,
             defaultGroupName: string,
             justCreated: string,

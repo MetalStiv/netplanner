@@ -7,7 +7,7 @@ import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { userCleanMicroservice } from "../../common/axiosMicroservices";
 import { login, ISignInForm} from "../../common/login";
-import useLanguage from '../../common/customHooks/useLanguage';
+import { LanguageData, useLanguageContext } from '../../providers/languageProvider';
 
 interface IRegisterForm {
     email: string,
@@ -16,9 +16,11 @@ interface IRegisterForm {
 }
 
 const LoginPanel: React.FC = () => {
-    const navigate = useNavigate();
-    const [, , , langText] = useLanguage();
+    const lang: LanguageData | null = useLanguageContext();
     const userStore = useRootStore()?.getUserStore();
+
+    const navigate = useNavigate();
+
     const [registrationEmailError, setRegistrationEmailError] = useState<boolean>(false);
     const [invalidUserError, setinvalidUserError] = useState<boolean>(false);
     const [passwordError, setPasswordError] = useState<boolean>(false);
@@ -46,13 +48,13 @@ const LoginPanel: React.FC = () => {
         },
         validationSchema: Yup.object({
             email: Yup.string()
-                .required(langText.loginPage.userForm.requiredError)
-                .email(langText.loginPage.userForm.emailError)
-                .max(40, langText.loginPage.userForm.toLongEmailError),
+                .required(lang!.langText.loginPage.userForm.requiredError)
+                .email(lang!.langText.loginPage.userForm.emailError)
+                .max(40, lang!.langText.loginPage.userForm.toLongEmailError),
             password: Yup.string()
-                .required(langText.loginPage.userForm.requiredError)
-                .min(4, langText.loginPage.userForm.toShortPassword)
-                .max(20, langText.loginPage.userForm.toLongPasswordError),
+                .required(lang!.langText.loginPage.userForm.requiredError)
+                .min(4, lang!.langText.loginPage.userForm.toShortPassword)
+                .max(20, lang!.langText.loginPage.userForm.toLongPasswordError),
         })
     })
 
@@ -73,16 +75,16 @@ const LoginPanel: React.FC = () => {
         },
         validationSchema: Yup.object({
             email: Yup.string()
-                .required(langText.loginPage.userForm.requiredError)
-                .email(langText.loginPage.userForm.emailError)
-                .max(40, langText.loginPage.userForm.toLongEmailError),
+                .required(lang!.langText.loginPage.userForm.requiredError)
+                .email(lang!.langText.loginPage.userForm.emailError)
+                .max(40, lang!.langText.loginPage.userForm.toLongEmailError),
             password: Yup.string()
-                .required(langText.loginPage.userForm.requiredError)
-                .min(4, langText.loginPage.userForm.toShortPassword)
-                .max(20, langText.loginPage.userForm.toLongPasswordError),
+                .required(lang!.langText.loginPage.userForm.requiredError)
+                .min(4, lang!.langText.loginPage.userForm.toShortPassword)
+                .max(20, lang!.langText.loginPage.userForm.toLongPasswordError),
             passwordConfirmation: Yup.string()
                 .test('passwords-match', 
-                    langText.loginPage.userForm.passwordsDoesNotMatch, 
+                    lang!.langText.loginPage.userForm.passwordsDoesNotMatch, 
                     function (value: string | undefined, context) {
                         return context.parent.password === value
                 })
@@ -101,8 +103,8 @@ const LoginPanel: React.FC = () => {
             <h1>NETPLANNER</h1>
             <Tabs>
                 <TabList>
-                    <Tab>{langText.loginPage.userForm.signIn}</Tab>
-                    <Tab>{langText.loginPage.userForm.register}</Tab>
+                    <Tab>{lang!.langText.loginPage.userForm.signIn}</Tab>
+                    <Tab>{lang!.langText.loginPage.userForm.register}</Tab>
                 </TabList>
 
                 <TabPanel>
@@ -143,24 +145,24 @@ const LoginPanel: React.FC = () => {
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
-                                <label htmlFor="password">{langText.loginPage.userForm.password}</label>
+                                <label htmlFor="password">{lang!.langText.loginPage.userForm.password}</label>
                             </div>
                             <div>
                                 {signIn.touched.password && signIn.errors.password && (
                                     <small>{signIn.errors.password}</small>
                                 )}
                             </div>
-                            <a href="" rel="nofollow">{langText.loginPage.userForm.forgotPassword}</a>
+                            <a href="" rel="nofollow">{lang!.langText.loginPage.userForm.forgotPassword}</a>
                         </div>
                         {
-                            invalidUserError && <small>{langText.loginPage.userForm.invalidUserError}</small>
+                            invalidUserError && <small>{lang!.langText.loginPage.userForm.invalidUserError}</small>
                         }
                         {
-                            passwordError && <small>{langText.loginPage.userForm.passwordError}</small>
+                            passwordError && <small>{lang!.langText.loginPage.userForm.passwordError}</small>
                         }
                         <div style={{ textAlign: 'center', paddingTop: 48 }}>
                             <button className="btn btn-blue" type="submit">
-                                {langText.loginPage.userForm.buttonStart}
+                                {lang!.langText.loginPage.userForm.buttonStart}
                             </button>
                         </div>
                     </form>
@@ -199,7 +201,7 @@ const LoginPanel: React.FC = () => {
                                     readOnly
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
-                                <label htmlFor="password">{langText.loginPage.userForm.password}</label>
+                                <label htmlFor="password">{lang!.langText.loginPage.userForm.password}</label>
                             </div>
 
                             {register.touched.password && register.errors.password && (
@@ -218,7 +220,7 @@ const LoginPanel: React.FC = () => {
                                     onFocus={(e) => e.target.removeAttribute('readonly')}
                                 />
                                 <label htmlFor="passwordConfirmation">{
-                                    langText.loginPage.userForm.passwordConfirmation}
+                                    lang!.langText.loginPage.userForm.passwordConfirmation}
                                 </label>
                             </div>
 
@@ -227,11 +229,11 @@ const LoginPanel: React.FC = () => {
                             )}
                         </div>
                         {
-                            registrationEmailError && <small>{langText.loginPage.userForm.registrationEmailError}</small>
+                            registrationEmailError && <small>{lang!.langText.loginPage.userForm.registrationEmailError}</small>
                         }
                         <div style={{ textAlign: 'center' }}>
                             <button className="btn btn-blue" type="submit">
-                                {langText.loginPage.userForm.buttonRegister}
+                                {lang!.langText.loginPage.userForm.buttonRegister}
                             </button>
                         </div>
                     </form>

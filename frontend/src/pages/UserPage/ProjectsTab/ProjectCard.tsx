@@ -6,10 +6,9 @@ import { TUsersStore } from "../../../stores/usersStore";
 import { observer } from "mobx-react-lite";
 import { projectMicroservice } from "../../../common/axiosMicroservices";
 import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
-import useLanguage from "../../../common/customHooks/useLanguage";
 import { useNavigate } from "react-router-dom";
 import imageLoadingPlaceholder from '../../../assets/images/image-loading.jpg';
-import defaultAvatar from '../../../assets/images/user-avatar.png';
+import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 
 interface IProjectCardProps {
     projectId: string;
@@ -17,12 +16,13 @@ interface IProjectCardProps {
 
 const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
-    const [, , , langText] = useLanguage();
+    const usersStore: TUsersStore = useRootStore()!.getUsersStore();
+    const lang: LanguageData | null = useLanguageContext();
+    
     const navigate = useNavigate();
     
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(projectsMetaStore.getById(projectId)!.name);
-    const usersStore: TUsersStore = useRootStore()!.getUsersStore();
 
     const removeProject = async () => {
         const res = await projectMicroservice.post("removeProject", {id: projectId})
@@ -57,7 +57,7 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
             <img className="project-image" src={imageLoadingPlaceholder} 
                 onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}/>
             <div className="base-info">
-                <div className="modified-info">{langText.userPage.projectTab.justCreated}</div>
+                <div className="modified-info">{lang!.langText.userPage.projectTab.justCreated}</div>
                 {
                     isEdittingName ? <div className="name-container">
                             <input
@@ -126,7 +126,7 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                         </div>
                 }
 
-                <div className="owner-info">{langText.userPage.projectTab.owner + ': '}
+                <div className="owner-info">{lang!.langText.userPage.projectTab.owner + ': '}
                     <img src={
                         usersStore.getData()
                             .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.avatarBase64
@@ -138,8 +138,8 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                         }
                     </div>
                 </div>
-                <div className="subscribers-info">{langText.userPage.projectTab.subscribers + ': '+
-                    langText.userPage.projectTab.none}</div>
+                <div className="subscribers-info">{lang!.langText.userPage.projectTab.subscribers + ': '+
+                    lang!.langText.userPage.projectTab.none}</div>
             </div>
 
             <div className="menu-icon-group">
@@ -179,24 +179,24 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                         <div className="panel-menu-container">
                             <div className="panel-menu">
                                 <div className="menu-text disabled">
-                                    {langText.userPage.projectTab.createCheckpoint}
+                                    {lang!.langText.userPage.projectTab.createCheckpoint}
                                 </div>
                                 <hr className="separator" />
                                 <div className="menu-text disabled">
-                                    {langText.userPage.projectTab.restoreFromCheckpoint}
+                                    {lang!.langText.userPage.projectTab.restoreFromCheckpoint}
                                 </div>
                                 <hr className="separator" />
                                 <div className="menu-text">
-                                    {langText.userPage.projectTab.moveToGroup}
+                                    {lang!.langText.userPage.projectTab.moveToGroup}
                                 </div>
                                 <hr className="separator" />
                                 <div className="menu-text">
-                                    <ConfirmationDialog showText={langText.userPage.projectTab.delete} 
-                                        btnAcceptText={langText.userPage.projectTab.delete}
-                                        btnDeclineText={langText.userPage.projectTab.cancel} 
-                                        questionTextPartOne={langText.userPage.projectTab.deleteProjectQuestion}
+                                    <ConfirmationDialog showText={lang!.langText.userPage.projectTab.delete} 
+                                        btnAcceptText={lang!.langText.userPage.projectTab.delete}
+                                        btnDeclineText={lang!.langText.userPage.projectTab.cancel} 
+                                        questionTextPartOne={lang!.langText.userPage.projectTab.deleteProjectQuestion}
                                         questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
-                                        questionTextPartThree={langText.userPage.projectTab.deleteProjectDefinition}
+                                        questionTextPartThree={lang!.langText.userPage.projectTab.deleteProjectDefinition}
                                         action={removeProject} />
                                 </div>
                             </div>
@@ -207,18 +207,6 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                         </div>
                 }
             </div>
-            {/* <div className="btn-block">
-                <ConfirmationDialog btnShowText={langText.userPage.projectTab.delete} 
-                    btnAcceptText={langText.userPage.projectTab.delete}
-                    btnDeclineText={langText.userPage.projectTab.cancel} 
-                    questionTextPartOne={langText.userPage.projectTab.deleteProjectQuestion}
-                    questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
-                    action={removeProject} />
-                
-                <button onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}>
-                    To project
-                </button>
-            </div> */}
         </div>
     )
 })

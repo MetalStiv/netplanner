@@ -10,6 +10,111 @@
 
     .menu-bar {
         flex-basis: 58px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        color: $white;
+        gap: 16px;
+
+        .search-group {
+            align-self: center;
+            flex-basis: 36vw;
+            margin-left: 148px;
+
+            .search-input {
+                width: 40vw;
+                height: 40px;
+
+                background-color: $darkgray;
+                border: none;
+                border-radius: 16px;
+    
+                text-align: center;
+                padding-left: 16px;
+                padding-right: 16px;
+                color: $lightgray;
+                font-size: 18px;
+                font-family: FontAwesome, 'Inter' !important;
+                font-style: normal;
+                font-weight: normal;
+                text-decoration: inherit;
+    
+                &:focus {
+                    outline: none;
+                    &::placeholder {
+                        color: transparent;
+                    }
+                }
+
+                &::placeholder{
+                    color: $lightgray;
+                    opacity: 1;
+                }
+            }
+        }
+
+        .user-group {
+            flex-basis: 60vw;
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 16px;
+            align-items: center;
+            margin-right: 20px;
+
+            img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-top: 2px;
+                padding: 2px;
+                border: 2px solid $lightblue;
+            }
+
+            .user-name {
+                font-size: 18px;
+                font-family: 'Inter';
+                max-width: 25vw;
+                margin-left: 16px;
+
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .main-menu {
+            position: fixed;
+            top: 50px;
+            right: 12px;
+
+            .panel-menu {
+                background: $dark;
+                padding: 12px;
+                box-shadow: 0px 20px 34px rgba(85, 82, 95, 0.06);
+                border-bottom-left-radius: 15px;
+                border-bottom-right-radius: 15px;
+                width: fit-content;
+                min-width: 7vw;
+
+                .menu-text {
+                    color: $white;
+                    cursor: pointer;
+                    line-height: normal;
+                    font-size: 14px;
+                    font-weight: 500;
+
+                    &:hover {
+                        color: $gray;
+                    }
+                }
+
+                .separator {
+                    color: darkgray;
+                    margin-top: 4px;
+                    margin-bottom: 4px;
+                }
+            }
+        }
     }
 
     .main-row {

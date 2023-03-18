@@ -10,6 +10,7 @@ import { RootProvider } from "./providers/rootProvider";
 import { createRootStore } from "./stores/rootStore";
 import { useLocalObservable } from 'mobx-react-lite';
 import { useEffect } from "react";
+import { LanguageProvider } from "./providers/languageProvider";
 
 const App: React.FC = () => {
   useLocalObservable(createRootStore);
@@ -19,15 +20,17 @@ const App: React.FC = () => {
 
   return (
     <RootProvider>
-      <div className="App" style={{ height: '100%' }}>
-        <Router>
-          <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/home" element={<UserPage />} />
-            <Route path="/project" element={<ProjectPage />} />
-          </Routes>
-        </Router>
-      </div>
+      <LanguageProvider>
+        <div className="App" style={{ height: '100%' }}>
+          <Router>
+            <Routes>
+              <Route path="/" element={<LoginPage />} />
+              <Route path="/home" element={<UserPage />} />
+              <Route path="/project" element={<ProjectPage />} />
+            </Routes>
+          </Router>
+        </div>
+      </LanguageProvider>
     </RootProvider>
   );
 }

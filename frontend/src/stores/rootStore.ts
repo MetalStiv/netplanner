@@ -18,6 +18,8 @@ interface IRootStore {
     getUserStore: () => TUserStore,
     getUsersStore: () => TUsersStore,
     getProjectsMetaStore: () => TProjectsMetaStore,
+
+    clearStore: () => void,
 }
 
 export const createRootStore = () => {
@@ -41,6 +43,13 @@ export const createRootStore = () => {
 
         getProjectsMetaStore() {
             return this[projectsMetaStoreSymbol];
+        },
+
+        clearStore() {
+            this[projectStoreSymbol].clearStore();
+            this[userStoreSymbol].clearStore();
+            this[usersStoreSymbol].clearStore();
+            this[projectsMetaStoreSymbol].clearStore();
         }
     };
 

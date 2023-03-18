@@ -1,4 +1,4 @@
-#projectsTab {
+#projects-tab {
     display: flex;
     background-color: $background;
     flex-direction: column;
@@ -12,7 +12,62 @@
         opacity: 0.7;
     }
 
-    .startMenu {
+    #navigation {
+        display: flex;
+        flex-direction: row;
+        height: fit-content;
+        width: fit-content;
+        max-width: calc(80vw - 184px);
+
+        .group-navigation-button-group {
+            display: flex;
+            height: fit-content;
+            flex: 0 0 8vw;
+            gap: 8px;
+
+            .navigation-button {
+                font-size: 12px;
+                cursor: pointer;
+                background: $background;
+                border: 2px solid $lightblue;
+                border-radius: 15px;
+                width: 3vw;
+                height: 5vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                stroke: $lightblue;
+
+                &:hover {
+                    background: linear-gradient(0deg, $blue, $blue);
+                    stroke: $white;
+                    transition: background .2s
+                }
+            }
+        }
+
+        .groups-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: left;
+            flex: 0 0 calc(72vw - 184px);
+
+            .group-name {
+                cursor: pointer;
+                flex-basis: max-content;
+                padding-left: 3px;
+                padding-top: 1vh;
+                font-size: 20px;
+                font-weight: 500;
+    
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    .start-menu {
         .text {
             position: fixed;
             width: fit-content;
@@ -29,8 +84,17 @@
         }
     
         .text-transformed {
-            transform: translate(-33vw, -27vh);
-            transition-duration: 0.5s;
+            animation: fadeOut .3s linear forwards;
+
+            @keyframes fadeIn {
+                0% {
+                    opacity: 1;
+                }
+        
+                100% {
+                    opacity: 0;
+                }
+            }
         }
     
         .add-btn-group {
@@ -50,7 +114,7 @@
                 color: $white;
                 border-radius: 15px;
                 width: 6vw;
-                height: fill;
+                height: 5vh;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -69,7 +133,7 @@
                 border: 2px solid $lightblue;
                 border-radius: 15px;
                 width: 6vw;
-                height: fill;
+                height: 5vh;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -84,21 +148,10 @@
         }
     
         .add-btn-group-transformed {
-            transform: translate(-10vw, -36vh);
+            transform: translate(38vw, -35vh);
             transition-duration: 1.2s;
         }
-
-        .group-navigation-button-group {
-            position: fixed;
-            display: flex;
-            gap: 16px;
-            width: fit-content;
-            height: 5vh;
-            top: 10vh;
-            right: 15vw;
-        }
     }
-
 
     #project-card-container {
         display: flex;
@@ -106,7 +159,6 @@
         overflow: auto;
         flex-wrap: wrap;
         gap: 24px;
-        margin-top: 5vh;
         width: calc(100vw - 154px);
         background-color: $background;
     }

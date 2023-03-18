@@ -45,4 +45,6 @@ export const login = async (params: ISignInForm): Promise<IUser> => {
   return user;
 }
 
-export const logout = () => clearAuthTokens()
+export const logout = () => {
+  clearAuthTokens();
+}

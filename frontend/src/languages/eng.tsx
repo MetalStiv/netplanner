@@ -1,6 +1,12 @@
 import ILanguage from "./ILanguage"
 
 export const eng: ILanguage = {
+    headerMenu: {
+        projects: "Projects",
+        settings: "Settings",
+        exit: "Exit",
+        searchProject: "Search project...",
+    },
     loginPage: {
         rates: "Rates",
         aboutIn: "",
@@ -33,6 +39,7 @@ export const eng: ILanguage = {
     },
     userPage: {
         projectTab: {
+            searchResult: "Search result",
             defaultName: "New project",
             defaultGroupName: "New group",
             justCreated: "Just created",

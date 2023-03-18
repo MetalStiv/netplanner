@@ -25,6 +25,8 @@ interface IProjectStore {
     setCurrentProject: (layerID: number) => void,
     getCurrentProject: () => IProject,
     _titleUniqueization: (title: string) => string,
+
+    clearStore: () => void,
 }
 
 export const createProjectStore = () => {
@@ -177,6 +179,10 @@ export const createProjectStore = () => {
                 title += `_${copyIndex}`;
             }
             return title;
+        },
+
+        clearStore(){
+            this[projectsSymbol] = [];
         }
     };
 

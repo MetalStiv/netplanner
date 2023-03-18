@@ -6,8 +6,7 @@ import { TUsersStore } from "../../../stores/usersStore";
 import { observer } from "mobx-react-lite";
 import { projectMicroservice } from "../../../common/axiosMicroservices";
 import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
-import useLanguage from "../../../common/customHooks/useLanguage";
-import { useNavigate } from "react-router-dom";
+import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 
 interface IProjectGroupCardProps {
     projectId: string;
@@ -15,12 +14,11 @@ interface IProjectGroupCardProps {
 
 const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({projectId}) => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
-    const [, , , langText] = useLanguage();
-    const navigate = useNavigate();
+    const usersStore: TUsersStore = useRootStore()!.getUsersStore();
+    const lang: LanguageData | null = useLanguageContext();
     
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(projectsMetaStore.getById(projectId)!.name);
-    const usersStore: TUsersStore = useRootStore()!.getUsersStore();
 
     const removeProject = async () => {
         const res = await projectMicroservice.post("removeProject", {id: projectId})
@@ -51,7 +49,10 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({projectId}
         <div className={`project-group-card ${projectsMetaStore.getById(projectId)!.hide ? 
             "project-group-card-hidden" 
             : "project-group-card-visible"}`}
-            onDoubleClick={() => projectsMetaStore.setCurrentGroupId(projectId)}
+            onDoubleClick={() => {
+                projectsMetaStore.inGroup(projectId)
+                console.log(projectsMetaStore.getCurrentGroupId())
+            }}
         >
             <div className="base-info">
                 <div className="first-row">
@@ -122,11 +123,11 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({projectId}
                                 </span>
                             </div>
                     }
-                    <div className="modified-info">{langText.userPage.projectTab.justCreated}</div>
+                    <div className="modified-info">{lang!.langText.userPage.projectTab.justCreated}</div>
                 </div>
 
                 <div className="second-row">
-                    <div className="owner-info">{langText.userPage.projectTab.owner + ': '}
+                    <div className="owner-info">{lang!.langText.userPage.projectTab.owner + ': '}
                         <img src={
                             usersStore.getData()
                                 .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.avatarBase64
@@ -138,13 +139,13 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({projectId}
                             }
                         </div>
                     </div>
-                    <div className="subscribers-info">{langText.userPage.projectTab.subscribers + ': '+
-                        langText.userPage.projectTab.none}</div>
+                    <div className="subscribers-info">{lang!.langText.userPage.projectTab.subscribers + ': '+
+                        lang!.langText.userPage.projectTab.none}</div>
                 </div>
 
                 <div className="third-row">
-                    <div className="projects-label">{langText.userPage.projectTab.projects}:</div>
-                    <div className="projects-none">{langText.userPage.projectTab.none}</div>
+                    <div className="projects-label">{lang!.langText.userPage.projectTab.projects}:</div>
+                    <div className="projects-none">{lang!.langText.userPage.projectTab.none}</div>
                 </div>
             </div>
 
@@ -185,16 +186,16 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({projectId}
                         <div className="panel-menu-container">
                             <div className="panel-menu">
                                 <div className="menu-text">
-                                    {langText.userPage.projectTab.moveToGroup}
+                                    {lang!.langText.userPage.projectTab.moveToGroup}
                                 </div>
                                 <hr className="separator" />
                                 <div className="menu-text">
-                                    <ConfirmationDialog showText={langText.userPage.projectTab.delete} 
-                                        btnAcceptText={langText.userPage.projectTab.delete}
-                                        btnDeclineText={langText.userPage.projectTab.cancel} 
-                                        questionTextPartOne={langText.userPage.projectTab.deleteGroupQuestion}
+                                    <ConfirmationDialog showText={lang!.langText.userPage.projectTab.delete} 
+                                        btnAcceptText={lang!.langText.userPage.projectTab.delete}
+                                        btnDeclineText={lang!.langText.userPage.projectTab.cancel} 
+                                        questionTextPartOne={lang!.langText.userPage.projectTab.deleteGroupQuestion}
                                         questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
-                                        questionTextPartThree={langText.userPage.projectTab.deleteGroupDefinition}
+                                        questionTextPartThree={lang!.langText.userPage.projectTab.deleteGroupDefinition}
                                         action={removeProject} />
                                 </div>
                             </div>
@@ -205,18 +206,6 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({projectId}
                         </div>
                 }
             </div>
-            {/* <div className="btn-block">
-                <ConfirmationDialog btnShowText={langText.userPage.projectTab.delete} 
-                    btnAcceptText={langText.userPage.projectTab.delete}
-                    btnDeclineText={langText.userPage.projectTab.cancel} 
-                    questionTextPartOne={langText.userPage.projectTab.deleteProjectQuestion}
-                    questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
-                    action={removeProject} />
-                
-                <button onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}>
-                    To project
-                </button>
-            </div> */}
         </div>
     )
 })

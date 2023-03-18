@@ -5,7 +5,9 @@ const usersSymbol: unique symbol = Symbol()
 interface IUsersStore {
     [usersSymbol]: IUser[],
     getData: () => IUser[],
-    setData: (users: IUser[]) => void
+    setData: (users: IUser[]) => void,
+
+    clearStore: () => void,
 }
 
 export const createUsersStore = () => {
@@ -18,6 +20,10 @@ export const createUsersStore = () => {
 
         setData(users: IUser[]) {
             this[usersSymbol] = users;
+        },
+
+        clearStore(){
+            this[usersSymbol] = [];
         }
     };
 

@@ -4,10 +4,10 @@ import bmstuIcon from "../../assets/images/bmstu-icon.svg";
 import loginImage from "../../assets/images/login-image.webp";
 import LoginPanel from "./LoginPanel";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import useLanguage from "../../common/customHooks/useLanguage";
+import { LanguageData, useLanguageContext } from "../../providers/languageProvider";
 
 const LoginPage: React.FC = () => {
-    const [language, , switchLanguage, langText] = useLanguage();
+    const lang: LanguageData | null = useLanguageContext();
 
     return (
         <div id="loginPage">
@@ -19,23 +19,23 @@ const LoginPage: React.FC = () => {
                                 <div className="logo">
                                     <img src={bmstuIcon} alt="МГТУ им. Н.Э. Баумана" />
                                 </div>
-                                <p className="tagline">{langText.loginPage.slog.first}<br />
-                                    {langText.loginPage.slog.second}</p>
+                                <p className="tagline">{lang!.langText.loginPage.slog.first}<br />
+                                    {lang!.langText.loginPage.slog.second}</p>
                             </div>
                             <div className="nav-block">
                                 <TabList>
-                                    <Tab>{langText.loginPage.login}</Tab>
-                                    <Tab>{langText.loginPage.aboutTheProject}</Tab>
-                                    <Tab>{langText.loginPage.rates}</Tab>
-                                    <Tab>{langText.loginPage.contactWithDevelopers}</Tab>
+                                    <Tab>{lang!.langText.loginPage.login}</Tab>
+                                    <Tab>{lang!.langText.loginPage.aboutTheProject}</Tab>
+                                    <Tab>{lang!.langText.loginPage.rates}</Tab>
+                                    <Tab>{lang!.langText.loginPage.contactWithDevelopers}</Tab>
                                 </TabList>
                             </div>
                             <div className="lang-block">
-                                <button className={language === "ru" ? "current" : ""} onClick={() => {
-                                    switchLanguage("ru")
+                                <button className={lang!.language === "ru" ? "current" : ""} onClick={() => {
+                                    lang!.switchLanguage("ru")
                                 }}>RU</button>
-                                <button className={language === "en" ? "current" : ""} onClick={() => {
-                                    switchLanguage("en")
+                                <button className={lang!.language === "en" ? "current" : ""} onClick={() => {
+                                    lang!.switchLanguage("en")
                                 }}>EN</button>
                             </div>
                         </div>

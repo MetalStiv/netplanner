@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import '../../styles/home/settings/index.scss';
-import useLanguage from "../../common/customHooks/useLanguage";
 import avatarOverlay from "../../assets/images/avatar-overlay.png";
 import { observer } from "mobx-react-lite";
 import { useRootStore } from "../../providers/rootProvider";
@@ -9,11 +8,12 @@ import { userMicroservice } from "../../common/axiosMicroservices";
 import IUser from "../../model/IUser";
 import { getBase64 } from "../../common/fileManipulations";
 import { timeZones } from "../../common/timezones";
+import { LanguageData, useLanguageContext } from "../../providers/languageProvider";
 
 const SettingsTab: React.FC = observer(() => {
     const userStore: TUserStore = useRootStore()!.getUserStore();
-
-    const [language, languages, switchLanguage, langText] = useLanguage();
+    const lang: LanguageData | null = useLanguageContext();
+    
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(userStore.getData()!.name);
     const [currentFile, setCurrentFile] = useState<File>();
@@ -70,11 +70,11 @@ const SettingsTab: React.FC = observer(() => {
                             accept=".png, .jpeg, .bmp" style={{display: 'none'}}/>
                         <div className="avatar-container" onClick={() => inputFile.current?.click()}>
                             <img src={userStore.getData()?.avatarBase64} className="avatar" />
-                            <div className="avatar-overlay-text">{langText.userPage.settingsTab.userInfo.changePhoto}</div>
+                            <div className="avatar-overlay-text">{lang!.langText.userPage.settingsTab.userInfo.changePhoto}</div>
                             <img src={avatarOverlay} className="avatar-overlay" />
                         </div>
                         <div className="panel-data-container">
-                            <div className="title">{langText.userPage.settingsTab.userInfo.title}</div>
+                            <div className="title">{lang!.langText.userPage.settingsTab.userInfo.title}</div>
                             {
                                 isEdittingName ? <div className="name-container">
                                         <input
@@ -189,7 +189,7 @@ const SettingsTab: React.FC = observer(() => {
                     </div>
                     <div className="user-balance-panel panel">
                         <div className="panel-data-container">
-                            <div className="title">{langText.userPage.settingsTab.balance.title}</div>
+                            <div className="title">{lang!.langText.userPage.settingsTab.balance.title}</div>
                             <div className="balance-field">
                                 <div>{0}</div>
                                 <div>₽</div>
@@ -245,24 +245,24 @@ const SettingsTab: React.FC = observer(() => {
                                         " 6.24999 1.02892 6.25L1.02893 7.75ZM6 12.75H14V11.25H6V12.75ZM11 8.75H14V7.25H11V8.75Z"} 
                                         fill="#176DEA"/>
                                 </svg>
-                                <div className="field-name">{langText.userPage.settingsTab.balance.history}</div>
+                                <div className="field-name">{lang!.langText.userPage.settingsTab.balance.history}</div>
                             </div>
                         </div>
                     </div>
                     <div className="user-general-settings-panel panel">
                         <div className="panel-data-container">
-                            <div className="title">{langText.userPage.settingsTab.generalSettings.title}</div>
-                            <div className="subtitle">{langText.userPage.settingsTab.generalSettings.subtitle}</div>
+                            <div className="title">{lang!.langText.userPage.settingsTab.generalSettings.title}</div>
+                            <div className="subtitle">{lang!.langText.userPage.settingsTab.generalSettings.subtitle}</div>
                             <div className="panel-row">
-                                <div className="field-name">{langText.userPage.settingsTab.generalSettings.language+":"}</div>
-                                <select value={language}>
+                                <div className="field-name">{lang!.langText.userPage.settingsTab.generalSettings.language+":"}</div>
+                                <select value={lang!.language}>
                                 {
-                                    languages.map(l => <option onClick={e => switchLanguage(l)}>
+                                    lang!.languages.map(l => <option onClick={e => lang!.switchLanguage(l)}>
                                         {l}
                                     </option>)
                                 }
                                 </select>
-                                <div className="field-name">{langText.userPage.settingsTab.generalSettings.timezone+":"}</div>
+                                <div className="field-name">{lang!.langText.userPage.settingsTab.generalSettings.timezone+":"}</div>
                                 <select value={userStore.getData()?.timeZoneId}>
                                 {
                                     timeZones.map(tz => <option value={tz.id} onClick={e => changeTimeZone(tz.id)}>
@@ -272,8 +272,8 @@ const SettingsTab: React.FC = observer(() => {
                                 </select>
                             </div>
                             <div className="panel-row">
-                                <div className="field-name">{langText.userPage.settingsTab.generalSettings.password}</div>
-                                <div className="change-link">{langText.userPage.settingsTab.generalSettings.change}</div>
+                                <div className="field-name">{lang!.langText.userPage.settingsTab.generalSettings.password}</div>
+                                <div className="change-link">{lang!.langText.userPage.settingsTab.generalSettings.change}</div>
                             </div>
                         </div>
                     </div>
@@ -282,20 +282,20 @@ const SettingsTab: React.FC = observer(() => {
                 <div className="second-row">
                     <div className="user-personal-rate-panel panel">
                         <div className="panel-data-container">
-                            <div className="title">{langText.userPage.settingsTab.personalRate.title}</div>
+                            <div className="title">{lang!.langText.userPage.settingsTab.personalRate.title}</div>
                         </div>
                     </div>
                     <div className="sub-column">
                         <div className="user-organization-panel panel">
                             <div className="panel-data-container">
-                                <div className="title">{langText.userPage.settingsTab.organization.title}</div>
-                                <div className="subtitle">{langText.userPage.settingsTab.organization.subtitle}</div>
+                                <div className="title">{lang!.langText.userPage.settingsTab.organization.title}</div>
+                                <div className="subtitle">{lang!.langText.userPage.settingsTab.organization.subtitle}</div>
                             </div>
                         </div>
                         <div className="user-metrics-panel panel">
                             <div className="panel-data-container">
-                                <div className="title">{langText.userPage.settingsTab.metrics.title}</div>
-                                <div className="subtitle">{langText.userPage.settingsTab.metrics.subtitle}</div>
+                                <div className="title">{lang!.langText.userPage.settingsTab.metrics.title}</div>
+                                <div className="subtitle">{lang!.langText.userPage.settingsTab.metrics.subtitle}</div>
                             </div>
                         </div>
                     </div>
