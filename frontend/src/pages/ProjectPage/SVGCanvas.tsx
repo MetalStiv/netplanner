@@ -5,7 +5,6 @@ import IShapeCreator from '../../model/IShapeCreator';
 import { ILayer } from '../../model/Layer';
 import Page from '../../model/Page';
 import ICanvasConfig from '../../common/canvasConfig';
-import { PointerOptions } from '@testing-library/user-event/dist/utils';
 
 interface SVGCanvasProps {
     currentPage: Page,
@@ -190,6 +189,18 @@ const SVGCanvas = ({ currentPage, canvasConfig,
         }));
     }
 
+    function toScale(nextScale: number, originPoint?: { x: number, y: number }) {
+        const g = svgCanvas.current!.querySelector('#elementsGroup') as SVGSVGElement;
+        originPoint ??= { x: g.getBBox().x + g.getBBox().width / 2, y: g.getBBox().y + g.getBBox().height / 2 };
+        console.log(originPoint)
+        const divis = nextScale / scale;
+        setTranslate({
+            x: divis * (translate.x - originPoint.x) + originPoint.x,
+            y: divis * (translate.y - originPoint.y) + originPoint.y
+        });
+        setScale(nextScale);
+    }
+
     // const onWheelHandler = (e: React.WheelEvent<SVGSVGElement>) => {
     function wheelHandler(e: WheelEvent) {
         e.preventDefault();
@@ -204,13 +215,10 @@ const SVGCanvas = ({ currentPage, canvasConfig,
         const originPoint = { x: e.offsetX, y: e.offsetY };
 
         if (nextScale > 0.1 && nextScale < 2) {
-            const divis = nextScale / scale;
-
-            setTranslate({
-                x: divis * (translate.x - originPoint.x) + originPoint.x,
-                y: divis * (translate.y - originPoint.y) + originPoint.y
-            })
-            setScale(nextScale);
+            toScale(
+                nextScale,
+                originPoint
+            )
         }
     };
 
@@ -236,6 +244,7 @@ const SVGCanvas = ({ currentPage, canvasConfig,
         }
     }
 
+    const [sliderTextInput, setSliderTextInput] = useState('');
     return (
         <>
             <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()}
@@ -252,12 +261,24 @@ const SVGCanvas = ({ currentPage, canvasConfig,
                     onMouseMoveCapture={onMousemoveCaptureHandler}
                     style={{
                         backgroundColor: canvasConfig.sheetFillColor,
-                        // backgroundPosition: 'left top',
                         backgroundPosition: `${translate.x}px ${translate.y}px`,
-                        backgroundSize: `${canvasConfig.a4Height * scale - 1}px ${canvasConfig.a4Width * scale - 1}px`,
+                        // backgroundSize: `${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
+                        // ${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
+                        // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px,
+                        // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px,
+                        // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px,
+                        // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px
+                        // `,
+                        backgroundSize: `${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
+                        ${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
+                        ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px,
+                        ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px,
+                        ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px,
+                        ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px
+                        `,
                         backgroundRepeat: 'repeat',
-                        backgroundImage: `linear-gradient(90deg, ${canvasConfig.sheetStrokeColor} 1px, transparent 1px), 
-                        linear-gradient(180deg, ${canvasConfig.sheetStrokeColor} 1px, transparent 1px),
+                        backgroundImage: `linear-gradient(0deg, ${canvasConfig.sheetStrokeColor} 1px, transparent 0px), 
+                        linear-gradient(90deg, ${canvasConfig.sheetStrokeColor} 1px, transparent 0px),
                         repeating-linear-gradient(90deg, transparent 0 ${canvasConfig.gridStep - 1}px, ${canvasConfig.gridColor} 0px ${canvasConfig.gridStep}px),
                         repeating-linear-gradient(0deg, transparent 0 ${canvasConfig.gridStep - 1}px, ${canvasConfig.gridColor} 0px ${canvasConfig.gridStep}px),
                         repeating-linear-gradient(90deg, transparent 0 ${canvasConfig.subgridStep - 1}px, ${canvasConfig.subgridColor} 0px ${canvasConfig.subgridStep}px),
@@ -277,13 +298,34 @@ const SVGCanvas = ({ currentPage, canvasConfig,
                 </svg>
             </div>
             <div id="scale-slider">
-                <input type="range"
-                    min={10}
-                    max={200}
-                    step={10}
-                    value={Math.ceil(scale * 100)}
-                    onChange={e => setScale(parseFloat((parseInt(e.target.value) * 0.01).toFixed(1)))}
-                />
+                <div id="slider-range">
+                    <input type="range"
+                        id="slider-range-input"
+                        min={10}
+                        max={200}
+                        step={10}
+                        value={Math.ceil(scale * 100)}
+                        onChange={e => toScale(parseFloat((parseInt(e.target.value) * 0.01).toFixed(1)))}
+                    />
+                </div>
+                <div id="slider-text">
+                    <input id="slider-text-input"
+                        type="text"
+                        value={sliderTextInput}
+                        onInput={e => {
+                            const curVal = e.currentTarget.value;
+                            if (parseInt(curVal) <= 1000 || curVal === '') {
+                                setSliderTextInput(curVal);
+                            }
+                        }}
+                        onKeyDown={e => {
+                            if (e.keyCode === 13) {
+                                toScale(parseFloat((parseInt(sliderTextInput) * 0.01).toFixed(1)));
+                            }
+                        }}
+                    />
+                    <label htmlFor="slider-text-input">%</label>
+                </div>
             </div>
         </>
     )

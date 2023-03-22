@@ -19,9 +19,11 @@
                 position: absolute;
                 top: 0;
                 bottom: 0;
+                transform: translateX(-50%);
                 width: 10px;
                 height: 100%;
                 background-color: transparent;
+                z-index: 100;
             }
 
         }

@@ -23,63 +23,109 @@
         #scale-slider {
             position: fixed;
             bottom: 3%;
-            right: calc($rightPanelWidth + 2%);
+            right: calc($rightPanelWidth + 1%);
+            display: flex;
+            align-items: center;
 
-            input {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 100%;
-                height: 4px;
-                border-radius: 50rem;
-                background: $lightgray;
-                outline: none;
-                opacity: 0.7;
-                -webkit-transition: .2s;
-                transition: opacity .2s;
-                cursor: pointer;
+            #slider-range {
+                position: relative;
 
-                &:hover {
-                    opacity: 1;
-                }
-
-                &::-webkit-slider-thumb,
-                &::-moz-range-thumb {
+                #slider-range-input {
                     -webkit-appearance: none;
                     appearance: none;
-                    width: 14px;
-                    height: 14px;
-                    border-radius: 50%;
-                    background: $blue;
+                    width: 100%;
+                    height: 4px;
+                    border-radius: 50rem;
+                    background: $lightgray;
+                    outline: none;
+                    opacity: 0.7;
+                    -webkit-transition: .2s;
+                    transition: opacity .2s;
                     cursor: pointer;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+
+                    &::-webkit-slider-thumb,
+                    &::-moz-range-thumb {
+                        -webkit-appearance: none;
+                        appearance: none;
+                        width: 14px;
+                        height: 14px;
+                        border-radius: 50%;
+                        background: $blue;
+                        cursor: pointer;
+                    }
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        left: 50%;
+                        top: 30%;
+                        transform: translateX(-100%);
+                        width: 2px;
+                        height: 18px;
+                        background-color: $blue;
+                    }
                 }
 
                 &::before {
-                    content: "";
+                    content: "10%";
                     position: absolute;
-                    left: 50%;
-                    top: 30%;
-                    transform: translateX(-100%);
-                    width: 2px;
-                    height: 18px;
-                    background-color: $blue;
+                    left: 0;
+                    top: -12px;
+                    transform: translateX(-50%);
                 }
+
+                &::after {
+                    content: "200%";
+                    position: absolute;
+                    right: 0;
+                    top: -12px;
+                    transform: translateX(50%);
+                }
+
+                margin-right:32px;
             }
 
-            &::before {
-                content: "10%";
-                position: absolute;
-                left: 0;
-                top: -10px;
-                transform: translateX(-50%);
+            #slider-text {
+                #slider-text-input {
+                    &:focus {
+                        color: $dark;
+                        border-color: $lightblue;
+                        outline: 0;
+                    }
+
+                    max-width: 40px;
+                    width:100%;
+                    padding: 4px 16px 4px 4px;
+                    font-size: 1rem;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    color: $darkgray;
+                    background-color: transparent;
+                    border: 2px solid $lightgray;
+                    border-radius:8px;
+                    transition: border-color .2s;
+
+                    &::-webkit-outer-spin-button,
+                    &::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
+                }
+
+                label {
+                    position: absolute;
+                    right: 4px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+
+                position:relative;
             }
 
-            &::after {
-                content: "200%";
-                position: absolute;
-                right: 0;
-                top: -10px;
-                transform: translateX(50%);
-            }
 
         }
 
