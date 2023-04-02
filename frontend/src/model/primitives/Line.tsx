@@ -1,5 +1,6 @@
 import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
+import genID from "../../common/helpers/genID";
 
 interface ILineGraphicalProps extends IShapeGraphicalProps {
     //endCoords: { x: number, y: number },
@@ -57,13 +58,9 @@ class Line implements IShape {
     isVisible: boolean = true;
     zIndex: number = 0;
 
-    private genID = (len: number) => {
-        return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(len).toString().replace('.', ''));
-    }
-
     constructor(obj: ILineProps) {
         this.config = obj;
-        this.config.id = `${this.type}-${this.genID(10)}`;
+        this.config.id = `${this.type}-${genID(10)}`;
         this.zIndex = obj.zIndex ?? 0;
     }
 

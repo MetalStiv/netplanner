@@ -1,4 +1,5 @@
 import IShape from "./IShape";
+import genID from "../common/helpers/genID";
 
 export interface ILayer {
     id: number,
@@ -11,6 +12,7 @@ export interface ILayer {
     getElems(): IShape[],
     setElems(shapes: IShape[]): void,
     addElem(shape: IShape): void,
+    removeElem(elem: IShape): void,
     //copy(layer: ILayer): void,
 }
 
@@ -23,7 +25,7 @@ class Layer implements ILayer {
     isCurrent: boolean;
 
     constructor(layersCount: number, title: string = "Layer") {
-        this.id = this._genID(12);
+        this.id = genID(12);
         // this.title = `Layer${layersCount > 0 ? '_' + layersCount : ''}`;
         this.title = title;
         this.zIndex = layersCount * 1000;
@@ -48,9 +50,12 @@ class Layer implements ILayer {
         shape.config.zIndex = this.elems.length;
         this.elems = [...this.elems, shape];
     }
-
-    private _genID(length: number) {
-        return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(length).toString().replace('.', ''));
+    removeElem(delElem: IShape) {
+        this.setElems(
+            this.elems.filter(elem => elem !== delElem)
+        );
+        // shape.config.zIndex = this.elems.length;
+        // this.elems = [...this.elems, shape];
     }
 }
 

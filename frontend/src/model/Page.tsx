@@ -1,4 +1,6 @@
 import Layer, { ILayer } from "./Layer";
+import genID from "../common/helpers/genID";
+import titleUniqueization from "../common/helpers/titleUniquezation";
 
 // export interface Page {
 //     id: number,
@@ -23,11 +25,11 @@ class Page implements Page {
     layers: ILayer[];
     isCurrent: boolean;
 
-    constructor(pagesCount: number, title: string = "Page") {
-        this.id = this._genID(12);
+    constructor(title: string = "Page", layers?: ILayer[]) {
+        this.id = genID(12);
         //this.title = `Page ${pagesCount + 1}`;
         this.title = title;
-        this.layers = [new Layer(0)] as ILayer[];
+        this.layers = layers ?? [new Layer(0)] as ILayer[];
         this.isCurrent = true;
     }
 
@@ -69,28 +71,13 @@ class Page implements Page {
                 item.isCurrent = false;
             }
         });
-        this.layers = [...this.getLayers(), new Layer(this.layers.length, this.titleUniqueization(title))];
+        this.layers = [...this.getLayers(), new Layer(this.layers.length, titleUniqueization(title, this.getLayers()))];
+    }
+    getCurrentLayer(): ILayer {
+        return this.getLayers().find(layer => layer.isCurrent)!;
     }
 
-    private _genID(length: number) {
-        return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(length).toString().replace('.', ''))
-    }
 
-    titleUniqueization(title: string, renamingItemID?: number) {
-        let copyIndex = 0;
-        while (true) {
-            if (this.getLayers().find(item => item.id !== renamingItemID && item.title === (title + (copyIndex === 0 ? '' : `_${copyIndex}`)))) {
-                copyIndex++;
-            }
-            else {
-                break;
-            }
-        }
-        if (copyIndex > 0) {
-            title += `_${copyIndex}`;
-        }
-        return title;
-    }
 }
 
 export default Page;

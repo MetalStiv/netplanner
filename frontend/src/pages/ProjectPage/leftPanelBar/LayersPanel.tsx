@@ -1,6 +1,7 @@
 import Page from '../../../model/Page';
 import { useState } from 'react';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
+import titleUniqueization from '../../../common/helpers/titleUniquezation';
 
 
 interface ILayersPanelProps {
@@ -34,7 +35,7 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
         let newTitle = el.value.trim();
 
         if (newTitle.length) {
-            newTitle = currentPage.titleUniqueization(newTitle, layerID);
+            newTitle = titleUniqueization(newTitle, currentPage.getLayers(), layerID);
 
             currentPage.setLayers(currentPage.getLayers().map(item => {
                 if (item.id === layerID) {

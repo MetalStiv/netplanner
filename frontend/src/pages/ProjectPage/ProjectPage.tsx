@@ -29,6 +29,8 @@ import { projectMicroservice } from "../../common/axiosMicroservices";
 import Loader from "../../components/Loader";
 import RangeInput from "../../components/RangeInput";
 import { LanguageData, useLanguageContext } from '../../providers/languageProvider';
+import { ApplicationData, useApplicationContext } from '../../providers/applicationProvider';
+// import { UndoAction } from '../../model/Action';
 
 export interface IElemProps {
     type: string,
@@ -57,6 +59,7 @@ const ProjectPage: React.FC = () => {
     const workspaceDivRef = useRef<HTMLDivElement>(null);
 
     const lang: LanguageData | null = useLanguageContext();
+    const app: ApplicationData | null = useApplicationContext();
 
     const updateProject = useCallback(async () => {
         setLoading(true)
@@ -120,6 +123,22 @@ const ProjectPage: React.FC = () => {
 
     const clickedElemPropsCallback = useCallback((elemProps: IElemProps) => {
         setSelectedElemProps(elemProps);
+    }, []);
+
+    useEffect(() => {
+        const onKeypress = (e: KeyboardEvent) => {
+            console.log(e);
+            if (e.ctrlKey && e.code === 'KeyZ') {
+                // app?.addAction(new UndoAction(app.actionsHistory));
+                app?.undo();
+            }
+        }
+
+        document.addEventListener('keypress', onKeypress);
+
+        return () => {
+            document.removeEventListener('keypress', onKeypress);
+        };
     }, []);
 
     return (

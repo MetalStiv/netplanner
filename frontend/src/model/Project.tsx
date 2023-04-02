@@ -1,7 +1,9 @@
 import Page from "./Page";
 import IShapesGroup from "./IGeometryGroup";
-import Layer, { ILayer } from "./Layer";
-import IShape from "./IShape";
+import genID from "../common/helpers/genID";
+import titleUniqueization from "../common/helpers/titleUniquezation";
+// import Layer, { ILayer } from "./Layer";
+// import IShape from "./IShape";
 
 export interface IProject {
     id: number,
@@ -13,7 +15,6 @@ export interface IProject {
     addPage: () => void,
     getCurrentPage: () => Page,
     setCurrentPage: (pageID: number) => void,
-    titleUniqueization: (title: string, renamingItemID?: number) => string,
     //copy: (project: IProject) => void,
 }
 
@@ -25,11 +26,10 @@ class Project implements IProject {
     isCurrent: boolean;
 
     constructor(shapesGroups: IShapesGroup[], title: string = "Project") {
-        this.id = this._genID(12);
-        //this.title = `Project${projectsCount > 0 ? ' ' + projectsCount : ''}`;
+        this.id = genID(12);
         this.title = title;
         this.shapesGroups = shapesGroups;
-        this.pages = [new Page(0)] as Page[];
+        this.pages = [new Page()] as Page[];
         this.isCurrent = true;
     }
 
@@ -81,28 +81,9 @@ class Project implements IProject {
                 page.isCurrent = false;
             }
         })
-        this.setPages([...this.pages, new Page(this.pages.length, this.titleUniqueization(title))]);
+        this.setPages([...this.pages, new Page(titleUniqueization(title, this.getPages()))]);
     }
 
-    private _genID(length: number) {
-        return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(length).toString().replace('.', ''));
-    }
-
-    titleUniqueization(title: string, renamingItemID?: number) {
-        let copyIndex = 0;
-        while (true) {
-            if (this.getPages().find(item => item.id !== renamingItemID && item.title === (title + (copyIndex === 0 ? '' : `_${copyIndex}`)))) {
-                copyIndex++;
-            }
-            else {
-                break;
-            }
-        }
-        if (copyIndex > 0) {
-            title += `_${copyIndex}`;
-        }
-        return title;
-    }
 }
 
 export default Project;

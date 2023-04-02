@@ -5,6 +5,7 @@ import { useClickAndDoubleClickHandler } from '../../../common/customHooks/useCl
 //import Page from '../../../model/Page';
 import { IProject } from '../../../model/Project';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
+import titleUniqueization from '../../../common/helpers/titleUniquezation';
 
 interface PagesPanelProps {
     currentProject: IProject,
@@ -38,7 +39,7 @@ const PagesPanel = ({ currentProject }: PagesPanelProps) => {
         let newTitle = el.value.trim();
 
         if (newTitle.length) {
-            newTitle = currentProject.titleUniqueization(newTitle, pageID);
+            newTitle = titleUniqueization(newTitle, currentProject.getPages(), pageID);
 
             currentProject.setPages(currentProject.getPages().map(item => {
                 if (item.id === pageID) {

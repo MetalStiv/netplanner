@@ -1,5 +1,6 @@
 import IShape, { IShapeProps, IShapeGraphicalProps, IGraphProp } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
+import genID from "../../common/helpers/genID";
 
 interface ICircleGraphicalProps extends IShapeGraphicalProps {
     //additionalGraphProps: []
@@ -68,13 +69,9 @@ class Circle implements IShape {
     config: ICircleProps;
     isVisible: boolean = true;
 
-    private genID = (len: number) => {
-        return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(len).toString().replace('.', ''));
-    }
-
     constructor(obj: ICircleProps) {
         this.config = obj;
-        this.config.id = `${this.type}-${this.genID(10)}`;
+        this.config.id = `${this.type}-${genID(10)}`;
         this.config.zIndex = obj.zIndex ?? 0;
     }
 

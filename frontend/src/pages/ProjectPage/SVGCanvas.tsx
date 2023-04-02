@@ -5,6 +5,9 @@ import IShapeCreator from '../../model/IShapeCreator';
 import { ILayer } from '../../model/Layer';
 import Page from '../../model/Page';
 import ICanvasConfig from '../../common/canvasConfig';
+import { DrawShapeAction } from '../../model/Action';
+import { ApplicationData, useApplicationContext } from '../../providers/applicationProvider';
+
 
 interface SVGCanvasProps {
     currentPage: Page,
@@ -23,6 +26,8 @@ const SVGCanvas = ({ currentPage, canvasConfig,
     const [translate, setTranslate] = useState({ x: 0, y: 0 });
 
     const svgCanvas: React.MutableRefObject<SVGSVGElement | null> = useRef(null);
+
+    const app: ApplicationData | null = useApplicationContext();
 
     // const handleAlt = (e: KeyboardEvent) => {
     //     if (e.altKey) {
@@ -175,18 +180,10 @@ const SVGCanvas = ({ currentPage, canvasConfig,
             x: e.pageX,
             y: e.pageY,
         })
-        const newShape: IShape = creatorOnDrop!.create();
-        //|| new Circle({ graphical: { startCoords: { x: 0, y: 0 }, r: { label: 'Radius', value: '10' } } });
-        newShape.config.graphical.x.value = dropCoords.x.toString();
-        newShape.config.graphical.y.value = dropCoords.y.toString();
-        // console.log(dropCoords, scale)
 
-        currentPage.setLayers(currentPage.getLayers().map(layer => {
-            if (layer.isCurrent) {
-                layer.addElem(newShape);
-            }
-            return layer;
-        }));
+        const newShape: IShape = creatorOnDrop!.create();
+        let drawShapeAction = new DrawShapeAction(newShape, currentPage, dropCoords)
+        drawShapeAction.do() && app?.addAction(drawShapeAction);
     }
 
     function toScale(nextScale: number, originPoint?: { x: number, y: number }) {
