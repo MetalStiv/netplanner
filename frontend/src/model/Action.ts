@@ -1,7 +1,4 @@
-import ActionsHistory from "./ActionsHistory";
 import IShape from "./IShape";
-import IShapeCreator from "./IShapeCreator";
-import Layer from "./Layer";
 import Page from "./Page";
 
 export interface IAction {
@@ -10,7 +7,6 @@ export interface IAction {
 }
 
 export class DrawShapeAction implements IAction {
-    // private shapeCreator: IShapeCreator;
     private shape: IShape;
     private currentPage: Page;
     private dropCoords: { x: number, y: number };
@@ -22,7 +18,6 @@ export class DrawShapeAction implements IAction {
     }
 
     do(): boolean {
-        // const newShape: IShape = this.shapeCreator.create();
         this.shape.config.graphical.x.value = this.dropCoords.x.toString();
         this.shape.config.graphical.y.value = this.dropCoords.y.toString();
         this.currentPage.getCurrentLayer().addElem(this.shape);
@@ -34,23 +29,23 @@ export class DrawShapeAction implements IAction {
     }
 }
 
-export class ChangeShapePropertyAction implements IAction {
-    private shape: IShape;
-    private property: any;
+// export class ChangeShapePropertyAction implements IAction {
+//     private shape: IShape;
+//     private property: any;
 
-    constructor(shape: IShape, property: any) {
-        this.shape = shape;
-        this.property = property;
-    }
+//     constructor(shape: IShape, property: any) {
+//         this.shape = shape;
+//         this.property = property;
+//     }
 
-    do(): boolean {
+//     do(): boolean {
 
-        return true;
-    }
-    undo(): void {
+//         return true;
+//     }
+//     undo(): void {
 
-    }
-}
+//     }
+// }
 
 // export class UndoAction implements IAction {
 //     private history: ActionsHistory;

@@ -54,8 +54,6 @@ class Layer implements ILayer {
         this.setElems(
             this.elems.filter(elem => elem !== delElem)
         );
-        // shape.config.zIndex = this.elems.length;
-        // this.elems = [...this.elems, shape];
     }
 }
 
