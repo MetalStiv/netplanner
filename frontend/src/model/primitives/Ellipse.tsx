@@ -22,12 +22,12 @@ export class EllipseCreator implements IShapeCreator {
                 x: {
                     label: 'X',
                     value: '0',
-                    isReadable: false,
+                    isReadable: true,
                 },
                 y: {
                     label: 'Y',
                     value: '0',
-                    isReadable: false,
+                    isReadable: true,
                 },
                 rx: {
                     label: 'Radius X',

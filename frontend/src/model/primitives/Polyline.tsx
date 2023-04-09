@@ -22,12 +22,12 @@ export class PolylineCreator implements IShapeCreator {
                 x: {
                     label: 'X',
                     value: '0',
-                    isReadable: false,
+                    isReadable: true,
                 },
                 y: {
                     label: 'Y',
                     value: '0',
-                    isReadable: false,
+                    isReadable: true,
                 },
                 points: [[15, -30], [40, 45], [50, -70]],
                 stroke: {

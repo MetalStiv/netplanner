@@ -1,4 +1,4 @@
-import IShape from "./IShape";
+import IShape, { IGraphProp, IShapeGraphicalProps } from "./IShape";
 import Page from "./Page";
 
 export interface IAction {
@@ -29,23 +29,36 @@ export class DrawShapeAction implements IAction {
     }
 }
 
-// export class ChangeShapePropertyAction implements IAction {
-//     private shape: IShape;
-//     private property: any;
+export class ChangeShapePropertyAction implements IAction {
+    // private graphProps: IShapeGraphicalProps;
+    // private property: string;
+    private item: IGraphProp;
+    private prevState: string;
+    private nextState: string;
 
-//     constructor(shape: IShape, property: any) {
-//         this.shape = shape;
-//         this.property = property;
-//     }
+    constructor(item: IGraphProp, prevState: string, nextState: string) {
+        // this.graphProps = graphProps;
+        // this.property = property;
+        this.item = item;
+        this.prevState = prevState;
+        this.nextState = nextState;
+    }
 
-//     do(): boolean {
+    // getKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T) =>
+    // obj[key];
 
-//         return true;
-//     }
-//     undo(): void {
+    do(): boolean {
+        this.item.value = this.nextState;
+        // this.graphProps[this.property as keyof IShapeGraphicalProps].value = this.nextState;
 
-//     }
-// }
+        // this.getKeyValue<keyof IShapeGraphicalProps, IShapeGraphicalProps>(this.property)(this.graphProps)
+        return true;
+    }
+    undo(): void {
+        this.item.value = this.prevState;
+        // this.graphProps[this.property as keyof IShapeGraphicalProps].value = this.prevState;
+    }
+}
 
 // export class UndoAction implements IAction {
 //     private history: ActionsHistory;

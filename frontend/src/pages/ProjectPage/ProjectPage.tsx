@@ -24,17 +24,16 @@ import Project, { IProject } from '../../model/Project';
 import { IShapeGraphicalProps } from '../../model/IShape';
 import ICanvasConfig, { Portrait } from "../../common/canvasConfig";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import AlertDialog from "../../components/AlertDialog";
+import { AlertDialog } from "../../components";
 import { projectMicroservice } from "../../common/axiosMicroservices";
-import Loader from "../../components/Loader";
-import RangeInput from "../../components/RangeInput";
+import { Loader } from "../../components";
+// import { RangeInput } from "../../components";
 import { LanguageData, useLanguageContext } from '../../providers/languageProvider';
 import { ApplicationData, useApplicationContext } from '../../providers/applicationProvider';
 // import { UndoAction } from '../../model/Action';
 
 export interface IElemProps {
     type: string,
-    size: { w: number, h: number },
     graphProps: IShapeGraphicalProps,
     //coords: { x: number, y: number },
 }
@@ -188,7 +187,12 @@ const ProjectPage: React.FC = () => {
                                     <ObjectPropertiesPanel elemProps={selectedElemProps} />
                                 </div>
                                 <div style={{ minHeight: 150 }}>
-                                    <GraphicalPropertiesPanel elemProps={selectedElemProps} />
+                                    <GraphicalPropertiesPanel elemProps={selectedElemProps}
+                                    // onChange={val => {
+                                    // let changePropAction = new ChangeShapePropertyAction(elemProps.graphProps, item.label, item.value, val)
+                                    // changePropAction.do() && app?.addAction(changePropAction);
+                                    // }}
+                                    />
                                 </div>
                             </VerticalPageSplit>
                         </div>
