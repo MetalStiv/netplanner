@@ -6,7 +6,7 @@ import titleUniqueization from "../common/helpers/titleUniquezation";
 // import IShape from "./IShape";
 
 export interface IProject {
-    id: number,
+    id: string,
     title: string,
     shapesGroups?: IShapesGroup[],
     pages?: Page[],
@@ -19,18 +19,16 @@ export interface IProject {
 }
 
 class Project implements IProject {
-    id: number;
+    id: string;
     title: string;
     shapesGroups: IShapesGroup[];
     pages: Page[];
-    isCurrent: boolean;
 
-    constructor(shapesGroups: IShapesGroup[], title: string = "Project") {
-        this.id = genID(12);
+    constructor(shapesGroups: IShapesGroup[], title: string = "Project", id: string) {
+        this.id = id;
         this.title = title;
         this.shapesGroups = shapesGroups;
         this.pages = [new Page()] as Page[];
-        this.isCurrent = true;
     }
 
     // copy(project: IProject) {

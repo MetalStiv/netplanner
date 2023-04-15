@@ -53,7 +53,9 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
         <div className={`project-card ${projectsMetaStore.getById(projectId)!.hide ? 
             "project-card-hidden" 
             : "project-card-visible"}`}
-            onDoubleClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}>
+            onDoubleClick={() => {
+                navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)
+            }}>
             <img className="project-image" src={imageLoadingPlaceholder} 
                 onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}/>
             <div className="base-info">

@@ -7,4 +7,5 @@ public interface IProjectRepositoryService
     Task RemoveAsync(string projectId);
     Task<ProjectMeta> GetProjectByIdAsync(string projectId);
     Task<List<ProjectMeta>?> GetProjectsAsync(string userId);
+    Task<ProjectDto> GetProjectContentAsync(string projectId);
 }

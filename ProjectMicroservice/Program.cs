@@ -4,7 +4,10 @@ var dbSettings = new ProjectDBSettings(
     Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? "",
     Environment.GetEnvironmentVariable("DB_NAME") ?? "",
     Environment.GetEnvironmentVariable("DB_PROJECT_META_COLLECTION_NAME") ?? "",
-    Environment.GetEnvironmentVariable("DB_PROJECT_COLLECTION_NAME") ?? ""
+    Environment.GetEnvironmentVariable("DB_PROJECT_COLLECTION_NAME") ?? "",
+    Environment.GetEnvironmentVariable("DB_PAGE_COLLECTION_NAME") ?? "",
+    Environment.GetEnvironmentVariable("DB_LAYER_COLLECTION_NAME") ?? "",
+    Environment.GetEnvironmentVariable("DB_SHAPE_COLLECTION_NAME") ?? ""
 );
 
 var jwtSettings = new JwtSettings(
@@ -158,9 +161,12 @@ app.MapGet("/getProjectContent", [Authorize] async (HttpContext http,
         }
 
         // await http.Response.WriteAsJsonAsync(projects);
-        http.Response.StatusCode = 200;
+        var projectContent = await projectRepositoryService.GetProjectContentAsync(projectId);
+        Console.WriteLine(projectContent.Pages.Count);
+        await http.Response.WriteAsJsonAsync(projectContent);
+        // http.Response.StatusCode = 200;
         return;
     }
 );
- 
+
 await app.RunAsync();

@@ -10,11 +10,6 @@ import PagesPanel from './leftPanelBar/PagesPanel';
 import LayersPanel from './leftPanelBar/LayersPanel';
 import ObjectPropertiesPanel from './rightPanelBar/ObjectPropertiesPanel';
 import GraphicalPropertiesPanel from './rightPanelBar/GraphicalPropertiesPanel';
-
-//import '../../styles/project/index.scss';
-
-//import { Panel } from './Panel';
-
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import SVGCanvas from './SVGCanvas';
 import IShapeCreator from '../../model/IShapeCreator';
@@ -29,7 +24,20 @@ import { projectMicroservice } from "../../common/axiosMicroservices";
 import Loader from "../../components/Loader";
 import RangeInput from "../../components/RangeInput";
 import { LanguageData, useLanguageContext } from '../../providers/languageProvider';
-import { ApplicationData, useApplicationContext } from '../../providers/applicationProvider';
+import PolygonsGroup from '../../model/primitives/PolygonsGroup';
+import { CircleCreator } from '../../model/primitives/Circle';
+import { EllipseCreator } from '../../model/primitives/Ellipse';
+import { RectCreator } from '../../model/primitives/Rect';
+import PrimitivesGroup from '../../model/primitives/PrimitivesGroup';
+import { LineCreator } from '../../model/primitives/Line';
+import { PolylineCreator } from '../../model/primitives/Polyline';
+import { PointCreator } from '../../model/primitives/Point';
+import IGeometryGroup from '../../model/IGeometryGroup';
+import Page from '../../model/Page';
+import { TProjectStore } from '../../stores/projectStore';
+import { TActionStore } from '../../stores/actionStore';
+import IAction from '../../model/Action';
+import { observer } from 'mobx-react-lite';
 // import { UndoAction } from '../../model/Action';
 
 export interface IElemProps {
@@ -43,35 +51,48 @@ export interface IDraggableElemProps {
     type: string,
 }
 
-const ProjectPage: React.FC = () => {
+const ProjectPage: React.FC = observer(() => {
     const [params] = useSearchParams();
     const navigate = useNavigate();
 
     const [canvasCursorCoords, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [selectedElemProps, setSelectedElemProps] = useState<IElemProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
-    const [currentProject, setCurrentProject] = useState<IProject>(
-        useRootStore()!.getProjectStore().getCurrentProject()
-    );
     const [orientation,] = useState<ICanvasConfig>(Portrait);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const [projectUpdateError, setProjectUpdateError] = useState<boolean>(false);
     const workspaceDivRef = useRef<HTMLDivElement>(null);
 
     const lang: LanguageData | null = useLanguageContext();
-    const app: ApplicationData | null = useApplicationContext();
+    const actionStore: TActionStore = useRootStore().getActionStore();
+    const projectStore: TProjectStore = useRootStore()!.getProjectStore();
 
-    const updateProject = useCallback(async () => {
+    const updateProject = useCallback(async (projectId: string) => {
         setLoading(true)
-        await new Promise(r => setTimeout(r, 1000));
         let project = await projectMicroservice.get('getProjectContent', {
             params: {
-                id: params.get('id')
+                id: projectId
             }
         })
         if (project.status === 520) {
             setProjectUpdateError(true);
         }
+        //test
+        const newProject = new Project( [
+            new PolygonsGroup([
+                new CircleCreator(),
+                new EllipseCreator(),
+                new RectCreator(),
+            ]),
+            new PrimitivesGroup([
+                new LineCreator(),
+                new PolylineCreator(),
+                new PointCreator(),
+            ])
+        ] as IGeometryGroup[], 'project', projectId)
+        // newProject.setPages([new Page()]);
+        projectStore.setProject(newProject);
+
         setLoading(false)
     }, [setProjectUpdateError])
 
@@ -80,10 +101,11 @@ const ProjectPage: React.FC = () => {
         workspaceDivRef.current!.scrollLeft = orientation.a4Width * Math.floor(orientation.widthInSheets / 2) - 150;
     }, [orientation, workspaceDivRef]);
     useEffect(() => {
-        let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title);
-        newProject.setPages(currentProject.getPages());
-        setCurrentProject(newProject);
-    }, [currentProject]);
+        const projectId: string = params.get('id') ?? ''
+        updateProject(projectId);
+        // let newProject: IProject = new Project(currentProject.shapesGroups!, currentProject.title, params.get('id')!);
+        // newProject.setPages(currentProject.getPages());
+    }, []);
     // useEffect(() => {
     //     // workspaceDivRef.current!.scrollTo({top: 0, left: 0})
     //     const oldScale = scale;
@@ -130,7 +152,8 @@ const ProjectPage: React.FC = () => {
             console.log(e);
             if (e.ctrlKey && e.code === 'KeyZ') {
                 // app?.addAction(new UndoAction(app.actionsHistory));
-                app?.undo();
+                const message: IAction | null = actionStore.pop();
+                console.log(message);
             }
         }
 
@@ -163,21 +186,28 @@ const ProjectPage: React.FC = () => {
                                 <ShapesPanel getCreatorOnDragCallback={draggableElemCallback} />
                             </div>
                             <div style={{ minHeight: 150 }}>
-                                <PagesPanel currentProject={currentProject} />
-                                <LayersPanel currentPage={currentProject.getCurrentPage()} />
+                                {
+                                    !loading && <>
+                                        <PagesPanel currentProject={projectStore.getProject()!} />
+                                        <LayersPanel currentPage={projectStore.getProject()!.getCurrentPage()} />
+                                    </>
+                                }
                             </div>
                         </VerticalPageSplit>
                     </aside>
 
                     <section id="workspace">
                         <div className="canvas-container" ref={workspaceDivRef}>
-                            <SVGCanvas
-                                currentPage={currentProject.getCurrentPage()}
-                                canvasConfig={orientation}
-                                getCursorCoordsCallback={cursorCoordsCallback}
-                                getClickedElemConfigCallback={clickedElemPropsCallback}
-                                creatorOnDrop={currentCreator}
-                            />
+                            { 
+                                !loading &&
+                                    <SVGCanvas
+                                        currentPage={projectStore.getProject()!.getCurrentPage()}
+                                        canvasConfig={orientation}
+                                        getCursorCoordsCallback={cursorCoordsCallback}
+                                        getClickedElemConfigCallback={clickedElemPropsCallback}
+                                        creatorOnDrop={currentCreator}
+                                    />
+                            }
                         </div>
                     </section>
 
@@ -197,6 +227,6 @@ const ProjectPage: React.FC = () => {
             </main>
         </div>
     );
-}
+})
 
 export default ProjectPage

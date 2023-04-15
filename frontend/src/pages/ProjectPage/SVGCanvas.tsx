@@ -6,8 +6,9 @@ import { ILayer } from '../../model/Layer';
 import Page from '../../model/Page';
 import ICanvasConfig from '../../common/canvasConfig';
 import { DrawShapeAction } from '../../model/Action';
-import { ApplicationData, useApplicationContext } from '../../providers/applicationProvider';
-
+import { useRootStore } from '../../providers/rootProvider';
+import { TActionStore } from '../../stores/actionStore';
+import { observer } from 'mobx-react-lite';
 
 interface SVGCanvasProps {
     currentPage: Page,
@@ -20,14 +21,16 @@ interface SVGCanvasProps {
     //onWheelHandler: (e: React.WheelEvent<SVGSVGElement>) => void,
 }
 
-const SVGCanvas = ({ currentPage, canvasConfig,
+const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfig,
     creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
     const [scale, setScale] = useState<number>(1);
     const [translate, setTranslate] = useState({ x: 0, y: 0 });
 
     const svgCanvas: React.MutableRefObject<SVGSVGElement | null> = useRef(null);
 
-    const app: ApplicationData | null = useApplicationContext();
+    const actionStore: TActionStore = useRootStore().getActionStore();
+    // const projectId = useRootStore()!.getProjectStore().getProject()!.id;
+    // app?.setProjectId(projectId)
 
     // const handleAlt = (e: KeyboardEvent) => {
     //     if (e.altKey) {
@@ -183,7 +186,7 @@ const SVGCanvas = ({ currentPage, canvasConfig,
 
         const newShape: IShape = creatorOnDrop!.create();
         let drawShapeAction = new DrawShapeAction(newShape, currentPage, dropCoords)
-        drawShapeAction.do() && app?.addAction(drawShapeAction);
+        drawShapeAction.do() && actionStore.push(drawShapeAction)
     }
 
     function toScale(nextScale: number, originPoint?: { x: number, y: number }) {
@@ -326,6 +329,6 @@ const SVGCanvas = ({ currentPage, canvasConfig,
             </div>
         </>
     )
-}
+})
 
 export default SVGCanvas;
