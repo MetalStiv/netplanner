@@ -1,6 +1,7 @@
 import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import genID from "../../common/helpers/genID";
+import { ShapeType } from "../ShapeType";
 
 interface IPolylineGraphicalProps extends IShapeGraphicalProps {
     points: [number, number][],
@@ -15,7 +16,7 @@ interface IPolylineProps extends IShapeProps {
 }
 
 export class PolylineCreator implements IShapeCreator {
-    type: string = 'Polyline';
+    type: ShapeType = ShapeType.POLYLINE;
     create() {
         return new Polyline({
             graphical: {
@@ -42,7 +43,7 @@ export class PolylineCreator implements IShapeCreator {
 }
 
 class Polyline implements IShape {
-    type: string = 'Polyline';
+    type: ShapeType = ShapeType.POLYLINE;
     config: IPolylineProps;
     isVisible: boolean = true;
     zIndex: number = 0;

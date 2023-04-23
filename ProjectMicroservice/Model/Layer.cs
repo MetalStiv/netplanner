@@ -16,9 +16,13 @@ public record Layer
     [BsonElement("name")]
     public string Name { get; private set; }
 
-    public Layer(string name, string pageId)
+    [BsonElement("zIndex")]
+    public int ZIndex { get; private set; }
+
+    public Layer(string name, string pageId, int zIndex)
     {
         this.Name = name;
         this.PageId = pageId;
+        this.ZIndex = zIndex;
     }
 }

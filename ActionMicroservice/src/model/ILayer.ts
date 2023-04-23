@@ -4,5 +4,6 @@ import { IShape } from "./IShape";
 export interface ILayer {
     _id: ObjectId,
     name: string,
-    pageId: ObjectId
+    pageId: ObjectId,
+    zIndex: number
 }

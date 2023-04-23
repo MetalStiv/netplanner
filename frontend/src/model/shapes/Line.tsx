@@ -1,6 +1,7 @@
 import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import genID from "../../common/helpers/genID";
+import { ShapeType } from "../ShapeType";
 
 interface ILineGraphicalProps extends IShapeGraphicalProps {
     //endCoords: { x: number, y: number },
@@ -17,7 +18,7 @@ interface ILineProps extends IShapeProps {
 }
 
 export class LineCreator implements IShapeCreator {
-    type: string = 'Line';
+    type: ShapeType = ShapeType.LINE;
     create() {
         return new Line({
             graphical: {
@@ -53,7 +54,7 @@ export class LineCreator implements IShapeCreator {
 }
 
 class Line implements IShape {
-    type: string = 'Line';
+    type: ShapeType = ShapeType.LINE;
     config: ILineProps;
     isVisible: boolean = true;
     zIndex: number = 0;

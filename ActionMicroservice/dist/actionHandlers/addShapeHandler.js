@@ -38,28 +38,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.addShapeHandler = void 0;
 var mongodb_1 = require("mongodb");
-var actionTypes_1 = require("../actionTypes");
+var actionType_1 = require("../actionType");
 var addShapeHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
     var newShape;
     return __generator(this, function (_a) {
-        if (message.type !== actionTypes_1.ActionTypes.ADD_SHAPE) {
+        if (message.type !== actionType_1.ActionType.ADD_SHAPE) {
             return [2 /*return*/, false];
         }
         ;
+        console.log(message);
         newShape = {
             _id: new mongodb_1.ObjectId(),
             type: message.data.shape,
             layerId: new mongodb_1.ObjectId(message.layerId),
+            zIndex: parseInt(message.data.zIndex),
             graphicalProperties: {
                 x: message.data.dropCoords.x.toString(),
                 y: message.data.dropCoords.y.toString()
             }
         };
         collections.shapeCollection.insertOne(newShape);
-        // collections.layerCollection.updateOne(
-        //     { _id: new ObjectId(message.layerId) },
-        //     { $push: { shapes: newShape._id } }
-        // )
         message.data.id = newShape._id.toString();
         return [2 /*return*/, true];
     });

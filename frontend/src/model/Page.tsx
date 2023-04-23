@@ -20,20 +20,20 @@ import titleUniqueization from "../common/helpers/titleUniquezation";
 // }
 
 class Page implements Page {
-    id: number;
+    id: string;
     title: string;
     layers: ILayer[];
     isCurrent: boolean;
 
-    constructor(title: string = "Page", layers?: ILayer[]) {
-        this.id = genID(12);
+    constructor(id: string = "sdfasdfasd", title: string = "Page", layers: ILayer[]) {
+        this.id = id;
         //this.title = `Page ${pagesCount + 1}`;
         this.title = title;
-        this.layers = layers ?? [new Layer(0)] as ILayer[];
+        this.layers = layers;
         this.isCurrent = true;
     }
 
-    setCurrentLayer(layerID: number) {
+    setCurrentLayer(layerID: string) {
         this.layers.forEach(item => {
             if (item.id === layerID) {
                 item.isCurrent = true;
@@ -71,7 +71,7 @@ class Page implements Page {
                 item.isCurrent = false;
             }
         });
-        this.layers = [...this.getLayers(), new Layer(this.layers.length, titleUniqueization(title, this.getLayers()))];
+        this.layers = [...this.getLayers(), new Layer("eirotwert", this.layers.length, "hlkjhlk", [])];
     }
     getCurrentLayer(): ILayer {
         return this.getLayers().find(layer => layer.isCurrent)!;

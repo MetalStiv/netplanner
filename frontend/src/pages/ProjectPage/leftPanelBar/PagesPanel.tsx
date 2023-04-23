@@ -27,14 +27,14 @@ const PagesPanel = ({ currentProject }: PagesPanelProps) => {
         });
 
 
-    function selectPageHandler(pageID: number) {
+    function selectPageHandler(pageID: string) {
         setCollapsePanelIsOpen(false);
         currentProject.setCurrentPage(pageID);
         console.log(currentProject.getCurrentPage())
         //updateProjectCallback(currentProject.getPages());
     }
 
-    const changeTitleHandler = (el: HTMLInputElement, pageID: number) => {
+    const changeTitleHandler = (el: HTMLInputElement, pageID: string) => {
         setEditingPageIndex(-1);
         let newTitle = el.value.trim();
 

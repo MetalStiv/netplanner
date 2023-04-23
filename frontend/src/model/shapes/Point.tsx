@@ -2,9 +2,10 @@ import IShape from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import { CircleCreator, ICircleProps, } from "./Circle";
 import genID from "../../common/helpers/genID";
+import { ShapeType } from "../ShapeType";
 
 export class PointCreator implements IShapeCreator {
-    type: string = 'Point';
+    type: ShapeType = ShapeType.POINT;
     create() {
         return new Point({
             graphical: {
@@ -35,7 +36,7 @@ export class PointCreator implements IShapeCreator {
 }
 
 class Point implements IShape {
-    type: string = 'Point';
+    type: ShapeType = ShapeType.POINT;
     config: ICircleProps;
     isVisible: boolean = true;
     zIndex: number = 0;

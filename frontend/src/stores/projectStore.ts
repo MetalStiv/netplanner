@@ -1,26 +1,24 @@
-// import ILayer from "../model/Layer";
-// import Page from "../model/Page";
 import IProject from "../model/Project";
-//import IShape from "../model/IShape";
-import { CircleCreator } from "../model/primitives/Circle";
-import { EllipseCreator } from "../model/primitives/Ellipse";
-import { LineCreator } from "../model/primitives/Line";
-import { PointCreator } from "../model/primitives/Point";
-import { PolylineCreator } from "../model/primitives/Polyline";
-import { RectCreator } from "../model/primitives/Rect";
-import IGeometryGroup from "../model/IGeometryGroup";
-import PrimitivesGroup from "../model/primitives/PrimitivesGroup";
-import PolygonsGroup from "../model/primitives/PolygonsGroup";
-//import Layer from "../model/Layer";
-import Project from "../model/Project";
-//import Page from "../model/Page";
+import actionHandlers from "../model/actionHandlers/actionHandlers";
+import { IMessage } from "../model/IMessage";
 
 const projectSymbol: unique symbol = Symbol()
+const projectToLoadId: unique symbol = Symbol()
+const webSocketUpdaterSymbol: unique symbol = Symbol()
+const rerenderSymbol: unique symbol = Symbol()
 
 interface IProjectStore {
     [projectSymbol]: IProject | null,
+    [projectToLoadId]: string,
+    [webSocketUpdaterSymbol]: (() => void) | null,
+    [rerenderSymbol]: boolean,
     setProject: (p: IProject) => void,
     getProject: () => IProject | null,
+    setProjectToLoadId: (id: string) => void,
+    getProjectToLoadId: () => string,
+    setWebSocketUpdater: (webSocketUpdater: () => void) => void,
+    actionHandler: (message: IMessage) => Promise<void>,
+    rerender: () => void,
 
     clearStore: () => void,
 }
@@ -28,13 +26,38 @@ interface IProjectStore {
 export const createProjectStore = () => {
     const store: IProjectStore = {
         [projectSymbol]: null,
+        [projectToLoadId]: "",
+        [webSocketUpdaterSymbol]: null,
+        [rerenderSymbol]: true,
 
         setProject(p: IProject) {
             this[projectSymbol] = p;
+            // this[webSocketUpdaterSymbol]!();
         },
 
         getProject() {
             return this[projectSymbol];
+        },
+
+        setProjectToLoadId(id: string) {
+            this[projectToLoadId] = id;
+            this[webSocketUpdaterSymbol]!();
+        },
+
+        getProjectToLoadId() {
+            return this[projectToLoadId];
+        },
+
+        setWebSocketUpdater(webSocketUpdater: () => void){
+            this[webSocketUpdaterSymbol] = webSocketUpdater;
+        },
+
+        async actionHandler(message: IMessage) {
+            this[projectSymbol] && await actionHandlers.handle(this[projectSymbol]!, message);
+        },
+
+        rerender() {
+            this[rerenderSymbol] = !this[rerenderSymbol];
         },
 
         clearStore(){

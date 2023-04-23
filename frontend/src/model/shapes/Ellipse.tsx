@@ -1,27 +1,24 @@
 import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import genID from "../../common/helpers/genID";
+import { ShapeType } from "../ShapeType";
 
-interface IRectGraphicalProps extends IShapeGraphicalProps {
-    //sizes: { w: number, h: number, },
-    w: IGraphProp,
-    h: IGraphProp,
-    fill?: IGraphProp,
+interface IEllipseGraphicalProps extends IShapeGraphicalProps {
     stroke?: IGraphProp,
-    rx?: IGraphProp,
-    ry?: IGraphProp,
-    pathLength?: number,
+    fill?: IGraphProp,
+    rx: IGraphProp,
+    ry: IGraphProp,
 }
 
-interface IRectProps extends IShapeProps {
-    graphical: IRectGraphicalProps
+interface IEllipseProps extends IShapeProps {
+    graphical: IEllipseGraphicalProps,
     zIndex: number,
 }
 
-export class RectCreator implements IShapeCreator {
-    type: string = 'Rectangle';
+export class EllipseCreator implements IShapeCreator {
+    type: ShapeType = ShapeType.ELLIPS;
     create() {
-        return new Rect({
+        return new Ellipse({
             graphical: {
                 x: {
                     label: 'X',
@@ -33,15 +30,15 @@ export class RectCreator implements IShapeCreator {
                     value: '0',
                     isReadable: false,
                 },
-                w: {
-                    label: 'Width',
-                    value: '45',
-                    isReadable: false,
-                },
-                h: {
-                    label: 'Height',
+                rx: {
+                    label: 'Radius X',
                     value: '30',
-                    isReadable: false,
+                    isReadable: true,
+                },
+                ry: {
+                    label: 'Radius Y',
+                    value: '20',
+                    isReadable: true,
                 },
                 fill: {
                     label: 'Fill',
@@ -59,13 +56,13 @@ export class RectCreator implements IShapeCreator {
     }
 }
 
-class Rect implements IShape {
-    type: string = 'Rectangle';
-    config: IRectProps;
+class Ellipse implements IShape {
+    type: ShapeType = ShapeType.ELLIPS;
+    config: IEllipseProps;
     isVisible: boolean = true;
     zIndex: number = 0;
 
-    constructor(obj: IRectProps) {
+    constructor(obj: IEllipseProps) {
         this.config = obj;
         this.config.id = `${this.type}-${genID(10)}`;
         this.zIndex = obj.zIndex ?? 0;
@@ -85,17 +82,26 @@ class Rect implements IShape {
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
-            d={
-                `M${this.config.graphical.x.value} ${this.config.graphical.y.value} 
-                h ${this.config.graphical.w.value ?? 15}
-                v ${this.config.graphical.h.value ?? 10}
-                h -${this.config.graphical.w.value ?? 15}
-                Z`
-            }
+            d={`
+                M ${(+this.config.graphical.x.value) +
+                (+this.config.graphical.rx.value)},${this.config.graphical.y.value}
+                a ${this.config.graphical.rx.value},${this.config.graphical.ry.value}
+                0
+                1,0
+                1,0
+                z
+            `}
         />
-        //return <rect id={this.elemProps.id} key={this.elemProps.id} x={this.elemProps.startCoords?.x} y={this.elemProps.startCoords?.y} width={this.elemProps.sizes?.w ?? 15} height={this.elemProps.sizes?.h ?? 10} rx={this.elemProps.rDif?.rx ?? 0} ry={this.elemProps.rDif?.ry ?? 0} pathLength={this.elemProps.pathLength ?? ''} stroke={this.elemProps.stroke ?? 'black'} fill={this.elemProps.fill ?? 'black'} onDragStart={(e) => e.preventDefault} onMouseDown={handlerMouseDown} />;
+        // M - левая координата
+        // первая в а - размеры по x,y
+        // угол поворота
+        // флаги
+        // последняя - правая координата
+
+
+        //return <ellipse id={this.elemProps.id} key={this.elemProps.id} cx={this.elemProps.startCoords.x + this.elemProps.rDif.rx} cy={this.elemProps.startCoords.y + this.elemProps.rDif.ry} r={this.elemProps.r ?? 10} rx={this.elemProps.rDif?.rx ?? 0} ry={this.elemProps.rDif?.ry ?? 0} pathLength={this.elemProps.pathLength} stroke={this.elemProps.stroke ?? 'black'} fill={this.elemProps.fill ?? 'black'} onDragStart={(e) => e.preventDefault} onMouseDown={handlerMouseDown} />;
     }
 }
 
 
-export default Rect;
+export default Ellipse;

@@ -1,9 +1,8 @@
-import { IDatadaseCollections, IMessage } from "../app";
+import { IDatadaseCollections } from "../app";
+import { IMessage } from "../dto/IMessage";
 import { addLayerHandler } from "./addLayerHandler";
 import { addPageHandler } from "./addPageHandler";
 import { addShapeHandler } from "./addShapeHandler";
-import * as mongoDB from "mongodb";
-import { IProject } from "../model/IProject";
 
 export type ActionHandler = (collections: IDatadaseCollections, message: IMessage) => Promise<boolean>
 

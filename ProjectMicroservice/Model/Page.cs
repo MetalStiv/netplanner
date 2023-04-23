@@ -9,7 +9,7 @@ public record Page
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; private set; }
     
-    [BsonElement("pojectId")]
+    [BsonElement("projectId")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? ProjectId { get; private set; }
     

@@ -186,7 +186,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
 
         const newShape: IShape = creatorOnDrop!.create();
         let drawShapeAction = new DrawShapeAction(newShape, currentPage, dropCoords)
-        drawShapeAction.do() && actionStore.push(drawShapeAction)
+        // drawShapeAction.do() && actionStore.push(drawShapeAction)
+        actionStore.push(drawShapeAction);
     }
 
     function toScale(nextScale: number, originPoint?: { x: number, y: number }) {

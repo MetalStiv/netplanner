@@ -10,11 +10,12 @@ export interface IProject {
     title: string,
     shapesGroups?: IShapesGroup[],
     pages?: Page[],
+    isLoading: boolean,
     setPages: (page: Page[]) => void,
     getPages: () => Page[],
     addPage: () => void,
     getCurrentPage: () => Page,
-    setCurrentPage: (pageID: number) => void,
+    setCurrentPage: (pageID: string) => void,
     //copy: (project: IProject) => void,
 }
 
@@ -23,12 +24,14 @@ class Project implements IProject {
     title: string;
     shapesGroups: IShapesGroup[];
     pages: Page[];
+    isLoading: boolean;
 
     constructor(shapesGroups: IShapesGroup[], title: string = "Project", id: string) {
         this.id = id;
+        this.isLoading = true;
         this.title = title;
         this.shapesGroups = shapesGroups;
-        this.pages = [new Page()] as Page[];
+        this.pages = [];
     }
 
     // copy(project: IProject) {
@@ -47,7 +50,7 @@ class Project implements IProject {
     //     })
     // }
 
-    setCurrentPage(pageID: number) {
+    setCurrentPage(pageID: string) {
         this.pages.forEach(item => {
             if (item.id === pageID) {
                 item.isCurrent = true;
@@ -59,6 +62,7 @@ class Project implements IProject {
             }
         })
     }
+
     getCurrentPage() {
         return this.getPages().find(page => {
             if (page.isCurrent) {
@@ -67,21 +71,23 @@ class Project implements IProject {
             return false;
         }) || this.getPages()[0]
     }
+
     getPages() {
         return this.pages;
     }
+
     setPages(pages: Page[]) {
         this.pages = pages;
     }
+
     addPage(title: string = "Page") {
         this.pages.forEach(page => {
             if (page.isCurrent) {
                 page.isCurrent = false;
             }
         })
-        this.setPages([...this.pages, new Page(titleUniqueization(title, this.getPages()))]);
+        this.setPages([...this.pages, new Page("qwe", "qwer", [])]);
     }
-
 }
 
 export default Project;

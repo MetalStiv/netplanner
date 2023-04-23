@@ -1,6 +1,11 @@
 import * as http from 'http'; 
 import * as mongoDB from "mongodb";
 import actionHandlers from './actionHandlers/actionHandlers';
+import { ActionType } from './actionType';
+import { ILayerTree } from './dto/ILayerTree';
+import { IMessage } from './dto/IMessage';
+import { IPageTree } from './dto/IPageTree';
+import { IShapeTree } from './dto/IShapeTree';
 import { ILayer } from './model/ILayer';
 import { IPage } from './model/IPage';
 import { IProject } from './model/IProject';
@@ -43,29 +48,17 @@ interface IMetadata {
     projectId: string
 }
 
-export interface IMessage {
-    type: string,
-    senderId?: string,
-    projectId?: string,
-    pageId?: string,
-    layerId?: string,
-    data: {
-        id?: string,
-        shape?: string, 
-        dropCoords?: { x: number, y: number }
-    },
-}
-
 const clients = new Map<WebSocket, IMetadata>();
 const publicKey = fs.readFileSync("/app/RsaKeys/public.pem", "utf8");
 
-wsServer.on('connection', (ws: WebSocket, req: http.IncomingMessage) => {
+wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     let queryData = require('url').parse(req.url, true).query;
     let token: string = queryData.token;
     let projectId: string = queryData.projectId;
 
-    if (!projectId || projectId === ""){
-        ws.close()
+    if (!projectId || projectId === "" || projectId === "undefined"){
+        ws.close();
+        return;
     }
 
     let userId: string = '';
@@ -77,15 +70,53 @@ wsServer.on('connection', (ws: WebSocket, req: http.IncomingMessage) => {
         }
     });
 
+    console.log('open');
+    // check user rights!
+
     const metadata: IMetadata = { userId, projectId };
     clients.set(ws, metadata);
+
+    const pageFilter: mongoDB.Filter<IPage> = {"projectId": new mongoDB.ObjectId(projectId)};
+    const pages: IPage[] = await (await collections.pageCollection.find(pageFilter)).toArray();
+    const pageTrees: IPageTree[] = await Promise.all(pages.map(async p => {
+        const layerFilter: mongoDB.Filter<ILayer> = {"pageId": new mongoDB.ObjectId(p._id)};
+        const layers: ILayer[] = await (await collections.layerCollection.find(layerFilter)).toArray();
+        const layerTrees: ILayerTree[] = await Promise.all(layers.map(async l => {
+            const shapeFilter: mongoDB.Filter<IShape> = {"layerId": new mongoDB.ObjectId(l._id)};
+            const shapes: IShape[] = await (await collections.shapeCollection.find(shapeFilter)).toArray();
+            const shapeTrees: IShapeTree[] = shapes.map(s => ({
+                id: s._id.toString(),
+                type: s.type,
+                zIndex: s.zIndex.toString(),
+                graphicalProperties: s.graphicalProperties
+            }))
+            return {
+                id: l._id.toString(),
+                name: l.name,
+                shapes: shapeTrees,
+                zIndex: l.zIndex.toString()
+            }
+        }))
+        return {
+            id: p._id.toString(),
+            name: p.name,
+            layers: layerTrees
+        }
+    }));
+
+    const sendMessage: IMessage = {
+        type: ActionType.OPEN_PROJECT,
+        data: {
+            pages: pageTrees
+        }
+    };
+
+    ws.send(JSON.stringify(sendMessage));
 
     ws.onmessage = function(event: MessageEvent){
         const message: IMessage = JSON.parse(event.data);
         message.senderId = clients.get(ws).userId;
         message.projectId = clients.get(ws).projectId;
-
-        console.log(message);
 
         const isHandled = actionHandlers.handle(collections, message)
         if (!isHandled){
@@ -100,5 +131,9 @@ wsServer.on('connection', (ws: WebSocket, req: http.IncomingMessage) => {
 
     ws.onclose = function() {
         clients.delete(ws);
+    }
+
+    ws.onerror = (e: Event) => {
+        console.log(e);
     }
 })

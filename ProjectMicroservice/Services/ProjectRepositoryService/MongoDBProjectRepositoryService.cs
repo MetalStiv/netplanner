@@ -41,7 +41,7 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
                     var newPage = new Page("Page_1", newProject.Id!);
                     await _pageCollection.InsertOneAsync(newPage);
 
-                    var newLayer = new Layer("Layer_1", newPage.Id!);
+                    var newLayer = new Layer("Layer_1", newPage.Id!, 10000);
                     await _layerCollection.InsertOneAsync(newLayer);
                 })
             );
@@ -97,37 +97,4 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
 
     public async Task<List<ProjectMeta>?> GetProjectsAsync(string userId) =>
         await (await _projectMetaCollection.FindAsync(p => p.OwnerId == userId)).ToListAsync();
-
-    public async Task<List<ShapeDto>> GetLayerShapeDtosAsync(string layerId){
-        var shapes = await (await _shapeCollection.FindAsync(s => s.LayerId == layerId)).ToListAsync();
-        var shapeDtos = new List<ShapeDto>();
-        shapes.ForEach(s => shapeDtos.Add(new ShapeDto(s.Id!, s.Type!)));
-        return shapeDtos;
-    }
-
-    public async Task<List<LayerDto>> GetPageLayerDtosAsync(string pageId){
-        var layers = await (await _layerCollection.FindAsync(l => l.PageId == pageId)).ToListAsync();
-        var layerDtos = new List<LayerDto>();
-        layers.ForEach(l => {
-            var shapeDtos = GetLayerShapeDtosAsync(l.Id!).Result;
-            layerDtos.Add(new LayerDto(l.Id!, l.Name!, shapeDtos));
-        });
-        return layerDtos;
-    }
-
-    public async Task<List<PageDto>> GetProjectPageDtosAsync(string projectId){
-        var pages = await (await _pageCollection.FindAsync(p => p.ProjectId == projectId)).ToListAsync();
-        var pageDtos = new List<PageDto>();
-        pages.ForEach(p => {
-            var layerDtos = GetPageLayerDtosAsync(p.Id!).Result;
-            pageDtos.Add(new PageDto(p.Id!, p.Name!, layerDtos));
-        });
-        return pageDtos;
-    }
-
-    public async Task<ProjectDto> GetProjectContentAsync(string projectId){
-        var project = await (await _projectCollection.FindAsync(p => p.Id == projectId)).SingleAsync();
-        var pages = GetProjectPageDtosAsync(projectId).Result;
-        return new ProjectDto(project.Id!, pages);
-    }
 }

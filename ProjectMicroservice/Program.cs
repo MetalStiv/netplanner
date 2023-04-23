@@ -126,47 +126,4 @@ app.MapPost("/renameProject", [Authorize] async (HttpContext http,
     }
 );
 
-app.MapGet("/getProjectContent", [Authorize] async (HttpContext http, 
-    ITokenService tokenService,
-    IProjectRepositoryService projectRepositoryService) => {
-        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var userId = tokenService.GetUserIdFromToken(token);
-        var projectId = http.Request.Query["id"];
-
-        if (projectId == "")
-        {
-            http.Response.StatusCode = 500;
-            return;
-        }
-
-        ProjectMeta project;
-        try
-        {
-            project = await projectRepositoryService.GetProjectByIdAsync(projectId);
-        }
-        catch(Exception){
-            http.Response.StatusCode = 520;
-            return;
-        }
-
-        var isSubscriber = false;
-        if (project.SubscriberIds != null){
-            isSubscriber = project.SubscriberIds.Contains(userId);
-        }
-
-        if (project == null || (project.OwnerId != userId && !isSubscriber))
-        {
-            http.Response.StatusCode = 520;
-            return;
-        }
-
-        // await http.Response.WriteAsJsonAsync(projects);
-        var projectContent = await projectRepositoryService.GetProjectContentAsync(projectId);
-        Console.WriteLine(projectContent.Pages.Count);
-        await http.Response.WriteAsJsonAsync(projectContent);
-        // http.Response.StatusCode = 200;
-        return;
-    }
-);
-
 await app.RunAsync();

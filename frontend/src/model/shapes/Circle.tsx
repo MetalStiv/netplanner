@@ -1,6 +1,9 @@
 import IShape, { IShapeProps, IShapeGraphicalProps, IGraphProp } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import genID from "../../common/helpers/genID";
+import { ShapeType } from "../ShapeType";
+import { TShapeInflater } from "../shapeInflaters";
+import { IMessageShape } from "../IMessageShape";
 
 interface ICircleGraphicalProps extends IShapeGraphicalProps {
     //additionalGraphProps: []
@@ -15,8 +18,34 @@ export interface ICircleProps extends IShapeProps {
     zIndex: number,
 }
 
+export const circleInflater: TShapeInflater = async (messageShape: IMessageShape) => {
+    if (messageShape.type != ShapeType.CIRCLE){
+        return null
+    }
+    return new Circle({
+        zIndex: 10,
+        graphical: {
+            r: {
+                label: "Radius",
+                value: messageShape.graphicalProperties.r!,
+                isReadable: true, 
+            },
+            x: {
+                label: "X",
+                value: messageShape.graphicalProperties.x,
+                isReadable: true, 
+            },
+            y: {
+                label: "Y",
+                value: messageShape.graphicalProperties.y,
+                isReadable: true, 
+            }
+        }
+    })
+}
+
 export class CircleCreator implements IShapeCreator {
-    type: string = 'Circle';
+    type: ShapeType = ShapeType.CIRCLE;
     create() {
         return new Circle({
             graphical: {
@@ -65,7 +94,7 @@ export class CircleCreator implements IShapeCreator {
 }
 
 class Circle implements IShape {
-    type: string = 'Circle';
+    type: ShapeType = ShapeType.CIRCLE;
     config: ICircleProps;
     isVisible: boolean = true;
 

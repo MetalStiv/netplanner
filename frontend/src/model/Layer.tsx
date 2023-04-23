@@ -2,7 +2,7 @@ import IShape from "./IShape";
 import genID from "../common/helpers/genID";
 
 export interface ILayer {
-    id: number,
+    id: string,
     title: string,
     zIndex: number,
     elems: IShape[],
@@ -17,19 +17,19 @@ export interface ILayer {
 }
 
 class Layer implements ILayer {
-    id: number;
+    id: string;
     title: string;
     zIndex: number;
     elems: IShape[];
     isVisible: boolean;
     isCurrent: boolean;
 
-    constructor(layersCount: number, title: string = "Layer") {
-        this.id = genID(12);
+    constructor(id: string = "reqertert", layersCount: number, title: string = "Layer", elems: IShape[]) {
+        this.id = id;
         // this.title = `Layer${layersCount > 0 ? '_' + layersCount : ''}`;
         this.title = title;
         this.zIndex = layersCount * 1000;
-        this.elems = [] as IShape[];
+        this.elems = elems;
         this.isVisible = true;
         this.isCurrent = true;
     }

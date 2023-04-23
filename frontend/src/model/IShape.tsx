@@ -1,3 +1,5 @@
+import { ShapeType } from "./ShapeType";
+
 export interface IShapeGraphicalProps {
     //startCoords: { x: number, y: number },
     x: IGraphProp,
@@ -18,7 +20,7 @@ export interface IShapeProps {
 }
 
 export interface IShape {
-    type: string,
+    type: ShapeType,
     config: IShapeProps,
     isVisible: boolean,
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,

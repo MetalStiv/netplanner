@@ -37,9 +37,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.addLayerHandler = void 0;
+var actionType_1 = require("../actionType");
 var addLayerHandler = function (collection, message) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        if (message.type !== "addPage") {
+        if (message.type !== actionType_1.ActionType.ADD_LAYER) {
             return [2 /*return*/, false];
         }
         return [2 /*return*/, true];

@@ -30,12 +30,12 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
         <path d="M16.5 1.5L10.8975 7.1025" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>;
 
-    const changeTitleHandler = (el: HTMLInputElement, layerID: number) => {
+    const changeTitleHandler = (el: HTMLInputElement, layerID: string) => {
         setEditingLayerIndex(-1);
         let newTitle = el.value.trim();
 
         if (newTitle.length) {
-            newTitle = titleUniqueization(newTitle, currentPage.getLayers(), layerID);
+            newTitle = titleUniqueization(newTitle, currentPage.getLayers(), "234123413");
 
             currentPage.setLayers(currentPage.getLayers().map(item => {
                 if (item.id === layerID) {
@@ -56,7 +56,7 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
         if (e.dataTransfer.getData("draggableElement") !== 'layer') {
             return;
         }
-        let draggableLayerID = +e.dataTransfer.getData("id");
+        let draggableLayerID = e.dataTransfer.getData("id");
         let draggableLayerZindex = currentPage.getLayers().find(item => item.id === draggableLayerID ? true : false)!.zIndex;
 
         currentPage.setLayers(currentPage.getLayers().map(layerItem => {
