@@ -2,8 +2,9 @@ import { IGraphProp } from "../../../model/IShape";
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 import { IElemProps } from "../ProjectPage";
 import { PropertyPanel } from "../../../components";
-import { ApplicationData, useApplicationContext } from '../../../providers/applicationProvider';
 import { ChangeShapePropertyAction } from "../../../model/Action";
+import { TActionStore } from "../../../stores/actionStore";
+import { useRootStore } from "../../../providers/rootProvider";
 
 interface IGraphicalPropertiesPanelProps {
     // graphicalConfig: IShapeGraphicalProps | undefined,
@@ -16,7 +17,7 @@ interface IGraphicalPropertiesPanelProps {
 
 const GraphicalPropertiesPanel = ({ elemProps }: IGraphicalPropertiesPanelProps) => {
     const lang: LanguageData | null = useLanguageContext();
-    const app: ApplicationData | null = useApplicationContext();
+    const actionStore: TActionStore = useRootStore().getActionStore();
 
     return (
         <div id="graphicalPropertiesPanel">
@@ -44,9 +45,9 @@ const GraphicalPropertiesPanel = ({ elemProps }: IGraphicalPropertiesPanelProps)
                                 <PropertyPanel key={i + item.label} property={{ label: item.label, value: item.value }}
                                     onChange={val => {
                                         let changePropAction = new ChangeShapePropertyAction(item, item.value, val)
-                                        changePropAction.do() && app?.addAction(changePropAction);
+                                        // changePropAction.do() && app?.addAction(changePropAction);
                                         // item.value = val;
-
+                                        actionStore.push(changePropAction);
                                     }
                                     }
                                 />
