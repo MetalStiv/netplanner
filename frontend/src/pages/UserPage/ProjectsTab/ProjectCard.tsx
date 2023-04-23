@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ConfirmationDialog from "../../../components/ConfirmationDialog";
+import { ConfirmationDialog } from "../../../components";
 import IProjectMeta from "../../../model/IProjectMeta";
 import { useRootStore } from "../../../providers/rootProvider";
 import { TUsersStore } from "../../../stores/usersStore";
@@ -14,19 +14,19 @@ interface IProjectCardProps {
     projectId: string;
 }
 
-const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
+const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId }) => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
     const usersStore: TUsersStore = useRootStore()!.getUsersStore();
     const lang: LanguageData | null = useLanguageContext();
-    
+
     const navigate = useNavigate();
-    
+
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(projectsMetaStore.getById(projectId)!.name);
 
     const removeProject = async () => {
-        const res = await projectMicroservice.post("removeProject", {id: projectId})
-        if (res.status !== 200){
+        const res = await projectMicroservice.post("removeProject", { id: projectId })
+        if (res.status !== 200) {
             alert(res.statusText)
         }
         projectsMetaStore.hideById(projectId);
@@ -41,17 +41,17 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
             id: projectId,
             name: tempName
         });
-        if (res.status === 200){
+        if (res.status === 200) {
             const newProjectMeta: IProjectMeta = projectsMetaStore.getById(projectId)!;
             newProjectMeta.name = tempName;
             projectsMetaStore.updateOrInsert(newProjectMeta);
             setIsEdittingName(false);
-        } 
+        }
     }
 
     return (
-        <div className={`project-card ${projectsMetaStore.getById(projectId)!.hide ? 
-            "project-card-hidden" 
+        <div className={`project-card ${projectsMetaStore.getById(projectId)!.hide ?
+            "project-card-hidden"
             : "project-card-visible"}`}
             onDoubleClick={() => {
                 navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)
@@ -62,30 +62,30 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                 <div className="modified-info">{lang!.langText.userPage.projectTab.justCreated}</div>
                 {
                     isEdittingName ? <div className="name-container">
-                            <input
-                                className='change-name-input'
-                                autoFocus={true}
-                                type="text"
-                                onBlur={saveNameHandler}
-                                value={tempName}
-                                onChange={e => changeName(e.target)}
-                                onKeyDown={e => {
-                                    if (e.keyCode === 13) {
-                                        saveNameHandler();
-                                    }
-                                    if (e.keyCode === 27) {
-                                        setIsEdittingName(false);
-                                        setTempName(projectsMetaStore.getById(projectId)!.name);
-                                    }
-                                }}
-                            />
-                        </div>
+                        <input
+                            className='change-name-input'
+                            autoFocus={true}
+                            type="text"
+                            onBlur={saveNameHandler}
+                            value={tempName}
+                            onChange={e => changeName(e.target)}
+                            onKeyDown={e => {
+                                if (e.keyCode === 13) {
+                                    saveNameHandler();
+                                }
+                                if (e.keyCode === 27) {
+                                    setIsEdittingName(false);
+                                    setTempName(projectsMetaStore.getById(projectId)!.name);
+                                }
+                            }}
+                        />
+                    </div>
                         : <div className="name-container">
                             <p className="name-info">
                                 {projectsMetaStore.getById(projectId)!.name}
                             </p>
                             <span className="pencil-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
                                     onClick={() => setIsEdittingName(true)}>
                                     <path d="M4 20.0001H3C3 20.2653 3.10536 20.5197 3.2929 20.7072C3.48043 
@@ -122,7 +122,7 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                                         5.43896C16.0993 5.51468 16.2145 5.62885 16.4242 5.83857L17.8385 4.42436ZM16 
                                         5.41431H16.0001L16.6181 3.51219C16.2164 3.38168 15.7837 3.38168 15.382 3.51219L16 
                                         5.41431ZM11.2929 8.70722L15.2929 12.7072L16.7071 11.293L12.7071 7.29301L11.2929 
-                                        8.70722Z" fill="#176DEA"/>
+                                        8.70722Z" fill="#176DEA" />
                                 </svg>
                             </span>
                         </div>
@@ -140,73 +140,73 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({projectId}) => {
                         }
                     </div>
                 </div>
-                <div className="subscribers-info">{lang!.langText.userPage.projectTab.subscribers + ': '+
+                <div className="subscribers-info">{lang!.langText.userPage.projectTab.subscribers + ': ' +
                     lang!.langText.userPage.projectTab.none}</div>
             </div>
 
             <div className="menu-icon-group">
                 <div className="menu-icon">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d={"M7 11.5L13 14.5M13 5.5L7 8.5M16 19C14.3431 19 13 17.6569 13 16C13 14.3431 14.3431 "+
-                            " 13 16 13C17.6569 13 19 14.3431 19 16C19 17.6569 17.6569 19 16 19ZM4 13C2.34315 13 1 "+
-                            " 11.6569 1 10C1 8.34315 2.34315 7 4 7C5.65685 7 7 8.34315 7 10C7 11.6569 5.65685 13 "+
-                            " 4 13ZM16 7C14.3431 7 13 5.65685 13 4C13 2.34315 14.3431 1 16 1C17.6569 1 19 2.34315 "+
-                            " 19 4C19 5.65685 17.6569 7 16 7Z"} stroke="#292C33" stroke-width="2" 
-                            stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d={"M7 11.5L13 14.5M13 5.5L7 8.5M16 19C14.3431 19 13 17.6569 13 16C13 14.3431 14.3431 " +
+                            " 13 16 13C17.6569 13 19 14.3431 19 16C19 17.6569 17.6569 19 16 19ZM4 13C2.34315 13 1 " +
+                            " 11.6569 1 10C1 8.34315 2.34315 7 4 7C5.65685 7 7 8.34315 7 10C7 11.6569 5.65685 13 " +
+                            " 4 13ZM16 7C14.3431 7 13 5.65685 13 4C13 2.34315 14.3431 1 16 1C17.6569 1 19 2.34315 " +
+                            " 19 4C19 5.65685 17.6569 7 16 7Z"} stroke="#292C33" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </div>
 
                 <div className="menu-icon" onClick={() => projectsMetaStore.switchMenuById(projectId)}>
                     <svg width="4" height="17" viewBox="0 0 4 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 "+
-                            " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} fill="#292C33"/>
-                        <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 "+
-                            " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} fill="#292C33"/>
-                        <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 2.07143C3 "+
-                            " 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} fill="#292C33"/>
-                        <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 "+
-                            " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} stroke="#292C33" 
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 "+
-                            " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} stroke="#292C33" 
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 "+
-                            " 2.07143C3 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} stroke="#292C33" 
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 " +
+                            " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} fill="#292C33" />
+                        <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 " +
+                            " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} fill="#292C33" />
+                        <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 2.07143C3 " +
+                            " 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} fill="#292C33" />
+                        <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 " +
+                            " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} stroke="#292C33"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 " +
+                            " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} stroke="#292C33"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 " +
+                            " 2.07143C3 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} stroke="#292C33"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </div>
 
                 {
                     projectsMetaStore.getById(projectId)!.showMenu &&
-                        <div className="panel-menu-container">
-                            <div className="panel-menu">
-                                <div className="menu-text disabled">
-                                    {lang!.langText.userPage.projectTab.createCheckpoint}
-                                </div>
-                                <hr className="separator" />
-                                <div className="menu-text disabled">
-                                    {lang!.langText.userPage.projectTab.restoreFromCheckpoint}
-                                </div>
-                                <hr className="separator" />
-                                <div className="menu-text">
-                                    {lang!.langText.userPage.projectTab.moveToGroup}
-                                </div>
-                                <hr className="separator" />
-                                <div className="menu-text">
-                                    <ConfirmationDialog showText={lang!.langText.userPage.projectTab.delete} 
-                                        btnAcceptText={lang!.langText.userPage.projectTab.delete}
-                                        btnDeclineText={lang!.langText.userPage.projectTab.cancel} 
-                                        questionTextPartOne={lang!.langText.userPage.projectTab.deleteProjectQuestion}
-                                        questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
-                                        questionTextPartThree={lang!.langText.userPage.projectTab.deleteProjectDefinition}
-                                        action={removeProject} />
-                                </div>
+                    <div className="panel-menu-container">
+                        <div className="panel-menu">
+                            <div className="menu-text disabled">
+                                {lang!.langText.userPage.projectTab.createCheckpoint}
                             </div>
-
-                            <div className="tail">
-
+                            <hr className="separator" />
+                            <div className="menu-text disabled">
+                                {lang!.langText.userPage.projectTab.restoreFromCheckpoint}
+                            </div>
+                            <hr className="separator" />
+                            <div className="menu-text">
+                                {lang!.langText.userPage.projectTab.moveToGroup}
+                            </div>
+                            <hr className="separator" />
+                            <div className="menu-text">
+                                <ConfirmationDialog showText={lang!.langText.userPage.projectTab.delete}
+                                    btnAcceptText={lang!.langText.userPage.projectTab.delete}
+                                    btnDeclineText={lang!.langText.userPage.projectTab.cancel}
+                                    questionTextPartOne={lang!.langText.userPage.projectTab.deleteProjectQuestion}
+                                    questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
+                                    questionTextPartThree={lang!.langText.userPage.projectTab.deleteProjectDefinition}
+                                    action={removeProject} />
                             </div>
                         </div>
+
+                        <div className="tail">
+
+                        </div>
+                    </div>
                 }
             </div>
         </div>

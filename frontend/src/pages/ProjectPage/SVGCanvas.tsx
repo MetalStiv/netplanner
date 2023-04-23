@@ -9,6 +9,7 @@ import { DrawShapeAction } from '../../model/Action';
 import { useRootStore } from '../../providers/rootProvider';
 import { TActionStore } from '../../stores/actionStore';
 import { observer } from 'mobx-react-lite';
+import { RangeInput } from '../../components';
 
 interface SVGCanvasProps {
     currentPage: Page,
@@ -166,11 +167,23 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
         });
         const config: IElemProps = {
             type: curObj!.type,
-            size: {
-                w: Math.round(e.currentTarget?.getBBox().width ?? e.domRect.width),
-                h: Math.round(e.currentTarget?.getBBox().height ?? e.domRect.height)
-            },
-            graphProps: curObj!.config.graphical
+            // size: {
+            //     w: Math.round(e.currentTarget?.getBBox().width ?? e.domRect.width),
+            //     h: Math.round(e.currentTarget?.getBBox().height ?? e.domRect.height)
+            // },
+            graphProps: {
+                ...curObj!.config.graphical,
+                // w: {
+                //     label: 'width',
+                //     value: `${Math.round(e.currentTarget?.getBBox().width ?? e.domRect.width)}`,
+                //     isReadable: true,
+                // } as IGraphProp,
+                // h: {
+                //     label: 'height',
+                //     value: `${Math.round(e.currentTarget?.getBBox().height ?? e.domRect.height)}`,
+                //     isReadable: true,
+                // } as IGraphProp
+            }
         }
         getClickedElemConfigCallback(config);
     }
@@ -245,7 +258,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
         }
     }
 
-    const [sliderTextInput, setSliderTextInput] = useState('');
     return (
         <>
             <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()}
@@ -298,36 +310,13 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
                     </g>
                 </svg>
             </div>
-            <div id="scale-slider">
-                <div id="slider-range">
-                    <input type="range"
-                        id="slider-range-input"
-                        min={10}
-                        max={200}
-                        step={10}
-                        value={Math.ceil(scale * 100)}
-                        onChange={e => toScale(parseFloat((parseInt(e.target.value) * 0.01).toFixed(1)))}
-                    />
-                </div>
-                <div id="slider-text">
-                    <input id="slider-text-input"
-                        type="text"
-                        value={sliderTextInput}
-                        onInput={e => {
-                            const curVal = e.currentTarget.value;
-                            if (parseInt(curVal) <= 1000 || curVal === '') {
-                                setSliderTextInput(curVal);
-                            }
-                        }}
-                        onKeyDown={e => {
-                            if (e.keyCode === 13) {
-                                toScale(parseFloat((parseInt(sliderTextInput) * 0.01).toFixed(1)));
-                            }
-                        }}
-                    />
-                    <label htmlFor="slider-text-input">%</label>
-                </div>
-            </div>
+            <RangeInput
+                value={scale}
+                min={10}
+                max={200}
+                step={10}
+                numberInputMax={1000}
+                onChangeHandler={(val: string) => toScale(parseFloat((parseInt(val) * 0.01).toFixed(1)))} />
         </>
     )
 })

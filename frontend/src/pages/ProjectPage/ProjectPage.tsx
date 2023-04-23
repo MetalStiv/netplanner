@@ -19,8 +19,6 @@ import Project from '../../model/Project';
 import { IShapeGraphicalProps } from '../../model/IShape';
 import ICanvasConfig, { Portrait } from "../../common/canvasConfig";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import AlertDialog from "../../components/AlertDialog";
-import Loader from "../../components/Loader";
 import { LanguageData, useLanguageContext } from '../../providers/languageProvider';
 import PolygonsGroup from '../../model/shapes/PolygonsGroup';
 import { CircleCreator } from '../../model/shapes/Circle';
@@ -35,11 +33,12 @@ import { TProjectStore } from '../../stores/projectStore';
 import { TActionStore } from '../../stores/actionStore';
 import IAction from '../../model/Action';
 import { observer } from 'mobx-react-lite';
+import { AlertDialog } from '../../components';
+import { Loader } from '../../components';
 // import { UndoAction } from '../../model/Action';
 
 export interface IElemProps {
     type: string,
-    size: { w: number, h: number },
     graphProps: IShapeGraphicalProps,
     //coords: { x: number, y: number },
 }
@@ -172,7 +171,12 @@ const ProjectPage: React.FC = observer(() => {
                                     <ObjectPropertiesPanel elemProps={selectedElemProps} />
                                 </div>
                                 <div style={{ minHeight: 150 }}>
-                                    <GraphicalPropertiesPanel elemProps={selectedElemProps} />
+                                    <GraphicalPropertiesPanel elemProps={selectedElemProps}
+                                    // onChange={val => {
+                                    // let changePropAction = new ChangeShapePropertyAction(elemProps.graphProps, item.label, item.value, val)
+                                    // changePropAction.do() && app?.addAction(changePropAction);
+                                    // }}
+                                    />
                                 </div>
                             </VerticalPageSplit>
                         </div>

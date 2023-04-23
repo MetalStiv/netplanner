@@ -27,22 +27,22 @@ export class RectCreator implements IShapeCreator {
                 x: {
                     label: 'X',
                     value: '0',
-                    isReadable: false,
+                    isReadable: true,
                 },
                 y: {
                     label: 'Y',
                     value: '0',
-                    isReadable: false,
+                    isReadable: true,
                 },
                 w: {
                     label: 'Width',
                     value: '45',
-                    isReadable: false,
+                    isReadable: true,
                 },
                 h: {
                     label: 'Height',
                     value: '30',
-                    isReadable: false,
+                    isReadable: true,
                 },
                 fill: {
                     label: 'Fill',

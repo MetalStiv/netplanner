@@ -3,7 +3,9 @@ import { ShapeType } from "./ShapeType";
 export interface IShapeGraphicalProps {
     //startCoords: { x: number, y: number },
     x: IGraphProp,
-    y: IGraphProp
+    y: IGraphProp,
+    // w: IGraphProp,
+    // h: IGraphProp,
     //otherPropertiesView?: { title: string, value: string }[],
 }
 

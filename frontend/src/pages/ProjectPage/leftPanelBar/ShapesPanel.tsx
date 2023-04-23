@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRootStore } from '../../../providers/rootProvider';
-import Dropdown from '../../../components/Dropdown';
+import { Dropdown } from '../../../components';
 //import { IDraggableElemProps } from '../ProjectPage';
 import IShapeCreator from '../../../model/IShapeCreator';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
