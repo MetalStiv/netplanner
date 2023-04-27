@@ -16,8 +16,9 @@ export const actionHandlers: IActionHandlers = {
         addShapeHandler
     ),
 
-    handle(project: Project, message: IMessage){
-        let result: Project = new Project(project.shapesGroups, "project", project.id);
+    async handle(project: Project, message: IMessage){
+        let result: Project = new Project(project.shapesGroups, project.title, project.id);
+        result.isLoading = true;
         if (project.pages){
             result.setPages(project.getPages());
             result.pages.forEach(p => p.setCurrentLayer(
@@ -26,10 +27,15 @@ export const actionHandlers: IActionHandlers = {
             project.getCurrentPage() && result.setCurrentPage(project.getCurrentPage().id);
         }
 
-        this.handlers.forEach(async handler => {
+        await this.handlers.every(async handler => {
             result = await handler(result, message);
+            if (result.isLoading === true){
+                return (false);
+            }
+            return true;
         })
-        return Promise.resolve(result);
+
+        return result;
     }
 }
 

@@ -5,6 +5,7 @@ import useWebSocket from "react-use-websocket";
 import { getAccessToken } from "axios-jwt";
 import IAction from "../model/Action";
 import actionHandlers from "../model/actionHandlers/actionHandlers";
+import Project from "../model/Project";
 
 export const RootStoreContext = React.createContext<TRootStore>(createRootStore());
 
@@ -22,21 +23,26 @@ export const RootProvider: React.FC<Props> = ({ children }) => {
     
     const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(WEB_SOCKET_URL+
         getAccessToken()+'&projectId='+store.getProjectStore().getProjectToLoadId());
-
-    useEffect(() => {
-        const handleMessage = async (message: MessageEvent<any> | null) => {
-            console.log(message)
-            message && console.log(await actionHandlers.handle(store.getProjectStore().getProject()!, JSON.parse(message!.data)));
-            message && store.getProjectStore().setProject(
-                await actionHandlers.handle(store.getProjectStore().getProject()!, JSON.parse(message!.data))
-            );
-        }
-
-        handleMessage(lastMessage);
-    }, [lastMessage])
-
+    
     store.getActionStore().setMessageSender(sendMessage);
     store.getProjectStore().setWebSocketUpdater(updateWebSocket);
+    
+    useEffect(() => {
+        const handleMessage = async (message: MessageEvent<any> | null) => {
+            if (!message){
+                return;
+            }
+            console.log("New message");
+            console.log(message);
+            const handledProject: Project = 
+                await actionHandlers.handle(store.getProjectStore().getProject()!, JSON.parse(message!.data));
+            console.log("New project");
+            console.log(handledProject);
+            store.getProjectStore().setProject(handledProject);
+            store.getProjectStore().rerender();
+        }
+        handleMessage(lastMessage);
+    }, [lastMessage])
 
     return (
         <RootStoreContext.Provider value={store}>

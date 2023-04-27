@@ -2,7 +2,7 @@ namespace UserMicroservice.Services.TokenService;
 
 public class RsaTokenService : ITokenService
 {
-    private TimeSpan _expiryDuration = new TimeSpan(0, 6, 0);
+    private TimeSpan _expiryDuration = new TimeSpan(0, 60, 0);
     private JwtSettings _settings;
 
     public RsaTokenService(JwtSettings jwtSettings)

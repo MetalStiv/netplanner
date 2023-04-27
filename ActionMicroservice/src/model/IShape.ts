@@ -6,7 +6,8 @@ export interface IShape {
     layerId: ObjectId,
     zIndex: number,
     graphicalProperties: {
-        x: string,
-        y: string
-    }
+        label: string,
+        value: string,
+        isReadable: boolean
+    }[]
 }

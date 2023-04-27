@@ -95,8 +95,6 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                 token = queryData.token;
                 projectId = queryData.projectId;
                 if (!projectId || projectId === "" || projectId === "undefined") {
-                    console.log(projectId);
-                    console.log('close');
                     ws.close();
                     return [2 /*return*/];
                 }
@@ -104,7 +102,6 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                 jwt.verify(token, publicKey, function (err, decoded) {
                     if (err) {
                         ws.close();
-                        console.log('jwt error');
                     }
                     else {
                         userId = decoded.Id;
@@ -176,8 +173,6 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                     var message = JSON.parse(event.data);
                     message.senderId = clients.get(ws).userId;
                     message.projectId = clients.get(ws).projectId;
-                    console.log('message');
-                    console.log(message);
                     var isHandled = actionHandlers_1["default"].handle(collections, message);
                     if (!isHandled) {
                         return;

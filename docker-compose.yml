@@ -110,12 +110,6 @@ services:
     volumes:
       - ./RsaKeys/public.pem:/app/RsaKeys/public.pem:ro
     environment:
-      # ASPNETCORE_HTTPS_PORT: ws://+:7067
-      # ASPNETCORE_URLS: ws://+:5110
-      # DB_CONNECTION_STRING: mongodb://root:example@mongo-projectdb:27017
-      # DB_NAME: projectdb
-      # DB_PROJECT_META_COLLECTION_NAME: meta
-      # DB_PROJECT_COLLECTION_NAME: projects
       DB_CONNECTION_STRING: mongodb://root:example@mongo-projectdb:27017
       DB_NAME: projectdb
       DB_PROJECT_COLLECTION_NAME: projects

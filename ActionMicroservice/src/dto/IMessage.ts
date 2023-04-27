@@ -1,5 +1,5 @@
 import { ActionType } from "../actionType";
-import { IPageTree } from "./IPageTree";
+import { IShapeTree } from "./IShapeTree";
 
 export interface IMessage {
     type: ActionType,
@@ -8,10 +8,16 @@ export interface IMessage {
     pageId?: string,
     layerId?: string,
     data: {
-        id?: string,
-        shape?: string, 
         zIndex?: string,
-        dropCoords?: { x: number, y: number },
-        pages?: IPageTree[]
-    },
+        pages?: {
+            id: string,
+            name: string,
+            layers: {
+                id: string,
+                name: string,
+                shapes: IShapeTree[]
+            }[]
+        }[],
+        newShape?: IShapeTree
+    }
 }

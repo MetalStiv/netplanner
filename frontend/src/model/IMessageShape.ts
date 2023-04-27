@@ -1,9 +1,9 @@
 export interface IMessageShape {
-    id: string,
+    id?: string,
     type: string,
     graphicalProperties: {
-        r?: string,
-        x: string,
-        y: string
-    }
+        label: string,
+        value: string,
+        isReadable: boolean,
+    }[]
 }

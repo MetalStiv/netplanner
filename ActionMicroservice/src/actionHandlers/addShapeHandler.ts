@@ -10,17 +10,14 @@ export const addShapeHandler: ActionHandler = async (collections, message) => {
     console.log(message)
     const newShape: IShape = {
         _id: new ObjectId(),
-        type: message.data.shape,
+        type: message.data.newShape.type,
         layerId: new ObjectId(message.layerId),
         zIndex: parseInt(message.data.zIndex),
-        graphicalProperties: {
-            x: message.data.dropCoords.x.toString(),
-            y: message.data.dropCoords.y.toString()
-        }
+        graphicalProperties: message.data.newShape.graphicalProperties
     };
 
     collections.shapeCollection.insertOne(newShape)
         
-    message.data.id = newShape._id.toString();
+    message.data.newShape.id = newShape._id.toString();
     return true;
 }

@@ -1,4 +1,3 @@
-import { ILayer } from "../model/ILayer";
 import { IShapeTree } from "./IShapeTree";
 
 export interface ILayerTree{

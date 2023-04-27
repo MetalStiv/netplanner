@@ -9,16 +9,7 @@ export const addShapeHandler: ActionHandler = async (project, message) => {
         return project;
     };
 
-    const newShapeMessage: IMessageShape = {
-        id: message.id!,
-        type: message.type,
-        graphicalProperties: {
-            x: message.data.dropCoords?.x.toString()!,
-            y: message.data.dropCoords?.y.toString()!,
-            r: "10",
-        }
-    }
-    const newShape: IShape | null = await shapeInflaters.inflate(newShapeMessage);
+    const newShape: IShape | null = await shapeInflaters.inflate(message.data.newShape!);
     if (newShape){
         project.getPages().find(p => p.id === message.pageId)
             ?.getLayers().find(l => l.id === message.layerId)

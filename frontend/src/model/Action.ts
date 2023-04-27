@@ -1,3 +1,4 @@
+import { isReadable } from "stream";
 import { IMessage } from "./IMessage";
 import IShape, { IGraphProp } from "./IShape";
 import Page from "./Page";
@@ -52,12 +53,23 @@ export class DrawShapeAction implements IAction {
             pageId: this.currentPage.id,
             layerId: this.currentPage.getCurrentLayer().id,
             data: {
-                shape: this.shape.type,
-                zIndex: this.shape.config.zIndex?.toString(),
-                dropCoords: {
-                    x: this.dropCoords.x,
-                    y: this.dropCoords.y
-                }
+                newShape: {
+                    type: this.shape.type,
+                    graphicalProperties: [
+                        {
+                            label: "X",
+                            value: this.dropCoords.x.toString(),
+                            isReadable: true
+                        },
+                        {
+                            label: "Y",
+                            value: this.dropCoords.y.toString(),
+                            isReadable: true
+                        },
+                        // this.shape.config.graphical
+                    ]
+                },
+                zIndex: this.shape.config.zIndex?.toString()
             }
         }
     }

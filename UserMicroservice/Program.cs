@@ -257,7 +257,7 @@ app.MapPost("/changeTimeZone", ([Authorize] async (HttpContext http,
         var userId = tokenService.GetUserIdFromToken(token);
 
         var user = await userRepositoryService.GetByIdAsync(userId);
-        user!.TimeZone = newTimezoneDto.timeZoneId;
+        user!.TimeZone = newTimezoneDto!.timeZoneId;
         await userRepositoryService.UpdateAsync(user);
 
         http.Response.StatusCode = 200;

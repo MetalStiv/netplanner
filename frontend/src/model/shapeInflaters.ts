@@ -13,15 +13,15 @@ export const shapeInflaters: IShapeInflaters = {
     inflaters: [
         circleInflater
     ],
-    inflate(message: IMessageShape) {
+    async inflate(message: IMessageShape) {
         let result: IShape | null = null;
-        this.inflaters.every(async inflater => {
+        await this.inflaters.every(async inflater => {
             result = await inflater(message);
             if (result){
                 return (false);
             }
             return true;
         })
-        return Promise.resolve(result);
+        return result;
     }
 }

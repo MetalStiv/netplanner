@@ -17,7 +17,6 @@ interface IProjectStore {
     setProjectToLoadId: (id: string) => void,
     getProjectToLoadId: () => string,
     setWebSocketUpdater: (webSocketUpdater: () => void) => void,
-    actionHandler: (message: IMessage) => Promise<void>,
     rerender: () => void,
 
     clearStore: () => void,
@@ -32,7 +31,6 @@ export const createProjectStore = () => {
 
         setProject(p: IProject) {
             this[projectSymbol] = p;
-            // this[webSocketUpdaterSymbol]!();
         },
 
         getProject() {
@@ -50,10 +48,6 @@ export const createProjectStore = () => {
 
         setWebSocketUpdater(webSocketUpdater: () => void){
             this[webSocketUpdaterSymbol] = webSocketUpdater;
-        },
-
-        async actionHandler(message: IMessage) {
-            this[projectSymbol] && await actionHandlers.handle(this[projectSymbol]!, message);
         },
 
         rerender() {

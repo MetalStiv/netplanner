@@ -49,16 +49,13 @@ var addShapeHandler = function (collections, message) { return __awaiter(void 0,
         console.log(message);
         newShape = {
             _id: new mongodb_1.ObjectId(),
-            type: message.data.shape,
+            type: message.data.newShape.type,
             layerId: new mongodb_1.ObjectId(message.layerId),
             zIndex: parseInt(message.data.zIndex),
-            graphicalProperties: {
-                x: message.data.dropCoords.x.toString(),
-                y: message.data.dropCoords.y.toString()
-            }
+            graphicalProperties: message.data.newShape.graphicalProperties
         };
         collections.shapeCollection.insertOne(newShape);
-        message.data.id = newShape._id.toString();
+        message.data.newShape.id = newShape._id.toString();
         return [2 /*return*/, true];
     });
 }); };

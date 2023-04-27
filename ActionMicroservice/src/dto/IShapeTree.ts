@@ -3,7 +3,8 @@ export interface IShapeTree {
     type: string,
     zIndex: string,
     graphicalProperties: {
-        x: string,
-        y: string
-    }
+        label: string,
+        value: string,
+        isReadable: boolean
+    }[]
 }

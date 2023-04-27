@@ -14,6 +14,7 @@ interface ICircleGraphicalProps extends IShapeGraphicalProps {
 
 export interface ICircleProps extends IShapeProps {
     //pathLength?: number,
+    id?: string,
     graphical: ICircleGraphicalProps,
     zIndex: number,
 }
@@ -22,24 +23,37 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
     if (messageShape.type != ShapeType.CIRCLE){
         return null
     }
+    const x = messageShape.graphicalProperties.find(p => p.label === "X")!.value;
+    const y = messageShape.graphicalProperties.find(p => p.label === "Y")!.value;
     return new Circle({
+        id: messageShape.id,
         zIndex: 10,
         graphical: {
             r: {
                 label: "Radius",
-                value: messageShape.graphicalProperties.r!,
-                isReadable: true, 
+                value: "20", //messageShape.graphicalProperties.find(p => p.label === "Radius")!.value,
+                isReadable: true //messageShape.graphicalProperties.find(p => p.label === "Radius")!.isReadable, 
             },
             x: {
                 label: "X",
-                value: messageShape.graphicalProperties.x,
+                value: x,
                 isReadable: true, 
             },
             y: {
                 label: "Y",
-                value: messageShape.graphicalProperties.y,
+                value: y,
                 isReadable: true, 
-            }
+            },
+            // fill: {
+            //     label: 'Fill',
+            //     value: messageShape.graphicalProperties.find(p => p.label === "Fill")!.value,
+            //     isReadable: messageShape.graphicalProperties.find(p => p.label === "Fill")!.isReadable,
+            // },
+            // stroke: {
+            //     label: 'Stroke',
+            //     value: messageShape.graphicalProperties.find(p => p.label === "Stroke")!.value,
+            //     isReadable: messageShape.graphicalProperties.find(p => p.label === "Stroke")!.isReadable,
+            // }
         }
     })
 }
@@ -73,20 +87,7 @@ export class CircleCreator implements IShapeCreator {
                     label: 'Stroke',
                     value: `#000000`,
                     isReadable: true,
-                },
-                // otherPropertiesView: [{
-                //     title: 'Radius',
-                //     value: `${15}`
-                // },
-                // {
-                //     title: 'Fill',
-                //     value: `#000000`
-                // },
-                // {
-                //     title: 'Stroke',
-                //     value: `#000000`
-                // },
-                // ],
+                }
             },
             zIndex: 0,
         });
@@ -100,7 +101,6 @@ class Circle implements IShape {
 
     constructor(obj: ICircleProps) {
         this.config = obj;
-        this.config.id = `${this.type}-${genID(10)}`;
         this.config.zIndex = obj.zIndex ?? 0;
     }
 
@@ -121,8 +121,6 @@ class Circle implements IShape {
         a ${(this.config.graphical.r.value)},${(this.config.graphical.r.value)} 0 1,1 ${(+this.config.graphical.r.value) * 2},0 
         a ${(this.config.graphical.r.value)},${(this.config.graphical.r.value)} 0 1,1 -${(+this.config.graphical.r.value) * 2},0
         `} />
-
-        //return <circle id={this.elemProps.id} key={this.elemProps.id} cx={this.elemProps.startCoords.x + this.elemProps.r} cy={this.elemProps.startCoords.y + this.elemProps.r} r={this.elemProps.r ?? 10} pathLength={this.elemProps.pathLength} stroke={this.elemProps.stroke} fill={this.elemProps.fill} onDragStart={(e) => e.preventDefault} onMouseDown={handlerMouseDown} />;
     }
 }
 
