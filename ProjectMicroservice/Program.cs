@@ -4,7 +4,6 @@ var dbSettings = new ProjectDBSettings(
     Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? "",
     Environment.GetEnvironmentVariable("DB_NAME") ?? "",
     Environment.GetEnvironmentVariable("DB_PROJECT_META_COLLECTION_NAME") ?? "",
-    Environment.GetEnvironmentVariable("DB_PROJECT_COLLECTION_NAME") ?? "",
     Environment.GetEnvironmentVariable("DB_PAGE_COLLECTION_NAME") ?? "",
     Environment.GetEnvironmentVariable("DB_LAYER_COLLECTION_NAME") ?? "",
     Environment.GetEnvironmentVariable("DB_SHAPE_COLLECTION_NAME") ?? ""
@@ -63,7 +62,8 @@ app.MapPost("/addProject", [Authorize] async (HttpContext http,
             newProjectMeta = ProjectMeta.CreateProjectMeta(projectCreationDto.Name, 
                 userId,projectCreationDto.GroupId);
         }
-        await projectRepositoryService.AddAsync(newProjectMeta);
+        await projectRepositoryService.AddAsync(newProjectMeta, projectCreationDto.DefaultPageName+" 1",
+            projectCreationDto.DefaultLayerName+" 1");
 
         await http.Response.WriteAsJsonAsync(newProjectMeta);
         return;

@@ -41,6 +41,8 @@ export const ru: ILanguage = {
         projectTab: {
             searchResult: "Результаты поиска",
             defaultName: "Новый проект",
+            defaultPageName: "Страница",
+            defaultLayerName: "Слой",
             defaultGroupName: "Новая группа",
             justCreated: "Только что создан",
             owner: "Владелец",
@@ -121,7 +123,7 @@ export const ru: ILanguage = {
         },
         primitives: {
             label: "Примитивы",
-            elements: {
+            shapes: {
                 line: "Отрезок",
                 polyline: "Кривая",
                 point: "Точка"

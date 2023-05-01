@@ -41,6 +41,8 @@ export const eng: ILanguage = {
         projectTab: {
             searchResult: "Search result",
             defaultName: "New project",
+            defaultPageName: "Page",
+            defaultLayerName: "Layer",
             defaultGroupName: "New group",
             justCreated: "Just created",
             owner: "Owner",
@@ -121,7 +123,7 @@ export const eng: ILanguage = {
         },
         primitives: {
             label: "Primitives",
-            elements: {
+            shapes: {
                 line: "Line",
                 polyline: "Polyline",
                 point: "Point"

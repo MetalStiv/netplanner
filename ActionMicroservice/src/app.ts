@@ -8,14 +8,12 @@ import { IPageTree } from './dto/IPageTree';
 import { IShapeTree } from './dto/IShapeTree';
 import { ILayer } from './model/ILayer';
 import { IPage } from './model/IPage';
-import { IProject } from './model/IProject';
 import { IShape } from './model/IShape';
 
 require('dotenv').config();
 const PORT: string = process.env.PORT;
 const DB_CONNECTION_STRING: string = process.env.DB_CONNECTION_STRING;
 const DB_NAME: string = process.env.DB_NAME;
-const DB_PROJECT_COLLECTION_NAME: string = process.env.DB_PROJECT_COLLECTION_NAME;
 const DB_PAGE_COLLECTION_NAME: string = process.env.DB_PAGE_COLLECTION_NAME;
 const DB_LAYER_COLLECTION_NAME: string = process.env.DB_LAYER_COLLECTION_NAME;
 const DB_SHAPE_COLLECTION_NAME: string = process.env.DB_SHAPE_COLLECTION_NAME;
@@ -30,14 +28,12 @@ const mongoClient = new mongoDB.MongoClient(DB_CONNECTION_STRING);
 const mongoDatabase: mongoDB.Db = mongoClient.db(DB_NAME);
 
 export interface IDatadaseCollections {
-    projectCollection: mongoDB.Collection<IProject>,
     pageCollection: mongoDB.Collection<IPage>,
     layerCollection: mongoDB.Collection<ILayer>,
     shapeCollection: mongoDB.Collection<IShape>
 }
 
 const collections: IDatadaseCollections = {
-    projectCollection: mongoDatabase.collection<IProject>(DB_PROJECT_COLLECTION_NAME),
     pageCollection: mongoDatabase.collection<IPage>(DB_PAGE_COLLECTION_NAME),
     layerCollection: mongoDatabase.collection<ILayer>(DB_LAYER_COLLECTION_NAME),
     shapeCollection: mongoDatabase.collection<IShape>(DB_SHAPE_COLLECTION_NAME),

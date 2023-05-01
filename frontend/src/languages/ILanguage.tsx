@@ -38,6 +38,8 @@ interface ILanguage {
         projectTab: {
             searchResult: string,
             defaultName: string,
+            defaultPageName: string,
+            defaultLayerName: string,
             defaultGroupName: string,
             justCreated: string,
             owner: string,
@@ -118,7 +120,7 @@ interface ILanguage {
         },
         primitives: {
             label: string,
-            elements: {
+            shapes: {
                 line: string,
                 polyline: string,
                 point: string

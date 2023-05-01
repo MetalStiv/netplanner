@@ -5,7 +5,6 @@ namespace ProjectMicroservice.Services.ProjectRepositoryService;
 public class MongoDBProjectRepositoryService : IProjectRepositoryService
 {
     private readonly IMongoCollection<ProjectMeta> _projectMetaCollection;
-    private readonly IMongoCollection<Project> _projectCollection;
     private readonly IMongoCollection<Page> _pageCollection;
     private readonly IMongoCollection<Layer> _layerCollection;
     private readonly IMongoCollection<Shape> _shapeCollection;
@@ -18,8 +17,6 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
 
         _projectMetaCollection = mongoDatabase.
             GetCollection<ProjectMeta>(projectDBSettings.ProjectMetaCollectionName);
-        _projectCollection = mongoDatabase.
-            GetCollection<Project>(projectDBSettings.ProjectCollectionName);
         _pageCollection = mongoDatabase.
             GetCollection<Page>(projectDBSettings.PageCollectionName);
         _layerCollection = mongoDatabase.
@@ -28,24 +25,19 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
             GetCollection<Shape>(projectDBSettings.ShapeCollectionName);
     }
 
-    public async Task AddAsync(ProjectMeta newProjectMeta)
+    public async Task AddAsync(ProjectMeta newProjectMeta, string pageName, string layerName)
     {
-        var tasks = newProjectMeta.IsGroup ? 
-            Task.WhenAll(_projectMetaCollection.InsertOneAsync(newProjectMeta))
-            : Task.WhenAll(
-                _projectMetaCollection.InsertOneAsync(newProjectMeta),
-                Task.Run(async () => {
-                    var newProject = new Project(newProjectMeta.Id!);
-                    await _projectCollection.InsertOneAsync(newProject);
-                    
-                    var newPage = new Page("Page_1", newProject.Id!);
-                    await _pageCollection.InsertOneAsync(newPage);
+        var task = newProjectMeta.IsGroup ? 
+            _projectMetaCollection.InsertOneAsync(newProjectMeta)
+            : Task.Run(async () => {
+                await _projectMetaCollection.InsertOneAsync(newProjectMeta);
+                var newPage = new Page(pageName, newProjectMeta.Id!);
+                await _pageCollection.InsertOneAsync(newPage);
 
-                    var newLayer = new Layer("Layer_1", newPage.Id!, 10000);
-                    await _layerCollection.InsertOneAsync(newLayer);
-                })
-            );
-        await tasks;
+                var newLayer = new Layer(layerName, newPage.Id!, 10000);
+                await _layerCollection.InsertOneAsync(newLayer);
+            });
+        await task;
     }
 
     public async Task UpdateAsync(ProjectMeta projectMetaToUpdate) =>
@@ -55,15 +47,14 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
     public async Task RemoveAsync(string projectId)
     {
         var removeChildrenTasks = new List<Task>();
-        var project = await (await _projectCollection.FindAsync(p => p.Id == projectId)).SingleAsync();
+        var projectMeta = await (await _projectMetaCollection.FindAsync(p => p.Id == projectId)).SingleAsync();
         var children = await (await _projectMetaCollection.FindAsync(p => p.GroupId == projectId)).ToListAsync();
         children.ForEach(ch => removeChildrenTasks.Add(RemoveAsync(ch.Id!)));
         await Task.WhenAll(removeChildrenTasks);
 
         await Task.WhenAll(
             _projectMetaCollection.DeleteOneAsync(p => p.Id == projectId),
-            RemovePagesAsync(project.Id!),
-            _projectCollection.DeleteOneAsync(p => p.Id == projectId)
+            RemovePagesAsync(projectMeta.Id!)
         );
     }
 

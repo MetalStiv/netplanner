@@ -68,7 +68,6 @@ require('dotenv').config();
 var PORT = process.env.PORT;
 var DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 var DB_NAME = process.env.DB_NAME;
-var DB_PROJECT_COLLECTION_NAME = process.env.DB_PROJECT_COLLECTION_NAME;
 var DB_PAGE_COLLECTION_NAME = process.env.DB_PAGE_COLLECTION_NAME;
 var DB_LAYER_COLLECTION_NAME = process.env.DB_LAYER_COLLECTION_NAME;
 var DB_SHAPE_COLLECTION_NAME = process.env.DB_SHAPE_COLLECTION_NAME;
@@ -79,7 +78,6 @@ var fs = require('fs');
 var mongoClient = new mongoDB.MongoClient(DB_CONNECTION_STRING);
 var mongoDatabase = mongoClient.db(DB_NAME);
 var collections = {
-    projectCollection: mongoDatabase.collection(DB_PROJECT_COLLECTION_NAME),
     pageCollection: mongoDatabase.collection(DB_PAGE_COLLECTION_NAME),
     layerCollection: mongoDatabase.collection(DB_LAYER_COLLECTION_NAME),
     shapeCollection: mongoDatabase.collection(DB_SHAPE_COLLECTION_NAME)

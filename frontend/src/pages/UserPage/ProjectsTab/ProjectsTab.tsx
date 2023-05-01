@@ -41,6 +41,8 @@ const ProjectsTab: React.FC = observer(() => {
     const addProject = async () => {
         let addProject = await projectMicroservice.post('addProject', {
             "name": lang!.langText.userPage.projectTab.defaultName,
+            "defaultPageName": lang!.langText.userPage.projectTab.defaultPageName,
+            "defaultLayerName": lang!.langText.userPage.projectTab.defaultLayerName,
             "groupId": projectsMetaStore.getCurrentGroupId(),
             "isGroup": false
         })
