@@ -1,18 +1,18 @@
-import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
+import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import genID from "../../common/helpers/genID";
 import { ShapeType } from "../ShapeType";
 
 interface ILineGraphicalProps extends IShapeGraphicalProps {
     //endCoords: { x: number, y: number },
-    endXCoord: IGraphProp,
-    endYCoord: IGraphProp,
-    //pathLength?: IGraphProp,
-    stroke?: IGraphProp,
-    fill?: IGraphProp,
+    endXCoord: IGraphicalProperty,
+    endYCoord: IGraphicalProperty,
+    //pathLength?: IGraphicalProperty,
+    stroke?: IGraphicalProperty,
+    fill?: IGraphicalProperty,
 }
 
-interface ILineProps extends IShapeProps {
+interface ILineConfig extends IShapeConfig {
     graphical: ILineGraphicalProps,
     zIndex: number,
 }
@@ -55,11 +55,11 @@ export class LineCreator implements IShapeCreator {
 
 class Line implements IShape {
     type: ShapeType = ShapeType.LINE;
-    config: ILineProps;
+    config: ILineConfig;
     isVisible: boolean = true;
     zIndex: number = 0;
 
-    constructor(obj: ILineProps) {
+    constructor(obj: ILineConfig) {
         this.config = obj;
         this.config.id = `${this.type}-${genID(10)}`;
         this.zIndex = obj.zIndex ?? 0;

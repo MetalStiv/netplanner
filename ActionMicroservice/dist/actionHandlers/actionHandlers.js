@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -35,13 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.actionHandlers = void 0;
 var addLayerHandler_1 = require("./addLayerHandler");
 var addPageHandler_1 = require("./addPageHandler");
 var addShapeHandler_1 = require("./addShapeHandler");
+var changeGraphicalPropertiesHandler_1 = require("./changeGraphicalPropertiesHandler");
 exports.actionHandlers = {
-    handlers: new Array(addShapeHandler_1.addShapeHandler, addPageHandler_1.addPageHandler, addLayerHandler_1.addLayerHandler),
+    handlers: new Array(addShapeHandler_1.addShapeHandler, addPageHandler_1.addPageHandler, addLayerHandler_1.addLayerHandler, changeGraphicalPropertiesHandler_1.changeGraphicalPropertiesHandler),
     handle: function (collections, message) {
         var _this = this;
         var result = false;
@@ -61,4 +62,4 @@ exports.actionHandlers = {
         return Promise.resolve(result);
     }
 };
-exports["default"] = exports.actionHandlers;
+exports.default = exports.actionHandlers;

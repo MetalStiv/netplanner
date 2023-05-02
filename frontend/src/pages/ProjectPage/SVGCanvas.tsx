@@ -1,34 +1,40 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { IShapeProps, IShape } from '../../model/IShape';
-import { IElemProps } from '../../pages/ProjectPage/ProjectPage'
+import React, { useEffect, useState, useRef, ReactElement } from 'react';
+import { IShapeConfig, IShape, IShapeGraphicalProps } from '../../model/IShape';
+import { IShapeProps } from '../../pages/ProjectPage/ProjectPage'
 import IShapeCreator from '../../model/IShapeCreator';
 import { ILayer } from '../../model/Layer';
-import Page from '../../model/Page';
+// import Page from '../../model/Page';
 import ICanvasConfig from '../../common/canvasConfig';
-import { DrawShapeAction } from '../../model/Action';
+import { ChangeShapePropertyAction, DrawShapeAction } from '../../model/Action';
 import { useRootStore } from '../../providers/rootProvider';
 import { TActionStore } from '../../stores/actionStore';
 import { observer } from 'mobx-react-lite';
 import { RangeInput } from '../../components';
+import Page from '../../model/Page';
 
 interface SVGCanvasProps {
-    currentPage: Page,
+    // currentPage: Page,
     //updatePageCallback: (page: Page) => void,
     canvasConfig: ICanvasConfig,
     //scale: number,
     creatorOnDrop: IShapeCreator | null,
     getCursorCoordsCallback: (cursorCoords: { x: number, y: number }) => void,
-    getClickedElemConfigCallback: (elemProps: IElemProps) => void,
+    getClickedShapeConfigCallback: (shapeProps: IShapeProps) => void,
     //onWheelHandler: (e: React.WheelEvent<SVGSVGElement>) => void,
 }
 
-const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfig,
-    creatorOnDrop, getCursorCoordsCallback, getClickedElemConfigCallback }: SVGCanvasProps) => {
+const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
+    creatorOnDrop, getCursorCoordsCallback, getClickedShapeConfigCallback }: SVGCanvasProps) => {
     const [scale, setScale] = useState<number>(1);
     const [translate, setTranslate] = useState({ x: 0, y: 0 });
-
+    // console.log(currentPage)
     const svgCanvas: React.MutableRefObject<SVGSVGElement | null> = useRef(null);
-
+    // const currentPage = useRootStore()!.getProjectStore().getProject()?.getCurrentPage();
+    const [currentPage, setCurrentPage] = useState<Page | undefined>(useRootStore()!.getProjectStore().getProject()?.getCurrentPage());
+    // useEffect(() => {
+    //     setCurPage(new Page(currentPage.id, currentPage.title, currentPage.getLayers()))
+    //     console.log(currentPage)
+    // }, [currentPage]);
     const actionStore: TActionStore = useRootStore().getActionStore();
     // const projectId = useRootStore()!.getProjectStore().getProject()!.id;
     // app?.setProjectId(projectId)
@@ -53,7 +59,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
     //let svgChildren = useRootStore()!.getProjectStore().getProjects().at(0)!.renderedShapes!;
 
     // const [svgChildren, setSVGChildren] = useState<ILayer[]>(
-    //     //useRootStore()!.getProjectStore().getProjects().at(0)!.pages?.at(0)!.layers.at(0)!.elems!
+    //     //useRootStore()!.getProjectStore().getProjects().at(0)!.pages?.at(0)!.layers.at(0)!.shapes!
     //     useRootStore()!.getProjectStore().getProjects().at(0)!.pages?.at(0)!.getLayers()
     // );
 
@@ -70,26 +76,44 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
         return () => svgCanvas.current?.removeEventListener('wheel', wheelHandler);
     });
 
-    function moveSVGAt(elemID: string, toSVGCoords: { x: number, y: number }, shift?: { x: number, y: number }) {
-        currentPage.setLayers(currentPage.getLayers().map(layer => {
-            layer.elems = layer.getElems().map(item => {
-                if (item.config.id === elemID) {
-                    let newData: IShapeProps = JSON.parse(JSON.stringify(item.config));
-                    // newData.graphical.startCoords = {
-                    //     x: Math.trunc(toSVGCoords.x - (shift ? shift.x : 0)),
-                    //     y: Math.trunc(toSVGCoords.y - (shift ? shift.y : 0)),
-                    // }
-                    newData.graphical.x.value = Math.trunc(toSVGCoords.x - (shift?.x ?? 0)).toString();
-                    newData.graphical.y.value = Math.trunc(toSVGCoords.y - (shift?.y ?? 0)).toString();
-                    item.config = newData;
-                    //console.log(item)
-                }
-                return item;
-            })
-            return layer;
-        }));
+    // function moveSVGAt(shapeID: string, toSVGCoords: { x: number, y: number }, shift?: { x: number, y: number }) {
+    //     currentPage?.setLayers(currentPage.getLayers().map(layer => {
+    //         layer.shapes = layer.getShapes().map(item => {
+    //             if (item.config.id === shapeID) {
+    //                 let newData: IShapeProps = JSON.parse(JSON.stringify(item.config));
+    //                 // newData.graphical.startCoords = {
+    //                 //     x: Math.trunc(toSVGCoords.x - (shift ? shift.x : 0)),
+    //                 //     y: Math.trunc(toSVGCoords.y - (shift ? shift.y : 0)),
+    //                 // }
+    //                 newData.graphical.x.value = Math.trunc(toSVGCoords.x - (shift?.x ?? 0)).toString();
+    //                 newData.graphical.y.value = Math.trunc(toSVGCoords.y - (shift?.y ?? 0)).toString();
+    //                 item.config = newData;
+    //                 //console.log(item)
+    //             }
+    //             return item;
+    //         })
+    //         return layer;
+    //     }));
 
-        //updatePageCallback(currentPage);
+    //     //updatePageCallback(currentPage);
+    // }
+    // let ps = useRootStore()!.getProjectStore()
+    function moveSVGAt(shapeID: string, toSVGCoords: { x: number, y: number }, shift?: { x: number, y: number }) {
+
+        // console.log(shapeID)
+
+        setCurrentPage(new Page(currentPage?.getID(), currentPage?.getTitle(), currentPage!.getLayers().map(layer => {
+            layer.setShapes(layer.getShapes().map(shapeItem => {
+                if (shapeItem.config.id === shapeID) {
+                    let newData: IShapeGraphicalProps = { ...shapeItem!.config.graphical };
+                    newData.x.value = Math.trunc(toSVGCoords.x - (shift?.x ?? 0)).toString();
+                    newData.y.value = Math.trunc(toSVGCoords.y - (shift?.y ?? 0)).toString();
+                    shapeItem.config.graphical = newData;
+                }
+                return shapeItem;
+            }))
+            return layer
+        })))
     }
 
     const svgDragNDrop = (e: React.MouseEvent<SVGGeometryElement>) => {
@@ -98,8 +122,29 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
             x: (e.clientX / scale - cur.getBoundingClientRect().left / scale), // смещение позиции курсора от позиции элемента по x
             y: (e.clientY / scale - cur.getBoundingClientRect().top / scale), // по y
         }
-        const curId = e.currentTarget.id;
+        const shapeID = e.currentTarget.id;
+        let movableShape: IShape | undefined = undefined;
+        let layerID = "";
+        currentPage?.getLayers().every(layer => {
+            const curShape = layer.getShapes().find(shape => shape.config.id === shapeID);
+            if (curShape) {
+                movableShape = curShape;
+                layerID = layer.getID();
+                return false;
+            }
+            return true;
+        })
+        // const wrapper = React.createElement('g', null, React.cloneElement(e.currentTarget as unknown as ReactElement<SVGGeometryElement>)) as any as SVGGElement;
+        // svgCanvas.current?.appendChild(wrapper as Node);
+        // e.currentTarget.style.transform = 'translate(0px,0px)';
+        // wrapper.style.transform = 'translate(0,0)';
+        // const shadow = document.createElement('g');
+        // const shadowInner = e.currentTarget.cloneNode(true) as SVGGeometryElement;
+        // shadow.appendChild(shadowInner);
+
         const curRect = e.currentTarget.getBBox();
+        // let el = e.currentTarget;
+        // console.log(el)
         function onMouseMove(event: MouseEvent) {
             // let SVGPoint = transformOuterCoordsToSVGCoords({
             //     x: event.pageX * scale - translate.x * scale,
@@ -111,16 +156,75 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
             });
             let toCoords = { x: SVGPoint.x, y: SVGPoint.y };
             //console.log(scale, { x: (svg!.getBBox().width - svg!.getBBox().width / scale) / (1 - scale), y: (svg!.getBBox().height - svg!.getBBox().height / scale) / (1 - scale) });
-            moveSVGAt(cur.id, toCoords, shift);
-            svgSelect({ id: curId, domRect: curRect });
+            moveSVGAt(movableShape!.config.id!, toCoords, shift);
+            svgSelect({ id: shapeID, domRect: curRect });
+            // el.style.transform = `translate(${Math.trunc(toCoords.x - (shift?.x ?? 0)).toString()},${Math.trunc(toCoords.y - (shift?.y ?? 0)).toString()})`;
         }
 
         svgCanvas.current!.onmousemove = onMouseMove;
         svgCanvas.current!.onmouseup = () => {
+            const moveShapeAction = new ChangeShapePropertyAction(movableShape!, layerID, movableShape!.config.graphical);
+            actionStore.push(moveShapeAction);
             svgCanvas.current!.onmousemove = null;
             svgCanvas.current!.onmouseup = null;
         }
     }
+
+    // const svgDragNDrop = (e: React.MouseEvent<SVGGeometryElement>) => {
+    //     const cur = e.currentTarget;
+    //     const originPoint = {
+    //         x: e.pageX,
+    //         y: e.pageY
+    //     }
+    //     const shift = {
+    //         x: (e.clientX / scale - cur.getBoundingClientRect().left / scale), // смещение позиции курсора от позиции элемента по x
+    //         y: (e.clientY / scale - cur.getBoundingClientRect().top / scale), // по y
+    //     }
+    //     const curId = e.currentTarget.id;
+    //     const curRect = e.currentTarget.getBBox();
+    //     // const shadow = React.createElement('g', null, React.cloneElement(e.currentTarget as unknown as ReactElement<SVGGeometryElement>) )
+    //     // const shadow = document.createElement('g');
+    //     // const shadowInner = e.currentTarget.cloneNode(true) as SVGGeometryElement;
+    //     // shadow.appendChild(shadowInner);
+    //     // const shadow = e.currentTarget.cloneNode(true) as SVGGeometryElement;
+    //     // shadow.style.position = 'absolute';
+    //     // shadow.props.style?.transform = '';
+    //     svgCanvas.current?.getElementById('elementsGroup').appendChild(shadow);
+    //     shadow.style.transform = `translate(0,0)`;
+    //     // moveSVGAt()
+
+    //     function onMouseMove(event: MouseEvent) {
+    //         // shadow.style.left = event.pageX - shift.x + 'px';
+    //         // shadow.style.top = event.pageY - shift.y + 'px';
+    //         shadow.style.transform = `translate(${originPoint.x + event.pageX - shift.x + 'px'}, ${originPoint.y + event.pageY - shift.y + 'px'})`
+    //         // let SVGPoint = transformOuterCoordsToSVGCoords({
+    //         //     x: event.pageX * scale - translate.x * scale,
+    //         //     y: event.pageY * scale - translate.y * scale
+    //         // });
+    //         // let SVGPoint = transformOuterCoordsToSVGCoords({
+    //         //     x: event.pageX,
+    //         //     y: event.pageY
+    //         // });
+    //         // let toCoords = { x: SVGPoint.x, y: SVGPoint.y };
+    //         //console.log(scale, { x: (svg!.getBBox().width - svg!.getBBox().width / scale) / (1 - scale), y: (svg!.getBBox().height - svg!.getBBox().height / scale) / (1 - scale) });
+
+    //         // moveSVGAt(cur.id, toCoords, shift);
+    //         // svgSelect({ id: curId, domRect: curRect });
+    //     }
+
+    //     svgCanvas.current!.onmousemove = onMouseMove;
+    //     svgCanvas.current!.onmouseup = () => {
+    //         // svgCanvas.current?.removeChild(shadow);
+    //         // let SVGPoint = transformOuterCoordsToSVGCoords({
+    //         //     x: event.pageX,
+    //         //     y: event.pageY
+    //         // });
+    //         // let toCoords = { x: SVGPoint.x, y: SVGPoint.y };
+
+    //         svgCanvas.current!.onmousemove = null;
+    //         svgCanvas.current!.onmouseup = null;
+    //     }
+    // }
 
     const svgClickHandler = (e: React.MouseEvent<SVGElement>) => {
         // const svg = e.currentTarget as SVGSVGElement;
@@ -159,13 +263,13 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
     function svgSelect(e: { id: string, domRect: DOMRect }): void;
     function svgSelect(e: any): void {
         let curObj: IShape | undefined;
-        currentPage.getLayers().some(layer => {
-            curObj = layer.getElems().find(item => {
+        currentPage?.getLayers().some(layer => {
+            curObj = layer.getShapes().find(item => {
                 return item.config.id === (e.currentTarget?.id ?? e.id);
             })
             return typeof (curObj) !== 'undefined';
         });
-        const config: IElemProps = {
+        const config: IShapeProps = {
             type: curObj!.type,
             // size: {
             //     w: Math.round(e.currentTarget?.getBBox().width ?? e.domRect.width),
@@ -177,15 +281,15 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
                 //     label: 'width',
                 //     value: `${Math.round(e.currentTarget?.getBBox().width ?? e.domRect.width)}`,
                 //     isReadable: true,
-                // } as IGraphProp,
+                // } as IGraphicalProperty,
                 // h: {
                 //     label: 'height',
                 //     value: `${Math.round(e.currentTarget?.getBBox().height ?? e.domRect.height)}`,
                 //     isReadable: true,
-                // } as IGraphProp
+                // } as IGraphicalProperty
             }
         }
-        getClickedElemConfigCallback(config);
+        getClickedShapeConfigCallback(config);
     }
 
     const onDropHandler = (e: React.DragEvent) => {
@@ -198,7 +302,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
         })
 
         const newShape: IShape = creatorOnDrop!.create();
-        let drawShapeAction = new DrawShapeAction(newShape, currentPage, dropCoords)
+        let drawShapeAction = new DrawShapeAction(newShape, currentPage!, dropCoords)
         // drawShapeAction.do() && actionStore.push(drawShapeAction)
         actionStore.push(drawShapeAction);
     }
@@ -257,7 +361,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
             (ev.currentTarget! as SVGSVGElement).onpointermove = null;
         }
     }
-
     return (
         <>
             <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()}
@@ -271,7 +374,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
                     // onClick={svgClickHandler}
                     // onWheel={onWheelHandler}
                     onPointerDown={onPointerDownHandler}
-                    onMouseMoveCapture={onMousemoveCaptureHandler}
+                    // onMouseMoveCapture={onMousemoveCaptureHandler}
                     style={{
                         backgroundColor: canvasConfig.sheetFillColor,
                         backgroundPosition: `${translate.x}px ${translate.y}px`,
@@ -304,8 +407,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ currentPage, canvasConfi
                         transform: `matrix(${scale}, 0, 0, ${scale}, ${translate.x}, ${translate.y})`,
                         // transformOrigin: 'center
                     }}>
-                        {currentPage.getLayers().map((layer: ILayer) => layer.getElems().map(el => {
-                            return el.render(svgDragNDrop, svgSelect, layer.zIndex);
+                        {currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(el => {
+                            return el.render(svgDragNDrop, svgSelect, layer.getZIndex());
                         }))}
                     </g>
                 </svg>

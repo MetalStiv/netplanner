@@ -1,6 +1,6 @@
-import { isReadable } from "stream";
 import { IMessage } from "./IMessage";
-import IShape, { IGraphProp } from "./IShape";
+import IShape, { IGraphicalProperty, IShapeGraphicalProps } from "./IShape";
+import { ILayer } from "./Layer";
 import Page from "./Page";
 
 export interface IAction {
@@ -38,36 +38,37 @@ export class DrawShapeAction implements IAction {
     do(): boolean {
         this.shape.config.graphical.x.value = this.dropCoords.x.toString();
         this.shape.config.graphical.y.value = this.dropCoords.y.toString();
-        this.currentPage.getCurrentLayer().addElem(this.shape);
+        this.currentPage.getCurrentLayer().addShape(this.shape);
+        console.log(this.shape)
         return true;
     }
 
     undo(): void {
-        const layer = this.currentPage.getLayers().find(layer => layer.getElems().some(elem => elem === this.shape))
-        layer?.removeElem(this.shape);
+        const layer = this.currentPage.getLayers().find(layer => layer.getShapes().some(elem => elem === this.shape));
+        layer?.removeShape(this.shape);
     }
 
     getMessage(): IMessage {
         return {
             type: ActionType.ADD_SHAPE,
-            pageId: this.currentPage.id,
-            layerId: this.currentPage.getCurrentLayer().id,
+            pageId: this.currentPage.getID(),
+            layerId: this.currentPage.getCurrentLayer().getID(),
             data: {
                 newShape: {
                     type: this.shape.type,
-                    graphicalProperties: [
-                        {
+                    graphicalProperties: {
+                        x: {
                             label: "X",
                             value: this.dropCoords.x.toString(),
                             isReadable: true
                         },
-                        {
+                        y: {
                             label: "Y",
                             value: this.dropCoords.y.toString(),
                             isReadable: true
                         },
                         // this.shape.config.graphical
-                    ]
+                    }
                 },
                 zIndex: this.shape.config.zIndex?.toString()
             }
@@ -78,37 +79,41 @@ export class DrawShapeAction implements IAction {
 export class ChangeShapePropertyAction implements IAction {
     // private graphProps: IShapeGraphicalProps;
     // private property: string;
-    private item: IGraphProp;
-    private prevState: string;
-    private nextState: string;
+    private shape: IShape;
+    private layerID: string;
+    private oldProperties: IShapeGraphicalProps;
+    private newProperties: IShapeGraphicalProps;
 
-    constructor(item: IGraphProp, prevState: string, nextState: string) {
-        // this.graphProps = graphProps;
-        // this.property = property;
-        this.item = item;
-        this.prevState = prevState;
-        this.nextState = nextState;
+    constructor(shape: IShape, layerID: string, newProperties: IShapeGraphicalProps) {
+        this.shape = shape;
+        this.layerID = layerID;
+        // this.currentPage = currentPage;
+        this.oldProperties = { ...shape.config.graphical };
+        this.newProperties = newProperties;
     }
-
     // getKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T) =>
     // obj[key];
 
     do(): boolean {
-        this.item.value = this.nextState;
+        this.shape.config.graphical = this.newProperties;
         // this.graphProps[this.property as keyof IShapeGraphicalProps].value = this.nextState;
 
         // this.getKeyValue<keyof IShapeGraphicalProps, IShapeGraphicalProps>(this.property)(this.graphProps)
         return true;
     }
     undo(): void {
-        this.item.value = this.prevState;
+        this.shape.config.graphical = this.oldProperties;
+        // this.item.value = this.prevState;
         // this.graphProps[this.property as keyof IShapeGraphicalProps].value = this.prevState;
     }
 
     getMessage(): IMessage {
         return {
             type: ActionType.CHANGE_GRAPHICAL_PROPERTY,
+            layerId: this.layerID,
+            shapeId: this.shape.config.id,
             data: {
+                graphicalProperties: this.newProperties
                 // id, property
             }
         }

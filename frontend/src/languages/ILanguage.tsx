@@ -112,7 +112,7 @@ interface ILanguage {
     projectGroups: {
         polygons: {
             label: string,
-            elements: {
+            shapes: {
                 circle: string,
                 rect: string,
                 ellipse: string

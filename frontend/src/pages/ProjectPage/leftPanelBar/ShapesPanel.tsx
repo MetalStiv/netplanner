@@ -1,12 +1,12 @@
 import React from 'react';
 import { useRootStore } from '../../../providers/rootProvider';
 import { Dropdown } from '../../../components';
-//import { IDraggableElemProps } from '../ProjectPage';
+//import { IDraggableShapeProps } from '../ProjectPage';
 import IShapeCreator from '../../../model/IShapeCreator';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
 
 interface IShapesPanelProps {
-    getCreatorOnDragCallback: (elemType: IShapeCreator) => void,
+    getCreatorOnDragCallback: (shapeType: IShapeCreator) => void,
 }
 
 const ShapesPanel = ({ getCreatorOnDragCallback }: IShapesPanelProps) => {

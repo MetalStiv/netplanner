@@ -1,4 +1,4 @@
-import IShape, { IShapeProps } from "../IShape";
+import IShape, { IShapeConfig } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import IShapesGroup from "../IGeometryGroup"
 

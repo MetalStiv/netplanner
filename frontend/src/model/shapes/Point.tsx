@@ -1,6 +1,6 @@
 import IShape from "../IShape";
 import IShapeCreator from "../IShapeCreator";
-import { CircleCreator, ICircleProps, } from "./Circle";
+import { CircleCreator, ICircleConfig } from "./Circle";
 import genID from "../../common/helpers/genID";
 import { ShapeType } from "../ShapeType";
 
@@ -37,11 +37,11 @@ export class PointCreator implements IShapeCreator {
 
 class Point implements IShape {
     type: ShapeType = ShapeType.POINT;
-    config: ICircleProps;
+    config: ICircleConfig;
     isVisible: boolean = true;
     zIndex: number = 0;
 
-    constructor(obj: ICircleProps) {
+    constructor(obj: ICircleConfig) {
         this.config = obj;
         this.config.id = `${this.type}-${genID(10)}`;
         this.zIndex = obj.zIndex ?? 0;

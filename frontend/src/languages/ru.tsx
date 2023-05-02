@@ -115,7 +115,7 @@ export const ru: ILanguage = {
     projectGroups: {
         polygons: {
             label: "Многоугольники",
-            elements: {
+            shapes: {
                 circle: "Окружность",
                 rect: "Прямоугольник",
                 ellipse: "Эллипс"

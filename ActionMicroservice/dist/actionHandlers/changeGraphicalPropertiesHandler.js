@@ -36,14 +36,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addLayerHandler = void 0;
+exports.changeGraphicalPropertiesHandler = void 0;
+var mongodb_1 = require("mongodb");
 var actionType_1 = require("../actionType");
-var addLayerHandler = function (collection, message) { return __awaiter(void 0, void 0, void 0, function () {
+var changeGraphicalPropertiesHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        if (message.type !== actionType_1.ActionType.ADD_LAYER) {
+        if (message.type !== actionType_1.ActionType.CHANGE_GRAPHICAL_PROPERTY) {
             return [2 /*return*/, false];
         }
+        ;
+        console.log(message);
+        // const newShape: IShape = {
+        //     _id: new ObjectId(),
+        //     type: message.data.newShape.type,
+        //     layerId: new ObjectId(message.layerId),
+        //     zIndex: parseInt(message.data.zIndex),
+        //     graphicalProperties: message.data.newShape.graphicalProperties
+        // };
+        collections.shapeCollection.findOneAndUpdate({
+            layerId: new mongodb_1.ObjectId(message.layerId),
+            _id: new mongodb_1.ObjectId(message.shapeId)
+        }, {
+            $set: { graphicalProperties: message.data.graphicalProperties }
+        });
+        // message.data.newShape.id = newShape._id.toString();
         return [2 /*return*/, true];
     });
 }); };
-exports.addLayerHandler = addLayerHandler;
+exports.changeGraphicalPropertiesHandler = changeGraphicalPropertiesHandler;

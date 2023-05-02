@@ -1,6 +1,6 @@
-import { IGraphProp } from "../../model/IShape";
-import { LanguageData, useLanguageContext } from "../../providers/languageProvider";
-import { IElemProps } from "../../pages/ProjectPage/ProjectPage";
+// import { IGraphicalProperty } from "../../model/IShape";
+// import { LanguageData, useLanguageContext } from "../../providers/languageProvider";
+// import { IShapeProps } from "../../pages/ProjectPage/ProjectPage";
 import { useState, useEffect } from "react";
 import "./propertyPanel.scss";
 
@@ -10,7 +10,7 @@ interface IPropertyPanelProps {
     //     w: number,
     //     h: number,
     // } | undefined,
-    // graphProp: IGraphProp,
+    // graphProp: IGraphicalProperty,
     // origin: any,
     property: {
         label: string,

@@ -104,7 +104,7 @@ export const eng: ILanguage = {
         },
         propertiesPanel: {
             title: "Object properties",
-            elType: "Element type"
+            elType: "E type"
         },
         graphPanel: {
             title: "Graphical properties",
@@ -115,7 +115,7 @@ export const eng: ILanguage = {
     projectGroups: {
         polygons: {
             label: "Polygons",
-            elements: {
+            shapes: {
                 circle: "Circle",
                 rect: "Rectangle",
                 ellipse: "Ellipse"
