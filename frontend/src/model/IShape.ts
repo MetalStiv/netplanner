@@ -2,20 +2,20 @@ import { ShapeType } from "./ShapeType";
 
 export interface IShapeGraphicalProps {
     //startCoords: { x: number, y: number },
-    x: IGraphProp,
-    y: IGraphProp,
-    // w: IGraphProp,
-    // h: IGraphProp,
+    x: IGraphicalProperty,
+    y: IGraphicalProperty,
+    // w: IGraphicalProperty,
+    // h: IGraphicalProperty,
     //otherPropertiesView?: { title: string, value: string }[],
 }
 
-export interface IGraphProp {
+export interface IGraphicalProperty {
     label: string,
     value: string,
     isReadable: boolean,
 }
 
-export interface IShapeProps {
+export interface IShapeConfig {
     id?: string,
     graphical: IShapeGraphicalProps,
     zIndex?: number,
@@ -23,7 +23,7 @@ export interface IShapeProps {
 
 export interface IShape {
     type: ShapeType,
-    config: IShapeProps,
+    config: IShapeConfig,
     isVisible: boolean,
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,

@@ -1,16 +1,16 @@
-import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
+import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import genID from "../../common/helpers/genID";
 import { ShapeType } from "../ShapeType";
 
 interface IPolylineGraphicalProps extends IShapeGraphicalProps {
     points: [number, number][],
-    pathLength?: IGraphProp,
-    stroke?: IGraphProp,
-    fill?: IGraphProp,
+    pathLength?: IGraphicalProperty,
+    stroke?: IGraphicalProperty,
+    fill?: IGraphicalProperty,
 }
 
-interface IPolylineProps extends IShapeProps {
+interface IPolylineProps extends IShapeConfig {
     graphical: IPolylineGraphicalProps,
     zIndex: number,
 }

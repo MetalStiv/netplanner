@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { IGraphicalProperty } from "../dto/IGraphicalProperty";
 
 export interface IShape {
     _id: ObjectId,
@@ -6,8 +7,7 @@ export interface IShape {
     layerId: ObjectId,
     zIndex: number,
     graphicalProperties: {
-        label: string,
-        value: string,
-        isReadable: boolean
-    }[]
+        x: IGraphicalProperty,
+        y: IGraphicalProperty
+    }
 }

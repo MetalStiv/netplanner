@@ -1,4 +1,4 @@
-import IShape, { IShapeProps, IShapeGraphicalProps, IGraphProp } from "../IShape";
+import IShape, { IShapeConfig, IShapeGraphicalProps, IGraphicalProperty } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import genID from "../../common/helpers/genID";
 import { ShapeType } from "../ShapeType";
@@ -7,12 +7,12 @@ import { IMessageShape } from "../IMessageShape";
 
 interface ICircleGraphicalProps extends IShapeGraphicalProps {
     //additionalGraphProps: []
-    r: IGraphProp,
-    fill?: IGraphProp,
-    stroke?: IGraphProp,
+    r: IGraphicalProperty,
+    fill?: IGraphicalProperty,
+    stroke?: IGraphicalProperty,
 }
 
-export interface ICircleProps extends IShapeProps {
+export interface ICircleConfig extends IShapeConfig {
     //pathLength?: number,
     id?: string,
     graphical: ICircleGraphicalProps,
@@ -20,30 +20,29 @@ export interface ICircleProps extends IShapeProps {
 }
 
 export const circleInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type != ShapeType.CIRCLE){
+    if (messageShape.type != ShapeType.CIRCLE) {
         return null
     }
-    const x = messageShape.graphicalProperties.find(p => p.label === "X")!.value;
-    const y = messageShape.graphicalProperties.find(p => p.label === "Y")!.value;
     return new Circle({
         id: messageShape.id,
         zIndex: 10,
         graphical: {
+            x: {
+                label: "X",
+                value: messageShape.graphicalProperties.x.value,
+                isReadable: true,
+            },
+            y: {
+                label: "Y",
+                value: messageShape.graphicalProperties.y.value,
+                isReadable: true,
+            },
             r: {
                 label: "Radius",
                 value: "20", //messageShape.graphicalProperties.find(p => p.label === "Radius")!.value,
                 isReadable: true //messageShape.graphicalProperties.find(p => p.label === "Radius")!.isReadable, 
             },
-            x: {
-                label: "X",
-                value: x,
-                isReadable: true, 
-            },
-            y: {
-                label: "Y",
-                value: y,
-                isReadable: true, 
-            },
+
             // fill: {
             //     label: 'Fill',
             //     value: messageShape.graphicalProperties.find(p => p.label === "Fill")!.value,
@@ -96,10 +95,10 @@ export class CircleCreator implements IShapeCreator {
 
 class Circle implements IShape {
     type: ShapeType = ShapeType.CIRCLE;
-    config: ICircleProps;
+    config: ICircleConfig;
     isVisible: boolean = true;
 
-    constructor(obj: ICircleProps) {
+    constructor(obj: ICircleConfig) {
         this.config = obj;
         this.config.zIndex = obj.zIndex ?? 0;
     }

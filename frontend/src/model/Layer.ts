@@ -1,58 +1,96 @@
 import IShape from "./IShape";
-import genID from "../common/helpers/genID";
+// import genID from "../common/helpers/genID";
+
+const idSym: unique symbol = Symbol();
+const titleSym: unique symbol = Symbol();
+const zIndexSym: unique symbol = Symbol();
+const shapesSym: unique symbol = Symbol();
+const isVisibleSym: unique symbol = Symbol();
+const isCurrentSym: unique symbol = Symbol();
 
 export interface ILayer {
-    id: string,
-    title: string,
-    zIndex: number,
-    elems: IShape[],
-    isVisible: boolean,
-    isCurrent: boolean,
+    [idSym]: string,
+    [titleSym]: string,
+    [zIndexSym]: number,
+    [shapesSym]: IShape[],
+    [isVisibleSym]: boolean,
+    [isCurrentSym]: boolean,
     changeVisible(val: boolean): void,
-    getElems(): IShape[],
-    setElems(shapes: IShape[]): void,
-    addElem(shape: IShape): void,
-    removeElem(elem: IShape): void,
+    setIsCurrent(val: boolean): void,
+    getID(): string,
+    getTitle(): string,
+    setTitle(newTitle: string): void,
+    getZIndex(): number,
+    setZIndex(val: number): void,
+    getIsCurrent(): boolean,
+    getIsVisible(): boolean,
+    getShapes(): IShape[],
+    setShapes(shapes: IShape[]): void,
+    addShape(shape: IShape): void,
+    removeShape(shape: IShape): void,
     //copy(layer: ILayer): void,
 }
 
 class Layer implements ILayer {
-    id: string;
-    title: string;
-    zIndex: number;
-    elems: IShape[];
-    isVisible: boolean;
-    isCurrent: boolean;
+    [idSym]: string;
+    [titleSym]: string;
+    [zIndexSym]: number;
+    [shapesSym]: IShape[];
+    [isVisibleSym]: boolean;
+    [isCurrentSym]: boolean;
 
-    constructor(id: string = "reqertert", layersCount: number, title: string = "Layer", elems: IShape[]) {
-        this.id = id;
-        // this.title = `Layer${layersCount > 0 ? '_' + layersCount : ''}`;
-        this.title = title;
-        this.zIndex = layersCount * 1000;
-        this.elems = elems;
-        this.isVisible = true;
-        this.isCurrent = true;
+    constructor(id: string = "reqertert", layersCount: number, title: string = "Layer", shapes: IShape[]) {
+        this[idSym] = id;
+        this[titleSym] = title;
+        this[zIndexSym] = layersCount * 1000;
+        this[shapesSym] = shapes;
+        this[isVisibleSym] = true;
+        this[isCurrentSym] = true;
     }
 
     changeVisible(val: boolean) {
-        this.isVisible = val;
-        this.elems.forEach(item => {
+        this[isVisibleSym] = val;
+        this[shapesSym].forEach(item => {
             item.isVisible = val;
         })
     }
-    getElems() {
-        return this.elems;
+    setIsCurrent(val: boolean) {
+        this[isCurrentSym] = val;
     }
-    setElems(shapes: IShape[]) {
-        this.elems = shapes;
+    getID() {
+        return this[idSym];
     }
-    addElem(shape: IShape) {
-        shape.config.zIndex = this.elems.length;
-        this.elems = [...this.elems, shape];
+    getTitle() {
+        return this[titleSym];
     }
-    removeElem(delElem: IShape) {
-        this.setElems(
-            this.elems.filter(elem => elem !== delElem)
+    setTitle(newTitle: string) {
+        this[titleSym] = newTitle;
+    }
+    getZIndex() {
+        return this[zIndexSym];
+    }
+    setZIndex(val: number) {
+        this[zIndexSym] = val;
+    }
+    getShapes() {
+        return this[shapesSym];
+    }
+    getIsCurrent() {
+        return this[isCurrentSym];
+    }
+    getIsVisible() {
+        return this[isVisibleSym];
+    }
+    setShapes(shapes: IShape[]) {
+        this[shapesSym] = shapes;
+    }
+    addShape(shape: IShape) {
+        shape.config.zIndex = this[shapesSym].length;
+        this[shapesSym] = [...this[shapesSym], shape];
+    }
+    removeShape(delShape: IShape) {
+        this.setShapes(
+            this[shapesSym].filter(shape => shape !== delShape)
         );
     }
 }

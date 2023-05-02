@@ -38,8 +38,8 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
             newTitle = titleUniqueization(newTitle, currentPage.getLayers(), "234123413");
 
             currentPage.setLayers(currentPage.getLayers().map(item => {
-                if (item.id === layerID) {
-                    item.title = newTitle;
+                if (item.getID() === layerID) {
+                    item.setTitle(newTitle);
                 }
                 return item;
             }))
@@ -57,15 +57,15 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
             return;
         }
         let draggableLayerID = e.dataTransfer.getData("id");
-        let draggableLayerZindex = currentPage.getLayers().find(item => item.id === draggableLayerID ? true : false)!.zIndex;
+        let draggableLayerZindex = currentPage.getLayers().find(item => item.getID() === draggableLayerID ? true : false)!.getZIndex();
 
         currentPage.setLayers(currentPage.getLayers().map(layerItem => {
-            if (layerItem.id === draggableLayerID) {
+            if (layerItem.getID() === draggableLayerID) {
                 if (draggableLayerZindex < layerZIndex) {
-                    layerItem.zIndex = layerZIndex;
+                    layerItem.setZIndex(layerZIndex);
                 }
                 if (draggableLayerZindex > layerZIndex) {
-                    layerItem.zIndex = layerZIndex + 1000;
+                    layerItem.setZIndex(layerZIndex + 1000);
                 }
             }
             return layerItem;
@@ -73,14 +73,14 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
         currentPage.setLayers(currentPage.getLayers().map(layerItem => {
             // если перемещаем слой сверху вниз
             if (draggableLayerZindex < layerZIndex) {
-                if (layerItem.zIndex > draggableLayerZindex && layerItem.zIndex <= layerZIndex && layerItem.id !== draggableLayerID) {
-                    layerItem.zIndex -= 1000;
+                if (layerItem.getZIndex() > draggableLayerZindex && layerItem.getZIndex() <= layerZIndex && layerItem.getID() !== draggableLayerID) {
+                    layerItem.setZIndex(layerItem.getZIndex() - 1000);
                 }
             }
             // снизу вверх
             if (draggableLayerZindex > layerZIndex) {
-                if (layerItem.zIndex > layerZIndex && layerItem.zIndex < draggableLayerZindex && layerItem.id !== draggableLayerID) {
-                    layerItem.zIndex += 1000;
+                if (layerItem.getZIndex() > layerZIndex && layerItem.getZIndex() < draggableLayerZindex && layerItem.getID() !== draggableLayerID) {
+                    layerItem.setZIndex(layerItem.getZIndex() + 1000);
                 }
             }
             return layerItem;
@@ -109,20 +109,20 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
                 </p>
             </div>
             <div className="panel-content">
-                {currentPage.getLayers().slice().sort((first, second) => first.zIndex - second.zIndex).map((layer, i) => (
-                    <div key={layer.title + i} className="layer-container">
+                {currentPage.getLayers().slice().sort((first, second) => first.getZIndex() - second.getZIndex()).map((layer, i) => (
+                    <div key={layer.getTitle() + i} className="layer-container">
                         <div className={`dropzone top${draggableLayerIndex !== -1 && i === 0 && draggableLayerIndex !== 0 ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, -1000)} onDragOver={e => e.preventDefault()} ></div>
 
-                        <div className={`layer${layer.isCurrent ? ' current' : ''}`}
+                        <div className={`layer${layer.getIsCurrent() ? ' current' : ''}`}
                             onClick={function () {
                                 currentPage.setLayers(currentPage.getLayers().map(item => {
-                                    if (item.isCurrent) {
-                                        item.isCurrent = false;
+                                    if (item.getIsCurrent()) {
+                                        item.setIsCurrent(false);
                                     }
                                     return item;
                                 }))
                                 //updatePageCallback(currentPage);
-                                layer.isCurrent = true;
+                                layer.setIsCurrent(true);
                             }}
                             draggable
                             onDragStart={e => {
@@ -131,7 +131,7 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
 
                                 e.dataTransfer.effectAllowed = 'move';
                                 e.dataTransfer.setData("draggableElement", 'layer');
-                                e.dataTransfer.setData("id", '' + layer.id);
+                                e.dataTransfer.setData("id", '' + layer.getID());
                             }} onDragEnd={e => {
                                 setDraggableLayerIndex(-1);
                                 e.currentTarget.style.opacity = '1';
@@ -140,38 +140,38 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
                                 onClick={function (e) {
                                     e.stopPropagation();
                                     currentPage.setLayers(currentPage.getLayers().map(item => {
-                                        if (item.id === layer.id) {
-                                            item.changeVisible(!item.isVisible);
+                                        if (item.getID() === layer.getID()) {
+                                            item.changeVisible(!item.getIsVisible());
                                         }
                                         return item;
                                     }))
                                     //updatePageCallback(currentPage);
                                 }}>
-                                {layer.isVisible ? visibleIcon : invisibleIcon}
+                                {layer.getIsVisible() ? visibleIcon : invisibleIcon}
                             </div>
                             <span style={{ display: editingLayerIndex === i ? 'none' : 'inline' }}
                                 className='layer-title'
                                 onDoubleClick={() => {
                                     setEditingLayerIndex(i);
-                                    setTitle(layer.title);
-                                }}>{layer.title}</span>
+                                    setTitle(layer.getTitle());
+                                }}>{layer.getTitle()}</span>
                             {
                                 (editingLayerIndex === i) && <input
                                     className='change-name-input'
                                     autoFocus={true}
                                     type="text"
-                                    onBlur={e => changeTitleHandler(e.target, layer.id)}
+                                    onBlur={e => changeTitleHandler(e.target, layer.getID())}
                                     value={title}
                                     onChange={inputTitle}
                                     onKeyDown={e => {
                                         if (e.keyCode === 13) {
-                                            changeTitleHandler(e.target, layer.id);
+                                            changeTitleHandler(e.target, layer.getID());
                                         }
                                     }} />
                             }
                         </div>
 
-                        <div className={`dropzone${draggableLayerIndex !== -1 && draggableLayerIndex !== i ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, layer.zIndex)} onDragOver={e => e.preventDefault()} ></div>
+                        <div className={`dropzone${draggableLayerIndex !== -1 && draggableLayerIndex !== i ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, layer.getZIndex())} onDragOver={e => e.preventDefault()} ></div>
                     </div>
                 ))}
             </div>

@@ -1,6 +1,6 @@
 import Layer, { ILayer } from "./Layer";
-import genID from "../common/helpers/genID";
-import titleUniqueization from "../common/helpers/titleUniquezation";
+// import genID from "../common/helpers/genID";
+// import titleUniqueization from "../common/helpers/titleUniquezation";
 
 // export interface Page {
 //     id: number,
@@ -19,62 +19,73 @@ import titleUniqueization from "../common/helpers/titleUniquezation";
 //     //copyLayers: (pages: ILayer[]) => void,
 // }
 
+const idSym: unique symbol = Symbol();
+const titleSym: unique symbol = Symbol();
+const layersSym: unique symbol = Symbol();
+const isCurrentSym: unique symbol = Symbol();
+
 class Page implements Page {
-    id: string;
-    title: string;
-    layers: ILayer[];
-    isCurrent: boolean;
+    [idSym]: string;
+    [titleSym]: string;
+    [layersSym]: ILayer[];
+    [isCurrentSym]: boolean;
 
     constructor(id: string = "sdfasdfasd", title: string = "Page", layers: ILayer[]) {
-        this.id = id;
-        //this.title = `Page ${pagesCount + 1}`;
-        this.title = title;
-        this.layers = layers;
-        this.isCurrent = true;
+        this[idSym] = id;
+        this[titleSym] = title;
+        this[layersSym] = layers;
+        this[isCurrentSym] = true;
     }
 
     setCurrentLayer(layerID: string) {
-        this.layers.forEach(item => {
-            if (item.id === layerID) {
-                item.isCurrent = true;
+        this.getLayers().forEach(layer => {
+            if (layer.getID() === layerID) {
+                layer.setIsCurrent(true);
             }
             else {
-                if (item.isCurrent) {
-                    item.isCurrent = false;
+                if (layer.getIsCurrent()) {
+                    layer.setIsCurrent(false);
                 }
             }
         })
     }
-    // copy(page: Page) {
-    //     this.id = page.id;
-    //     this.title = page.title;
-    //     this.copyLayers(page.getLayers())
-    //     //this.layers = page.layers;
-    //     this.isCurrent = page.isCurrent;
-    // }
-    // copyLayers(layers: ILayer[]) {
-    //     this.layers = layers.map(layer => {
-    //         let newLayer = new Layer(0, []);
-    //         newLayer.copy(layer);
-    //         return newLayer;
-    //     })
-    // }
     getLayers() {
-        return this.layers;
+        return this[layersSym];
     }
     setLayers(layers: ILayer[]) {
-        this.layers = layers;
+        this[layersSym] = layers;
     }
     addLayer(title: string = "Layer") {
         this.getLayers().forEach(item => {
-            if (item.isCurrent) {
-                item.isCurrent = false;
+            if (item.getIsCurrent()) {
+                item.setIsCurrent(false);
             }
         });
-        this.layers = [...this.getLayers(), new Layer("eirotwert", this.layers.length, "hlkjhlk", [])];
+        this[layersSym] = [...this.getLayers(), new Layer("eirotwert", this.getLayers().length, "hlkjhlk", [])];
     }
+
     getCurrentLayer(): ILayer {
-        return this.getLayers().find(layer => layer.isCurrent)!;
+        return this.getLayers().find(layer => layer.getIsCurrent())!;
+    }
+
+    isCurrent(): boolean {
+        return this[isCurrentSym];
+    }
+
+    getID(): string {
+        return this[idSym];
+    }
+
+    setIsCurrent(val: boolean) {
+        this[isCurrentSym] = val;
+    }
+
+    setTitle(newTitle: string) {
+        this[titleSym] = newTitle;
+    }
+
+    getTitle(): string {
+        return this[titleSym];
     }
 
 

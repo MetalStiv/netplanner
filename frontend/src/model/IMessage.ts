@@ -1,9 +1,11 @@
 import { IMessageShape } from "./IMessageShape"
+import { IShapeGraphicalProps } from "./IShape"
 
 export interface IMessage {
     type: string,
     pageId?: string,
     layerId?: string,
+    shapeId?: string,
     data: {
         zIndex?: string,
         pages?: [{
@@ -15,6 +17,7 @@ export interface IMessage {
                 shapes: IMessageShape[]
             }]
         }],
-        newShape?: IMessageShape
+        newShape?: IMessageShape,
+        graphicalProperties?: IShapeGraphicalProps
     }
 }

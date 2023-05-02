@@ -42,8 +42,8 @@ const PagesPanel = ({ currentProject }: PagesPanelProps) => {
             newTitle = titleUniqueization(newTitle, currentProject.getPages(), pageID);
 
             currentProject.setPages(currentProject.getPages().map(item => {
-                if (item.id === pageID) {
-                    item.title = newTitle;
+                if (item.getID() === pageID) {
+                    item.setTitle(newTitle);
                 }
                 return item;
             }))
@@ -62,31 +62,31 @@ const PagesPanel = ({ currentProject }: PagesPanelProps) => {
                     aria-expanded={collapsePanelIsOpen}
                     onClick={() => setCollapsePanelIsOpen(!collapsePanelIsOpen)}
                     className="collapsedPanel-head btn">
-                    {currentProject.getCurrentPage().title}
+                    {currentProject.getCurrentPage().getTitle()}
                 </p>
                 <Collapse isOpened={collapsePanelIsOpen}>
                     <div>
                         {currentProject.getPages().map((page, i) => {
-                            return <div key={page.id} className='collapseItem' onClick={() => selectPageHandler(page.id)}>
+                            return <div key={page.getID()} className='collapseItem' onClick={() => selectPageHandler(page.getID())}>
                                 <span style={{ display: editingPageIndex === i ? 'none' : 'inline', cursor: "text" }}
                                     className='page-title'
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         titleClickHandler(e, page, i);
                                     }}
-                                >{page.title}</span>
+                                >{page.getTitle()}</span>
                                 {
                                     (editingPageIndex === i) && <input
                                         className='change-name-input'
                                         autoFocus={true}
                                         onClick={e => e.stopPropagation()}
                                         type="text"
-                                        onBlur={e => changeTitleHandler(e.target, page.id)}
+                                        onBlur={e => changeTitleHandler(e.target, page.getID())}
                                         value={title}
                                         onChange={inputTitle}
                                         onKeyDown={e => {
                                             if (e.keyCode === 13) {
-                                                changeTitleHandler(e.target, page.id);
+                                                changeTitleHandler(e.target, page.getID());
                                             }
                                         }} />
                                 }

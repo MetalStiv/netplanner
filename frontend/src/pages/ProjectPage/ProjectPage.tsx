@@ -15,7 +15,7 @@ import SVGCanvas from './SVGCanvas';
 import IShapeCreator from '../../model/IShapeCreator';
 import HeaderNavbar from './HeaderNavbar';
 import { useRootStore } from '../../providers/rootProvider';
-import Project from '../../model/Project';
+import Project, { IProject } from '../../model/Project';
 import { IShapeGraphicalProps } from '../../model/IShape';
 import ICanvasConfig, { Portrait } from "../../common/canvasConfig";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -37,13 +37,13 @@ import { AlertDialog } from '../../components';
 import { Loader } from '../../components';
 // import { UndoAction } from '../../model/Action';
 
-export interface IElemProps {
+export interface IShapeProps {
     type: string,
     graphProps: IShapeGraphicalProps,
     //coords: { x: number, y: number },
 }
 
-export interface IDraggableElemProps {
+export interface IDraggableShapeProps {
     type: string,
 }
 
@@ -52,7 +52,7 @@ const ProjectPage: React.FC = observer(() => {
     const navigate = useNavigate();
 
     const [, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
-    const [selectedElemProps, setSelectedElemProps] = useState<IElemProps | null>(null);
+    const [selectedShapeProps, setSelectedShapeProps] = useState<IShapeProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
     const [orientation,] = useState<ICanvasConfig>(Portrait);
     const [projectUpdateError, setProjectUpdateError] = useState<boolean>(false);
@@ -61,9 +61,13 @@ const ProjectPage: React.FC = observer(() => {
     const lang: LanguageData | null = useLanguageContext();
     const actionStore: TActionStore = useRootStore().getActionStore();
     const projectStore: TProjectStore = useRootStore()!.getProjectStore();
+    const project = projectStore.getProject();
+
+    const [currentProject, setCurrentProject] = useState<IProject | null>(projectStore.getProject());
+
 
     const updateProject = useCallback(async (projectId: string) => {
-        const newProject = new Project( [
+        const newProject = new Project([
             new PolygonsGroup([
                 new CircleCreator(),
                 new EllipseCreator(),
@@ -77,7 +81,12 @@ const ProjectPage: React.FC = observer(() => {
         ] as IGeometryGroup[], 'project', projectId)
         projectStore.setProject(newProject);
         projectStore.setProjectToLoadId(projectId);
+        // console.log(newProject)
     }, [setProjectUpdateError])
+
+    useEffect(() => {
+        console.log('render')
+    }, [currentProject]);
 
     useEffect(() => {
         workspaceDivRef.current!.scrollTop = orientation.a4Height * Math.floor(orientation.heightInSheets / 2) - 150;
@@ -92,12 +101,12 @@ const ProjectPage: React.FC = observer(() => {
         setCanvasCursorCoords(cursorCoords);
     }, []);
 
-    const draggableElemCallback = useCallback((creator: IShapeCreator) => {
+    const draggableShapeCallback = useCallback((creator: IShapeCreator) => {
         setCurrentCreator(creator);
     }, []);
 
-    const clickedElemPropsCallback = useCallback((elemProps: IElemProps) => {
-        setSelectedElemProps(elemProps);
+    const clickedShapePropsCallback = useCallback((shapeProps: IShapeProps) => {
+        setSelectedShapeProps(shapeProps);
     }, []);
 
     useEffect(() => {
@@ -136,7 +145,7 @@ const ProjectPage: React.FC = observer(() => {
                     <aside id="leftPanelBar">
                         <VerticalPageSplit resize={Limit} >
                             <div style={{ minHeight: 150 }}>
-                                <ShapesPanel getCreatorOnDragCallback={draggableElemCallback} />
+                                <ShapesPanel getCreatorOnDragCallback={draggableShapeCallback} />
                             </div>
                             <div style={{ minHeight: 150 }}>
                                 {
@@ -151,15 +160,15 @@ const ProjectPage: React.FC = observer(() => {
 
                     <section id="workspace">
                         <div className="canvas-container" ref={workspaceDivRef}>
-                            { 
+                            {
                                 (projectStore.getProject() && !projectStore.getProject()!.isLoading) &&
-                                    <SVGCanvas
-                                        currentPage={projectStore.getProject()!.getCurrentPage()}
-                                        canvasConfig={orientation}
-                                        getCursorCoordsCallback={cursorCoordsCallback}
-                                        getClickedElemConfigCallback={clickedElemPropsCallback}
-                                        creatorOnDrop={currentCreator}
-                                    />
+                                <SVGCanvas
+                                    // currentPage={projectStore.getProject()!.getCurrentPage()}
+                                    canvasConfig={orientation}
+                                    getCursorCoordsCallback={cursorCoordsCallback}
+                                    getClickedShapeConfigCallback={clickedShapePropsCallback}
+                                    creatorOnDrop={currentCreator}
+                                />
                             }
                         </div>
                     </section>
@@ -168,12 +177,12 @@ const ProjectPage: React.FC = observer(() => {
                         <div className="content">
                             <VerticalPageSplit resize={Limit}>
                                 <div style={{ minHeight: 150 }}>
-                                    <ObjectPropertiesPanel elemProps={selectedElemProps} />
+                                    <ObjectPropertiesPanel shapeProps={selectedShapeProps} />
                                 </div>
                                 <div style={{ minHeight: 150 }}>
-                                    <GraphicalPropertiesPanel elemProps={selectedElemProps}
+                                    <GraphicalPropertiesPanel shapeProps={selectedShapeProps}
                                     // onChange={val => {
-                                    // let changePropAction = new ChangeShapePropertyAction(elemProps.graphProps, item.label, item.value, val)
+                                    // let changePropAction = new ChangeShapePropertyAction(shapeProps.graphProps, item.label, item.value, val)
                                     // changePropAction.do() && app?.addAction(changePropAction);
                                     // }}
                                     />

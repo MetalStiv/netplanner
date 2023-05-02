@@ -46,7 +46,7 @@ export const createProjectStore = () => {
             return this[projectToLoadId];
         },
 
-        setWebSocketUpdater(webSocketUpdater: () => void){
+        setWebSocketUpdater(webSocketUpdater: () => void) {
             this[webSocketUpdaterSymbol] = webSocketUpdater;
         },
 
@@ -54,7 +54,7 @@ export const createProjectStore = () => {
             this[rerenderSymbol] = !this[rerenderSymbol];
         },
 
-        clearStore(){
+        clearStore() {
             this[projectSymbol] = null;
         }
     };

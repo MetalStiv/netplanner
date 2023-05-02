@@ -1,7 +1,7 @@
 import Page from "./Page";
 import IShapesGroup from "./IGeometryGroup";
-import genID from "../common/helpers/genID";
-import titleUniqueization from "../common/helpers/titleUniquezation";
+// import genID from "../common/helpers/genID";
+// import titleUniqueization from "../common/helpers/titleUniquezation";
 // import Layer, { ILayer } from "./Layer";
 // import IShape from "./IShape";
 
@@ -16,7 +16,6 @@ export interface IProject {
     addPage: () => void,
     getCurrentPage: () => Page,
     setCurrentPage: (pageID: string) => void,
-    //copy: (project: IProject) => void,
 }
 
 class Project implements IProject {
@@ -34,30 +33,14 @@ class Project implements IProject {
         this.pages = [];
     }
 
-    // copy(project: IProject) {
-    //     this.id = project.id;
-    //     this.title = project.title;
-    //     this.shapesGroups = project.shapesGroups ?? [];
-    //     //this.copyPages(project.getPages());
-    //     // this.pages = project.pages ?? [];
-    // }
-
-    // copyPages(pages: Page[]) {
-    //     this.pages = pages.map(page => {
-    //         let newPage = new Page(0);
-    //         newPage.copy(page);
-    //         return newPage;
-    //     })
-    // }
-
     setCurrentPage(pageID: string) {
         this.pages.forEach(item => {
-            if (item.id === pageID) {
-                item.isCurrent = true;
+            if (item.getID() === pageID) {
+                item.setIsCurrent(true);
             }
             else {
-                if (item.isCurrent) {
-                    item.isCurrent = false;
+                if (item.isCurrent()) {
+                    item.setIsCurrent(false);
                 }
             }
         })
@@ -65,7 +48,7 @@ class Project implements IProject {
 
     getCurrentPage() {
         return this.getPages().find(page => {
-            if (page.isCurrent) {
+            if (page.isCurrent()) {
                 return true;
             }
             return false;
@@ -82,8 +65,8 @@ class Project implements IProject {
 
     addPage(title: string = "Page") {
         this.pages.forEach(page => {
-            if (page.isCurrent) {
-                page.isCurrent = false;
+            if (page.isCurrent()) {
+                page.setIsCurrent(false);
             }
         })
         this.setPages([...this.pages, new Page("qwe", "qwer", [])]);

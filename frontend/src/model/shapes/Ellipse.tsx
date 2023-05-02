@@ -1,16 +1,16 @@
-import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
+import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import genID from "../../common/helpers/genID";
 import { ShapeType } from "../ShapeType";
 
 interface IEllipseGraphicalProps extends IShapeGraphicalProps {
-    stroke?: IGraphProp,
-    fill?: IGraphProp,
-    rx: IGraphProp,
-    ry: IGraphProp,
+    stroke?: IGraphicalProperty,
+    fill?: IGraphicalProperty,
+    rx: IGraphicalProperty,
+    ry: IGraphicalProperty,
 }
 
-interface IEllipseProps extends IShapeProps {
+interface IEllipseConfig extends IShapeConfig {
     graphical: IEllipseGraphicalProps,
     zIndex: number,
 }
@@ -58,11 +58,11 @@ export class EllipseCreator implements IShapeCreator {
 
 class Ellipse implements IShape {
     type: ShapeType = ShapeType.ELLIPS;
-    config: IEllipseProps;
+    config: IEllipseConfig;
     isVisible: boolean = true;
     zIndex: number = 0;
 
-    constructor(obj: IEllipseProps) {
+    constructor(obj: IEllipseConfig) {
         this.config = obj;
         this.config.id = `${this.type}-${genID(10)}`;
         this.zIndex = obj.zIndex ?? 0;

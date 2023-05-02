@@ -1,20 +1,20 @@
-import IShape, { IGraphProp, IShapeGraphicalProps, IShapeProps } from "../IShape";
+import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../IShape";
 import IShapeCreator from "../IShapeCreator";
 import genID from "../../common/helpers/genID";
 import { ShapeType } from "../ShapeType";
 
 interface IRectGraphicalProps extends IShapeGraphicalProps {
     //sizes: { w: number, h: number, },
-    w: IGraphProp,
-    h: IGraphProp,
-    fill?: IGraphProp,
-    stroke?: IGraphProp,
-    rx?: IGraphProp,
-    ry?: IGraphProp,
+    w: IGraphicalProperty,
+    h: IGraphicalProperty,
+    fill?: IGraphicalProperty,
+    stroke?: IGraphicalProperty,
+    rx?: IGraphicalProperty,
+    ry?: IGraphicalProperty,
     pathLength?: number,
 }
 
-interface IRectProps extends IShapeProps {
+interface IRectConfig extends IShapeConfig {
     graphical: IRectGraphicalProps
     zIndex: number,
 }
@@ -62,11 +62,11 @@ export class RectCreator implements IShapeCreator {
 
 class Rect implements IShape {
     type: ShapeType = ShapeType.RECTANGLE;
-    config: IRectProps;
+    config: IRectConfig;
     isVisible: boolean = true;
     zIndex: number = 0;
 
-    constructor(obj: IRectProps) {
+    constructor(obj: IRectConfig) {
         this.config = obj;
         this.config.id = `${this.type}-${genID(10)}`;
         this.zIndex = obj.zIndex ?? 0;
