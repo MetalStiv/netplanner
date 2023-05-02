@@ -85,13 +85,10 @@ const ProjectPage: React.FC = observer(() => {
     }, [setProjectUpdateError])
 
     useEffect(() => {
-        console.log('render')
-    }, [currentProject]);
-
-    useEffect(() => {
         workspaceDivRef.current!.scrollTop = orientation.a4Height * Math.floor(orientation.heightInSheets / 2) - 150;
         workspaceDivRef.current!.scrollLeft = orientation.a4Width * Math.floor(orientation.widthInSheets / 2) - 150;
     }, [orientation, workspaceDivRef]);
+    
     useEffect(() => {
         const projectId: string = params.get('id') ?? ''
         updateProject(projectId);

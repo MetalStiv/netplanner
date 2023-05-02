@@ -407,8 +407,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                         transform: `matrix(${scale}, 0, 0, ${scale}, ${translate.x}, ${translate.y})`,
                         // transformOrigin: 'center
                     }}>
-                        {currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(el => {
-                            return el.render(svgDragNDrop, svgSelect, layer.getZIndex());
+                        {currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(s => {
+                            return s.render(svgDragNDrop, svgSelect, layer.getZIndex());
                         }))}
                     </g>
                 </svg>
