@@ -5,6 +5,20 @@ export interface IMessageShape {
     type: string,
     graphicalProperties: {
         x: IGraphicalProperty,
-        y: IGraphicalProperty
+        y: IGraphicalProperty,
+        r?: IGraphicalProperty,
+        width?: IGraphicalProperty,
+        height?: IGraphicalProperty,
+        pivot?: IGraphicalProperty,
+
+        strokeColor?: IGraphicalProperty,
+        strokeWidth?: IGraphicalProperty,
+        strokeDash?: IGraphicalProperty,
+
+        fillType?: IGraphicalProperty,
+        fillColorOne?: IGraphicalProperty,
+        fillColorTwo?: IGraphicalProperty,
+        fillHatchingSpace?: IGraphicalProperty,
+        fillHatchingDash?: IGraphicalProperty,
     }
 }

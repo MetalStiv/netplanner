@@ -21,13 +21,13 @@ import ICanvasConfig, { Portrait } from "../../common/canvasConfig";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LanguageData, useLanguageContext } from '../../providers/languageProvider';
 import PolygonsGroup from '../../model/shapes/PolygonsGroup';
-import { CircleCreator } from '../../model/shapes/Circle';
-import { EllipseCreator } from '../../model/shapes/Ellipse';
-import { RectCreator } from '../../model/shapes/Rect';
+import { CircleCreator } from '../../model/shapes/primitiveShapes/Circle';
+import { EllipseCreator } from '../../model/shapes/primitiveShapes/Ellipse';
+import { RectCreator } from '../../model/shapes/primitiveShapes/Rect';
 import PrimitivesGroup from '../../model/shapes/PrimitivesGroup';
-import { LineCreator } from '../../model/shapes/Line';
-import { PolylineCreator } from '../../model/shapes/Polyline';
-import { PointCreator } from '../../model/shapes/Point';
+import { LineCreator } from '../../model/shapes/primitiveShapes/Line';
+import { PolylineCreator } from '../../model/shapes/primitiveShapes/Polyline';
+import { PointCreator } from '../../model/shapes/primitiveShapes/Point';
 import IGeometryGroup from '../../model/IGeometryGroup';
 import { TProjectStore } from '../../stores/projectStore';
 import { TActionStore } from '../../stores/actionStore';
@@ -35,6 +35,14 @@ import IAction from '../../model/Action';
 import { observer } from 'mobx-react-lite';
 import { AlertDialog } from '../../components';
 import { Loader } from '../../components';
+import BlockDiagramGroup from '../../model/shapes/BlockDiagramGroup';
+import { BeginEndCreator } from '../../model/shapes/blockDiagramShapes/BeginEnd';
+import { ProcessCreator } from '../../model/shapes/blockDiagramShapes/Process';
+import { OperationCreator } from '../../model/shapes/blockDiagramShapes/Operation';
+import { DecisionCreator } from '../../model/shapes/blockDiagramShapes/Decision';
+import { ModificationCreator } from '../../model/shapes/blockDiagramShapes/Modification';
+import { InputOutputCreator } from '../../model/shapes/blockDiagramShapes/InputOutput';
+import { RepeatCreator } from '../../model/shapes/blockDiagramShapes/Repeat';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {
@@ -77,6 +85,15 @@ const ProjectPage: React.FC = observer(() => {
                 new LineCreator(),
                 new PolylineCreator(),
                 new PointCreator(),
+            ]),
+            new BlockDiagramGroup([
+                new BeginEndCreator(),
+                new OperationCreator(),
+                new ProcessCreator(),
+                new DecisionCreator(),
+                new ModificationCreator(),
+                new InputOutputCreator(),
+                new RepeatCreator(),
             ])
         ] as IGeometryGroup[], 'project', projectId)
         projectStore.setProject(newProject);

@@ -1,7 +1,7 @@
-import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../IShape";
-import IShapeCreator from "../IShapeCreator";
-import genID from "../../common/helpers/genID";
-import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../../IShape";
+import IShapeCreator from "../../IShapeCreator";
+import genID from "../../../common/helpers/genID";
+import { ShapeType } from "../../ShapeType";
 
 interface IRectGraphicalProps extends IShapeGraphicalProps {
     //sizes: { w: number, h: number, },
@@ -15,6 +15,7 @@ interface IRectGraphicalProps extends IShapeGraphicalProps {
 }
 
 interface IRectConfig extends IShapeConfig {
+    id?: string,
     graphical: IRectGraphicalProps
     zIndex: number,
 }
@@ -42,6 +43,11 @@ export class RectCreator implements IShapeCreator {
                 h: {
                     label: 'Height',
                     value: '30',
+                    isReadable: true,
+                },
+                pivot: {
+                    label: 'Pivot',
+                    value: '0',
                     isReadable: true,
                 },
                 fill: {

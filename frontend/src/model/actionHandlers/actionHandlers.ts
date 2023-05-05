@@ -32,7 +32,7 @@ export const actionHandlers: IActionHandlers = {
         await this.handlers.every(async handler => {
             result = await handler(result, message);
             if (result.isLoading === true) {
-                return (false);
+                return false;
             }
             return true;
         })

@@ -4,6 +4,7 @@ export interface IShapeGraphicalProps {
     //startCoords: { x: number, y: number },
     x: IGraphicalProperty,
     y: IGraphicalProperty,
+    pivot: IGraphicalProperty
     // w: IGraphicalProperty,
     // h: IGraphicalProperty,
     //otherPropertiesView?: { title: string, value: string }[],

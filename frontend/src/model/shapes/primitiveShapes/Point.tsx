@@ -1,8 +1,8 @@
-import IShape from "../IShape";
-import IShapeCreator from "../IShapeCreator";
+import IShape from "../../IShape";
+import IShapeCreator from "../../IShapeCreator";
 import { CircleCreator, ICircleConfig } from "./Circle";
-import genID from "../../common/helpers/genID";
-import { ShapeType } from "../ShapeType";
+import genID from "../../../common/helpers/genID";
+import { ShapeType } from "../../ShapeType";
 
 export class PointCreator implements IShapeCreator {
     type: ShapeType = ShapeType.POINT;
@@ -16,6 +16,11 @@ export class PointCreator implements IShapeCreator {
                 },
                 y: {
                     label: 'Y',
+                    value: '0',
+                    isReadable: true,
+                },
+                pivot: {
+                    label: 'Pivot',
                     value: '0',
                     isReadable: true,
                 },

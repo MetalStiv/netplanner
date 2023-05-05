@@ -1,7 +1,7 @@
-import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../IShape";
-import IShapeCreator from "../IShapeCreator";
-import genID from "../../common/helpers/genID";
-import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../../IShape";
+import IShapeCreator from "../../IShapeCreator";
+import genID from "../../../common/helpers/genID";
+import { ShapeType } from "../../ShapeType";
 
 interface ILineGraphicalProps extends IShapeGraphicalProps {
     //endCoords: { x: number, y: number },
@@ -13,6 +13,7 @@ interface ILineGraphicalProps extends IShapeGraphicalProps {
 }
 
 interface ILineConfig extends IShapeConfig {
+    id?: string,
     graphical: ILineGraphicalProps,
     zIndex: number,
 }
@@ -29,6 +30,11 @@ export class LineCreator implements IShapeCreator {
                 },
                 y: {
                     label: 'Y',
+                    value: '0',
+                    isReadable: true,
+                },
+                pivot: {
+                    label: 'Pivot',
                     value: '0',
                     isReadable: true,
                 },

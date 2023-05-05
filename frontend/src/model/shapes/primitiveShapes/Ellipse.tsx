@@ -1,7 +1,7 @@
-import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../IShape";
-import IShapeCreator from "../IShapeCreator";
-import genID from "../../common/helpers/genID";
-import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../../IShape";
+import IShapeCreator from "../../IShapeCreator";
+import genID from "../../../common/helpers/genID";
+import { ShapeType } from "../../ShapeType";
 
 interface IEllipseGraphicalProps extends IShapeGraphicalProps {
     stroke?: IGraphicalProperty,
@@ -11,6 +11,7 @@ interface IEllipseGraphicalProps extends IShapeGraphicalProps {
 }
 
 interface IEllipseConfig extends IShapeConfig {
+    id?: string,
     graphical: IEllipseGraphicalProps,
     zIndex: number,
 }
@@ -30,6 +31,11 @@ export class EllipseCreator implements IShapeCreator {
                     value: '0',
                     isReadable: true,
                 },
+                pivot: {
+                    label: 'Pivot',
+                    value: '0',
+                    isReadable: true,
+                },
                 rx: {
                     label: 'Radius X',
                     value: '30',
@@ -40,16 +46,16 @@ export class EllipseCreator implements IShapeCreator {
                     value: '20',
                     isReadable: true,
                 },
-                fill: {
-                    label: 'Fill',
-                    value: `#000000`,
-                    isReadable: true,
-                },
-                stroke: {
-                    label: 'Stroke',
-                    value: `#000000`,
-                    isReadable: true,
-                },
+                // fill: {
+                //     label: 'Fill',
+                //     value: `#000000`,
+                //     isReadable: true,
+                // },
+                // stroke: {
+                //     label: 'Stroke',
+                //     value: `#000000`,
+                //     isReadable: true,
+                // },
             },
             zIndex: 0,
         });

@@ -1,7 +1,7 @@
-import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../IShape";
-import IShapeCreator from "../IShapeCreator";
-import genID from "../../common/helpers/genID";
-import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../../IShape";
+import IShapeCreator from "../../IShapeCreator";
+import genID from "../../../common/helpers/genID";
+import { ShapeType } from "../../ShapeType";
 
 interface IPolylineGraphicalProps extends IShapeGraphicalProps {
     points: [number, number][],
@@ -11,6 +11,7 @@ interface IPolylineGraphicalProps extends IShapeGraphicalProps {
 }
 
 interface IPolylineProps extends IShapeConfig {
+    id?: string,
     graphical: IPolylineGraphicalProps,
     zIndex: number,
 }
@@ -30,12 +31,17 @@ export class PolylineCreator implements IShapeCreator {
                     value: '0',
                     isReadable: true,
                 },
-                points: [[15, -30], [40, 45], [50, -70]],
-                stroke: {
-                    label: 'Stroke',
-                    value: `#000000`,
+                pivot: {
+                    label: 'Pivot',
+                    value: '0',
                     isReadable: true,
                 },
+                points: [[15, -30], [40, 45], [50, -70]],
+                // stroke: {
+                //     label: 'Stroke',
+                //     value: `#000000`,
+                //     isReadable: true,
+                // },
             },
             zIndex: 0,
         });

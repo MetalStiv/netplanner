@@ -49,6 +49,9 @@ export class DrawShapeAction implements IAction {
     }
 
     getMessage(): IMessage {
+        this.shape.config.graphical.x.value = this.dropCoords.x.toString();
+        this.shape.config.graphical.y.value = this.dropCoords.y.toString();
+
         return {
             type: ActionType.ADD_SHAPE,
             pageId: this.currentPage.getID(),
@@ -56,19 +59,7 @@ export class DrawShapeAction implements IAction {
             data: {
                 newShape: {
                     type: this.shape.type,
-                    graphicalProperties: {
-                        x: {
-                            label: "X",
-                            value: this.dropCoords.x.toString(),
-                            isReadable: true
-                        },
-                        y: {
-                            label: "Y",
-                            value: this.dropCoords.y.toString(),
-                            isReadable: true
-                        },
-                        // this.shape.config.graphical
-                    }
+                    graphicalProperties: this.shape.config.graphical
                 },
                 zIndex: this.shape.config.zIndex?.toString()
             }

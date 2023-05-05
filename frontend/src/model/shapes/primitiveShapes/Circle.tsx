@@ -1,9 +1,9 @@
-import IShape, { IShapeConfig, IShapeGraphicalProps, IGraphicalProperty } from "../IShape";
-import IShapeCreator from "../IShapeCreator";
-import genID from "../../common/helpers/genID";
-import { ShapeType } from "../ShapeType";
-import { TShapeInflater } from "../shapeInflaters";
-import { IMessageShape } from "../IMessageShape";
+import IShape, { IShapeConfig, IShapeGraphicalProps, IGraphicalProperty } from "../../IShape";
+import IShapeCreator from "../../IShapeCreator";
+import genID from "../../../common/helpers/genID";
+import { ShapeType } from "../../ShapeType";
+import { TShapeInflater } from "../../shapeInflaters";
+import { IMessageShape } from "../../IMessageShape";
 
 interface ICircleGraphicalProps extends IShapeGraphicalProps {
     //additionalGraphProps: []
@@ -39,20 +39,14 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
             },
             r: {
                 label: "Radius",
-                value: "20", //messageShape.graphicalProperties.find(p => p.label === "Radius")!.value,
-                isReadable: true //messageShape.graphicalProperties.find(p => p.label === "Radius")!.isReadable, 
+                value: messageShape.graphicalProperties.r!.value,
+                isReadable: true 
             },
-
-            // fill: {
-            //     label: 'Fill',
-            //     value: messageShape.graphicalProperties.find(p => p.label === "Fill")!.value,
-            //     isReadable: messageShape.graphicalProperties.find(p => p.label === "Fill")!.isReadable,
-            // },
-            // stroke: {
-            //     label: 'Stroke',
-            //     value: messageShape.graphicalProperties.find(p => p.label === "Stroke")!.value,
-            //     isReadable: messageShape.graphicalProperties.find(p => p.label === "Stroke")!.isReadable,
-            // }
+            pivot: {
+                label: 'Pivot',
+                value: '0',
+                isReadable: true,
+            },
         }
     })
 }
@@ -86,7 +80,12 @@ export class CircleCreator implements IShapeCreator {
                     label: 'Stroke',
                     value: `#000000`,
                     isReadable: true,
-                }
+                },
+                pivot: {
+                    label: 'Pivot',
+                    value: '0',
+                    isReadable: true,
+                },
             },
             zIndex: 0,
         });
