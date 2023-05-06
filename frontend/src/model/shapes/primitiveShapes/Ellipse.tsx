@@ -1,26 +1,75 @@
-import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../../IShape";
-import IShapeCreator from "../../IShapeCreator";
+import IShapeCreator from "../IShapeCreator";
 import genID from "../../../common/helpers/genID";
-import { ShapeType } from "../../ShapeType";
+import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import { TShapeInflater } from "../shapeInflaters";
+import { IMessageShape } from "../../message/IMessageShape";
 
 interface IEllipseGraphicalProps extends IShapeGraphicalProps {
-    stroke?: IGraphicalProperty,
-    fill?: IGraphicalProperty,
+    strokeColor: IGraphicalProperty,
+    fillColorOne: IGraphicalProperty,
     rx: IGraphicalProperty,
     ry: IGraphicalProperty,
 }
 
 interface IEllipseConfig extends IShapeConfig {
     id?: string,
-    graphical: IEllipseGraphicalProps,
+    graphicalProperties: IEllipseGraphicalProps,
     zIndex: number,
+}
+
+export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShape) => {
+    if (messageShape.type !== ShapeType.ELLIPS) {
+        return null
+    }
+    return new Ellipse({
+        id: messageShape.id,
+        zIndex: 10,
+        graphicalProperties: {
+            x: {
+                label: "X",
+                value: messageShape.graphicalProperties.x.value,
+                isReadable: true,
+            },
+            y: {
+                label: "Y",
+                value: messageShape.graphicalProperties.y.value,
+                isReadable: true,
+            },
+            pivot: {
+                label: 'Pivot',
+                value: '0',
+                isReadable: true,
+            },
+            rx: {
+                label: "rx",
+                value: messageShape.graphicalProperties.rx!.value,
+                isReadable: true 
+            },
+            ry: {
+                label: "ry",
+                value: messageShape.graphicalProperties.ry!.value,
+                isReadable: true 
+            },
+            strokeColor: {
+                label: "Stroke Color",
+                value: messageShape.graphicalProperties.strokeColor!.value,
+                isReadable: true 
+            },
+            fillColorOne: {
+                label: "Fill Color One",
+                value: messageShape.graphicalProperties.fillColorOne!.value,
+                isReadable: true 
+            },
+        }
+    })
 }
 
 export class EllipseCreator implements IShapeCreator {
     type: ShapeType = ShapeType.ELLIPS;
     create() {
         return new Ellipse({
-            graphical: {
+            graphicalProperties: {
                 x: {
                     label: 'X',
                     value: '0',
@@ -46,16 +95,16 @@ export class EllipseCreator implements IShapeCreator {
                     value: '20',
                     isReadable: true,
                 },
-                // fill: {
-                //     label: 'Fill',
-                //     value: `#000000`,
-                //     isReadable: true,
-                // },
-                // stroke: {
-                //     label: 'Stroke',
-                //     value: `#000000`,
-                //     isReadable: true,
-                // },
+                strokeColor: {
+                    label: 'Stroke Color',
+                    value: '#000000',
+                    isReadable: true,
+                },
+                fillColorOne: {
+                    label: 'Fill Color One',
+                    value: '#ffffff',
+                    isReadable: true,
+                },
             },
             zIndex: 0,
         });
@@ -82,30 +131,22 @@ class Ellipse implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphical.stroke?.value ?? 'black'}
-            fill={this.config.graphical.fill?.value ?? 'black'}
+            stroke={this.config.graphicalProperties.strokeColor.value ?? 'black'}
+            fill={this.config.graphicalProperties.fillColorOne.value ?? 'black'}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-                M ${(+this.config.graphical.x.value) +
-                (+this.config.graphical.rx.value)},${this.config.graphical.y.value}
-                a ${this.config.graphical.rx.value},${this.config.graphical.ry.value}
+                M ${(+this.config.graphicalProperties.x.value) +
+                (+this.config.graphicalProperties.rx.value)},${this.config.graphicalProperties.y.value}
+                a ${this.config.graphicalProperties.rx.value},${this.config.graphicalProperties.ry.value}
                 0
                 1,0
                 1,0
                 z
             `}
         />
-        // M - левая координата
-        // первая в а - размеры по x,y
-        // угол поворота
-        // флаги
-        // последняя - правая координата
-
-
-        //return <ellipse id={this.elemProps.id} key={this.elemProps.id} cx={this.elemProps.startCoords.x + this.elemProps.rDif.rx} cy={this.elemProps.startCoords.y + this.elemProps.rDif.ry} r={this.elemProps.r ?? 10} rx={this.elemProps.rDif?.rx ?? 0} ry={this.elemProps.rDif?.ry ?? 0} pathLength={this.elemProps.pathLength} stroke={this.elemProps.stroke ?? 'black'} fill={this.elemProps.fill ?? 'black'} onDragStart={(e) => e.preventDefault} onMouseDown={handlerMouseDown} />;
     }
 }
 

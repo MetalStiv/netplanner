@@ -1,15 +1,11 @@
 import Page from "./Page";
-import IShapesGroup from "./IGeometryGroup";
-// import genID from "../common/helpers/genID";
-// import titleUniqueization from "../common/helpers/titleUniquezation";
-// import Layer, { ILayer } from "./Layer";
-// import IShape from "./IShape";
+import IShapesGroup from "../shapes/IShapeGroup";
 
 export interface IProject {
     id: string,
     title: string,
-    shapesGroups?: IShapesGroup[],
-    pages?: Page[],
+    shapesGroups: IShapesGroup[],
+    pages: Page[],
     isLoading: boolean,
     setPages: (page: Page[]) => void,
     getPages: () => Page[],

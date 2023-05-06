@@ -1,4 +1,4 @@
-import { IGraphicalProperty } from "./IShape"
+import { IGraphicalProperty } from "../shapes/IShape";
 
 export interface IMessageShape {
     id?: string,
@@ -7,6 +7,8 @@ export interface IMessageShape {
         x: IGraphicalProperty,
         y: IGraphicalProperty,
         r?: IGraphicalProperty,
+        rx?: IGraphicalProperty,
+        ry?: IGraphicalProperty,
         width?: IGraphicalProperty,
         height?: IGraphicalProperty,
         pivot?: IGraphicalProperty,

@@ -1,9 +1,9 @@
-import { ActionType } from "../Action";
-import IShape from "../IShape";
-import Layer from "../Layer";
-import Page from "../Page";
-import { shapeInflaters } from "../shapeInflaters";
+import { shapeInflaters } from "../shapes/shapeInflaters";
+import IShape from "../shapes/IShape";
 import { ActionHandler } from "./actionHandlers";
+import { ActionType } from "../actions/ActionType";
+import Page from "../projectData/Page";
+import Layer from "../projectData/Layer";
 
 export const openProjectHandler: ActionHandler = async (project, message) => {
     if (message.type !== ActionType.OPEN_PROJECT) {

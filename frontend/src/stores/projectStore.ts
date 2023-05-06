@@ -1,6 +1,4 @@
-import IProject from "../model/Project";
-import actionHandlers from "../model/actionHandlers/actionHandlers";
-import { IMessage } from "../model/IMessage";
+import { IProject } from "../model/projectData/Project"
 
 const projectSymbol: unique symbol = Symbol()
 const projectToLoadId: unique symbol = Symbol()

@@ -1,8 +1,8 @@
-import { IMessageShape } from "../../IMessageShape";
-import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../../IShape";
-import IShapeCreator from "../../IShapeCreator";
-import { TShapeInflater } from "../../shapeInflaters";
-import { ShapeType } from "../../ShapeType";
+import IShapeCreator from "../IShapeCreator";
+import { TShapeInflater } from "../shapeInflaters";
+import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import { IMessageShape } from "../../message/IMessageShape";
 
 interface IBeginEndProps extends IShapeGraphicalProps {
     width: IGraphicalProperty,
@@ -13,18 +13,18 @@ interface IBeginEndProps extends IShapeGraphicalProps {
 
 export interface IBeginEndConfig extends IShapeConfig {
     id?: string,
-    graphical: IBeginEndProps,
+    graphicalProperties: IBeginEndProps,
     zIndex: number,
 }
 
 export const beginEndInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type != ShapeType.BEGIN_END) {
+    if (messageShape.type !== ShapeType.BEGIN_END) {
         return null
     }
     return new BeginEnd({
         id: messageShape.id,
         zIndex: 10,
-        graphical: {
+        graphicalProperties: {
             x: {
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
@@ -35,15 +35,9 @@ export const beginEndInflater: TShapeInflater = async (messageShape: IMessageSha
                 value: messageShape.graphicalProperties.y.value,
                 isReadable: true,
             },
-
-            fillColorOne: {
-                label: 'Fill Color One',
-                value: messageShape.graphicalProperties.fillColorOne!.value,
-                isReadable: true,
-            },
-            strokeColor: {
-                label: 'Stroke',
-                value: messageShape.graphicalProperties.strokeColor!.value,
+            pivot: {
+                label: "Pivot",
+                value: messageShape.graphicalProperties.pivot!.value,
                 isReadable: true,
             },
             width: {
@@ -56,11 +50,16 @@ export const beginEndInflater: TShapeInflater = async (messageShape: IMessageSha
                 value: messageShape.graphicalProperties.height!.value,
                 isReadable: true,
             },
-            pivot: {
-                label: "Pivot",
-                value: messageShape.graphicalProperties.pivot!.value,
+            fillColorOne: {
+                label: 'Fill Color One',
+                value: messageShape.graphicalProperties.fillColorOne!.value,
                 isReadable: true,
-            }
+            },
+            strokeColor: {
+                label: 'Stroke',
+                value: messageShape.graphicalProperties.strokeColor!.value,
+                isReadable: true,
+            },
         }
     })
 }
@@ -69,7 +68,7 @@ export class BeginEndCreator implements IShapeCreator {
     type: ShapeType = ShapeType.BEGIN_END;
     create() {
         return new BeginEnd({
-            graphical: {
+            graphicalProperties: {
                 x: {
                     label: 'X',
                     value: '0',
@@ -131,18 +130,20 @@ class BeginEnd implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphical.strokeColor?.value}
-            fill={this.config.graphical.fillColorOne?.value}
+            stroke={this.config.graphicalProperties.strokeColor?.value}
+            fill={this.config.graphicalProperties.fillColorOne?.value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-                M ${this.config.graphical.x.value},${(+this.config.graphical.y.value) + +this.config.graphical.height.value} 
-                a ${+this.config.graphical.height.value/2},${+this.config.graphical.height.value/2} 0 1,0 0,${this.config.graphical.height.value}
-                l ${+this.config.graphical.width.value-+this.config.graphical.height.value} 0
-                a ${+this.config.graphical.height.value/2},${+this.config.graphical.height.value/2} 0 1,0 0,-${this.config.graphical.height.value}
-                l -${+this.config.graphical.width.value-+this.config.graphical.height.value} 0
+                M ${this.config.graphicalProperties.x.value},${(+this.config.graphicalProperties.y.value) + +this.config.graphicalProperties.height.value} 
+                a ${+this.config.graphicalProperties.height.value/2},${+this.config.graphicalProperties.height.value/2} 0 1,
+                    0 0,${this.config.graphicalProperties.height.value}
+                l ${+this.config.graphicalProperties.width.value-+this.config.graphicalProperties.height.value} 0
+                a ${+this.config.graphicalProperties.height.value/2},${+this.config.graphicalProperties.height.value/2} 0 1,
+                    0 0,-${this.config.graphicalProperties.height.value}
+                l -${+this.config.graphicalProperties.width.value-+this.config.graphicalProperties.height.value} 0
                 `} 
             />
     }

@@ -5,44 +5,29 @@ import {
 } from 'react-page-split';
 import 'react-page-split/style.css';
 
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import SVGCanvas from './SVGCanvas';
+import IShapeCreator from '../../model/shapes/IShapeCreator';
+import HeaderNavbar from './HeaderNavbar';
+import { useRootStore } from '../../providers/rootProvider';
+import ICanvasConfig, { Portrait } from "../../common/canvasConfig";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { LanguageData, useLanguageContext } from '../../providers/languageProvider';
+import { TProjectStore } from '../../stores/projectStore';
+import { TActionStore } from '../../stores/actionStore';
+import { observer } from 'mobx-react-lite';
+import blockDiagramGroup from '../../model/shapes/blockDiagramShapes/BlockDiagramGroup';
+import primitiveGroup from '../../model/shapes/primitiveShapes/PrimitivesGroup';
+import { IShapeGraphicalProps } from '../../model/shapes/IShape';
+import Project, { IProject } from '../../model/projectData/Project';
+import IShapeGroup from '../../model/shapes/IShapeGroup';
+import { IAction } from '../../model/actions/IAction';
+import { AlertDialog, Loader } from '../../components';
 import ShapesPanel from './leftPanelBar/ShapesPanel';
 import PagesPanel from './leftPanelBar/PagesPanel';
 import LayersPanel from './leftPanelBar/LayersPanel';
 import ObjectPropertiesPanel from './rightPanelBar/ObjectPropertiesPanel';
 import GraphicalPropertiesPanel from './rightPanelBar/GraphicalPropertiesPanel';
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import SVGCanvas from './SVGCanvas';
-import IShapeCreator from '../../model/IShapeCreator';
-import HeaderNavbar from './HeaderNavbar';
-import { useRootStore } from '../../providers/rootProvider';
-import Project, { IProject } from '../../model/Project';
-import { IShapeGraphicalProps } from '../../model/IShape';
-import ICanvasConfig, { Portrait } from "../../common/canvasConfig";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { LanguageData, useLanguageContext } from '../../providers/languageProvider';
-import PolygonsGroup from '../../model/shapes/PolygonsGroup';
-import { CircleCreator } from '../../model/shapes/primitiveShapes/Circle';
-import { EllipseCreator } from '../../model/shapes/primitiveShapes/Ellipse';
-import { RectCreator } from '../../model/shapes/primitiveShapes/Rect';
-import PrimitivesGroup from '../../model/shapes/PrimitivesGroup';
-import { LineCreator } from '../../model/shapes/primitiveShapes/Line';
-import { PolylineCreator } from '../../model/shapes/primitiveShapes/Polyline';
-import { PointCreator } from '../../model/shapes/primitiveShapes/Point';
-import IGeometryGroup from '../../model/IGeometryGroup';
-import { TProjectStore } from '../../stores/projectStore';
-import { TActionStore } from '../../stores/actionStore';
-import IAction from '../../model/Action';
-import { observer } from 'mobx-react-lite';
-import { AlertDialog } from '../../components';
-import { Loader } from '../../components';
-import BlockDiagramGroup from '../../model/shapes/BlockDiagramGroup';
-import { BeginEndCreator } from '../../model/shapes/blockDiagramShapes/BeginEnd';
-import { ProcessCreator } from '../../model/shapes/blockDiagramShapes/Process';
-import { OperationCreator } from '../../model/shapes/blockDiagramShapes/Operation';
-import { DecisionCreator } from '../../model/shapes/blockDiagramShapes/Decision';
-import { ModificationCreator } from '../../model/shapes/blockDiagramShapes/Modification';
-import { InputOutputCreator } from '../../model/shapes/blockDiagramShapes/InputOutput';
-import { RepeatCreator } from '../../model/shapes/blockDiagramShapes/Repeat';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {
@@ -76,26 +61,9 @@ const ProjectPage: React.FC = observer(() => {
 
     const updateProject = useCallback(async (projectId: string) => {
         const newProject = new Project([
-            new PolygonsGroup([
-                new CircleCreator(),
-                new EllipseCreator(),
-                new RectCreator(),
-            ]),
-            new PrimitivesGroup([
-                new LineCreator(),
-                new PolylineCreator(),
-                new PointCreator(),
-            ]),
-            new BlockDiagramGroup([
-                new BeginEndCreator(),
-                new OperationCreator(),
-                new ProcessCreator(),
-                new DecisionCreator(),
-                new ModificationCreator(),
-                new InputOutputCreator(),
-                new RepeatCreator(),
-            ])
-        ] as IGeometryGroup[], 'project', projectId)
+            primitiveGroup,
+            blockDiagramGroup,
+        ] as IShapeGroup[], 'project', projectId)
         projectStore.setProject(newProject);
         projectStore.setProjectToLoadId(projectId);
         // console.log(newProject)

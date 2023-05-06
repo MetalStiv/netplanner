@@ -1,22 +1,18 @@
-import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../../IShape";
-import IShapeCreator from "../../IShapeCreator";
+import IShapeCreator from "../IShapeCreator";
 import genID from "../../../common/helpers/genID";
-import { ShapeType } from "../../ShapeType";
+import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 
 interface IRectGraphicalProps extends IShapeGraphicalProps {
-    //sizes: { w: number, h: number, },
-    w: IGraphicalProperty,
-    h: IGraphicalProperty,
-    fill?: IGraphicalProperty,
-    stroke?: IGraphicalProperty,
-    rx?: IGraphicalProperty,
-    ry?: IGraphicalProperty,
-    pathLength?: number,
+    width: IGraphicalProperty,
+    height: IGraphicalProperty,
+    strokeColor: IGraphicalProperty,
+    fillColorOne: IGraphicalProperty
 }
 
 interface IRectConfig extends IShapeConfig {
     id?: string,
-    graphical: IRectGraphicalProps
+    graphicalProperties: IRectGraphicalProps
     zIndex: number,
 }
 
@@ -24,7 +20,7 @@ export class RectCreator implements IShapeCreator {
     type: ShapeType = ShapeType.RECTANGLE;
     create() {
         return new Rect({
-            graphical: {
+            graphicalProperties: {
                 x: {
                     label: 'X',
                     value: '0',
@@ -35,29 +31,29 @@ export class RectCreator implements IShapeCreator {
                     value: '0',
                     isReadable: true,
                 },
-                w: {
-                    label: 'Width',
-                    value: '45',
-                    isReadable: true,
-                },
-                h: {
-                    label: 'Height',
-                    value: '30',
-                    isReadable: true,
-                },
                 pivot: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
                 },
-                fill: {
-                    label: 'Fill',
-                    value: `#000000`,
+                width: {
+                    label: 'Width',
+                    value: '45',
                     isReadable: true,
                 },
-                stroke: {
-                    label: 'Stroke',
-                    value: `#000000`,
+                height: {
+                    label: 'Height',
+                    value: '30',
+                    isReadable: true,
+                },
+                strokeColor: {
+                    label: 'Stroke Color',
+                    value: '#000000',
+                    isReadable: true,
+                },
+                fillColorOne: {
+                    label: 'Fill Color One',
+                    value: '#ffffff',
                     isReadable: true,
                 },
             },
@@ -86,21 +82,21 @@ class Rect implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphical.stroke?.value ?? 'black'}
-            fill={this.config.graphical.fill?.value ?? 'black'}
+            stroke={this.config.graphicalProperties.strokeColor.value ?? 'black'}
+            fill={this.config.graphicalProperties.fillColorOne.value ?? 'black'}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={
-                `M${this.config.graphical.x.value} ${this.config.graphical.y.value} 
-                h ${this.config.graphical.w.value ?? 15}
-                v ${this.config.graphical.h.value ?? 10}
-                h -${this.config.graphical.w.value ?? 15}
+                `M${this.config.graphicalProperties.x.value} ${this.config.graphicalProperties.y.value} 
+                h ${this.config.graphicalProperties.width.value ?? 15}
+                v ${this.config.graphicalProperties.height.value ?? 10}
+                h -${this.config.graphicalProperties.width.value ?? 15}
                 Z`
             }
         />
-        //return <rect id={this.elemProps.id} key={this.elemProps.id} x={this.elemProps.startCoords?.x} y={this.elemProps.startCoords?.y} width={this.elemProps.sizes?.w ?? 15} height={this.elemProps.sizes?.h ?? 10} rx={this.elemProps.rDif?.rx ?? 0} ry={this.elemProps.rDif?.ry ?? 0} pathLength={this.elemProps.pathLength ?? ''} stroke={this.elemProps.stroke ?? 'black'} fill={this.elemProps.fill ?? 'black'} onDragStart={(e) => e.preventDefault} onMouseDown={handlerMouseDown} />;
+        
     }
 }
 

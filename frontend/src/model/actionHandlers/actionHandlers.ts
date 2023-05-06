@@ -1,5 +1,5 @@
-import { IMessage } from "../IMessage";
-import Project from "../Project";
+import { IMessage } from "../message/IMessage";
+import Project from "../projectData/Project";
 import { addShapeHandler } from "./addShapeHandler";
 import { changeGraphicalPropertyHandler } from "./changeGraphicalPropertyHandler";
 import { openProjectHandler } from "./openProjectHandler";

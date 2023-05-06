@@ -1,5 +1,4 @@
-import IShape from "./IShape";
-// import genID from "../common/helpers/genID";
+import IShape from "../shapes/IShape";
 
 const idSym: unique symbol = Symbol();
 const titleSym: unique symbol = Symbol();

@@ -1,7 +1,4 @@
-import { ActionType } from "../Action";
-import { IMessageShape } from "../IMessageShape";
-import IShape from "../IShape";
-import { shapeInflaters } from "../shapeInflaters";
+import { ActionType } from "../actions/ActionType";
 import { ActionHandler } from "./actionHandlers";
 
 export const changeGraphicalPropertyHandler: ActionHandler = async (project, message) => {

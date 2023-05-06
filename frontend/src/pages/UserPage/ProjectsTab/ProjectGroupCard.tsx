@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ConfirmationDialog } from "../../../components";
-import IProjectMeta from "../../../model/IProjectMeta";
+import IProjectMeta from "../../../model/projectData/IProjectMeta";
 import { useRootStore } from "../../../providers/rootProvider";
 import { TUsersStore } from "../../../stores/usersStore";
 import { observer } from "mobx-react-lite";

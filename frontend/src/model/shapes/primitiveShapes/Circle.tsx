@@ -1,32 +1,29 @@
-import IShape, { IShapeConfig, IShapeGraphicalProps, IGraphicalProperty } from "../../IShape";
-import IShapeCreator from "../../IShapeCreator";
-import genID from "../../../common/helpers/genID";
-import { ShapeType } from "../../ShapeType";
-import { TShapeInflater } from "../../shapeInflaters";
-import { IMessageShape } from "../../IMessageShape";
+import IShapeCreator from "../IShapeCreator";
+import { ShapeType } from "../ShapeType";
+import { TShapeInflater } from "../shapeInflaters";
+import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import { IMessageShape } from "../../message/IMessageShape";
 
 interface ICircleGraphicalProps extends IShapeGraphicalProps {
-    //additionalGraphProps: []
     r: IGraphicalProperty,
-    fill?: IGraphicalProperty,
-    stroke?: IGraphicalProperty,
+    strokeColor: IGraphicalProperty,
+    fillColorOne: IGraphicalProperty,
 }
 
 export interface ICircleConfig extends IShapeConfig {
-    //pathLength?: number,
     id?: string,
-    graphical: ICircleGraphicalProps,
+    graphicalProperties: ICircleGraphicalProps,
     zIndex: number,
 }
 
 export const circleInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type != ShapeType.CIRCLE) {
+    if (messageShape.type !== ShapeType.CIRCLE) {
         return null
     }
     return new Circle({
         id: messageShape.id,
         zIndex: 10,
-        graphical: {
+        graphicalProperties: {
             x: {
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
@@ -37,15 +34,25 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
                 value: messageShape.graphicalProperties.y.value,
                 isReadable: true,
             },
+            pivot: {
+                label: 'Pivot',
+                value: '0',
+                isReadable: true,
+            },
             r: {
                 label: "Radius",
                 value: messageShape.graphicalProperties.r!.value,
                 isReadable: true 
             },
-            pivot: {
-                label: 'Pivot',
-                value: '0',
-                isReadable: true,
+            strokeColor: {
+                label: "Stroke Color",
+                value: messageShape.graphicalProperties.r!.value,
+                isReadable: true 
+            },
+            fillColorOne: {
+                label: "Fill Color One",
+                value: messageShape.graphicalProperties.r!.value,
+                isReadable: true 
             },
         }
     })
@@ -55,7 +62,7 @@ export class CircleCreator implements IShapeCreator {
     type: ShapeType = ShapeType.CIRCLE;
     create() {
         return new Circle({
-            graphical: {
+            graphicalProperties: {
                 x: {
                     label: 'X',
                     value: '0',
@@ -66,24 +73,24 @@ export class CircleCreator implements IShapeCreator {
                     value: '0',
                     isReadable: true,
                 },
+                pivot: {
+                    label: 'Pivot',
+                    value: '0',
+                    isReadable: true,
+                },
                 r: {
                     label: 'Radius',
                     value: '15',
                     isReadable: true,
                 },
-                fill: {
-                    label: 'Fill',
-                    value: `#000000`,
+                strokeColor: {
+                    label: 'Stroke Color',
+                    value: '#000000',
                     isReadable: true,
                 },
-                stroke: {
-                    label: 'Stroke',
-                    value: `#000000`,
-                    isReadable: true,
-                },
-                pivot: {
-                    label: 'Pivot',
-                    value: '0',
+                fillColorOne: {
+                    label: 'Fill Color One',
+                    value: '#ffffff',
                     isReadable: true,
                 },
             },
@@ -108,16 +115,18 @@ class Circle implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphical.stroke?.value}
-            fill={this.config.graphical.fill?.value}
+            stroke={this.config.graphicalProperties.strokeColor.value}
+            fill={this.config.graphicalProperties.fillColorOne.value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-        M ${this.config.graphical.x.value},${(+this.config.graphical.y.value) + (+this.config.graphical.r.value)} 
-        a ${(this.config.graphical.r.value)},${(this.config.graphical.r.value)} 0 1,1 ${(+this.config.graphical.r.value) * 2},0 
-        a ${(this.config.graphical.r.value)},${(this.config.graphical.r.value)} 0 1,1 -${(+this.config.graphical.r.value) * 2},0
+        M ${this.config.graphicalProperties.x.value},${(+this.config.graphicalProperties.y.value) + (+this.config.graphicalProperties.r.value)} 
+        a ${(this.config.graphicalProperties.r.value)},${(this.config.graphicalProperties.r.value)} 0 1,
+            1 ${(+this.config.graphicalProperties.r.value) * 2},0 
+        a ${(this.config.graphicalProperties.r.value)},${(this.config.graphicalProperties.r.value)} 0 1,
+            1 -${(+this.config.graphicalProperties.r.value) * 2},0
         `} />
     }
 }

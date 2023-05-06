@@ -1,20 +1,17 @@
-import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../../IShape";
-import IShapeCreator from "../../IShapeCreator";
+import IShapeCreator from "../IShapeCreator";
 import genID from "../../../common/helpers/genID";
-import { ShapeType } from "../../ShapeType";
+import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 
 interface ILineGraphicalProps extends IShapeGraphicalProps {
-    //endCoords: { x: number, y: number },
     endXCoord: IGraphicalProperty,
     endYCoord: IGraphicalProperty,
-    //pathLength?: IGraphicalProperty,
-    stroke?: IGraphicalProperty,
-    fill?: IGraphicalProperty,
+    strokeColor: IGraphicalProperty,
 }
 
 interface ILineConfig extends IShapeConfig {
     id?: string,
-    graphical: ILineGraphicalProps,
+    graphicalProperties: ILineGraphicalProps,
     zIndex: number,
 }
 
@@ -22,7 +19,7 @@ export class LineCreator implements IShapeCreator {
     type: ShapeType = ShapeType.LINE;
     create() {
         return new Line({
-            graphical: {
+            graphicalProperties: {
                 x: {
                     label: 'X',
                     value: '0',
@@ -48,11 +45,11 @@ export class LineCreator implements IShapeCreator {
                     value: '20',
                     isReadable: true,
                 },
-                stroke: {
-                    label: 'Stroke',
-                    value: `#000000`,
+                strokeColor: {
+                    label: 'Stroke Color',
+                    value: '#000000',
                     isReadable: true,
-                },
+                }
             },
             zIndex: 0,
         });
@@ -79,20 +76,15 @@ class Line implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphical.stroke?.value ?? 'black'}
-            fill={this.config.graphical.fill?.value ?? 'black'}
+            stroke={this.config.graphicalProperties.strokeColor.value ?? 'black'}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={
-                `M ${this.config.graphical.x.value},${this.config.graphical.y.value}
-                l ${this.config.graphical.endXCoord.value},${this.config.graphical.endYCoord.value}`
+                `M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value}
+                l ${this.config.graphicalProperties.endXCoord.value},${this.config.graphicalProperties.endYCoord.value}`
             } />
-        // <g transform={`translate(${this.elemProps.startCoords.x} ${this.elemProps.startCoords.y})`} id={this.elemProps.id} key={this.elemProps.id} stroke={this.elemProps.stroke ?? 'black'} onDragStart={(e) => e.preventDefault} onMouseDown={handlerMouseDown}>
-        //     <line x1={this.elemProps.startCoords.x} y1={this.elemProps.startCoords.y} x2={this.elemProps.endCoord?.x} y2={this.elemProps.endCoord?.y} pathLength={this.elemProps.pathLength} />
-        // </g>
-        //);
     }
 }
 

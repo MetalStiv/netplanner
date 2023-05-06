@@ -1,4 +1,4 @@
-import IProjectMeta from "../model/IProjectMeta";
+import IProjectMeta from "../model/projectData/IProjectMeta";
 
 const projectsMetaSymbol: unique symbol = Symbol()
 const groupPathSymbol: unique symbol = Symbol()

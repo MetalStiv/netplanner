@@ -1,8 +1,8 @@
-import { IMessageShape } from "../../IMessageShape";
-import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../../IShape";
-import IShapeCreator from "../../IShapeCreator";
-import { TShapeInflater } from "../../shapeInflaters";
-import { ShapeType } from "../../ShapeType";
+import IShapeCreator from "../IShapeCreator";
+import { TShapeInflater } from "../shapeInflaters";
+import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import { IMessageShape } from "../../message/IMessageShape";
 
 interface IOperationProps extends IShapeGraphicalProps {
     width: IGraphicalProperty,
@@ -13,18 +13,18 @@ interface IOperationProps extends IShapeGraphicalProps {
 
 export interface IOperationConfig extends IShapeConfig {
     id?: string,
-    graphical: IOperationProps,
+    graphicalProperties: IOperationProps,
     zIndex: number,
 }
 
 export const operationInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type != ShapeType.OPERATION) {
+    if (messageShape.type !== ShapeType.OPERATION) {
         return null
     }
     return new Operation({
         id: messageShape.id,
         zIndex: 10,
-        graphical: {
+        graphicalProperties: {
             x: {
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
@@ -69,7 +69,7 @@ export class OperationCreator implements IShapeCreator {
     type: ShapeType = ShapeType.OPERATION;
     create() {
         return new Operation({
-            graphical: {
+            graphicalProperties: {
                 x: {
                     label: 'X',
                     value: '0',
@@ -77,6 +77,11 @@ export class OperationCreator implements IShapeCreator {
                 },
                 y: {
                     label: 'Y',
+                    value: '0',
+                    isReadable: true,
+                },
+                pivot: {
+                    label: 'Pivot',
                     value: '0',
                     isReadable: true,
                 },
@@ -90,12 +95,6 @@ export class OperationCreator implements IShapeCreator {
                     value: '80',
                     isReadable: true,
                 },
-                pivot: {
-                    label: 'Pivot',
-                    value: '0',
-                    isReadable: true,
-                },
-
                 strokeColor: {
                     label: 'Stroke Color',
                     value: '#000000',
@@ -131,18 +130,18 @@ class Operation implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphical.strokeColor?.value}
-            fill={this.config.graphical.fillColorOne?.value}
+            stroke={this.config.graphicalProperties.strokeColor?.value}
+            fill={this.config.graphicalProperties.fillColorOne?.value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-                M ${this.config.graphical.x.value},${this.config.graphical.y.value} 
-                l 0 ${this.config.graphical.height.value}
-                l ${this.config.graphical.width.value} 0
-                l 0 -${this.config.graphical.height.value}
-                l -${this.config.graphical.width.value} 0
+                M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value} 
+                l 0 ${this.config.graphicalProperties.height.value}
+                l ${this.config.graphicalProperties.width.value} 0
+                l 0 -${this.config.graphicalProperties.height.value}
+                l -${this.config.graphicalProperties.width.value} 0
                 `} 
             />
     }

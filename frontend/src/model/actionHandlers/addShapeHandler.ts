@@ -1,8 +1,7 @@
-import { ActionType } from "../Action";
-import { IMessageShape } from "../IMessageShape";
-import IShape from "../IShape";
-import { shapeInflaters } from "../shapeInflaters";
+import { shapeInflaters } from "../shapes/shapeInflaters";
+import IShape from "../shapes/IShape";
 import { ActionHandler } from "./actionHandlers";
+import { ActionType } from "../actions/ActionType";
 
 export const addShapeHandler: ActionHandler = async (project, message) => {
     if (message.type !== ActionType.ADD_SHAPE) {

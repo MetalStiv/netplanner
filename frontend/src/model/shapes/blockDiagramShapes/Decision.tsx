@@ -1,8 +1,8 @@
-import { IMessageShape } from "../../IMessageShape";
-import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../../IShape";
-import IShapeCreator from "../../IShapeCreator";
-import { TShapeInflater } from "../../shapeInflaters";
-import { ShapeType } from "../../ShapeType";
+import IShapeCreator from "../IShapeCreator";
+import { TShapeInflater } from "../shapeInflaters";
+import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import { IMessageShape } from "../../message/IMessageShape";
 
 interface IDecisionProps extends IShapeGraphicalProps {
     width: IGraphicalProperty,
@@ -13,18 +13,18 @@ interface IDecisionProps extends IShapeGraphicalProps {
 
 export interface IDecisionConfig extends IShapeConfig {
     id?: string,
-    graphical: IDecisionProps,
+    graphicalProperties: IDecisionProps,
     zIndex: number,
 }
 
 export const decisionInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type != ShapeType.DECISION) {
+    if (messageShape.type !== ShapeType.DECISION) {
         return null
     }
     return new Decision({
         id: messageShape.id,
         zIndex: 10,
-        graphical: {
+        graphicalProperties: {
             x: {
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
@@ -35,15 +35,9 @@ export const decisionInflater: TShapeInflater = async (messageShape: IMessageSha
                 value: messageShape.graphicalProperties.y.value,
                 isReadable: true,
             },
-
-            fillColorOne: {
-                label: 'Fill Color One',
-                value: messageShape.graphicalProperties.fillColorOne!.value,
-                isReadable: true,
-            },
-            strokeColor: {
-                label: 'Stroke',
-                value: messageShape.graphicalProperties.strokeColor!.value,
+            pivot: {
+                label: "Pivot",
+                value: messageShape.graphicalProperties.pivot!.value,
                 isReadable: true,
             },
             width: {
@@ -56,9 +50,14 @@ export const decisionInflater: TShapeInflater = async (messageShape: IMessageSha
                 value: messageShape.graphicalProperties.height!.value,
                 isReadable: true,
             },
-            pivot: {
-                label: "Pivot",
-                value: messageShape.graphicalProperties.pivot!.value,
+            fillColorOne: {
+                label: 'Fill Color One',
+                value: messageShape.graphicalProperties.fillColorOne!.value,
+                isReadable: true,
+            },
+            strokeColor: {
+                label: 'Stroke',
+                value: messageShape.graphicalProperties.strokeColor!.value,
                 isReadable: true,
             }
         }
@@ -69,7 +68,7 @@ export class DecisionCreator implements IShapeCreator {
     type: ShapeType = ShapeType.DECISION;
     create() {
         return new Decision({
-            graphical: {
+            graphicalProperties: {
                 x: {
                     label: 'X',
                     value: '0',
@@ -131,18 +130,19 @@ class Decision implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphical.strokeColor?.value}
-            fill={this.config.graphical.fillColorOne?.value}
+            stroke={this.config.graphicalProperties.strokeColor?.value}
+            fill={this.config.graphicalProperties.fillColorOne?.value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-                M ${+this.config.graphical.x.value+ +this.config.graphical.width.value/2},${this.config.graphical.y.value} 
-                l -${+this.config.graphical.width.value/2} ${+this.config.graphical.height.value/2}
-                l ${+this.config.graphical.width.value/2} ${+this.config.graphical.height.value/2}
-                l ${+this.config.graphical.width.value/2} -${+this.config.graphical.height.value/2}
-                l -${+this.config.graphical.width.value/2} -${+this.config.graphical.height.value/2}
+                M ${+this.config.graphicalProperties.x.value+ +this.config.graphicalProperties.width.value/2},
+                    ${this.config.graphicalProperties.y.value} 
+                l -${+this.config.graphicalProperties.width.value/2} ${+this.config.graphicalProperties.height.value/2}
+                l ${+this.config.graphicalProperties.width.value/2} ${+this.config.graphicalProperties.height.value/2}
+                l ${+this.config.graphicalProperties.width.value/2} -${+this.config.graphicalProperties.height.value/2}
+                l -${+this.config.graphicalProperties.width.value/2} -${+this.config.graphicalProperties.height.value/2}
                 `} 
             />
     }

@@ -1,10 +1,10 @@
-import { IGraphicalProperty } from "../../../model/IShape";
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 import { IShapeProps } from "../ProjectPage";
 import { PropertyPanel } from "../../../components";
-import { ChangeShapePropertyAction } from "../../../model/Action";
+import { ChangeShapePropertyAction } from "../../../model/actions/ChangeShapePropertyAction";
 import { TActionStore } from "../../../stores/actionStore";
 import { useRootStore } from "../../../providers/rootProvider";
+import { IGraphicalProperty } from "../../../model/shapes/IShape";
 
 interface IGraphicalPropertiesPanelProps {
     // graphicalConfig: IShapeGraphicalProps | undefined,

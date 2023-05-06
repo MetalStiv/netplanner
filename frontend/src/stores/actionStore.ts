@@ -1,5 +1,5 @@
 import { SendMessage } from "react-use-websocket";
-import IAction from "../model/Action";
+import { IAction } from "../model/actions/IAction";
 
 const actionsSymbol: unique symbol = Symbol()
 const maxSizeSymbol: unique symbol = Symbol()

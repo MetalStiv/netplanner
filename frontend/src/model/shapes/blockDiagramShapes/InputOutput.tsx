@@ -1,8 +1,8 @@
-import { IMessageShape } from "../../IMessageShape";
-import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../../IShape";
-import IShapeCreator from "../../IShapeCreator";
-import { TShapeInflater } from "../../shapeInflaters";
-import { ShapeType } from "../../ShapeType";
+import IShapeCreator from "../IShapeCreator";
+import { TShapeInflater } from "../shapeInflaters";
+import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import { IMessageShape } from "../../message/IMessageShape";
 
 interface IInputOutputProps extends IShapeGraphicalProps {
     width: IGraphicalProperty,
@@ -13,18 +13,18 @@ interface IInputOutputProps extends IShapeGraphicalProps {
 
 export interface IInputOutputConfig extends IShapeConfig {
     id?: string,
-    graphical: IInputOutputProps,
+    graphicalProperties: IInputOutputProps,
     zIndex: number,
 }
 
 export const inputOutputInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type != ShapeType.INPUT_OUTPUT) {
+    if (messageShape.type !== ShapeType.INPUT_OUTPUT) {
         return null
     }
     return new InputOutput({
         id: messageShape.id,
         zIndex: 10,
-        graphical: {
+        graphicalProperties: {
             x: {
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
@@ -69,7 +69,7 @@ export class InputOutputCreator implements IShapeCreator {
     type: ShapeType = ShapeType.INPUT_OUTPUT;
     create() {
         return new InputOutput({
-            graphical: {
+            graphicalProperties: {
                 x: {
                     label: 'X',
                     value: '0',
@@ -77,6 +77,11 @@ export class InputOutputCreator implements IShapeCreator {
                 },
                 y: {
                     label: 'Y',
+                    value: '0',
+                    isReadable: true,
+                },
+                pivot: {
+                    label: 'Pivot',
                     value: '0',
                     isReadable: true,
                 },
@@ -90,12 +95,6 @@ export class InputOutputCreator implements IShapeCreator {
                     value: '80',
                     isReadable: true,
                 },
-                pivot: {
-                    label: 'Pivot',
-                    value: '0',
-                    isReadable: true,
-                },
-
                 strokeColor: {
                     label: 'Stroke Color',
                     value: '#000000',
@@ -131,19 +130,19 @@ class InputOutput implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphical.strokeColor?.value}
-            fill={this.config.graphical.fillColorOne?.value}
+            stroke={this.config.graphicalProperties.strokeColor?.value}
+            fill={this.config.graphicalProperties.fillColorOne?.value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
-                M ${this.config.graphical.x.value},${this.config.graphical.y.value}
-                m ${+this.config.graphical.height.value/4} 0
-                l -${+this.config.graphical.height.value/4} ${+this.config.graphical.height.value}
-                l ${+this.config.graphical.width.value-+this.config.graphical.height.value/4} 0
-                l ${+this.config.graphical.height.value/4} -${+this.config.graphical.height.value}
-                l -${+this.config.graphical.width.value-+this.config.graphical.height.value/4} 0
+                M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value}
+                m ${+this.config.graphicalProperties.height.value/4} 0
+                l -${+this.config.graphicalProperties.height.value/4} ${+this.config.graphicalProperties.height.value}
+                l ${+this.config.graphicalProperties.width.value-+this.config.graphicalProperties.height.value/4} 0
+                l ${+this.config.graphicalProperties.height.value/4} -${+this.config.graphicalProperties.height.value}
+                l -${+this.config.graphicalProperties.width.value-+this.config.graphicalProperties.height.value/4} 0
                 `} 
             />
     }

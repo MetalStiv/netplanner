@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useRef, ReactElement } from 'react';
-import { IShapeConfig, IShape, IShapeGraphicalProps } from '../../model/IShape';
 import { IShapeProps } from '../../pages/ProjectPage/ProjectPage'
-import IShapeCreator from '../../model/IShapeCreator';
-import { ILayer } from '../../model/Layer';
+import IShapeCreator from '../../model/shapes/IShapeCreator';
 // import Page from '../../model/Page';
 import ICanvasConfig from '../../common/canvasConfig';
-import { ChangeShapePropertyAction, DrawShapeAction } from '../../model/Action';
+import { ChangeShapePropertyAction } from '../../model/actions/ChangeShapePropertyAction';
 import { useRootStore } from '../../providers/rootProvider';
 import { TActionStore } from '../../stores/actionStore';
 import { observer } from 'mobx-react-lite';
 import { RangeInput } from '../../components';
-import Page from '../../model/Page';
+import Page from '../../model/projectData/Page';
+import IShape, { IShapeGraphicalProps } from '../../model/shapes/IShape';
+import { DrawShapeAction } from '../../model/actions/DrawShapeAction';
+import { ILayer } from '../../model/projectData/Layer';
 
 interface SVGCanvasProps {
     // currentPage: Page,
@@ -105,10 +106,10 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         setCurrentPage(new Page(currentPage?.getID(), currentPage?.getTitle(), currentPage!.getLayers().map(layer => {
             layer.setShapes(layer.getShapes().map(shapeItem => {
                 if (shapeItem.config.id === shapeID) {
-                    let newData: IShapeGraphicalProps = { ...shapeItem!.config.graphical };
+                    let newData: IShapeGraphicalProps = { ...shapeItem!.config.graphicalProperties };
                     newData.x.value = Math.trunc(toSVGCoords.x - (shift?.x ?? 0)).toString();
                     newData.y.value = Math.trunc(toSVGCoords.y - (shift?.y ?? 0)).toString();
-                    shapeItem.config.graphical = newData;
+                    shapeItem.config.graphicalProperties = newData;
                 }
                 return shapeItem;
             }))
@@ -163,7 +164,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
 
         svgCanvas.current!.onmousemove = onMouseMove;
         svgCanvas.current!.onmouseup = () => {
-            const moveShapeAction = new ChangeShapePropertyAction(movableShape!, layerID, movableShape!.config.graphical);
+            const moveShapeAction = new ChangeShapePropertyAction(movableShape!, layerID, movableShape!.config.graphicalProperties);
             actionStore.push(moveShapeAction);
             svgCanvas.current!.onmousemove = null;
             svgCanvas.current!.onmouseup = null;
@@ -276,7 +277,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
             //     h: Math.round(e.currentTarget?.getBBox().height ?? e.domRect.height)
             // },
             graphProps: {
-                ...curObj!.config.graphical,
+                ...curObj!.config.graphicalProperties,
                 // w: {
                 //     label: 'width',
                 //     value: `${Math.round(e.currentTarget?.getBBox().width ?? e.domRect.width)}`,

@@ -1,7 +1,7 @@
-import Page from '../../../model/Page';
 import { useState } from 'react';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
 import titleUniqueization from '../../../common/helpers/titleUniquezation';
+import Page from '../../../model/projectData/Page';
 
 
 interface ILayersPanelProps {

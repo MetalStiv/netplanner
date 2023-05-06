@@ -1,5 +1,5 @@
 import { IMessageShape } from "./IMessageShape"
-import { IShapeGraphicalProps } from "./IShape"
+import { IShapeGraphicalProps } from "../shapes/IShape"
 
 export interface IMessage {
     type: string,

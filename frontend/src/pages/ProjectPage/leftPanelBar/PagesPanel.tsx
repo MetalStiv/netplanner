@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { Collapse } from 'react-collapse';
 import { useClickAndDoubleClickHandler } from '../../../common/customHooks/useClickAndDoubleClickHandler';
 //import Page from '../../../model/Page';
-import { IProject } from '../../../model/Project';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
 import titleUniqueization from '../../../common/helpers/titleUniquezation';
+import { IProject } from '../../../model/projectData/Project';
 
 interface PagesPanelProps {
     currentProject: IProject,

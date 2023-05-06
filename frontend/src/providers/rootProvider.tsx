@@ -3,9 +3,8 @@ import { createRootStore, TRootStore } from "../stores/rootStore";
 import { useLocalObservable } from 'mobx-react-lite';
 import useWebSocket from "react-use-websocket";
 import { getAccessToken } from "axios-jwt";
-import IAction from "../model/Action";
 import actionHandlers from "../model/actionHandlers/actionHandlers";
-import Project from "../model/Project";
+import Project from "../model/projectData/Project";
 
 export const RootStoreContext = React.createContext<TRootStore>(createRootStore());
 

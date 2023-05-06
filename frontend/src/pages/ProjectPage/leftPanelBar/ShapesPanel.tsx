@@ -2,7 +2,7 @@ import React from 'react';
 import { useRootStore } from '../../../providers/rootProvider';
 import { Dropdown } from '../../../components';
 //import { IDraggableShapeProps } from '../ProjectPage';
-import IShapeCreator from '../../../model/IShapeCreator';
+import IShapeCreator from '../../../model/shapes/IShapeCreator';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
 
 interface IShapesPanelProps {

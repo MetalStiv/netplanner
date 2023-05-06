@@ -1,13 +1,14 @@
-import { IMessageShape } from "./IMessageShape";
 import IShape from "./IShape";
-import { beginEndInflater } from "./shapes/blockDiagramShapes/BeginEnd";
-import { decisionInflater } from "./shapes/blockDiagramShapes/Decision";
-import { inputOutputInflater } from "./shapes/blockDiagramShapes/InputOutput";
-import { modificationInflater } from "./shapes/blockDiagramShapes/Modification";
-import { operationInflater } from "./shapes/blockDiagramShapes/Operation";
-import { processInflater } from "./shapes/blockDiagramShapes/Process";
-import { repeatInflater } from "./shapes/blockDiagramShapes/Repeat";
-import { circleInflater } from "./shapes/primitiveShapes/Circle";
+import { beginEndInflater } from "./blockDiagramShapes/BeginEnd";
+import { decisionInflater } from "./blockDiagramShapes/Decision";
+import { inputOutputInflater } from "./blockDiagramShapes/InputOutput";
+import { modificationInflater } from "./blockDiagramShapes/Modification";
+import { operationInflater } from "./blockDiagramShapes/Operation";
+import { processInflater } from "./blockDiagramShapes/Process";
+import { repeatInflater } from "./blockDiagramShapes/Repeat";
+import { circleInflater } from "./primitiveShapes/Circle";
+import { IMessageShape } from "../message/IMessageShape";
+import { ellipseInflater } from "./primitiveShapes/Ellipse";
 
 export type TShapeInflater = (message: IMessageShape) => Promise<IShape | null>;
 
@@ -19,6 +20,7 @@ export interface IShapeInflaters {
 export const shapeInflaters: IShapeInflaters = {
     inflaters: [
         circleInflater,
+        ellipseInflater,
 
         beginEndInflater,
         operationInflater,

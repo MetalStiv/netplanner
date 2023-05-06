@@ -1,18 +1,17 @@
-import IShape, { IGraphicalProperty, IShapeGraphicalProps, IShapeConfig } from "../../IShape";
-import IShapeCreator from "../../IShapeCreator";
+import IShapeCreator from "../IShapeCreator";
 import genID from "../../../common/helpers/genID";
-import { ShapeType } from "../../ShapeType";
+import { ShapeType } from "../ShapeType";
+import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 
 interface IPolylineGraphicalProps extends IShapeGraphicalProps {
     points: [number, number][],
     pathLength?: IGraphicalProperty,
-    stroke?: IGraphicalProperty,
-    fill?: IGraphicalProperty,
+    strokeColor: IGraphicalProperty,
 }
 
 interface IPolylineProps extends IShapeConfig {
     id?: string,
-    graphical: IPolylineGraphicalProps,
+    graphicalProperties: IPolylineGraphicalProps,
     zIndex: number,
 }
 
@@ -20,7 +19,7 @@ export class PolylineCreator implements IShapeCreator {
     type: ShapeType = ShapeType.POLYLINE;
     create() {
         return new Polyline({
-            graphical: {
+            graphicalProperties: {
                 x: {
                     label: 'X',
                     value: '0',
@@ -37,11 +36,11 @@ export class PolylineCreator implements IShapeCreator {
                     isReadable: true,
                 },
                 points: [[15, -30], [40, 45], [50, -70]],
-                // stroke: {
-                //     label: 'Stroke',
-                //     value: `#000000`,
-                //     isReadable: true,
-                // },
+                strokeColor: {
+                    label: 'Stroke',
+                    value: '#000000',
+                    isReadable: true,
+                },
             },
             zIndex: 0,
         });
@@ -64,25 +63,22 @@ class Polyline implements IShape {
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
         layerZIndex: number) {
         let pathStr: string = '';
-        this.config.graphical.points.forEach(el => pathStr = pathStr + ' l' + el.join(' '));
+        this.config.graphicalProperties.points.forEach(el => pathStr = pathStr + ' l' + el.join(' '));
         return <path
             id={this.config.id ?? ''}
             key={this.config.id ?? ''}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphical.stroke?.value ?? 'black'}
-            fill={this.config.graphical.fill?.value ?? 'transparent'}
+            stroke={this.config.graphicalProperties.strokeColor.value ?? 'black'}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={
-                `M ${this.config.graphical.x.value}, ${this.config.graphical.y.value}
+                `M ${this.config.graphicalProperties.x.value}, ${this.config.graphicalProperties.y.value}
                 ${pathStr}`
             }
         />
-        //this.elemProps.points.unshift([this.elemProps.startCoords.x, this.elemProps.startCoords.y]);
-        //return <polyline id={this.elemProps.id} key={this.elemProps.id} points={this.elemProps.points?.join(' ')} pathLength={this.elemProps.pathLength} stroke={this.elemProps.stroke ?? 'black'} fill={this.elemProps.fill ?? 'none'} onDragStart={(e) => e.preventDefault} onMouseDown={handlerMouseDown} />;
     }
 }
 

@@ -3,7 +3,7 @@ import { useRootStore } from "../../../providers/rootProvider";
 import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
 import { projectMicroservice, userMicroservice } from "../../../common/axiosMicroservices";
 import ProjectCard from "./ProjectCard";
-import IProjectMeta from "../../../model/IProjectMeta";
+import IProjectMeta from "../../../model/projectData/IProjectMeta";
 import { observer } from "mobx-react-lite";
 import { TUsersStore } from "../../../stores/usersStore";
 import IUser from "../../../model/IUser";
