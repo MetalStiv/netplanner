@@ -16,8 +16,8 @@ const ShapesPanel = ({ getCreatorOnDragCallback }: IShapesPanelProps) => {
     return (
         <div id="shapesPanel">
             <p className="panel-title">{lang?.langText.projectPage.shapesPanel.title}</p>
-            <div>
-                {projectStore.getProject()?.shapesGroups!.map(function (group, i) {
+            <div className='panel-content'>
+                {projectStore.getProject()?.getShapesGroups()!.map(function (group, i) {
                     return (
                         <Dropdown key={group.title + i} title={group.title}>
                             <ul className='collapse-group'>

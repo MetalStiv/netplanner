@@ -17,19 +17,19 @@ export interface IActionStore {
 }
 
 export const createActionStore = () => {
-    const store: IActionStore = { 
+    const store: IActionStore = {
         [actionsSymbol]: [],
         [maxSizeSymbol]: 1000,
         [messageSenderSymbol]: null,
 
-        setMessageSender(sendMessage: SendMessage){
+        setMessageSender(sendMessage: SendMessage) {
             this[messageSenderSymbol] = sendMessage
         },
 
         push(action: IAction) {
             this[actionsSymbol].length === this[maxSizeSymbol] && this[actionsSymbol].shift();
             this[actionsSymbol].push(action);
-            console.log(JSON.stringify(action.getMessage()));
+            // console.log(JSON.stringify(action.getMessage()));
             this[messageSenderSymbol] && this[messageSenderSymbol]!(JSON.stringify(action.getMessage()))
         },
 

@@ -21,8 +21,8 @@ export interface ILayer {
     setTitle(newTitle: string): void,
     getZIndex(): number,
     setZIndex(val: number): void,
-    getIsCurrent(): boolean,
-    getIsVisible(): boolean,
+    isCurrent(): boolean,
+    isVisible(): boolean,
     getShapes(): IShape[],
     setShapes(shapes: IShape[]): void,
     addShape(shape: IShape): void,
@@ -38,10 +38,10 @@ class Layer implements ILayer {
     [isVisibleSym]: boolean;
     [isCurrentSym]: boolean;
 
-    constructor(id: string = "reqertert", layersCount: number, title: string = "Layer", shapes: IShape[]) {
+    constructor(id: string = "reqertert", zIndex: number, title: string = "Layer", shapes: IShape[]) {
         this[idSym] = id;
         this[titleSym] = title;
-        this[zIndexSym] = layersCount * 1000;
+        this[zIndexSym] = zIndex;
         this[shapesSym] = shapes;
         this[isVisibleSym] = true;
         this[isCurrentSym] = true;
@@ -74,10 +74,10 @@ class Layer implements ILayer {
     getShapes() {
         return this[shapesSym];
     }
-    getIsCurrent() {
+    isCurrent() {
         return this[isCurrentSym];
     }
-    getIsVisible() {
+    isVisible() {
         return this[isVisibleSym];
     }
     setShapes(shapes: IShape[]) {

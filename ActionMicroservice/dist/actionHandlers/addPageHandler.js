@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -35,14 +35,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.addPageHandler = void 0;
+var mongodb_1 = require("mongodb");
 var actionType_1 = require("../actionType");
-var addPageHandler = function (collection, message) { return __awaiter(void 0, void 0, void 0, function () {
+var addPageHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
+    var newPage, newLayers;
     return __generator(this, function (_a) {
         if (message.type !== actionType_1.ActionType.ADD_PAGE) {
             return [2 /*return*/, false];
         }
+        newPage = {
+            _id: new mongodb_1.ObjectId(),
+            name: message.data.newPage.name,
+            projectId: new mongodb_1.ObjectId(message.projectId)
+        };
+        message.data.newPage.id = newPage._id.toString();
+        newLayers = [];
+        message.data.newPage.layers.forEach(function (layer) {
+            newLayers.push({
+                _id: new mongodb_1.ObjectId(),
+                name: layer.name,
+                pageId: new mongodb_1.ObjectId(message.data.newPage.id),
+                zIndex: layer.zIndex
+            });
+            layer.id = newLayers.at(-1)._id.toString();
+        });
+        collections.pageCollection.insertOne(newPage);
+        collections.layerCollection.insertMany(newLayers);
         return [2 /*return*/, true];
     });
 }); };

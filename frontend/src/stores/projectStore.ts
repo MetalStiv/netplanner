@@ -1,4 +1,4 @@
-import { IProject } from "../model/projectData/Project"
+import Project, { IProject } from "../model/projectData/Project"
 
 const projectSymbol: unique symbol = Symbol()
 const projectToLoadId: unique symbol = Symbol()
@@ -16,6 +16,7 @@ interface IProjectStore {
     getProjectToLoadId: () => string,
     setWebSocketUpdater: (webSocketUpdater: () => void) => void,
     rerender: () => void,
+    update: () => void,
 
     clearStore: () => void,
 }
@@ -50,6 +51,17 @@ export const createProjectStore = () => {
 
         rerender() {
             this[rerenderSymbol] = !this[rerenderSymbol];
+        },
+
+        update() {
+            if (this[projectSymbol]) {
+                const newProject = new Project(this[projectSymbol].getShapesGroups(),
+                    this[projectSymbol].getTitle(),
+                    this[projectSymbol].getID(),
+                    this[projectSymbol].getPages());
+                newProject.setIsLoading(false);
+                this.setProject(newProject);
+            }
         },
 
         clearStore() {

@@ -56,8 +56,8 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId }) => {
             onDoubleClick={() => {
                 navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)
             }}>
-            <img className="project-image" src={imageLoadingPlaceholder} 
-                onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)}/>
+            <img className="project-image" src={imageLoadingPlaceholder}
+                onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)} />
             <div className="base-info">
                 <div className="modified-info">{lang!.langText.userPage.projectTab.justCreated}</div>
                 {
@@ -151,8 +151,8 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId }) => {
                             " 13 16 13C17.6569 13 19 14.3431 19 16C19 17.6569 17.6569 19 16 19ZM4 13C2.34315 13 1 " +
                             " 11.6569 1 10C1 8.34315 2.34315 7 4 7C5.65685 7 7 8.34315 7 10C7 11.6569 5.65685 13 " +
                             " 4 13ZM16 7C14.3431 7 13 5.65685 13 4C13 2.34315 14.3431 1 16 1C17.6569 1 19 2.34315 " +
-                            " 19 4C19 5.65685 17.6569 7 16 7Z"} stroke="#292C33" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" />
+                            " 19 4C19 5.65685 17.6569 7 16 7Z"} stroke="#292C33" strokeWidth="2"
+                            strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </div>
 
@@ -166,13 +166,13 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId }) => {
                             " 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} fill="#292C33" />
                         <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 " +
                             " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} stroke="#292C33"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 " +
                             " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} stroke="#292C33"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 " +
                             " 2.07143C3 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} stroke="#292C33"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </div>
 

@@ -7,13 +7,6 @@ export const changeGraphicalPropertiesHandler: ActionHandler = async (collection
         return false;
     };
     console.log(message)
-    // const newShape: IShape = {
-    //     _id: new ObjectId(),
-    //     type: message.data.newShape.type,
-    //     layerId: new ObjectId(message.layerId),
-    //     zIndex: parseInt(message.data.zIndex),
-    //     graphicalProperties: message.data.newShape.graphicalProperties
-    // };
 
     collections.shapeCollection.findOneAndUpdate(
         {

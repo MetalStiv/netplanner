@@ -9,6 +9,9 @@ import { repeatInflater } from "./blockDiagramShapes/Repeat";
 import { circleInflater } from "./primitiveShapes/Circle";
 import { IMessageShape } from "../message/IMessageShape";
 import { ellipseInflater } from "./primitiveShapes/Ellipse";
+import { lineInflater } from "./primitiveShapes/Line";
+import { polylineInflater } from "./primitiveShapes/Polyline";
+import { rectInflater } from "./primitiveShapes/Rect";
 
 export type TShapeInflater = (message: IMessageShape) => Promise<IShape | null>;
 
@@ -21,6 +24,9 @@ export const shapeInflaters: IShapeInflaters = {
     inflaters: [
         circleInflater,
         ellipseInflater,
+        lineInflater,
+        polylineInflater,
+        rectInflater,
 
         beginEndInflater,
         operationInflater,
@@ -34,7 +40,7 @@ export const shapeInflaters: IShapeInflaters = {
         let result: IShape | null = null;
         await this.inflaters.every(async inflater => {
             const shape: IShape | null = await inflater(message);
-            if (!shape){
+            if (!shape) {
                 return false;
             }
             result = shape;

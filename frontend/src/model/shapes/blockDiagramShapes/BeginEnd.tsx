@@ -23,7 +23,7 @@ export const beginEndInflater: TShapeInflater = async (messageShape: IMessageSha
     }
     return new BeginEnd({
         id: messageShape.id,
-        zIndex: 10,
+        zIndex: messageShape.zIndex,
         graphicalProperties: {
             x: {
                 label: "X",
@@ -122,8 +122,8 @@ class BeginEnd implements IShape {
         this.config.zIndex = obj.zIndex ?? 0;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
-        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
         layerZIndex: number) {
         return <path
             id={this.config.id}
@@ -132,20 +132,20 @@ class BeginEnd implements IShape {
             role="shape"
             stroke={this.config.graphicalProperties.strokeColor?.value}
             fill={this.config.graphicalProperties.fillColorOne?.value}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={`
                 M ${this.config.graphicalProperties.x.value},${(+this.config.graphicalProperties.y.value) + +this.config.graphicalProperties.height.value} 
-                a ${+this.config.graphicalProperties.height.value/2},${+this.config.graphicalProperties.height.value/2} 0 1,
+                a ${+this.config.graphicalProperties.height.value / 2},${+this.config.graphicalProperties.height.value / 2} 0 1,
                     0 0,${this.config.graphicalProperties.height.value}
-                l ${+this.config.graphicalProperties.width.value-+this.config.graphicalProperties.height.value} 0
-                a ${+this.config.graphicalProperties.height.value/2},${+this.config.graphicalProperties.height.value/2} 0 1,
+                l ${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.height.value} 0
+                a ${+this.config.graphicalProperties.height.value / 2},${+this.config.graphicalProperties.height.value / 2} 0 1,
                     0 0,-${this.config.graphicalProperties.height.value}
-                l -${+this.config.graphicalProperties.width.value-+this.config.graphicalProperties.height.value} 0
-                `} 
-            />
+                l -${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.height.value} 0
+                `}
+        />
     }
 }
 
