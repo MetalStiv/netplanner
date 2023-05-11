@@ -19,8 +19,8 @@ const ProjectsTab: React.FC = observer(() => {
         const userIds: Set<string> = new Set<string>();
         projects.forEach((project: IProjectMeta) => {
             userIds.add(project.ownerId);
-            if (project.subscriberIds){
-                project.subscriberIds.forEach(id => userIds.add(id))
+            if (project.invites){
+                project.invites.forEach(i => userIds.add(i.userId))
             }
         });
         const users = await userMicroservice.get<IUser[]>('getUsersByIds', { params: {ids: Array.from(userIds)}})
@@ -31,8 +31,12 @@ const ProjectsTab: React.FC = observer(() => {
 
     const getProjects = useCallback(async () => {
         let projects = await projectMicroservice.get<IProjectMeta[]>('getProjects')
+        const openMenuId = projectsMetaStore.getData().find(p => p.showMenu === true)?.id ?? "";
+        const openShareFormId = projectsMetaStore.getData().find(p => p.showSharingForm === true)?.id ?? "";
+
         if (projects.status === 200){
-            const data = projects.data.map((item: IProjectMeta) => ({...item, "hide": false, "showMenu": false}));
+            const data = projects.data.map((item: IProjectMeta) => ({...item, "hide": false, 
+                "showMenu": item.id === openMenuId, "showSharingForm": item.id === openShareFormId}));
             await getUsers(data)
             projectsMetaStore?.setData(data)
         }
@@ -174,6 +178,7 @@ const ProjectsTab: React.FC = observer(() => {
                                 : <ProjectCard 
                                         projectId={p.id} 
                                         key={`card_${p.id}`} 
+                                        updateProjects={getProjects}
                                 />
                         })
                     : projectsMetaStore?.getData()
@@ -186,7 +191,8 @@ const ProjectsTab: React.FC = observer(() => {
                                 />
                                 : <ProjectCard 
                                         projectId={p.id} 
-                                        key={`card_${p.id}`} 
+                                        key={`card_${p.id}`}
+                                        updateProjects={getProjects}
                                 />
                         })
             }

@@ -59,7 +59,15 @@ export const ru: ILanguage = {
             createCheckpoint: "Создать резерв",
             restoreFromCheckpoint: "Востановить из резерва",
             moveToGroup: "Поместить в группу",
-            cancel: "Отмена"
+            cancel: "Отмена",
+            sharingForm: {
+                title: "Общий доступ к ",
+                readonly: "Только чтение",
+                fullAccess: "Полный доступ",
+                enterEmail: "Введите email",
+                invite: "Пригласить",
+                revoke: "Отозвать",
+            }
         },
         settingsTab: {
             userInfo: {

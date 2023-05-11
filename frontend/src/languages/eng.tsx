@@ -59,7 +59,16 @@ export const eng: ILanguage = {
             createCheckpoint: "Create checkpoint",
             restoreFromCheckpoint: "Restore from checkpoint",
             moveToGroup: "Move to group",
-            cancel: "Cancel"
+            cancel: "Cancel",            
+            sharingForm: {
+                title: "Share ",
+                readonly: "Read only",
+                fullAccess: "Full access",
+                enterEmail: "Enter email",
+                invite: "Invite",
+                revoke: "Revoke"
+            }
+
         },
         settingsTab: {
             userInfo: {

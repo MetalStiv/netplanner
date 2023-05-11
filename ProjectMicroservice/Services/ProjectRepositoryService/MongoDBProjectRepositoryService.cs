@@ -8,6 +8,7 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
     private readonly IMongoCollection<Page> _pageCollection;
     private readonly IMongoCollection<Layer> _layerCollection;
     private readonly IMongoCollection<Shape> _shapeCollection;
+    private readonly IMongoCollection<Invite> _inviteCollection;
 
     public MongoDBProjectRepositoryService(ProjectDBSettings projectDBSettings)
     {
@@ -23,6 +24,8 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
             GetCollection<Layer>(projectDBSettings.LayerCollectionName);
         _shapeCollection = mongoDatabase.
             GetCollection<Shape>(projectDBSettings.ShapeCollectionName);
+        _inviteCollection = mongoDatabase.
+            GetCollection<Invite>(projectDBSettings.InviteCollectionName);
     }
 
     public async Task AddAsync(ProjectMeta newProjectMeta, string pageName, string layerName)
@@ -58,6 +61,16 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
         );
     }
 
+    public async Task AddInvite(Invite invite)
+    {
+        var checkInvite = await
+            (await _inviteCollection.FindAsync(i => i.ProjectId == invite.ProjectId && i.UserId == invite.UserId)).AnyAsync();
+        if (checkInvite == false)
+        {
+            await _inviteCollection.InsertOneAsync(invite);
+        }
+    }
+
     public async Task RemovePagesAsync(string projectId)
     {
         var pages = await (await _pageCollection.FindAsync(p => p.ProjectId == projectId)).ToListAsync();
@@ -88,4 +101,7 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
 
     public async Task<List<ProjectMeta>?> GetProjectsAsync(string userId) =>
         await (await _projectMetaCollection.FindAsync(p => p.OwnerId == userId)).ToListAsync();
+    
+    public async Task<List<Invite>> GetProjectInvitesAsync(string projectId) =>
+        await (await _inviteCollection.FindAsync(i => i.ProjectId == projectId)).ToListAsync();
 }

@@ -1,3 +1,5 @@
+import IInvite from "./IInvite";
+
 interface IProjectMeta {
     id: string,
     name: string,
@@ -7,7 +9,9 @@ interface IProjectMeta {
     subscriberIds: string[],
     creationTime: string,
     hide: boolean,
-    showMenu: boolean
+    showMenu: boolean,
+    showSharingForm: boolean,
+    invites: IInvite[]
 }
 
 export default IProjectMeta;

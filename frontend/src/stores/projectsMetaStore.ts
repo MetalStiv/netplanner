@@ -15,6 +15,7 @@ interface IProjectsMetaStore {
     updateOrInsert: (newProjectMetaData: IProjectMeta) => void,
     hideById: (id: string) => void,
     switchMenuById: (id: string) => void,
+    switchShareFormById: (id: string) => void,
 
     getCurrentGroupId: () => string | null,
     inGroup: (id: string) => void,
@@ -69,6 +70,10 @@ export const createProjectsMetaStore = () => {
 
         switchMenuById(id: string){
             this[projectsMetaSymbol].forEach(p => p.id === id ? p.showMenu = !p.showMenu : p.showMenu = false)
+        },
+
+        switchShareFormById(id: string){
+            this[projectsMetaSymbol].forEach(p => p.id === id ? p.showSharingForm = !p.showSharingForm : p.showSharingForm = false)
         },
 
         getCurrentGroupId(){

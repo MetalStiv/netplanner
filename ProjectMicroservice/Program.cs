@@ -6,13 +6,16 @@ var dbSettings = new ProjectDBSettings(
     Environment.GetEnvironmentVariable("DB_PROJECT_META_COLLECTION_NAME") ?? "",
     Environment.GetEnvironmentVariable("DB_PAGE_COLLECTION_NAME") ?? "",
     Environment.GetEnvironmentVariable("DB_LAYER_COLLECTION_NAME") ?? "",
-    Environment.GetEnvironmentVariable("DB_SHAPE_COLLECTION_NAME") ?? ""
+    Environment.GetEnvironmentVariable("DB_SHAPE_COLLECTION_NAME") ?? "",
+    Environment.GetEnvironmentVariable("DB_INVITE_COLLECTION_NAME") ?? ""
 );
 
 var jwtSettings = new JwtSettings(
     Environment.GetEnvironmentVariable("JWT_PUBLIC_KEY") ?? "",
     Environment.GetEnvironmentVariable("JWT_ISSUER") ?? ""
 );
+
+var userMicroservice = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "";
 
 builder.Services.AddSingleton<ITokenService>(new RsaTokenService(jwtSettings));
 builder.Services.AddSingleton<IProjectRepositoryService>(new MongoDBProjectRepositoryService(dbSettings));
@@ -77,7 +80,19 @@ app.MapGet("/getProjects", [Authorize] async (HttpContext http,
         var userId = tokenService.GetUserIdFromToken(token);
 
         var projects = await projectRepositoryService.GetProjectsAsync(userId);
-        await http.Response.WriteAsJsonAsync(projects);
+        if (projects == null)
+        {
+            return;
+        }
+        var result = new List<ProjectMetaDto>();
+        foreach(var p in projects!)
+        {
+            var invites = await projectRepositoryService.GetProjectInvitesAsync(p.Id!);
+            result.Add(new ProjectMetaDto(p.Id!, p.Name, p.OwnerId, p.GroupId!, p.CreationTime,
+                p.LastModifyTime, p.IsGroup, invites));
+        }
+        await http.Response.WriteAsJsonAsync(result);
+        // await http.Response.WriteAsJsonAsync(projects);
         return;
     }
 );
@@ -124,6 +139,65 @@ app.MapPost("/renameProject", [Authorize] async (HttpContext http,
         http.Response.StatusCode = 200;
         return;
     }
+);
+
+app.MapPost("/sendInvite", [Authorize] async (HttpContext http, 
+    ITokenService tokenService,
+    IProjectRepositoryService projectRepositoryService) => {
+        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+        var userId = tokenService.GetUserIdFromToken(token);
+
+        var inviteDto = await http.Request.ReadFromJsonAsync<InviteDto>();
+        var project = await projectRepositoryService.GetProjectByIdAsync(inviteDto!.ProjectId);
+
+        if (project.OwnerId != userId)
+        {
+            http.Response.StatusCode = 401;
+            return;
+        }
+
+        var client = new HttpClient();
+        // var subscriberId = await client.GetStringAsync(userMicroservice+"/getId?mail="+sendInviteDto.UserId);
+        var subscriberId = await client.GetStringAsync("http://user-microservice:5108/getId?mail="+inviteDto.Email);
+        if (subscriberId == "")
+        {
+            http.Response.StatusCode = 501;
+            return;
+        }
+        if (subscriberId == project.OwnerId)
+        {
+            http.Response.StatusCode = 502;
+            return;
+        }
+
+        var invite = new Invite(inviteDto.ProjectId, subscriberId, inviteDto.Permission);
+        await projectRepositoryService.AddInvite(invite);
+        
+        http.Response.StatusCode = 200;
+        return;
+    }
+);
+
+app.MapGet("/getInvites", ([AllowAnonymous] async (HttpContext http,
+    ITokenService tokenService,
+    IProjectRepositoryService projectRepositoryService) => {
+        var projectId = http.Request.Query["projectId"];
+        var project = await projectRepositoryService.GetProjectByIdAsync(projectId);
+
+        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+        var userId = tokenService.GetUserIdFromToken(token);
+
+        if (project.OwnerId != userId)
+        {
+            http.Response.StatusCode = 401;
+            return;
+        }
+
+        var invites = await projectRepositoryService.GetProjectInvitesAsync(projectId);
+
+        await http.Response.WriteAsJsonAsync(invites);
+        return;
+    })
 );
 
 await app.RunAsync();

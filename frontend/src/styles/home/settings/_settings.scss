@@ -5,6 +5,14 @@
         gap: 16px;
         height: calc(100vh - 122px);
 
+        select {
+            margin-right: 1vw;
+            font-size: 16px;
+            text-align: center;
+            border: none;
+            background-color: transparent;
+        }
+
         .panel {
             background: $white;
             box-shadow: 0px 20px 34px rgba(85, 82, 95, 0.06);

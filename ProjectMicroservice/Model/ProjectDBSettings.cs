@@ -8,10 +8,12 @@ public class ProjectDBSettings
     public string PageCollectionName { get; set; } = null!;
     public string LayerCollectionName { get; set; } = null!;
     public string ShapeCollectionName { get; set; } = null!;
+    public string InviteCollectionName { get; set; } = null!;
 
     public ProjectDBSettings(string connectionString, string databaseName, 
         string projectMetaCollectionName, string pageCollectionName, 
-        string layerCollectionName, string shapeCollectionName)
+        string layerCollectionName, string shapeCollectionName,
+        string inviteCollectionName)
     {
         ConnectionString = connectionString;
         DatabaseName = databaseName;
@@ -19,5 +21,6 @@ public class ProjectDBSettings
         PageCollectionName = pageCollectionName;
         LayerCollectionName = layerCollectionName;
         ShapeCollectionName = shapeCollectionName;
+        InviteCollectionName = inviteCollectionName;
     }
 }

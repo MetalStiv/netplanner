@@ -18,11 +18,11 @@ public record ProjectMeta
     [BsonElement("groupId")]
     public string? GroupId { get; set; }
 
-    [BsonElement("subscriberIds")]
-    public List<String>? SubscriberIds { get; set; }
-
     [BsonElement("creationTime")]
     public DateTime CreationTime { get; private set; }
+    
+    [BsonElement("lastModifyTime")]
+    public DateTime LastModifyTime { get; private set; }
 
     [BsonElement("isGroup")]
     public bool IsGroup { get; set; }
@@ -33,7 +33,7 @@ public record ProjectMeta
         this.OwnerId = ownerId;
         this.GroupId = groupId;
         this.CreationTime = DateTime.Now;
-        this.SubscriberIds = null;
+        this.LastModifyTime = DateTime.Now;
         this.IsGroup = isGroup;
     }
 

@@ -9,12 +9,14 @@ import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
 import { useNavigate } from "react-router-dom";
 import imageLoadingPlaceholder from '../../../assets/images/image-loading.jpg';
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
+import ShareModalForm from "./ShareModalForm";
 
 interface IProjectCardProps {
-    projectId: string;
+    projectId: string,
+    updateProjects: () => void,
 }
 
-const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId }) => {
+const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updateProjects }) => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
     const usersStore: TUsersStore = useRootStore()!.getUsersStore();
     const lang: LanguageData | null = useLanguageContext();
@@ -145,7 +147,7 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId }) => {
             </div>
 
             <div className="menu-icon-group">
-                <div className="menu-icon">
+                <div className="menu-icon" onClick={() => projectsMetaStore.switchShareFormById(projectId)}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d={"M7 11.5L13 14.5M13 5.5L7 8.5M16 19C14.3431 19 13 17.6569 13 16C13 14.3431 14.3431 " +
                             " 13 16 13C17.6569 13 19 14.3431 19 16C19 17.6569 17.6569 19 16 19ZM4 13C2.34315 13 1 " +
@@ -204,9 +206,14 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId }) => {
                         </div>
 
                         <div className="tail">
-
                         </div>
                     </div>
+                }
+                {
+                    projectsMetaStore.getById(projectId)!.showSharingForm &&
+                        <ShareModalForm projectMeta={projectsMetaStore.getById(projectId)!} 
+                            close={() => projectsMetaStore.switchShareFormById(projectId)} 
+                            updateProjects={updateProjects} />
                 }
             </div>
         </div>

@@ -56,9 +56,6 @@ const ProjectPage: React.FC = observer(() => {
     const projectStore: TProjectStore = useRootStore()!.getProjectStore();
     const project = projectStore.getProject();
 
-    const [currentProject, setCurrentProject] = useState<IProject | null>(projectStore.getProject());
-
-
     const updateProject = useCallback(async (projectId: string) => {
         const newProject = new Project([
             primitiveGroup,

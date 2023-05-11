@@ -56,7 +56,15 @@ interface ILanguage {
             createCheckpoint: string,
             restoreFromCheckpoint: string,
             moveToGroup: string,
-            cancel: string
+            cancel: string,
+            sharingForm: {
+                title: string,
+                readonly: string,
+                fullAccess: string,
+                enterEmail: string,
+                invite: string,
+                revoke: string,
+            }
         },
         settingsTab: {
             userInfo: {

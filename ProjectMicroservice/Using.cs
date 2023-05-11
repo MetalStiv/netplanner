@@ -15,6 +15,7 @@ global using Microsoft.AspNetCore.Authorization;
 global using System.Security.Cryptography;
 global using BCrypt.Net;
 global using PemUtils;
+global using System.Net.Http;
 
 global using ProjectMicroservice.Services.ProjectRepositoryService;
 global using ProjectMicroservice.Services.TokenService;

@@ -1,0 +1,186 @@
+// .ReactModalPortal .ReactModal__Overlay.ReactModal__Overlay--after-open {
+//     background-color: rgba(0, 0, 0, 0.5) !important;
+// }
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    z-index: 1;
+    color: rgba(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.5) !important;
+
+    .show-form-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-items: flex-start;
+
+        .show-form-panel {
+            margin: 15vh;
+
+            width: 40vw;
+            display: flex;
+            background-color: $white;
+            padding: 1%;
+            align-items: flex-start;
+
+            border-radius: 15px;
+            border: 1px solid $gray;
+
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            animation: marginAppearence .2s linear 1 normal running 0s;
+
+            @keyframes marginAppearence {
+                0% {
+                    margin-top: 60vh;
+                }
+        
+                100% {
+                    margin-top: 15vh;
+                }
+            }
+
+            .show-form-header {
+                display: flex;
+                justify-content: space-between;
+                padding-right: 1vh;
+
+                font-weight: bold;
+                font-size: 24px;
+
+                .show-form-title {
+                    width: 39vw;
+                }
+
+                .close-icon {
+                    text-align: right;
+                    color: $lightgray;
+                    width: 1vw;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: $black;
+                    }
+                }
+            }
+
+            .show-form-sent-form {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 2vh;
+                margin-bottom: 1vh;
+
+                .show-form-sent-input {
+                    border: none;
+                    border-bottom: 1px solid $black;
+                    outline: none;
+                    background-color: transparent;
+                    font-size: 16px;
+                    width: 20vw;
+                    font-family: 'Inter';
+                }
+
+                .show-form-sent-permission {
+                    width: 9vw;
+                    margin-right: 1vw;
+                    text-align: center;
+                    border: none;
+                    background-color: transparent;
+                    font-size: 16px;
+                }
+
+                .show-form-sent-button {
+                    margin-left: 3vw;
+                    width: 6vw;
+                    height: 45px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    background: $lightblue;
+                    border: none;
+                    color: $white;
+                    border-radius: 15px;
+                    height: 4vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+    
+                    &:hover {
+                        background: linear-gradient(0deg, $blue, $blue);
+                        color: $white;
+                        transition: background .2s
+                    }
+                }
+            }
+
+            .show-form-data {
+                display: flex;
+                flex-direction: column;
+                overflow: auto;
+                flex-wrap: wrap;
+                height: 30vh;
+
+                .invite-data-row {
+                    display: flex;
+                    margin-top: 1vh;
+
+                    .invite-data-icon {
+                        img {
+                            width: 40px;
+                            height: 40px;
+                            border-radius: 50%;
+                            margin-top: 2px;
+                            padding: 2px;
+                            border: 2px solid $lightblue;
+                        }
+                    }
+
+                    .invite-data-user-name {
+                        margin: 10px;
+                        width: 18vw;
+                    }
+
+                    .invite-data-permission {
+                        margin: 10px;
+                        width: 5vw;
+                    }
+
+                    .invite-data-state {
+                        margin: 10px;
+                        margin-left: 20px;
+                        width: 5vw;
+                    }
+
+                    .invite-data-revoke-button {
+                        width: 6vw;
+                        height: 45px;
+                        margin-left: -16px;
+
+                        text-align: center;    
+                        font-size: 16px;
+                        cursor: pointer;
+                        background: $background;
+                        border: 2px solid $lightblue;
+                        border-radius: 15px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        stroke: $lightblue;
+        
+                        &:hover {
+                            background: linear-gradient(0deg, $blue, $blue);
+                            color: $white;
+                            transition: background .2s
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
