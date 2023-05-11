@@ -23,7 +23,7 @@ export const operationInflater: TShapeInflater = async (messageShape: IMessageSh
     }
     return new Operation({
         id: messageShape.id,
-        zIndex: 10,
+        zIndex: messageShape.zIndex,
         graphicalProperties: {
             x: {
                 label: "X",
@@ -122,8 +122,8 @@ class Operation implements IShape {
         this.config.zIndex = obj.zIndex ?? 0;
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void, 
-        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void, 
+    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
+        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
         layerZIndex: number) {
         return <path
             id={this.config.id}
@@ -132,7 +132,7 @@ class Operation implements IShape {
             role="shape"
             stroke={this.config.graphicalProperties.strokeColor?.value}
             fill={this.config.graphicalProperties.fillColorOne?.value}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
@@ -142,8 +142,8 @@ class Operation implements IShape {
                 l ${this.config.graphicalProperties.width.value} 0
                 l 0 -${this.config.graphicalProperties.height.value}
                 l -${this.config.graphicalProperties.width.value} 0
-                `} 
-            />
+                `}
+        />
     }
 }
 

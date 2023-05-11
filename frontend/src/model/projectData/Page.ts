@@ -30,7 +30,7 @@ class Page implements Page {
     [layersSym]: ILayer[];
     [isCurrentSym]: boolean;
 
-    constructor(id: string = "sdfasdfasd", title: string = "Page", layers: ILayer[]) {
+    constructor(id: string = "", title: string = "Page", layers: ILayer[] = []) {
         this[idSym] = id;
         this[titleSym] = title;
         this[layersSym] = layers;
@@ -38,34 +38,51 @@ class Page implements Page {
     }
 
     setCurrentLayer(layerID: string) {
-        this.getLayers().forEach(layer => {
-            if (layer.getID() === layerID) {
-                layer.setIsCurrent(true);
-            }
-            else {
-                if (layer.getIsCurrent()) {
-                    layer.setIsCurrent(false);
-                }
-            }
+        this.getLayers().map(item => {
+            item.isCurrent() && item.setIsCurrent(false);
+            item.getID() === layerID && item.setIsCurrent(true);
+            return item;
         })
+        // this.getLayers().forEach(layer => {
+        //     if (layer.getID() === layerID) {
+        //         layer.setIsCurrent(true);
+        //     }
+        //     else {
+        //         if (layer.getIsCurrent()) {
+        //             layer.setIsCurrent(false);
+        //         }
+        //     }
+        // })
     }
+
     getLayers() {
         return this[layersSym];
     }
+
     setLayers(layers: ILayer[]) {
         this[layersSym] = layers;
     }
-    addLayer(title: string = "Layer") {
+
+    // addLayer(title: string = "Layer") {
+    //     this.getLayers().forEach(item => {
+    //         if (item.getIsCurrent()) {
+    //             item.setIsCurrent(false);
+    //         }
+    //     });
+    //     this[layersSym] = [...this.getLayers(), new Layer("eirotwert", this.getLayers().length, "hlkjhlk", [])];
+    // }
+
+    addLayer(newLayer: ILayer) {
         this.getLayers().forEach(item => {
-            if (item.getIsCurrent()) {
+            if (item.isCurrent()) {
                 item.setIsCurrent(false);
             }
         });
-        this[layersSym] = [...this.getLayers(), new Layer("eirotwert", this.getLayers().length, "hlkjhlk", [])];
+        this[layersSym] = [...this.getLayers(), newLayer];
     }
 
     getCurrentLayer(): ILayer {
-        return this.getLayers().find(layer => layer.getIsCurrent())!;
+        return this.getLayers().find(layer => layer.isCurrent())!;
     }
 
     isCurrent(): boolean {

@@ -12,6 +12,7 @@ import Page from '../../model/projectData/Page';
 import IShape, { IShapeGraphicalProps } from '../../model/shapes/IShape';
 import { DrawShapeAction } from '../../model/actions/DrawShapeAction';
 import { ILayer } from '../../model/projectData/Layer';
+import { TProjectStore } from '../../stores/projectStore';
 
 interface SVGCanvasProps {
     // currentPage: Page,
@@ -31,15 +32,18 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     // console.log(currentPage)
     const svgCanvas: React.MutableRefObject<SVGSVGElement | null> = useRef(null);
     // const currentPage = useRootStore()!.getProjectStore().getProject()?.getCurrentPage();
-    const [currentPage, setCurrentPage] = useState<Page | undefined>(useRootStore()!.getProjectStore().getProject()?.getCurrentPage());
-    // useEffect(() => {
-    //     setCurPage(new Page(currentPage.id, currentPage.title, currentPage.getLayers()))
-    //     console.log(currentPage)
-    // }, [currentPage]);
+    const projectStore: TProjectStore = useRootStore().getProjectStore();
+    // let currentPage = projectStore.getProject()?.getCurrentPage();
+    const project = projectStore.getProject();
     const actionStore: TActionStore = useRootStore().getActionStore();
     // const projectId = useRootStore()!.getProjectStore().getProject()!.id;
     // app?.setProjectId(projectId)
 
+    const [currentPage, setCurrentPage] = useState(projectStore.getProject()?.getCurrentPage());
+
+    useEffect(() => {
+        project?.getCurrentPage() && setCurrentPage(project?.getCurrentPage())
+    }, [project]);
     // const handleAlt = (e: KeyboardEvent) => {
     //     if (e.altKey) {
     //         console.log('ee')
@@ -100,9 +104,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     // }
     // let ps = useRootStore()!.getProjectStore()
     function moveSVGAt(shapeID: string, toSVGCoords: { x: number, y: number }, shift?: { x: number, y: number }) {
-
-        // console.log(shapeID)
-
         setCurrentPage(new Page(currentPage?.getID(), currentPage?.getTitle(), currentPage!.getLayers().map(layer => {
             layer.setShapes(layer.getShapes().map(shapeItem => {
                 if (shapeItem.config.id === shapeID) {
@@ -303,7 +304,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         })
 
         const newShape: IShape = creatorOnDrop!.create();
-        let drawShapeAction = new DrawShapeAction(newShape, currentPage!, dropCoords)
+        let drawShapeAction = new DrawShapeAction(newShape, currentPage?.getCurrentLayer()!, dropCoords)
         // drawShapeAction.do() && actionStore.push(drawShapeAction)
         actionStore.push(drawShapeAction);
     }

@@ -14,6 +14,6 @@ export const changeGraphicalPropertyHandler: ActionHandler = async (project, mes
     //         ?.addShape(newShape);
     // }
 
-    project.isLoading = false;
+    project.setIsLoading(false);
     return project;
 }

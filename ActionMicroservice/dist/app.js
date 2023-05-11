@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -60,7 +60,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var mongoDB = require("mongodb");
 var actionHandlers_1 = require("./actionHandlers/actionHandlers");
 var actionType_1 = require("./actionType");
@@ -80,7 +80,7 @@ var mongoDatabase = mongoClient.db(DB_NAME);
 var collections = {
     pageCollection: mongoDatabase.collection(DB_PAGE_COLLECTION_NAME),
     layerCollection: mongoDatabase.collection(DB_LAYER_COLLECTION_NAME),
-    shapeCollection: mongoDatabase.collection(DB_SHAPE_COLLECTION_NAME)
+    shapeCollection: mongoDatabase.collection(DB_SHAPE_COLLECTION_NAME),
 };
 var clients = new Map();
 var publicKey = fs.readFileSync("/app/RsaKeys/public.pem", "utf8");
@@ -136,14 +136,14 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                                                         shapeTrees = shapes.map(function (s) { return ({
                                                             id: s._id.toString(),
                                                             type: s.type,
-                                                            zIndex: s.zIndex.toString(),
+                                                            zIndex: s.zIndex,
                                                             graphicalProperties: s.graphicalProperties
                                                         }); });
                                                         return [2 /*return*/, {
                                                                 id: l._id.toString(),
                                                                 name: l.name,
                                                                 shapes: shapeTrees,
-                                                                zIndex: l.zIndex.toString()
+                                                                zIndex: l.zIndex
                                                             }];
                                                 }
                                             });
@@ -171,7 +171,7 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                     var message = JSON.parse(event.data);
                     message.senderId = clients.get(ws).userId;
                     message.projectId = clients.get(ws).projectId;
-                    var isHandled = actionHandlers_1["default"].handle(collections, message);
+                    var isHandled = actionHandlers_1.default.handle(collections, message);
                     if (!isHandled) {
                         return;
                     }
@@ -182,7 +182,7 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                     });
                 };
                 ws.onclose = function () {
-                    clients["delete"](ws);
+                    clients.delete(ws);
                 };
                 ws.onerror = function (e) {
                     console.log(e);

@@ -63,14 +63,13 @@ const ProjectPage: React.FC = observer(() => {
         ] as IShapeGroup[], 'project', projectId)
         projectStore.setProject(newProject);
         projectStore.setProjectToLoadId(projectId);
-        // console.log(newProject)
     }, [setProjectUpdateError])
 
     useEffect(() => {
         workspaceDivRef.current!.scrollTop = orientation.a4Height * Math.floor(orientation.heightInSheets / 2) - 150;
         workspaceDivRef.current!.scrollLeft = orientation.a4Width * Math.floor(orientation.widthInSheets / 2) - 150;
     }, [orientation, workspaceDivRef]);
-    
+
     useEffect(() => {
         const projectId: string = params.get('id') ?? ''
         updateProject(projectId);
@@ -108,7 +107,7 @@ const ProjectPage: React.FC = observer(() => {
     return (
         <div id="projectPage">
             {
-                (!projectStore.getProject() || projectStore.getProject()!.isLoading) && <Loader />
+                (!projectStore.getProject() || projectStore.getProject()!.isLoading()) && <Loader />
             }
             <AlertDialog
                 btnText="Ok"
@@ -128,9 +127,9 @@ const ProjectPage: React.FC = observer(() => {
                             </div>
                             <div style={{ minHeight: 150 }}>
                                 {
-                                    (projectStore.getProject() && !projectStore.getProject()!.isLoading) && <>
-                                        <PagesPanel currentProject={projectStore.getProject()!} />
-                                        <LayersPanel currentPage={projectStore.getProject()!.getCurrentPage()} />
+                                    (projectStore.getProject() && !projectStore.getProject()!.isLoading()) && <>
+                                        <PagesPanel />
+                                        <LayersPanel />
                                     </>
                                 }
                             </div>
@@ -140,7 +139,7 @@ const ProjectPage: React.FC = observer(() => {
                     <section id="workspace">
                         <div className="canvas-container" ref={workspaceDivRef}>
                             {
-                                (projectStore.getProject() && !projectStore.getProject()!.isLoading) &&
+                                (projectStore.getProject() && !projectStore.getProject()!.isLoading()) &&
                                 <SVGCanvas
                                     // currentPage={projectStore.getProject()!.getCurrentPage()}
                                     canvasConfig={orientation}

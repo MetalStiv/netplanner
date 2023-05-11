@@ -1,5 +1,4 @@
 import IShapeCreator from "../IShapeCreator";
-import genID from "../../../common/helpers/genID";
 import { ShapeType } from "../ShapeType";
 import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 import { TShapeInflater } from "../shapeInflaters";
@@ -24,7 +23,7 @@ export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShap
     }
     return new Ellipse({
         id: messageShape.id,
-        zIndex: 10,
+        zIndex: messageShape.zIndex,
         graphicalProperties: {
             x: {
                 label: "X",
@@ -44,22 +43,22 @@ export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShap
             rx: {
                 label: "rx",
                 value: messageShape.graphicalProperties.rx!.value,
-                isReadable: true 
+                isReadable: true
             },
             ry: {
                 label: "ry",
                 value: messageShape.graphicalProperties.ry!.value,
-                isReadable: true 
+                isReadable: true
             },
             strokeColor: {
                 label: "Stroke Color",
                 value: messageShape.graphicalProperties.strokeColor!.value,
-                isReadable: true 
+                isReadable: true
             },
             fillColorOne: {
                 label: "Fill Color One",
                 value: messageShape.graphicalProperties.fillColorOne!.value,
-                isReadable: true 
+                isReadable: true
             },
         }
     })
@@ -119,7 +118,6 @@ class Ellipse implements IShape {
 
     constructor(obj: IEllipseConfig) {
         this.config = obj;
-        this.config.id = `${this.type}-${genID(10)}`;
         this.zIndex = obj.zIndex ?? 0;
     }
 
@@ -133,7 +131,7 @@ class Ellipse implements IShape {
             role="shape"
             stroke={this.config.graphicalProperties.strokeColor.value ?? 'black'}
             fill={this.config.graphicalProperties.fillColorOne.value ?? 'black'}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}

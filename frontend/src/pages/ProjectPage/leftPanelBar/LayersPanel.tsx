@@ -1,20 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
 import titleUniqueization from '../../../common/helpers/titleUniquezation';
 import Page from '../../../model/projectData/Page';
+import { AddLayerAction } from '../../../model/actions/AddLayerAction';
+import { useRootStore } from '../../../providers/rootProvider';
+import { TActionStore } from '../../../stores/actionStore';
+import { TProjectStore } from '../../../stores/projectStore';
 
 
-interface ILayersPanelProps {
-    currentPage: Page,
-    //updatePageCallback: (page: Page) => void,
-}
+// interface ILayersPanelProps {
+//     // currentPage: Page,
+//     //updatePageCallback: (page: Page) => void,
+// }
 
-const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
+const LayersPanel = () => {
     const [editingLayerIndex, setEditingLayerIndex] = useState<number>(-1);
     const [draggableLayerIndex, setDraggableLayerIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
 
     const lang: LanguageData | null = useLanguageContext();
+
+    const actionStore: TActionStore = useRootStore().getActionStore();
+    const projectStore: TProjectStore = useRootStore().getProjectStore();
+
+    let project = projectStore.getProject();
+    const [currentPage, setCurrentPage] = useState(project?.getCurrentPage()!);
+
+    useEffect(() => {
+        project?.getCurrentPage() && setCurrentPage(project?.getCurrentPage());
+    }, [project]);
 
     const visibleIcon = <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M11.6849 9C11.6849 10.485 10.4849 11.685 8.99994 11.685C7.51494 11.685 6.31494 10.485 6.31494 9C6.31494 7.515 7.51494 6.315 8.99994 6.315C10.4849 6.315 11.6849 7.515 11.6849 9Z" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -97,9 +111,10 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
                 <p className="panel-title">
                     <span>{lang?.langText.projectPage.layersPanel.title}</span>
                     <span className="plus" onClick={() => {
-                        currentPage.addLayer();
-                        //updatePageCallback(currentPage);
-                        setEditingLayerIndex(currentPage.getLayers().length - 1);
+                        // currentPage.addLayer();
+                        const addLayerAction = new AddLayerAction(currentPage);
+                        actionStore.push(addLayerAction);
+                        setEditingLayerIndex(currentPage.getLayers().length);
                     }}>
                         <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1 6.5H11" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -113,16 +128,14 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
                     <div key={layer.getTitle() + i} className="layer-container">
                         <div className={`dropzone top${draggableLayerIndex !== -1 && i === 0 && draggableLayerIndex !== 0 ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, -1000)} onDragOver={e => e.preventDefault()} ></div>
 
-                        <div className={`layer${layer.getIsCurrent() ? ' current' : ''}`}
+                        <div className={`layer${layer.isCurrent() ? ' current' : ''}`}
                             onClick={function () {
-                                currentPage.setLayers(currentPage.getLayers().map(item => {
-                                    if (item.getIsCurrent()) {
-                                        item.setIsCurrent(false);
-                                    }
+                                setCurrentPage(new Page(currentPage.getID(), currentPage.getTitle(), currentPage.getLayers().map(item => {
+                                    item.isCurrent() && item.setIsCurrent(false);
+                                    item.getID() === layer.getID() && item.setIsCurrent(true);
                                     return item;
-                                }))
-                                //updatePageCallback(currentPage);
-                                layer.setIsCurrent(true);
+                                })));
+                                console.log(project)
                             }}
                             draggable
                             onDragStart={e => {
@@ -141,13 +154,13 @@ const LayersPanel = ({ currentPage }: ILayersPanelProps) => {
                                     e.stopPropagation();
                                     currentPage.setLayers(currentPage.getLayers().map(item => {
                                         if (item.getID() === layer.getID()) {
-                                            item.changeVisible(!item.getIsVisible());
+                                            item.changeVisible(!item.isVisible());
                                         }
                                         return item;
                                     }))
                                     //updatePageCallback(currentPage);
                                 }}>
-                                {layer.getIsVisible() ? visibleIcon : invisibleIcon}
+                                {layer.isVisible() ? visibleIcon : invisibleIcon}
                             </div>
                             <span style={{ display: editingLayerIndex === i ? 'none' : 'inline' }}
                                 className='layer-title'

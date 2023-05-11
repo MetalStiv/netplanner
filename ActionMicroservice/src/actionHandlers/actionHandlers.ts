@@ -15,8 +15,8 @@ export interface IActionHandlers {
 export const actionHandlers: IActionHandlers = {
     handlers: new Array(
         addShapeHandler,
-        addPageHandler,
         addLayerHandler,
+        addPageHandler,
         changeGraphicalPropertiesHandler
     ),
 

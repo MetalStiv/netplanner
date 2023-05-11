@@ -1,22 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 //import { useRootStore } from '../../providers/rootProvider';
 import { Collapse } from 'react-collapse';
 import { useClickAndDoubleClickHandler } from '../../../common/customHooks/useClickAndDoubleClickHandler';
 //import Page from '../../../model/Page';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
 import titleUniqueization from '../../../common/helpers/titleUniquezation';
-import { IProject } from '../../../model/projectData/Project';
+import Project, { IProject } from '../../../model/projectData/Project';
+import { AddPageAction } from '../../../model/actions/AddPageAction';
+import { useRootStore } from '../../../providers/rootProvider';
+import { TActionStore } from '../../../stores/actionStore';
+import { TProjectStore } from '../../../stores/projectStore';
 
-interface PagesPanelProps {
-    currentProject: IProject,
-    //updateProjectCallback: (pages: Page[]) => void,
-}
+// interface PagesPanelProps {
+//     currentProject: IProject,
+//     //updateProjectCallback: (pages: Page[]) => void,
+// }
 
-const PagesPanel = ({ currentProject }: PagesPanelProps) => {
+const PagesPanel = () => {
     const [collapsePanelIsOpen, setCollapsePanelIsOpen] = useState<boolean>(false);
     const [editingPageIndex, setEditingPageIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
+
     const lang: LanguageData | null = useLanguageContext();
+
+    const actionStore: TActionStore = useRootStore().getActionStore();
+    const projectStore: TProjectStore = useRootStore().getProjectStore();
+
+    let currentProject = projectStore.getProject()!;
+    // const [currentProject, setCurrentProject] = useState<IProject>();
+
+    // useEffect(() => {
+    //     project ?? setCurrentProject(project);
+    // }, [project]);
+
     const titleClickHandler = useClickAndDoubleClickHandler(
         (e, page) => {
             selectPageHandler(page.id);
@@ -26,12 +42,11 @@ const PagesPanel = ({ currentProject }: PagesPanelProps) => {
             setTitle(page.title);
         });
 
-
     function selectPageHandler(pageID: string) {
         setCollapsePanelIsOpen(false);
         currentProject.setCurrentPage(pageID);
+        projectStore.update();
         console.log(currentProject.getCurrentPage())
-        //updateProjectCallback(currentProject.getPages());
     }
 
     const changeTitleHandler = (el: HTMLInputElement, pageID: string) => {
@@ -93,9 +108,10 @@ const PagesPanel = ({ currentProject }: PagesPanelProps) => {
                             </div>
                         })}
                         <p id="addPage-btn" onClick={() => {
-                            currentProject.addPage();
-                            //updateProjectCallback(currentProject.getPages());
-                            setEditingPageIndex(currentProject.getPages().length - 1);
+                            // currentProject.addPage();
+                            const addPageAction = new AddPageAction(currentProject);
+                            actionStore.push(addPageAction);
+                            setEditingPageIndex(currentProject.getPages().length);
                         }
                         }>{lang?.langText.projectPage.pagesPanel.addBtn}</p>
                     </div>

@@ -1,4 +1,4 @@
-import * as http from 'http'; 
+import * as http from 'http';
 import * as mongoDB from "mongodb";
 import actionHandlers from './actionHandlers/actionHandlers';
 import { ActionType } from './actionType';
@@ -52,7 +52,7 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     let token: string = queryData.token;
     let projectId: string = queryData.projectId;
 
-    if (!projectId || projectId === "" || projectId === "undefined"){
+    if (!projectId || projectId === "" || projectId === "undefined") {
         ws.close();
         return;
     }
@@ -72,25 +72,25 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     const metadata: IMetadata = { userId, projectId };
     clients.set(ws, metadata);
 
-    const pageFilter: mongoDB.Filter<IPage> = {"projectId": new mongoDB.ObjectId(projectId)};
+    const pageFilter: mongoDB.Filter<IPage> = { "projectId": new mongoDB.ObjectId(projectId) };
     const pages: IPage[] = await (await collections.pageCollection.find(pageFilter)).toArray();
     const pageTrees: IPageTree[] = await Promise.all(pages.map(async p => {
-        const layerFilter: mongoDB.Filter<ILayer> = {"pageId": new mongoDB.ObjectId(p._id)};
+        const layerFilter: mongoDB.Filter<ILayer> = { "pageId": new mongoDB.ObjectId(p._id) };
         const layers: ILayer[] = await (await collections.layerCollection.find(layerFilter)).toArray();
         const layerTrees: ILayerTree[] = await Promise.all(layers.map(async l => {
-            const shapeFilter: mongoDB.Filter<IShape> = {"layerId": new mongoDB.ObjectId(l._id)};
+            const shapeFilter: mongoDB.Filter<IShape> = { "layerId": new mongoDB.ObjectId(l._id) };
             const shapes: IShape[] = await (await collections.shapeCollection.find(shapeFilter)).toArray();
             const shapeTrees: IShapeTree[] = shapes.map(s => ({
                 id: s._id.toString(),
                 type: s.type,
-                zIndex: s.zIndex.toString(),
+                zIndex: s.zIndex,
                 graphicalProperties: s.graphicalProperties
             }))
             return {
                 id: l._id.toString(),
                 name: l.name,
                 shapes: shapeTrees,
-                zIndex: l.zIndex.toString()
+                zIndex: l.zIndex
             }
         }))
         return {
@@ -109,13 +109,13 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
 
     ws.send(JSON.stringify(sendMessage));
 
-    ws.onmessage = function(event: MessageEvent){
+    ws.onmessage = function (event: MessageEvent) {
         const message: IMessage = JSON.parse(event.data);
         message.senderId = clients.get(ws).userId;
         message.projectId = clients.get(ws).projectId;
 
         const isHandled = actionHandlers.handle(collections, message)
-        if (!isHandled){
+        if (!isHandled) {
             return;
         }
 
@@ -125,7 +125,7 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
         });
     }
 
-    ws.onclose = function() {
+    ws.onclose = function () {
         clients.delete(ws);
     }
 

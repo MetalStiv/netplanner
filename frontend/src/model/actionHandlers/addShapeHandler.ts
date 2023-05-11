@@ -11,11 +11,11 @@ export const addShapeHandler: ActionHandler = async (project, message) => {
     const newShape: IShape | null = await shapeInflaters.inflate(message.data.newShape!);
     console.log(newShape);
     if (newShape) {
-        project.getPages().find(p => p.getID() === message.pageId)
+        project.getCurrentPage() //.getPages()..find(p => p.getID() === message.pageId)
             ?.getLayers().find(l => l.getID() === message.layerId)
             ?.addShape(newShape);
     }
 
-    project.isLoading = false;
+    project.setIsLoading(false);
     return project;
 }

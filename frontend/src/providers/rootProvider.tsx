@@ -19,21 +19,21 @@ export const RootProvider: React.FC<Props> = ({ children }) => {
     const [currentVal, setCurrentVal] = useState<boolean>(false);
 
     const updateWebSocket = () => setCurrentVal(!currentVal);
-    
-    const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(WEB_SOCKET_URL+
-        getAccessToken()+'&projectId='+store.getProjectStore().getProjectToLoadId());
-    
+
+    const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(WEB_SOCKET_URL +
+        getAccessToken() + '&projectId=' + store.getProjectStore().getProjectToLoadId());
+
     store.getActionStore().setMessageSender(sendMessage);
     store.getProjectStore().setWebSocketUpdater(updateWebSocket);
-    
+
     useEffect(() => {
         const handleMessage = async (message: MessageEvent<any> | null) => {
-            if (!message){
+            if (!message) {
                 return;
             }
             console.log("New message");
-            console.log(message);
-            const handledProject: Project = 
+            console.log(message.data);
+            const handledProject: Project =
                 await actionHandlers.handle(store.getProjectStore().getProject()!, JSON.parse(message!.data));
             console.log("New project");
             console.log(handledProject);

@@ -1,6 +1,8 @@
 import { ActionType } from "../actionType";
 import { IShapeTree } from "./IShapeTree";
 import { IGraphicalProperty, IShapeGraphicalProperties } from "./IGraphicalProperty";
+import { ILayerTree } from "./ILayerTree";
+import { IPageTree } from "./IPageTree";
 
 export interface IMessage {
     type: ActionType,
@@ -10,7 +12,6 @@ export interface IMessage {
     layerId?: string,
     shapeId?: string,
     data: {
-        zIndex?: string,
         pages?: {
             id: string,
             name: string,
@@ -21,6 +22,8 @@ export interface IMessage {
             }[]
         }[],
         newShape?: IShapeTree,
+        newLayer?: ILayerTree,
+        newPage?: IPageTree,
         graphicalProperties?: IShapeGraphicalProperties
     }
 }

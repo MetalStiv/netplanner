@@ -1,11 +1,12 @@
 import IShapeCreator from "../IShapeCreator";
-import genID from "../../../common/helpers/genID";
 import { ShapeType } from "../ShapeType";
 import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import { TShapeInflater } from "../shapeInflaters";
+import { IMessageShape } from "../../message/IMessageShape";
 
 interface ILineGraphicalProps extends IShapeGraphicalProps {
-    endXCoord: IGraphicalProperty,
-    endYCoord: IGraphicalProperty,
+    x2: IGraphicalProperty,
+    y2: IGraphicalProperty,
     strokeColor: IGraphicalProperty,
 }
 
@@ -13,6 +14,48 @@ interface ILineConfig extends IShapeConfig {
     id?: string,
     graphicalProperties: ILineGraphicalProps,
     zIndex: number,
+}
+
+export const lineInflater: TShapeInflater = async (messageShape: IMessageShape) => {
+    if (messageShape.type !== ShapeType.LINE) {
+        return null
+    }
+    return new Line({
+        id: messageShape.id,
+        zIndex: messageShape.zIndex,
+        graphicalProperties: {
+            x: {
+                label: "X",
+                value: messageShape.graphicalProperties.x.value,
+                isReadable: true,
+            },
+            y: {
+                label: "Y",
+                value: messageShape.graphicalProperties.y.value,
+                isReadable: true,
+            },
+            pivot: {
+                label: 'Pivot',
+                value: messageShape.graphicalProperties.pivot!.value,
+                isReadable: true,
+            },
+            x2: {
+                label: 'x2',
+                value: messageShape.graphicalProperties.x2!.value,
+                isReadable: true,
+            },
+            y2: {
+                label: 'y2',
+                value: messageShape.graphicalProperties.y2!.value,
+                isReadable: true,
+            },
+            strokeColor: {
+                label: 'Stroke Color',
+                value: messageShape.graphicalProperties.strokeColor!.value,
+                isReadable: true,
+            }
+        }
+    })
 }
 
 export class LineCreator implements IShapeCreator {
@@ -35,12 +78,12 @@ export class LineCreator implements IShapeCreator {
                     value: '0',
                     isReadable: true,
                 },
-                endXCoord: {
+                x2: {
                     label: 'x2',
                     value: '15',
                     isReadable: true,
                 },
-                endYCoord: {
+                y2: {
                     label: 'y2',
                     value: '20',
                     isReadable: true,
@@ -64,7 +107,6 @@ class Line implements IShape {
 
     constructor(obj: ILineConfig) {
         this.config = obj;
-        this.config.id = `${this.type}-${genID(10)}`;
         this.zIndex = obj.zIndex ?? 0;
     }
 
@@ -77,13 +119,13 @@ class Line implements IShape {
             data-type={this.type}
             role="shape"
             stroke={this.config.graphicalProperties.strokeColor.value ?? 'black'}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={
                 `M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value}
-                l ${this.config.graphicalProperties.endXCoord.value},${this.config.graphicalProperties.endYCoord.value}`
+                l ${this.config.graphicalProperties.x2.value},${this.config.graphicalProperties.y2.value}`
             } />
     }
 }

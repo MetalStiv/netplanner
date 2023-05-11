@@ -1,5 +1,3 @@
-import { IShapeTree } from "./IShapeTree";
-
 export interface IGraphicalProperty {
     label: string,
     value: string,

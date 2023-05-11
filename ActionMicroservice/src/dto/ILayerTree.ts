@@ -1,8 +1,8 @@
 import { IShapeTree } from "./IShapeTree";
 
-export interface ILayerTree{
+export interface ILayerTree {
     id: string,
     name: string,
-    zIndex: string,
+    zIndex: number,
     shapes: IShapeTree[]
 }

@@ -1,7 +1,8 @@
 import IShapeCreator from "../IShapeCreator";
-import genID from "../../../common/helpers/genID";
 import { ShapeType } from "../ShapeType";
 import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import { TShapeInflater } from "../shapeInflaters";
+import { IMessageShape } from "../../message/IMessageShape";
 
 interface IPolylineGraphicalProps extends IShapeGraphicalProps {
     points: [number, number][],
@@ -13,6 +14,39 @@ interface IPolylineProps extends IShapeConfig {
     id?: string,
     graphicalProperties: IPolylineGraphicalProps,
     zIndex: number,
+}
+
+export const polylineInflater: TShapeInflater = async (messageShape: IMessageShape) => {
+    if (messageShape.type !== ShapeType.POLYLINE) {
+        return null
+    }
+    return new Polyline({
+        id: messageShape.id,
+        zIndex: messageShape.zIndex,
+        graphicalProperties: {
+            x: {
+                label: "X",
+                value: messageShape.graphicalProperties.x.value,
+                isReadable: true,
+            },
+            y: {
+                label: "Y",
+                value: messageShape.graphicalProperties.y.value,
+                isReadable: true,
+            },
+            pivot: {
+                label: 'Pivot',
+                value: messageShape.graphicalProperties.pivot!.value,
+                isReadable: true,
+            },
+            points: [[15, -30], [40, 45], [50, -70]],
+            strokeColor: {
+                label: 'Stroke Color',
+                value: messageShape.graphicalProperties.strokeColor!.value,
+                isReadable: true,
+            }
+        }
+    })
 }
 
 export class PolylineCreator implements IShapeCreator {
@@ -55,7 +89,6 @@ class Polyline implements IShape {
 
     constructor(obj: IPolylineProps) {
         this.config = obj;
-        this.config.id = `${this.type}-${genID(10)}`;
         this.zIndex = obj.zIndex ?? 0;
     }
 
@@ -70,7 +103,7 @@ class Polyline implements IShape {
             data-type={this.type}
             role="shape"
             stroke={this.config.graphicalProperties.strokeColor.value ?? 'black'}
-            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + layerZIndex }}
+            style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
