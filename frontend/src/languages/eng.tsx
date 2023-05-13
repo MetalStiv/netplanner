@@ -6,6 +6,11 @@ export const eng: ILanguage = {
         settings: "Settings",
         exit: "Exit",
         searchProject: "Search project...",
+        noMessages: "No messages...",
+        inviteTextProject: "shares with you project",
+        inviteTextGroup: "shares with you group",
+        accept: "Accept",
+        decline: "Decline",
     },
     loginPage: {
         rates: "Rates",

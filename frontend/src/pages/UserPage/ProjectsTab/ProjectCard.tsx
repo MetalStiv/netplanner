@@ -26,6 +26,8 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(projectsMetaStore.getById(projectId)!.name);
 
+    const maxSubscriberQuantity: number = 8;
+
     const removeProject = async () => {
         const res = await projectMicroservice.post("removeProject", { id: projectId })
         if (res.status !== 200) {
@@ -142,8 +144,30 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
                         }
                     </div>
                 </div>
-                <div className="subscribers-info">{lang!.langText.userPage.projectTab.subscribers + ': ' +
-                    lang!.langText.userPage.projectTab.none}</div>
+                <div className="subscribers-info">{lang!.langText.userPage.projectTab.subscribers + ': '}
+                    {
+                        projectsMetaStore.getById(projectId)!.invites !== undefined ?
+                            projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).length > 0 ?
+                                projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1)
+                                    .map((i, index) => 
+                                        index < maxSubscriberQuantity ? <img src={
+                                                usersStore.getData()
+                                                    .find(u => u.id === i.userId)?.avatarBase64
+                                            } title={usersStore.getData().find(u => u.id === i.userId)?.name} />
+                                            :index === maxSubscriberQuantity? <div className="addition-subscribers" onClick={() => projectsMetaStore.switchShareFormById(projectId)}
+                                                title={projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).map((i, index) => 
+                                                    index < maxSubscriberQuantity ? ''
+                                                    : usersStore.getData().find(u => u.id === i.userId)?.name
+                                                ).filter(item => item !== '').join(', ')}>
+                                                {'+'+(projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).length - 
+                                                    maxSubscriberQuantity)}
+                                            </div>
+                                            :''
+                                    )
+                                : lang!.langText.userPage.projectTab.none
+                            : lang!.langText.userPage.projectTab.none
+                    }
+                </div>
             </div>
 
             <div className="menu-icon-group">

@@ -4,6 +4,11 @@ interface ILanguage {
         settings: string,
         exit: string,
         searchProject: string,
+        noMessages: string,
+        inviteTextProject: string,
+        inviteTextGroup: string,
+        accept: string,
+        decline: string,
     },
     loginPage: {
         rates: string,

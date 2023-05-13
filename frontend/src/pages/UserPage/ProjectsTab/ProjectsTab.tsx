@@ -9,38 +9,53 @@ import { TUsersStore } from "../../../stores/usersStore";
 import IUser from "../../../model/IUser";
 import ProjectGroupCard from "./ProjectGroupCard";
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
+import IInvite from "../../../model/projectData/IInvite";
+import { TUserStore } from "../../../stores/userStore";
 
-const ProjectsTab: React.FC = observer(() => {
+interface IProjectTabProps {
+    getProjects: () => void
+}
+
+const ProjectsTab: React.FC<IProjectTabProps> = observer(({getProjects}) => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
     const usersStore: TUsersStore = useRootStore()!.getUsersStore();
+    const userStore: TUserStore = useRootStore()!.getUserStore();
     const lang: LanguageData | null = useLanguageContext();
 
-    const getUsers = useCallback(async (projects: IProjectMeta[]) => {
-        const userIds: Set<string> = new Set<string>();
-        projects.forEach((project: IProjectMeta) => {
-            userIds.add(project.ownerId);
-            if (project.invites){
-                project.invites.forEach(i => userIds.add(i.userId))
-            }
-        });
-        const users = await userMicroservice.get<IUser[]>('getUsersByIds', { params: {ids: Array.from(userIds)}})
-        if (users.status === 200){
-            usersStore?.setData(users.data)
-        }
-    }, [usersStore])
+    // const getUsers = useCallback(async (projects: IProjectMeta[]) => {
+    //     const userIds: Set<string> = new Set<string>();
+    //     projects.forEach((project: IProjectMeta) => {
+    //         userIds.add(project.ownerId);
+    //         if (project.invites){
+    //             project.invites.forEach(i => userIds.add(i.userId))
+    //         }
+    //     });
+    //     const users = await userMicroservice.get<IUser[]>('getUsersByIds', { params: {ids: Array.from(userIds)}})
+    //     if (users.status === 200){
+    //         usersStore?.setData(users.data)
+    //     }
+    // }, [usersStore])
 
-    const getProjects = useCallback(async () => {
-        let projects = await projectMicroservice.get<IProjectMeta[]>('getProjects')
-        const openMenuId = projectsMetaStore.getData().find(p => p.showMenu === true)?.id ?? "";
-        const openShareFormId = projectsMetaStore.getData().find(p => p.showSharingForm === true)?.id ?? "";
+    // const getActiveInvites = useCallback(async () => {
+    //     const invites = await projectMicroservice.get<IInvite[]>('getActiveInvites')
+    //     if (invites.status === 200){
+    //         userStore?.setInvites(invites.data)
+    //     }
+    // }, [])
 
-        if (projects.status === 200){
-            const data = projects.data.map((item: IProjectMeta) => ({...item, "hide": false, 
-                "showMenu": item.id === openMenuId, "showSharingForm": item.id === openShareFormId}));
-            await getUsers(data)
-            projectsMetaStore?.setData(data)
-        }
-    }, [projectsMetaStore, getUsers])
+    // const getProjects = useCallback(async () => {
+    //     let projects = await projectMicroservice.get<IProjectMeta[]>('getProjects')
+    //     const openMenuId = projectsMetaStore.getData().find(p => p.showMenu === true)?.id ?? "";
+    //     const openShareFormId = projectsMetaStore.getData().find(p => p.showSharingForm === true)?.id ?? "";
+
+    //     if (projects.status === 200){
+    //         const data = projects.data.map((item: IProjectMeta) => ({...item, "hide": false, 
+    //             "showMenu": item.id === openMenuId, "showSharingForm": item.id === openShareFormId}));
+    //         await getUsers(data);
+    //         await getActiveInvites();
+    //         projectsMetaStore?.setData(data);
+    //     }
+    // }, [projectsMetaStore, getUsers, getActiveInvites])
 
     const addProject = async () => {
         let addProject = await projectMicroservice.post('addProject', {

@@ -218,6 +218,18 @@ app.MapGet("/getId", ([AllowAnonymous] async (HttpContext http,
     })
 );
 
+app.MapGet("/getName", ([AllowAnonymous] async (HttpContext http,
+    IUserRepositoryService userRepositoryService) => {
+        var userId = http.Request.Query["id"];
+        var user = await userRepositoryService.GetByIdAsync(userId);
+        if (user == null)
+        {
+            return "";
+        }
+        return user!.Name;
+    })
+);
+
 app.MapPost("/changeName", ([Authorize] async (HttpContext http,
     ITokenService tokenService,
     IUserRepositoryService userRepositoryService) => {

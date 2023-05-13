@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import bookImage from '../../assets/images/Book.png';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import SettingsTab from "./SettingsTab";
@@ -7,18 +7,83 @@ import useLogout from "../../common/customHooks/useLogout";
 import { observer } from "mobx-react-lite";
 import { useRootStore } from "../../providers/rootProvider";
 import { TUserStore } from "../../stores/userStore";
+import { TUsersStore } from "../../stores/usersStore";
 import { TProjectsMetaStore } from "../../stores/projectsMetaStore";
 import { LanguageData, useLanguageContext } from "../../providers/languageProvider";
+import { projectMicroservice, userMicroservice } from "../../common/axiosMicroservices";
+import IProjectMeta from "../../model/projectData/IProjectMeta";
+import IInvite from "../../model/projectData/IInvite";
+import IUser from "../../model/IUser";
 
 const UserPage: React.FC = observer(() => {
     const lang: LanguageData | null = useLanguageContext();
     const logout = useLogout();
+    const usersStore: TUsersStore = useRootStore()!.getUsersStore();
     const userStore: TUserStore = useRootStore()!.getUserStore();
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
 
     const [showMenu, setShowMenu] = useState<boolean>(false);
+    const [showNotifications, setShowNotifications] = useState<boolean>(false);
     const projectsTabRef = useRef<HTMLDivElement>(null);
     const settingsTabRef = useRef<HTMLDivElement>(null);
+    const nameRef = useRef<HTMLDivElement>(null);
+
+    const getUsers = useCallback(async (projects: IProjectMeta[]) => {
+        const userIds: Set<string> = new Set<string>();
+        projects.forEach((project: IProjectMeta) => {
+            userIds.add(project.ownerId);
+            if (project.invites){
+                project.invites.forEach(i => userIds.add(i.userId))
+            }
+        });
+        const users = await userMicroservice.get<IUser[]>('getUsersByIds', { params: {ids: Array.from(userIds)}})
+        if (users.status === 200){
+            usersStore?.setData(users.data)
+        }
+    }, [usersStore])
+
+    const getActiveInvites = useCallback(async () => {
+        const invites = await projectMicroservice.get<IInvite[]>('getActiveInvites')
+        if (invites.status === 200){
+            userStore?.setInvites(invites.data)
+        }
+    }, [])
+
+    const getProjects = useCallback(async () => {
+        let projects = await projectMicroservice.get<IProjectMeta[]>('getProjects')
+        const openMenuId = projectsMetaStore.getData().find(p => p.showMenu === true)?.id ?? "";
+        const openShareFormId = projectsMetaStore.getData().find(p => p.showSharingForm === true)?.id ?? "";
+
+        if (projects.status === 200){
+            const data = projects.data.map((item: IProjectMeta) => ({...item, "hide": false, 
+                "showMenu": item.id === openMenuId, "showSharingForm": item.id === openShareFormId}));
+            await getUsers(data);
+            await getActiveInvites();
+            projectsMetaStore?.setData(data);
+        }
+    }, [projectsMetaStore, getUsers, getActiveInvites])
+    
+    const acceptInvite = async (id: string) => {
+        const res = await projectMicroservice.post("/acceptInvite", {
+            id: id
+        })
+        if (res.status === 200){
+            getProjects()
+        }
+    };
+
+    const declineInvite = async (id: string) => {
+        const res = await projectMicroservice.post("/declineInvite", {
+            id: id
+        })
+        if (res.status === 200){
+            getProjects()
+        }
+    };
+
+    useEffect(() => {
+        getProjects()
+    }, [getProjects])
 
     return (
         <div id="userPage">
@@ -45,23 +110,52 @@ const UserPage: React.FC = observer(() => {
                             userStore.getData()?.avatarBase64
                         } onClick={() => setShowMenu(!showMenu)} style={{ cursor: 'pointer' }} />
                     </div>
-                    <div className="user-name">
+                    <div className="user-name" ref={nameRef}>
                         {
                             userStore.getData()?.name
                         }
                     </div>
-                    <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg"
-                        style={{ cursor: 'pointer' }}>
-                        <path d={"M11.8572 17.4285C11.0953 18.5714 10.1429 19.1428 9.00005 19.1428C7.8572 19.1428 " +
-                            " 6.90482 18.5714 6.14291 17.4285M14.8109 15.7143H3.18917C2.14727 15.7143 1.30264 " +
-                            " 14.8696 1.30264 13.8277C1.30264 13.4858 1.39557 13.1503 1.57148 12.8571C2.69322 " +
-                            " 10.9875 3.28577 8.84826 3.28577 6.66799V5.42854C3.28577 2.90381 5.33247 0.857109 " +
-                            " 7.8572 0.857109H10.1429C12.6676 0.857109 14.7143 2.90381 14.7143 5.42854V6.66799C14.7143 " +
-                            " 8.84826 15.3069 10.9875 16.4286 12.8571C16.9647 13.7505 16.675 14.9094 15.7816 " +
-                            " 15.4454C15.4884 15.6213 15.1529 15.7143 14.8109 15.7143V15.7143Z"}
-                            stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    {
+                            userStore.getInvites().length === 0 ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                    onClick={() => setShowNotifications(!showNotifications)} style={{cursor: "pointer"}}>
+                                    <path d="M14.8572 19.4285C14.0953 20.5714 13.1429 21.1428 12.0001 21.1428C10.8572 21.1428 9.90482 20.5714 9.14291 19.4285M17.8109 17.7143H6.18917C5.14727 17.7143 4.30264 16.8696 4.30264 15.8277C4.30264 15.4858 4.39557 15.1503 4.57148 14.8571C5.69322 12.9875 6.28577 10.8483 6.28577 8.66799V7.42854C6.28577 4.90381 8.33247 2.85711 10.8572 2.85711H13.1429C15.6676 2.85711 17.7143 4.90381 17.7143 7.42854V8.66799C17.7143 10.8483 18.3069 12.9875 19.4286 14.8571C19.9647 15.7505 19.675 16.9094 18.7816 17.4454C18.4884 17.6213 18.1529 17.7143 17.8109 17.7143V17.7143Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                : <svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                    onClick={() => setShowNotifications(!showNotifications)} style={{cursor: "pointer"}}>
+                                    <path d="M14.8572 21.4285C14.0953 22.5714 13.1429 23.1428 12.0001 23.1428C10.8572 23.1428 9.90482 22.5714 9.14291 21.4285M17.8109 19.7143H6.18917C5.14727 19.7143 4.30264 18.8696 4.30264 17.8277C4.30264 17.4858 4.39557 17.1503 4.57148 16.8571C5.69322 14.9875 6.28577 12.8483 6.28577 10.668V9.42854C6.28577 6.90381 8.33247 4.85711 10.8572 4.85711H13.1429C15.6676 4.85711 17.7143 6.90381 17.7143 9.42854V10.668C17.7143 12.8483 18.3069 14.9875 19.4286 16.8571C19.9647 17.7505 19.675 18.9094 18.7816 19.4454C18.4884 19.6213 18.1529 19.7143 17.8109 19.7143V19.7143Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="17" cy="5" r="4" fill="#599BFF" stroke="#434345" stroke-width="2"/>
+                                </svg>
+                    }
                 </div>
+
+                {
+                    showNotifications && <div className="notification-menu-container">
+                        <div className="notification-menu-tail" style={{right: (nameRef.current?.clientWidth!+140)}}>
+                        </div>
+
+                        <div className="notification-menu" style={{right: (nameRef.current?.clientWidth!+100)}}>
+                            <div className="panel-notification">
+                                {
+                                    userStore.getInvites().length === 0 ?
+                                        lang!.langText.headerMenu.noMessages
+                                        : userStore.getInvites().map((i, index) => <div className="notification">
+                                            {
+                                                index > 0 && <hr className="separator" />
+                                            }
+                                            <span className="inviter-name">{i.inviterName}</span>
+                                            <span>{i.isGroup ? lang!.langText.headerMenu.inviteTextGroup 
+                                                : lang!.langText.headerMenu.inviteTextProject}</span>
+                                            <span className="project-name">'{i.projectName}'</span>
+                                            <div className="button-group">
+                                                <button className="accept-button" onClick={() => acceptInvite(i.id)}>{lang!.langText.headerMenu.accept}</button>
+                                                <button className="decline-button" onClick={() => declineInvite(i.id)}>{lang!.langText.headerMenu.decline}</button>
+                                            </div>
+                                        </div>)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
 
                 {
                     showMenu &&
@@ -185,7 +279,7 @@ const UserPage: React.FC = observer(() => {
                     </div>
                     <div className="tab-panel">
                         <TabPanel>
-                            <ProjectsTab />
+                            <ProjectsTab getProjects={getProjects}/>
                         </TabPanel>
                         <TabPanel>
                             <p>Empty panel</p>

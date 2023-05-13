@@ -16,6 +16,10 @@ public record Invite
     [BsonElement("userId")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string UserId { get; private set; }
+
+    [BsonElement("inviterId")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string InviterId { get; private set; }
     
     [BsonElement("permission")]
     [BsonRepresentation(BsonType.Int32)]
@@ -23,12 +27,13 @@ public record Invite
 
     [BsonElement("state")]
     [BsonRepresentation(BsonType.Int32)]
-    public int State { get; private set; }
+    public int State { get; set; }
 
-    public Invite(string projectId, string userId, int permission)
+    public Invite(string projectId, string userId, string InviterId, int permission)
     {
         this.ProjectId = projectId;
         this.UserId = userId;
+        this.InviterId = InviterId;
         this.Permission = permission;
         this.State = 0;
     }

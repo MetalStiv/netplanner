@@ -5,7 +5,12 @@ export const ru: ILanguage = {
         projects: "Проекты",
         settings: "Настройки",
         exit: "Выход",
-        searchProject: "Поиск проекта..."
+        searchProject: "Поиск проекта...",
+        noMessages: "Сообщений нет...",
+        inviteTextProject: "хочет поделиться проектом",
+        inviteTextGroup: "хочет поделиться группой",
+        accept: "Принять",
+        decline: "Отклонить",
     },
     loginPage: {
         rates: "Тарифы",

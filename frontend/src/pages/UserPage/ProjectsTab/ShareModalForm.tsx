@@ -26,11 +26,20 @@ const ShareModalForm: React.FC<IShareModalFormProps> = observer(({projectMeta, c
         const invite = await projectMicroservice.post('sendInvite', {
             projectId: projectMeta.id,
             email: emailValue,
-            permission: permissionValue
+            permission: permissionValue,
         })
         if (invite.status === 200){
             updateProjects()
         }
+    }
+
+    const revokeInvite = async (id: string) => {
+        const invite = await projectMicroservice.post('revokeInvite', {
+            id: id
+        })
+        if (invite.status === 200){
+            updateProjects()
+        } 
     }
     
     return (
@@ -93,7 +102,9 @@ const ShareModalForm: React.FC<IShareModalFormProps> = observer(({projectMeta, c
                                             </svg>
                                     }
                                     </div>
-                                    <button className="invite-data-revoke-button">{lang?.langText.userPage.projectTab.sharingForm.revoke}</button>
+                                    <button className="invite-data-revoke-button" onClick={() => revokeInvite(i.id)}>
+                                        {lang?.langText.userPage.projectTab.sharingForm.revoke}
+                                    </button>
                                 </div>
                             ))
                         }

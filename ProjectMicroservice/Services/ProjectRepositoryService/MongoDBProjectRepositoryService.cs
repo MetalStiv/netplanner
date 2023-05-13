@@ -99,9 +99,49 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
     public async Task<ProjectMeta> GetProjectByIdAsync(string projectId) =>
         await (await _projectMetaCollection.FindAsync(p => p.Id == projectId)).SingleAsync();
 
-    public async Task<List<ProjectMeta>?> GetProjectsAsync(string userId) =>
-        await (await _projectMetaCollection.FindAsync(p => p.OwnerId == userId)).ToListAsync();
+    public async Task<List<ProjectMeta>?> GetProjectsAsync(string userId)
+    {
+        var ownedProjects = await (await _projectMetaCollection.FindAsync(p => p.OwnerId == userId)).ToListAsync();
+        var invitedProjectIds = (await (await _inviteCollection.FindAsync(i => i.UserId == userId && i.State == 1)).ToListAsync())
+            .Select(i => i.ProjectId).ToList();
+        var subscribedProjects = await (await _projectMetaCollection.FindAsync(p => invitedProjectIds.Contains(p.Id!))).ToListAsync();
+
+        return ownedProjects.Concat(subscribedProjects).ToList();
+    }
     
     public async Task<List<Invite>> GetProjectInvitesAsync(string projectId) =>
         await (await _inviteCollection.FindAsync(i => i.ProjectId == projectId)).ToListAsync();
+
+    public async Task<Invite> GetInviteByIdAsync(string inviteId) =>
+        await (await _inviteCollection.FindAsync(i => i.Id == inviteId)).SingleAsync();
+
+    public async Task RemoveInviteAsync(string inviteId) =>
+        await _inviteCollection.DeleteOneAsync(i => i.Id == inviteId);
+
+    public async Task<bool> CheckUserFullRight(string userId, string projectId)
+    {
+        var project = await this.GetProjectByIdAsync(projectId);
+        if (project.OwnerId == userId)
+        {
+            return true;
+        }
+
+        var userInvite = await (await _inviteCollection.FindAsync(i => i.UserId == userId)).SingleAsync();
+        if (userInvite == null)
+        {
+            return false;
+        }
+        if (userInvite.State == 1 && userInvite.Permission == 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public async Task<List<Invite>> GetUserInvitesAsync(string userId) =>
+        await (await _inviteCollection.FindAsync(i => i.UserId == userId)).ToListAsync();
+    
+    public async Task UpdateInviteAsync(Invite invite) =>
+        await _inviteCollection.ReplaceOneAsync(i => i.Id == invite.Id, invite);
 }

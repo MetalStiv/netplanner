@@ -4,6 +4,9 @@ interface IInvite {
     userId: string,
     permission: number,
     state: number,
+    inviterName?: string,
+    isGroup?: boolean,
+    projectName?: string,
 }
 
 export default IInvite
