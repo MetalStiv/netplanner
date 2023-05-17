@@ -189,6 +189,7 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({getProjects}) => {
                                 <ProjectGroupCard 
                                     projectId={p.id} 
                                     key={`card_${p.id}`} 
+                                    updateProjects={getProjects}
                                 />
                                 : <ProjectCard 
                                         projectId={p.id} 
@@ -203,6 +204,7 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({getProjects}) => {
                                 <ProjectGroupCard 
                                     projectId={p.id} 
                                     key={`card_${p.id}`} 
+                                    updateProjects={getProjects}
                                 />
                                 : <ProjectCard 
                                         projectId={p.id} 

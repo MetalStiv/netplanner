@@ -53,6 +53,58 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
         }
     }
 
+    const getLastModifiedString = (date: Date) => {
+        const currentDateTime = new Date();
+        const difInSec: number = Math.floor((currentDateTime.getTime()-date.getTime())/1000);
+        const diffInMin: number = Math.floor(difInSec/60);
+        const diffInHour: number = Math.floor(diffInMin/60);
+        const diffInDay: number = Math.floor(diffInHour/24);
+        const diffInMonth: number = Math.floor(diffInDay/30);
+        const diffInYear: number = Math.floor(diffInMonth/12);
+        const lastMonth: number = diffInMonth-diffInYear*12;
+        const lastDay: number = diffInDay-(lastMonth+diffInYear*12)*30;
+        const lastHour: number = diffInHour-(lastDay+(lastMonth+diffInYear*12)*30)*24;
+        const lastMin: number = diffInMin-(lastHour+(lastDay+(lastMonth+diffInYear*12)*30)*24)*60;
+
+        const data: string = diffInYear > 0 ? 
+            diffInMonth > 0 ?
+                diffInDay > 0 ?
+                    diffInYear+lang!.langText.userPage.projectTab.yearAbbreviation+' '
+                        +lastMonth+lang!.langText.userPage.projectTab.monthAbbreviation+' '+lastDay
+                        +lang!.langText.userPage.projectTab.dayAbbreviation
+                    :diffInYear+lang!.langText.userPage.projectTab.yearAbbreviation+' '+lastMonth
+                        +lang!.langText.userPage.projectTab.monthAbbreviation
+                : diffInYear+lang!.langText.userPage.projectTab.yearAbbreviation
+            : lastMonth > 0 ?
+                lastDay > 0 ?
+                lastHour > 0 ?
+                    lastMonth+lang!.langText.userPage.projectTab.monthAbbreviation+' '+lastDay
+                        +lang!.langText.userPage.projectTab.dayAbbreviation+' '+lastHour
+                        +lang!.langText.userPage.projectTab.hourAbbreviation
+                    :lastMonth+lang!.langText.userPage.projectTab.monthAbbreviation+' '+lastDay+
+                        lang!.langText.userPage.projectTab.dayAbbreviation
+                :lastMonth+lang!.langText.userPage.projectTab.monthAbbreviation
+            : lastDay > 0 ?
+                lastHour > 0 ?
+                lastMin > 0 ?
+                    lastDay+lang!.langText.userPage.projectTab.dayAbbreviation+' '+lastHour
+                        +lang!.langText.userPage.projectTab.hourAbbreviation+' '
+                        +lastMin+lang!.langText.userPage.projectTab.minAbbreviation
+                    :lastDay+lang!.langText.userPage.projectTab.dayAbbreviation+' '+lastHour
+                        +lang!.langText.userPage.projectTab.hourAbbreviation+' '
+                :lastDay+lang!.langText.userPage.projectTab.dayAbbreviation
+            : lastHour > 0 ?
+                lastMin > 0 ?
+                    lastHour+lang!.langText.userPage.projectTab.hourAbbreviation+' '+lastMin
+                        +lang!.langText.userPage.projectTab.minAbbreviation
+                    :lastHour+lang!.langText.userPage.projectTab.hourAbbreviation
+            :lastMin > 0 ?
+                lastMin+lang!.langText.userPage.projectTab.minAbbreviation
+                :lang!.langText.userPage.projectTab.lessThenAMinute
+        
+        return lang!.langText.userPage.projectTab.modified+' '+data+' '+lang!.langText.userPage.projectTab.ago;
+    }
+
     return (
         <div className={`project-card ${projectsMetaStore.getById(projectId)!.hide ?
             "project-card-hidden"
@@ -63,7 +115,9 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
             <img className="project-image" src={imageLoadingPlaceholder}
                 onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)} />
             <div className="base-info">
-                <div className="modified-info">{lang!.langText.userPage.projectTab.justCreated}</div>
+                <div className="modified-info">{
+                    getLastModifiedString(new Date(projectsMetaStore.getById(projectId)!.lastModifyTime))
+                }</div>
                 {
                     isEdittingName ? <div className="name-container">
                         <input

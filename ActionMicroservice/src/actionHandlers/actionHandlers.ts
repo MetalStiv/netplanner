@@ -1,5 +1,7 @@
+import { ObjectId } from "mongodb";
 import { IDatadaseCollections } from "../app";
 import { IMessage } from "../dto/IMessage";
+import { IProjectMeta } from "../model/IProjectMeta";
 import { addLayerHandler } from "./addLayerHandler";
 import { addPageHandler } from "./addPageHandler";
 import { addShapeHandler } from "./addShapeHandler";
@@ -29,6 +31,12 @@ export const actionHandlers: IActionHandlers = {
             }
             return true;
         })
+        collections.projectMetaCollection.findOneAndUpdate({
+            _id: new ObjectId(message.projectId)
+        },
+        {
+            $set: { lastModifyTime: new Date }
+        });
         return Promise.resolve(result);
     }
 }

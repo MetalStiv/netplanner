@@ -114,6 +114,7 @@ services:
       DB_PAGE_COLLECTION_NAME: pages
       DB_LAYER_COLLECTION_NAME: layers
       DB_SHAPE_COLLECTION_NAME: shapes
+      DB_PROJECT_META_COLLECTION_NAME: meta
       JWT_PUBLIC_KEY: /app/RsaKeys/public.pem
       JWT_ISSUER: http://localhost:5108
       DOMAIN: http://localhost:5108

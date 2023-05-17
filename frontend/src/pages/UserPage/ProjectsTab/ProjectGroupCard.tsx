@@ -7,18 +7,22 @@ import { observer } from "mobx-react-lite";
 import { projectMicroservice } from "../../../common/axiosMicroservices";
 import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
+import ShareModalForm from "./ShareModalForm";
 
 interface IProjectGroupCardProps {
-    projectId: string;
+    projectId: string,
+    updateProjects: () => void,
 }
 
-const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId }) => {
+const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId, updateProjects }) => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
     const usersStore: TUsersStore = useRootStore()!.getUsersStore();
     const lang: LanguageData | null = useLanguageContext();
 
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(projectsMetaStore.getById(projectId)!.name);
+
+    const maxSubscriberQuantity = 6;
 
     const removeProject = async () => {
         const res = await projectMicroservice.post("removeProject", { id: projectId })
@@ -123,7 +127,7 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
                                 </span>
                             </div>
                     }
-                    <div className="modified-info">{lang!.langText.userPage.projectTab.justCreated}</div>
+                    <div className="modified-info"></div>
                 </div>
 
                 <div className="second-row">
@@ -139,8 +143,32 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
                             }
                         </div>
                     </div>
-                    <div className="subscribers-info">{lang!.langText.userPage.projectTab.subscribers + ': ' +
-                        lang!.langText.userPage.projectTab.none}</div>
+                    
+                    <div className="subscribers-info">{lang!.langText.userPage.projectTab.subscribers + ': '}
+                    {
+                        projectsMetaStore.getById(projectId)!.invites !== undefined ?
+                            projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).length > 0 ?
+                                projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1)
+                                    .map((i, index) => 
+                                        index < maxSubscriberQuantity ? <img src={
+                                                usersStore.getData()
+                                                    .find(u => u.id === i.userId)?.avatarBase64
+                                            } title={usersStore.getData().find(u => u.id === i.userId)?.name} />
+                                            :index === maxSubscriberQuantity? <div className="addition-subscribers" onClick={() => projectsMetaStore.switchShareFormById(projectId)}
+                                                title={projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).map((i, index) => 
+                                                    index < maxSubscriberQuantity ? ''
+                                                    : usersStore.getData().find(u => u.id === i.userId)?.name
+                                                ).filter(item => item !== '').join(', ')}>
+                                                {'+'+(projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).length - 
+                                                    maxSubscriberQuantity)}
+                                            </div>
+                                            :''
+                                    )
+                                : lang!.langText.userPage.projectTab.none
+                            : lang!.langText.userPage.projectTab.none
+                    }
+                    </div>
+
                 </div>
 
                 <div className="third-row">
@@ -150,7 +178,7 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
             </div>
 
             <div className="menu-icon-group">
-                <div className="menu-icon">
+                <div className="menu-icon" onClick={() => projectsMetaStore.switchShareFormById(projectId)}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d={"M7 11.5L13 14.5M13 5.5L7 8.5M16 19C14.3431 19 13 17.6569 13 16C13 14.3431 14.3431 " +
                             " 13 16 13C17.6569 13 19 14.3431 19 16C19 17.6569 17.6569 19 16 19ZM4 13C2.34315 13 1 " +
@@ -204,6 +232,13 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
 
                         </div>
                     </div>
+                }
+
+                {
+                    projectsMetaStore.getById(projectId)!.showSharingForm &&
+                        <ShareModalForm projectMeta={projectsMetaStore.getById(projectId)!} 
+                            close={() => projectsMetaStore.switchShareFormById(projectId)} 
+                            updateProjects={updateProjects} />
                 }
             </div>
         </div>

@@ -8,6 +8,7 @@ import { IPageTree } from './dto/IPageTree';
 import { IShapeTree } from './dto/IShapeTree';
 import { ILayer } from './model/ILayer';
 import { IPage } from './model/IPage';
+import { IProjectMeta } from './model/IProjectMeta';
 import { IShape } from './model/IShape';
 
 require('dotenv').config();
@@ -17,6 +18,7 @@ const DB_NAME: string = process.env.DB_NAME;
 const DB_PAGE_COLLECTION_NAME: string = process.env.DB_PAGE_COLLECTION_NAME;
 const DB_LAYER_COLLECTION_NAME: string = process.env.DB_LAYER_COLLECTION_NAME;
 const DB_SHAPE_COLLECTION_NAME: string = process.env.DB_SHAPE_COLLECTION_NAME;
+const DB_PROJECT_META_COLLECTION_NAME: string = process.env.DB_PROJECT_META_COLLECTION_NAME;
 
 const WebSocket = require('ws');
 const wsServer = new WebSocket.Server({ port: PORT });
@@ -30,13 +32,15 @@ const mongoDatabase: mongoDB.Db = mongoClient.db(DB_NAME);
 export interface IDatadaseCollections {
     pageCollection: mongoDB.Collection<IPage>,
     layerCollection: mongoDB.Collection<ILayer>,
-    shapeCollection: mongoDB.Collection<IShape>
+    shapeCollection: mongoDB.Collection<IShape>,
+    projectMetaCollection: mongoDB.Collection<IProjectMeta>,
 }
 
 const collections: IDatadaseCollections = {
     pageCollection: mongoDatabase.collection<IPage>(DB_PAGE_COLLECTION_NAME),
     layerCollection: mongoDatabase.collection<ILayer>(DB_LAYER_COLLECTION_NAME),
     shapeCollection: mongoDatabase.collection<IShape>(DB_SHAPE_COLLECTION_NAME),
+    projectMetaCollection: mongoDatabase.collection<IProjectMeta>(DB_PROJECT_META_COLLECTION_NAME),
 }
 
 interface IMetadata {

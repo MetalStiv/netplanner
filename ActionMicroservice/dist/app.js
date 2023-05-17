@@ -71,6 +71,7 @@ var DB_NAME = process.env.DB_NAME;
 var DB_PAGE_COLLECTION_NAME = process.env.DB_PAGE_COLLECTION_NAME;
 var DB_LAYER_COLLECTION_NAME = process.env.DB_LAYER_COLLECTION_NAME;
 var DB_SHAPE_COLLECTION_NAME = process.env.DB_SHAPE_COLLECTION_NAME;
+var DB_PROJECT_META_COLLECTION_NAME = process.env.DB_PROJECT_META_COLLECTION_NAME;
 var WebSocket = require('ws');
 var wsServer = new WebSocket.Server({ port: PORT });
 var jwt = require('jsonwebtoken');
@@ -80,7 +81,8 @@ var mongoDatabase = mongoClient.db(DB_NAME);
 var collections = {
     pageCollection: mongoDatabase.collection(DB_PAGE_COLLECTION_NAME),
     layerCollection: mongoDatabase.collection(DB_LAYER_COLLECTION_NAME),
-    shapeCollection: mongoDatabase.collection(DB_SHAPE_COLLECTION_NAME)
+    shapeCollection: mongoDatabase.collection(DB_SHAPE_COLLECTION_NAME),
+    projectMetaCollection: mongoDatabase.collection(DB_PROJECT_META_COLLECTION_NAME)
 };
 var clients = new Map();
 var publicKey = fs.readFileSync("/app/RsaKeys/public.pem", "utf8");

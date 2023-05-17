@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.actionHandlers = void 0;
+var mongodb_1 = require("mongodb");
 var addLayerHandler_1 = require("./addLayerHandler");
 var addPageHandler_1 = require("./addPageHandler");
 var addShapeHandler_1 = require("./addShapeHandler");
@@ -59,6 +60,11 @@ exports.actionHandlers = {
                 }
             });
         }); });
+        collections.projectMetaCollection.findOneAndUpdate({
+            _id: new mongodb_1.ObjectId(message.projectId)
+        }, {
+            $set: { lastModifyTime: new Date }
+        });
         return Promise.resolve(result);
     }
 };
