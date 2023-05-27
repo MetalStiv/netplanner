@@ -78,6 +78,10 @@ export const ru: ILanguage = {
                 enterEmail: "Введите email",
                 invite: "Пригласить",
                 revoke: "Отозвать",
+            },
+            moveForm: {
+                title: "Перемещение ",
+                emptyGroupError: "Группа не была выбрана!",
             }
         },
         settingsTab: {

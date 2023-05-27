@@ -25,7 +25,7 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
     const maxSubscriberQuantity = 6;
 
     const removeProject = async () => {
-        const res = await projectMicroservice.post("removeProject", { id: projectId })
+        const res = await projectMicroservice.delete("removeProject", { data: { id: projectId } })
         if (res.status !== 200) {
             alert(res.statusText)
         }

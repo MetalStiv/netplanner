@@ -122,9 +122,11 @@
             .show-form-data {
                 display: flex;
                 flex-direction: column;
+                width: 100%;
                 overflow: auto;
                 flex-wrap: wrap;
                 height: 30vh;
+                margin-top: 3vh;
 
                 .invite-data-row {
                     display: flex;
@@ -178,6 +180,60 @@
                             color: $white;
                             transition: background .2s
                         }
+                    }
+                }
+
+                .group-tree-element {
+                    display: flex;
+                    font-size: 18px;
+
+                    .tree-element-icon {
+                        margin-right: 6px;
+                    }
+                }
+
+                .selected-group-tree-element {
+                    display: flex;
+                    font-size: 17px;
+                    border: 2px solid $lightblue;
+                    border-radius: 15px;
+
+                    .tree-element-icon {
+                        margin-right: 6px;
+                    }
+                }
+            }
+
+            .error-text {
+                color: red;
+                margin-right: 8vw;
+            }
+
+            .btn-row {
+                display: flex;
+                width: 100%;
+                margin-right: 4vw;
+                flex-direction: row-reverse;
+
+                .move-btn {
+                    font-size: 18px;
+                    cursor: pointer;
+                    background: $background;
+                    border: 2px solid $lightblue;
+                    border-radius: 15px;
+                    width: 5vw;
+                    height: 4vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    stroke: $lightblue;
+                    color: $lightblue;
+    
+                    &:hover {
+                        background: linear-gradient(0deg, $blue, $blue);
+                        stroke: $white;
+                        color: $white;
+                        transition: background .2s
                     }
                 }
             }

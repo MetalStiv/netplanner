@@ -11,12 +11,14 @@ import ProjectGroupCard from "./ProjectGroupCard";
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 import IInvite from "../../../model/projectData/IInvite";
 import { TUserStore } from "../../../stores/userStore";
+import { Loader } from "../../../components";
 
 interface IProjectTabProps {
-    getProjects: () => void
+    getProjects: () => void,
+    isLoading: boolean,
 }
 
-const ProjectsTab: React.FC<IProjectTabProps> = observer(({getProjects}) => {
+const ProjectsTab: React.FC<IProjectTabProps> = observer(({getProjects, isLoading}) => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
     const usersStore: TUsersStore = useRootStore()!.getUsersStore();
     const userStore: TUserStore = useRootStore()!.getUserStore();
@@ -89,6 +91,9 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({getProjects}) => {
 
     return (
         <div id="projects-tab">
+            {
+                isLoading && <Loader />
+            }
             <div id="navigation">
                 <div className="group-navigation-button-group">
                     <button className="navigation-button" onClick={() => projectsMetaStore.outGroup()}>

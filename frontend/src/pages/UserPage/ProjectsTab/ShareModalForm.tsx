@@ -34,9 +34,7 @@ const ShareModalForm: React.FC<IShareModalFormProps> = observer(({projectMeta, c
     }
 
     const revokeInvite = async (id: string) => {
-        const invite = await projectMicroservice.post('revokeInvite', {
-            id: id
-        })
+        const invite = await projectMicroservice.delete('revokeInvite', { data: { id: id } })
         if (invite.status === 200){
             updateProjects()
         } 

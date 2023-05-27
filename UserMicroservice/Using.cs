@@ -5,6 +5,8 @@ global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.Hosting;
 global using System.Collections.Generic;
 global using System.Linq;
+global using Swashbuckle.AspNetCore.Annotations;
+global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.Extensions.DependencyInjection;
 global using System.Security.Claims;
 global using System.Text;

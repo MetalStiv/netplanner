@@ -78,8 +78,11 @@ export const eng: ILanguage = {
                 enterEmail: "Enter email",
                 invite: "Invite",
                 revoke: "Revoke"
+            },
+            moveForm: {
+                title: "Move ",
+                emptyGroupError: "No group was selected!",
             }
-
         },
         settingsTab: {
             userInfo: {

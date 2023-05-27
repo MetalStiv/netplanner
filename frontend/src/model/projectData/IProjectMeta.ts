@@ -12,6 +12,7 @@ interface IProjectMeta {
     hide: boolean,
     showMenu: boolean,
     showSharingForm: boolean,
+    showMoveForm: boolean,
     invites: IInvite[]
 }
 

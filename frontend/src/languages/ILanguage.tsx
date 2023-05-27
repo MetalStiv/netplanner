@@ -75,6 +75,10 @@ interface ILanguage {
                 enterEmail: string,
                 invite: string,
                 revoke: string,
+            },
+            moveForm: {
+                title: string,
+                emptyGroupError: string,
             }
         },
         settingsTab: {

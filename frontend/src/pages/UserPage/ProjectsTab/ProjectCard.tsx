@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import imageLoadingPlaceholder from '../../../assets/images/image-loading.jpg';
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 import ShareModalForm from "./ShareModalForm";
+import MoveModalForm from "./MoveModalForm";
 
 interface IProjectCardProps {
     projectId: string,
@@ -29,7 +30,7 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
     const maxSubscriberQuantity: number = 8;
 
     const removeProject = async () => {
-        const res = await projectMicroservice.post("removeProject", { id: projectId })
+        const res = await projectMicroservice.delete("removeProject", { data: { id: projectId } })
         if (res.status !== 200) {
             alert(res.statusText)
         }
@@ -268,7 +269,10 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
                                 {lang!.langText.userPage.projectTab.restoreFromCheckpoint}
                             </div>
                             <hr className="separator" />
-                            <div className="menu-text">
+                            <div className="menu-text" onClick={() => {
+                                projectsMetaStore.switchMenuById(projectId);
+                                projectsMetaStore.switchMoveFormById(projectId);
+                            }}>
                                 {lang!.langText.userPage.projectTab.moveToGroup}
                             </div>
                             <hr className="separator" />
@@ -291,6 +295,12 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
                     projectsMetaStore.getById(projectId)!.showSharingForm &&
                         <ShareModalForm projectMeta={projectsMetaStore.getById(projectId)!} 
                             close={() => projectsMetaStore.switchShareFormById(projectId)} 
+                            updateProjects={updateProjects} />
+                }
+                {
+                    projectsMetaStore.getById(projectId)!.showMoveForm &&
+                        <MoveModalForm projectMeta={projectsMetaStore.getById(projectId)!} 
+                            close={() => projectsMetaStore.switchMoveFormById(projectId)} 
                             updateProjects={updateProjects} />
                 }
             </div>

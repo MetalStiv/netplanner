@@ -3,6 +3,8 @@ global using System.ComponentModel.DataAnnotations;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.Hosting;
+global using Swashbuckle.AspNetCore.Annotations;
+global using Microsoft.OpenApi.Models; 
 global using System.Collections.Generic;
 global using System.Linq;
 global using Microsoft.Extensions.DependencyInjection;

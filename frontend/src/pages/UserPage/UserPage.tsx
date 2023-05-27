@@ -23,6 +23,7 @@ const UserPage: React.FC = observer(() => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
 
     const [showMenu, setShowMenu] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [showNotifications, setShowNotifications] = useState<boolean>(false);
     const projectsTabRef = useRef<HTMLDivElement>(null);
     const settingsTabRef = useRef<HTMLDivElement>(null);
@@ -53,14 +54,18 @@ const UserPage: React.FC = observer(() => {
         let projects = await projectMicroservice.get<IProjectMeta[]>('getProjects')
         const openMenuId = projectsMetaStore.getData().find(p => p.showMenu === true)?.id ?? "";
         const openShareFormId = projectsMetaStore.getData().find(p => p.showSharingForm === true)?.id ?? "";
+        const openMoveFormId = projectsMetaStore.getData().find(p => p.showMoveForm === true)?.id ?? "";
 
         if (projects.status === 200){
             const data = projects.data.map((item: IProjectMeta) => ({...item, "hide": false, 
-                "showMenu": item.id === openMenuId, "showSharingForm": item.id === openShareFormId}));
+                "showMenu": item.id === openMenuId, "showMoveForm": item.id === openMoveFormId,
+                "showSharingForm": item.id === openShareFormId}));
             await getUsers(data);
             await getActiveInvites();
             projectsMetaStore?.setData(data);
         }
+
+        setIsLoading(false);
     }, [projectsMetaStore, getUsers, getActiveInvites])
     
     const acceptInvite = async (id: string) => {
@@ -279,7 +284,7 @@ const UserPage: React.FC = observer(() => {
                     </div>
                     <div className="tab-panel">
                         <TabPanel>
-                            <ProjectsTab getProjects={getProjects}/>
+                            <ProjectsTab getProjects={getProjects} isLoading={isLoading}/>
                         </TabPanel>
                         <TabPanel>
                             <p>Empty panel</p>

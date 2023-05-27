@@ -17,6 +17,10 @@ var jwtSettings = new JwtSettings(
 
 var userMicroservice = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "";
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => c.EnableAnnotations());
+
 builder.Services.AddSingleton<ITokenService>(new RsaTokenService(jwtSettings));
 builder.Services.AddSingleton<IProjectRepositoryService>(new MongoDBProjectRepositoryService(dbSettings));
 
@@ -47,225 +51,342 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
 
-app.MapPost("/addProject", [Authorize] async (HttpContext http, 
-    ITokenService tokenService,
-    IProjectRepositoryService projectRepositoryService) => {
-        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var userId = tokenService.GetUserIdFromToken(token);
-        var projectCreationDto = await http.Request.ReadFromJsonAsync<ProjectCreationDto>();
+app.MapPost("/addProject", 
+    [SwaggerOperation(
+        Summary = "Add project",
+        Description = "Requires login")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "Some failure")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService,
+        IProjectRepositoryService projectRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
+            var projectCreationDto = await http.Request.ReadFromJsonAsync<ProjectCreationDto>();
 
-        ProjectMeta newProjectMeta;
-        if (projectCreationDto!.isGroup)
-        {
-            newProjectMeta = ProjectMeta.CreateProjectMetaGroup(projectCreationDto.Name, 
-                userId,projectCreationDto.GroupId);
-        }
-        else
-        {
-            newProjectMeta = ProjectMeta.CreateProjectMeta(projectCreationDto.Name, 
-                userId,projectCreationDto.GroupId);
-        }
-        await projectRepositoryService.AddAsync(newProjectMeta, projectCreationDto.DefaultPageName+" 1",
-            projectCreationDto.DefaultLayerName+" 1");
+            ProjectMeta newProjectMeta;
+            if (projectCreationDto!.isGroup)
+            {
+                newProjectMeta = ProjectMeta.CreateProjectMetaGroup(projectCreationDto.Name, 
+                    userId,projectCreationDto.GroupId);
+            }
+            else
+            {
+                newProjectMeta = ProjectMeta.CreateProjectMeta(projectCreationDto.Name, 
+                    userId,projectCreationDto.GroupId);
+            }
+            await projectRepositoryService.AddAsync(newProjectMeta, projectCreationDto.DefaultPageName+" 1",
+                projectCreationDto.DefaultLayerName+" 1");
 
-        await http.Response.WriteAsJsonAsync(newProjectMeta);
-        return;
-    }
-);
-
-app.MapGet("/getProjects", [Authorize] async (HttpContext http, 
-    ITokenService tokenService,
-    IProjectRepositoryService projectRepositoryService) => {
-        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var userId = tokenService.GetUserIdFromToken(token);
-
-        var projects = await projectRepositoryService.GetProjectsAsync(userId);
-        if (projects == null)
-        {
+            await http.Response.WriteAsJsonAsync(newProjectMeta);
             return;
         }
-        var result = new List<ProjectMetaDto>();
-        foreach(var p in projects!)
-        {
-            var invites = await projectRepositoryService.GetProjectInvitesAsync(p.Id!);
-            result.Add(new ProjectMetaDto(p.Id!, p.Name, p.OwnerId, p.GroupId!, p.CreationTime,
-                p.LastModifyTime, p.IsGroup, invites));
-        }
-        await http.Response.WriteAsJsonAsync(result);
-        // await http.Response.WriteAsJsonAsync(projects);
-        return;
-    }
-);
+)
+    .Accepts<ProjectCreationDto>("application/json")
+    .Produces<ProjectMeta>(StatusCodes.Status200OK);
 
-app.MapPost("/removeProject", [Authorize] async (HttpContext http, 
-    ITokenService tokenService,
-    IProjectRepositoryService projectRepositoryService) => {
-        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var userId = tokenService.GetUserIdFromToken(token);
+app.MapGet("/getProjects", 
+    [SwaggerOperation(
+        Summary = "Get all user owned and shared project",
+        Description = "Requires login")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "Some failure")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService,
+        IProjectRepositoryService projectRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
 
-        var projectIdDto = await http.Request.ReadFromJsonAsync<ProjectIdDto>();
-        var project = await projectRepositoryService.GetProjectByIdAsync(projectIdDto!.Id);
-
-        if (!await projectRepositoryService.CheckUserFullRight(userId, projectIdDto!.Id))
-        {
-            http.Response.StatusCode = 401;
+            var projects = await projectRepositoryService.GetProjectsAsync(userId);
+            if (projects == null)
+            {
+                return;
+            }
+            var result = new List<ProjectMetaDto>();
+            foreach(var p in projects!)
+            {
+                var invites = await projectRepositoryService.GetProjectInvitesAsync(p.Id!);
+                result.Add(new ProjectMetaDto(p.Id!, p.Name, p.OwnerId, p.GroupId!, p.CreationTime,
+                    p.LastModifyTime, p.IsGroup, invites));
+            }
+            await http.Response.WriteAsJsonAsync(result);
+            // await http.Response.WriteAsJsonAsync(projects);
             return;
         }
+)
+    .Produces<List<ProjectMeta>>(StatusCodes.Status200OK);
 
-        await projectRepositoryService.RemoveAsync(projectIdDto!.Id);
-        http.Response.StatusCode = 200;
-        return;
-    }
-);
+app.MapDelete("/removeProject", 
+    [SwaggerOperation(
+        Summary = "Remove owned or shared with full grants user project",
+        Description = "Requires login")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "Some failure")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService,
+        IProjectRepositoryService projectRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
 
-app.MapPost("/renameProject", [Authorize] async (HttpContext http, 
-    ITokenService tokenService,
-    IProjectRepositoryService projectRepositoryService) => {
-        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var userId = tokenService.GetUserIdFromToken(token);
+            var projectIdDto = await http.Request.ReadFromJsonAsync<ProjectIdDto>();
+            var project = await projectRepositoryService.GetProjectByIdAsync(projectIdDto!.Id);
 
-        var renameProjectDto = await http.Request.ReadFromJsonAsync<RenameProjectDto>();
-        var project = await projectRepositoryService.GetProjectByIdAsync(renameProjectDto!.Id);
+            if (!await projectRepositoryService.CheckUserFullRight(userId, projectIdDto!.Id))
+            {
+                http.Response.StatusCode = 401;
+                return;
+            }
 
-        if (!await projectRepositoryService.CheckUserFullRight(userId, renameProjectDto!.Id))
-        {
-            http.Response.StatusCode = 401;
+            await projectRepositoryService.RemoveAsync(projectIdDto!.Id);
+            http.Response.StatusCode = 200;
             return;
         }
+)
+    .Accepts<ProjectIdDto>("application/json")
+    .Produces(StatusCodes.Status200OK);
 
-        project.Name = renameProjectDto.Name;
-        await projectRepositoryService.UpdateAsync(project);
-        
-        http.Response.StatusCode = 200;
-        return;
-    }
-);
+app.MapPost("/renameProject", 
+    [SwaggerOperation(
+        Summary = "Rename owned or shared with full grants user project",
+        Description = "Requires login")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "Some failure")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService,
+        IProjectRepositoryService projectRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
 
-app.MapPost("/sendInvite", [Authorize] async (HttpContext http, 
-    ITokenService tokenService,
-    IProjectRepositoryService projectRepositoryService) => {
-        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var userId = tokenService.GetUserIdFromToken(token);
+            var renameProjectDto = await http.Request.ReadFromJsonAsync<RenameProjectDto>();
+            var project = await projectRepositoryService.GetProjectByIdAsync(renameProjectDto!.Id);
 
-        var inviteDto = await http.Request.ReadFromJsonAsync<InviteDto>();
-        var project = await projectRepositoryService.GetProjectByIdAsync(inviteDto!.ProjectId);
+            if (!await projectRepositoryService.CheckUserFullRight(userId, renameProjectDto!.Id))
+            {
+                http.Response.StatusCode = 401;
+                return;
+            }
 
-        if (!await projectRepositoryService.CheckUserFullRight(userId, inviteDto!.ProjectId))
-        {
-            http.Response.StatusCode = 401;
+            project.Name = renameProjectDto.Name;
+            await projectRepositoryService.UpdateAsync(project);
+            
+            http.Response.StatusCode = 200;
             return;
         }
+)
+    .Accepts<RenameProjectDto>("application/json")
+    .Produces(StatusCodes.Status200OK);
 
-        var client = new HttpClient();
-        // var subscriberId = await client.GetStringAsync(userMicroservice+"/getId?mail="+sendInviteDto.UserId);
-        var subscriberId = await client.GetStringAsync("http://user-microservice:5108/getId?mail="+inviteDto.Email);
-        if (subscriberId == "")
-        {
-            http.Response.StatusCode = 501;
+app.MapPost("/moveProjectToGroup", 
+    [SwaggerOperation(
+        Summary = "Move owned or shared with full grants user project to group",
+        Description = "Requires login")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "Some failure")]
+    [SwaggerResponse(501, "No group with such Id")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService,
+        IProjectRepositoryService projectRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
+
+            var moveProjectDto = await http.Request.ReadFromJsonAsync<MoveProjectDto>();
+
+            if (!await projectRepositoryService.CheckUserFullRight(userId, moveProjectDto!.Id)
+                || !await projectRepositoryService.CheckUserFullRight(userId, moveProjectDto!.GroupId))
+            {
+                http.Response.StatusCode = 401;
+                return;
+            }
+            var group = await projectRepositoryService.GetProjectByIdAsync(moveProjectDto!.GroupId);
+            if (!group.IsGroup)
+            {
+                http.Response.StatusCode = 501;
+                return;
+            }
+
+            var project = await projectRepositoryService.GetProjectByIdAsync(moveProjectDto!.Id);
+            project.GroupId = moveProjectDto!.GroupId;
+            await projectRepositoryService.UpdateAsync(project);
+
+            http.Response.StatusCode = 200;
             return;
         }
-        if (subscriberId == project.OwnerId)
-        {
-            http.Response.StatusCode = 502;
+)
+    .Accepts<MoveProjectDto>("application/json")
+    .Produces<ProjectMeta>(StatusCodes.Status200OK);
+
+app.MapPost("/sendInvite", 
+    [SwaggerOperation(
+        Summary = "Send invite to project or group by user with full grant",
+        Description = "Requires login")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "Some failure")]
+    [SwaggerResponse(501, "No user with such Id")]
+    [SwaggerResponse(502, "Attempt to invite owner or already invited user")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService,
+        IProjectRepositoryService projectRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
+
+            var inviteDto = await http.Request.ReadFromJsonAsync<InviteDto>();
+            var project = await projectRepositoryService.GetProjectByIdAsync(inviteDto!.ProjectId);
+
+            if (!await projectRepositoryService.CheckUserFullRight(userId, inviteDto!.ProjectId))
+            {
+                http.Response.StatusCode = 401;
+                return;
+            }
+
+            var client = new HttpClient();
+            // var subscriberId = await client.GetStringAsync(userMicroservice+"/getId?mail="+sendInviteDto.UserId);
+            var subscriberId = await client.GetStringAsync("http://user-microservice:5108/getId?mail="+inviteDto.Email);
+            if (subscriberId == "")
+            {
+                http.Response.StatusCode = 501;
+                return;
+            }
+            if (subscriberId == project.OwnerId)
+            {
+                http.Response.StatusCode = 502;
+                return;
+            }
+
+            var invite = new Invite(inviteDto.ProjectId, subscriberId, userId, inviteDto.Permission);
+            await projectRepositoryService.AddInvite(invite);
+            
+            http.Response.StatusCode = 200;
             return;
         }
+)
+    .Accepts<InviteDto>("application/json")
+    .Produces(StatusCodes.Status200OK);
 
-        var invite = new Invite(inviteDto.ProjectId, subscriberId, userId, inviteDto.Permission);
-        await projectRepositoryService.AddInvite(invite);
-        
-        http.Response.StatusCode = 200;
-        return;
-    }
-);
+app.MapDelete("/revokeInvite", 
+    [SwaggerOperation(
+        Summary = "Revoke invite to project or group by full granted user",
+        Description = "Requires login")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "Some failure")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService,
+        IProjectRepositoryService projectRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
 
-app.MapPost("/revokeInvite", [Authorize] async (HttpContext http, 
-    ITokenService tokenService,
-    IProjectRepositoryService projectRepositoryService) => {
-        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var userId = tokenService.GetUserIdFromToken(token);
+            var inviteId = (await http.Request.ReadFromJsonAsync<IdDto>())!.Id;
+            var invite = await projectRepositoryService.GetInviteByIdAsync(inviteId);
+            var project = await projectRepositoryService.GetProjectByIdAsync(invite.ProjectId);
 
-        var inviteId = (await http.Request.ReadFromJsonAsync<IdDto>())!.Id;
-        var invite = await projectRepositoryService.GetInviteByIdAsync(inviteId);
-        var project = await projectRepositoryService.GetProjectByIdAsync(invite.ProjectId);
+            if (!await projectRepositoryService.CheckUserFullRight(userId, invite.ProjectId))
+            {
+                http.Response.StatusCode = 401;
+                return;
+            }
 
-        if (!await projectRepositoryService.CheckUserFullRight(userId, invite.ProjectId))
-        {
-            http.Response.StatusCode = 401;
+            await projectRepositoryService.RemoveInviteAsync(inviteId);
+            
+            http.Response.StatusCode = 200;
             return;
         }
+)
+    .Accepts<IdDto>("application/json")
+    .Produces(StatusCodes.Status200OK);
 
-        await projectRepositoryService.RemoveInviteAsync(inviteId);
-        
-        http.Response.StatusCode = 200;
-        return;
-    }
-);
+app.MapPost("/acceptInvite", 
+    [SwaggerOperation(
+        Summary = "Accept invite",
+        Description = "Requires login")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "Some failure")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService,
+        IProjectRepositoryService projectRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
 
-app.MapPost("/acceptInvite", [Authorize] async (HttpContext http, 
-    ITokenService tokenService,
-    IProjectRepositoryService projectRepositoryService) => {
-        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var userId = tokenService.GetUserIdFromToken(token);
+            var inviteId = (await http.Request.ReadFromJsonAsync<IdDto>())!.Id;
+            var invite = await projectRepositoryService.GetInviteByIdAsync(inviteId);
 
-        var inviteId = (await http.Request.ReadFromJsonAsync<IdDto>())!.Id;
-        var invite = await projectRepositoryService.GetInviteByIdAsync(inviteId);
+            if (invite.UserId != userId)
+            {
+                http.Response.StatusCode = 401;
+                return; 
+            }
+            
+            invite.State = 1;
+            await projectRepositoryService.UpdateInviteAsync(invite);
 
-        if (invite.UserId != userId)
-        {
-            http.Response.StatusCode = 401;
-            return; 
+            http.Response.StatusCode = 200;
+            return;
         }
-        
-        invite.State = 1;
-        await projectRepositoryService.UpdateInviteAsync(invite);
+)
+    .Accepts<IdDto>("application/json")
+    .Produces(StatusCodes.Status200OK);
 
-        http.Response.StatusCode = 200;
-        return;
-    }
-);
+app.MapPost("/declineInvite", 
+   [SwaggerOperation(
+        Summary = "Decline invite",
+        Description = "Requires login")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "Some failure")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService,
+        IProjectRepositoryService projectRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
 
-app.MapPost("/declineInvite", [Authorize] async (HttpContext http, 
-    ITokenService tokenService,
-    IProjectRepositoryService projectRepositoryService) => {
-        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var userId = tokenService.GetUserIdFromToken(token);
+            var inviteId = (await http.Request.ReadFromJsonAsync<IdDto>())!.Id;
+            var invite = await projectRepositoryService.GetInviteByIdAsync(inviteId);
 
-        var inviteId = (await http.Request.ReadFromJsonAsync<IdDto>())!.Id;
-        var invite = await projectRepositoryService.GetInviteByIdAsync(inviteId);
+            if (invite.UserId != userId)
+            {
+                http.Response.StatusCode = 401;
+                return; 
+            }
+            
+            invite.State = 2;
+            await projectRepositoryService.UpdateInviteAsync(invite);
 
-        if (invite.UserId != userId)
-        {
-            http.Response.StatusCode = 401;
-            return; 
+            http.Response.StatusCode = 200;
+            return;
         }
-        
-        invite.State = 2;
-        await projectRepositoryService.UpdateInviteAsync(invite);
+)
+    .Accepts<IdDto>("application/json")
+    .Produces(StatusCodes.Status200OK);
 
-        http.Response.StatusCode = 200;
-        return;
-    }
-);
+app.MapGet("/getActiveInvites", 
+   [SwaggerOperation(
+        Summary = "Get all invites require user decision",
+        Description = "Requires login")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "Some failure")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService,
+        IProjectRepositoryService projectRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
 
-app.MapGet("/getActiveInvites", [Authorize] async (HttpContext http, 
-    ITokenService tokenService,
-    IProjectRepositoryService projectRepositoryService) => {
-        var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var userId = tokenService.GetUserIdFromToken(token);
+            var invites = (await projectRepositoryService.GetUserInvitesAsync(userId)).FindAll(i => i.State == 0);
+            var client = new HttpClient();
+            var inviteDtos = invites.Select(async (i) => {
+                var project = await projectRepositoryService.GetProjectByIdAsync(i.ProjectId);
+                var inviterName = await client.GetStringAsync("http://user-microservice:5108/getName?id="+i.InviterId);
 
-        var invites = (await projectRepositoryService.GetUserInvitesAsync(userId)).FindAll(i => i.State == 0);
-        var client = new HttpClient();
-        var inviteDtos = invites.Select(async (i) => {
-            var project = await projectRepositoryService.GetProjectByIdAsync(i.ProjectId);
-            var inviterName = await client.GetStringAsync("http://user-microservice:5108/getName?id="+i.InviterId);
+                return new InviteDto(i.Id!, i.ProjectId, null, null, i.Permission, inviterName, 
+                    project.IsGroup, project.Name);
+            })
+                .Select(i => i.Result);
+            await http.Response.WriteAsJsonAsync(inviteDtos);
+            return;
+        }
+)
+    .Produces<List<InviteDto>>(StatusCodes.Status200OK);
 
-            return new InviteDto(i.Id!, i.ProjectId, null, null, i.Permission, inviterName, 
-                project.IsGroup, project.Name);
-        })
-            .Select(i => i.Result);
-        await http.Response.WriteAsJsonAsync(inviteDtos);
-        return;
-    }
-);
+app.UseSwagger();
+app.UseSwaggerUI(c => {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Project Microservice API V1");
+    c.RoutePrefix = "swagger/ui";
+});
 
 await app.RunAsync();
