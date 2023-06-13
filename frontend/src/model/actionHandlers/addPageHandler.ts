@@ -18,7 +18,7 @@ export const addPageHandler: ActionHandler = async (project, message) => {
             []);
 
     message.data.newPage?.layers!
-        .map(layer => new Layer(layer.id, layer.zIndex, layer.name, []))
+        .map(layer => new Layer(layer.id, layer.zIndex!, layer.name, []))
         .forEach(layer => newPage.addLayer(layer));
 
     if (newPage) {

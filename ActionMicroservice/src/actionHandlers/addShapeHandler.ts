@@ -5,7 +5,7 @@ import { ActionHandler } from "./actionHandlers";
 
 export const addShapeHandler: ActionHandler = async (collections, message) => {
     if (message.type !== ActionType.ADD_SHAPE) {
-        return false;
+        return Promise.reject('Wrong handler');
     };
     // console.log(message)
     const newShape: IShape = {
@@ -19,5 +19,5 @@ export const addShapeHandler: ActionHandler = async (collections, message) => {
     collections.shapeCollection.insertOne(newShape)
 
     message.data.newShape.id = newShape._id.toString();
-    return true;
+    return message;
 }

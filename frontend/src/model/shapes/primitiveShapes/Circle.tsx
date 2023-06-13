@@ -46,12 +46,12 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
             },
             strokeColor: {
                 label: "Stroke Color",
-                value: messageShape.graphicalProperties.r!.value,
+                value: messageShape.graphicalProperties.strokeColor!.value,
                 isReadable: true
             },
             fillColorOne: {
                 label: "Fill Color One",
-                value: messageShape.graphicalProperties.r!.value,
+                value: messageShape.graphicalProperties.fillColorOne!.value,
                 isReadable: true
             },
         }

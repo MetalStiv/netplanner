@@ -43,6 +43,7 @@ const PropertyPanel = ({ property, onChange }: IPropertyPanelProps) => {
                 className='property-value'
                 style={{ display: isEditing ? 'none' : 'inline' }}
                 onClick={() => {
+                    setInputVal(property.value)
                     setIsEditing(true);
                 }}>
                 {property.value}

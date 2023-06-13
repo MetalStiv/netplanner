@@ -31,6 +31,7 @@ import GraphicalPropertiesPanel from './rightPanelBar/GraphicalPropertiesPanel';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {
+    id: string,
     type: string,
     graphProps: IShapeGraphicalProps,
     //coords: { x: number, y: number },
@@ -158,11 +159,9 @@ const ProjectPage: React.FC = observer(() => {
                                     <ObjectPropertiesPanel shapeProps={selectedShapeProps} />
                                 </div>
                                 <div style={{ minHeight: 150 }}>
-                                    <GraphicalPropertiesPanel shapeProps={selectedShapeProps}
-                                    // onChange={val => {
-                                    // let changePropAction = new ChangeShapePropertyAction(shapeProps.graphProps, item.label, item.value, val)
-                                    // changePropAction.do() && app?.addAction(changePropAction);
-                                    // }}
+                                    <GraphicalPropertiesPanel
+                                        shapeProps={selectedShapeProps}
+                                        onChange={(props) => setSelectedShapeProps({ ...selectedShapeProps!, graphProps: props })}
                                     />
                                 </div>
                             </VerticalPageSplit>

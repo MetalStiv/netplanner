@@ -4,7 +4,7 @@ import { PropertyPanel } from "../../../components";
 import { ChangeShapePropertyAction } from "../../../model/actions/ChangeShapePropertyAction";
 import { TActionStore } from "../../../stores/actionStore";
 import { useRootStore } from "../../../providers/rootProvider";
-import { IGraphicalProperty } from "../../../model/shapes/IShape";
+import { IGraphicalProperty, IShapeGraphicalProps } from "../../../model/shapes/IShape";
 
 interface IGraphicalPropertiesPanelProps {
     // graphicalConfig: IShapeGraphicalProps | undefined,
@@ -13,11 +13,13 @@ interface IGraphicalPropertiesPanelProps {
     //     h: number,
     // } | undefined,
     shapeProps: IShapeProps | null,
+    onChange: (props: IShapeGraphicalProps) => void
 }
 
-const GraphicalPropertiesPanel = ({ shapeProps }: IGraphicalPropertiesPanelProps) => {
+const GraphicalPropertiesPanel = ({ shapeProps, onChange }: IGraphicalPropertiesPanelProps) => {
     const lang: LanguageData | null = useLanguageContext();
     const actionStore: TActionStore = useRootStore().getActionStore();
+    const currentLayer = useRootStore().getProjectStore().getProject()?.getCurrentPage()?.getCurrentLayer();
 
     return (
         <div id="graphicalPropertiesPanel">
@@ -39,18 +41,21 @@ const GraphicalPropertiesPanel = ({ shapeProps }: IGraphicalPropertiesPanelProps
                 /> */}
                 <div className="">
                     {
-                        shapeProps && Object.values(shapeProps.graphProps)
-                            .filter((item: IGraphicalProperty) => item.isReadable)
-                            .map((item: IGraphicalProperty, i: number) =>
-                                <PropertyPanel key={i + item.label} property={{ label: item.label, value: item.value }}
-                                    onChange={val => {
-
-                                        // let changePropAction = new ChangeShapePropertyAction(item, item.value, val)
-                                        // changePropAction.do() && app?.addAction(changePropAction);
-                                        // item.value = val;
-                                        // actionStore.push(changePropAction);
-                                    }
-                                    }
+                        shapeProps && Object.entries(shapeProps.graphProps)
+                            .filter(([key, obj]) => obj.isReadable)
+                            .map(([key, obj]) =>
+                                <PropertyPanel key={key + obj.label} property={{ label: obj.label, value: obj.value }}
+                                    onChange={value => {
+                                        const changableShape = currentLayer?.getShapes().find(shape => shape.config.id === shapeProps.id);
+                                        const newProps = { ...shapeProps.graphProps, [key]: { ...obj, ...{ value } } }
+                                        let changePropAction = new ChangeShapePropertyAction(
+                                            changableShape!,
+                                            currentLayer!.getID(),
+                                            newProps
+                                        );
+                                        actionStore.push(changePropAction);
+                                        onChange(newProps);
+                                    }}
                                 />
                             )
                     }

@@ -7,12 +7,14 @@ export const changeGraphicalPropertyHandler: ActionHandler = async (project, mes
     };
 
     console.log(message)
-    // const newShape: IShape | null = await shapeInflaters.inflate(message.data.newShape!);
-    // if (newShape) {
-    //     project.getPages().find(p => p.id === message.pageId)
-    //         ?.getLayers().find(l => l.id === message.layerId)
-    //         ?.addShape(newShape);
-    // }
+
+    const searchedShape = project.getCurrentPage()
+        ?.getLayers().find(layer => layer.getID() === message.layerId)
+        ?.getShapes().find(shape => shape.config.id! === message.shapeId);
+
+    console.log(searchedShape)
+    if (searchedShape)
+        searchedShape.config.graphicalProperties = message.data.graphicalProperties!;
 
     project.setIsLoading(false);
     return project;
