@@ -142,7 +142,9 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         const curRect = e.currentTarget.getBBox();
         // let el = e.currentTarget;
         // console.log(el)
+        let isMoved = false;
         function onMouseMove(event: MouseEvent) {
+            !isMoved && (isMoved = true);
             // let SVGPoint = transformOuterCoordsToSVGCoords({
             //     x: event.pageX * scale - translate.x * scale,
             //     y: event.pageY * scale - translate.y * scale
@@ -160,10 +162,14 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
 
         svgCanvas.current!.onmousemove = onMouseMove;
         svgCanvas.current!.onmouseup = () => {
-            const moveShapeAction = new ChangeShapePropertyAction(movableShape!, layerID, movableShape!.config.graphicalProperties);
-            actionStore.push(moveShapeAction);
+            if (isMoved) {
+                const moveShapeAction = new ChangeShapePropertyAction(movableShape!, layerID, movableShape!.config.graphicalProperties);
+                actionStore.push(moveShapeAction);
+                isMoved = false;
+            }
             svgCanvas.current!.onmousemove = null;
             svgCanvas.current!.onmouseup = null;
+
         }
     }
 

@@ -55,7 +55,7 @@ const ProjectPage: React.FC = observer(() => {
     const lang: LanguageData | null = useLanguageContext();
     const actionStore: TActionStore = useRootStore().getActionStore();
     const projectStore: TProjectStore = useRootStore()!.getProjectStore();
-    const project = projectStore.getProject();
+    // const project = projectStore.getProject();
 
     const updateProject = useCallback(async (projectId: string) => {
         const newProject = new Project([
@@ -94,7 +94,7 @@ const ProjectPage: React.FC = observer(() => {
             if (e.ctrlKey && e.code === 'KeyZ') {
                 // app?.addAction(new UndoAction(app.actionsHistory));
                 const message: IAction | null = actionStore.pop();
-                console.log(message);
+                // console.log(message);
             }
         }
 
