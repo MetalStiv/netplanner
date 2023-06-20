@@ -2,6 +2,36 @@
     @import "./panels/objectPropertiesPanel";
     @import "./panels/graphicalPropertiesPanel";
 
+    .property {
+        .property-title {
+            width: 50%;
+            color: $bluegray;
+        }
+
+        .property-value {
+            width: 50%;
+            color: $bluegray;
+        }
+
+        input.change-property-input {
+            width: 50%;
+            border: none;
+            border-bottom: 1px solid $blue !important;
+            outline: none;
+            background-color: transparent;
+            color: $dark;
+        }
+
+        font-size: 12px;
+        color:$bluegray;
+        display: flex;
+        align-items: center;
+        padding:10px 18px;
+        border-bottom: 1px solid $lightpink;
+        background-color: $white;
+        transition: background-color .1s;
+    }
+
     .content {
         .react-page-split__divider--vertical {
             cursor: row-resize;
@@ -11,7 +41,7 @@
             background: $dark;
         }
 
-        overflow-x: scroll;
+        // overflow-x: scroll;
         background-color: $white;
         width: 100%;
     }
@@ -26,4 +56,8 @@
     min-width: $rightPanelWidth;
     max-width: $rightPanelWidth;
     border-left:1px solid $black;
+}
+
+.react-page-split__panel {
+    overflow: visible;
 }

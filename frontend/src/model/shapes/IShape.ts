@@ -1,4 +1,5 @@
 import { ShapeType } from "./ShapeType";
+import { EditorType } from "../EditorType";
 
 export interface IShapeGraphicalProps {
     x: IGraphicalProperty,
@@ -10,6 +11,7 @@ export interface IGraphicalProperty {
     label: string,
     value: string,
     isReadable: boolean,
+    editorType: EditorType
 }
 
 export interface IShapeConfig {

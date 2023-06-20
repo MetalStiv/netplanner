@@ -1,4 +1,4 @@
-@import '../../styles/common/variables';
+@import '../../../../styles/common/variables';
 
 .property {
     .property-title {
@@ -14,6 +14,7 @@
     input.change-property-input {
         width: 50%;
         border: none;
+        border-bottom: 1px solid $blue !important;
         outline: none;
         background-color: transparent;
         color: $dark;

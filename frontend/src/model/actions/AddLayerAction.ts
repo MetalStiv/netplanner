@@ -1,4 +1,4 @@
-import titleUniqueization from "../../common/helpers/titleUniquezation";
+// import titleUniqueization from "../../common/helpers/titleUniquezation";
 import { IMessage } from "../message/IMessage";
 import Page from "../projectData/Page";
 import { ActionType } from "./ActionType";
@@ -6,9 +6,11 @@ import { IAction } from "./IAction";
 
 export class AddLayerAction implements IAction {
     private currentPage: Page;
+    private name: string | null = null;
 
-    constructor(currentPage: Page) {
+    constructor(currentPage: Page, name?: string) {
         this.currentPage = currentPage;
+        name && (this.name = name);
     }
 
     do(): boolean {
@@ -20,13 +22,15 @@ export class AddLayerAction implements IAction {
     }
 
     getMessage(): IMessage {
+
         return {
             type: ActionType.ADD_LAYER,
             pageId: this.currentPage.getID(),
             data: {
                 newLayer: {
-                    name: titleUniqueization('Layer', this.currentPage.getLayers()),
-                    zIndex: this.currentPage.getLayers().length * 1000,
+                    name: this.name ?? '',
+                    // name: titleUniqueization('Layer', this.currentPage.getLayers()),
+                    // zIndex: this.currentPage.getLayers().length * 1000,
                 }
             }
         }

@@ -114,19 +114,19 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     ws.send(JSON.stringify(sendMessage));
 
     ws.onmessage = function (event: MessageEvent) {
-        const message: IMessage = JSON.parse(event.data);
+        let message: IMessage = JSON.parse(event.data);
         message.senderId = clients.get(ws).userId;
         message.projectId = clients.get(ws).projectId;
 
-        const isHandled = actionHandlers.handle(collections, message)
-        if (!isHandled) {
-            return;
-        }
-
-        const outbound = JSON.stringify(message);
-        [...clients].forEach(([ws, metadata]: [WebSocket, IMetadata]) => {
-            (metadata.projectId === clients.get(ws).projectId) && ws.send(outbound);
-        });
+        actionHandlers.handle(collections, message).then(response => {
+            if (!response) {
+                return;
+            }
+            const outbound = JSON.stringify(response);
+            [...clients].forEach(([ws, metadata]: [WebSocket, IMetadata]) => {
+                (metadata.projectId === clients.get(ws).projectId) && ws.send(outbound);
+            });
+        })
     }
 
     ws.onclose = function () {

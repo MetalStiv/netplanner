@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
-import titleUniqueization from '../../../common/helpers/titleUniquezation';
+import titleUniqueization from '../../../common/_helpers/titleUniquezation';
 import Page from '../../../model/projectData/Page';
 import { AddLayerAction } from '../../../model/actions/AddLayerAction';
 import { useRootStore } from '../../../providers/rootProvider';

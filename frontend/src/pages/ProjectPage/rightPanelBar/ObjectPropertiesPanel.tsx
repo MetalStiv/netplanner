@@ -1,7 +1,6 @@
 import React from 'react';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
 import { IShapeProps } from '../ProjectPage'
-import { PropertyPanel } from '../../../components';
 
 interface IObjectPropertiesPanelProps {
     shapeProps: IShapeProps | null,
@@ -22,17 +21,11 @@ const ObjectPropertiesPanel = ({ shapeProps }: IObjectPropertiesPanelProps) => {
                 </span>
             </p>
             {shapeProps && <div className="">
-                <PropertyPanel property={{ label: lang?.langText.projectPage.propertiesPanel.elType ?? '', value: shapeProps?.type ?? '' }}
-                    onChange={val => shapeProps && (shapeProps.type = val)}
-                />
-                {/* <div className="">
                 <div className="property">
                     <p className='property-title'>{lang?.langText.projectPage.propertiesPanel.elType}</p>
                     <p className='property-value'>{shapeProps?.type ?? ''}</p>
                 </div>
-            </div> */}
-            </div>
-            }
+            </div>}
         </div>
     )
 }

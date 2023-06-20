@@ -3,6 +3,7 @@ import { TShapeInflater } from "../shapeInflaters";
 import { ShapeType } from "../ShapeType";
 import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 import { IMessageShape } from "../../message/IMessageShape";
+import { EditorType } from "../../EditorType";
 
 interface IBeginEndProps extends IShapeGraphicalProps {
     width: IGraphicalProperty,
@@ -29,36 +30,43 @@ export const beginEndInflater: TShapeInflater = async (messageShape: IMessageSha
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
                 value: messageShape.graphicalProperties.y.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             pivot: {
                 label: "Pivot",
                 value: messageShape.graphicalProperties.pivot!.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             width: {
                 label: "Width",
                 value: messageShape.graphicalProperties.width!.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             height: {
                 label: "Height",
                 value: messageShape.graphicalProperties.height!.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             fillColorOne: {
                 label: 'Fill Color One',
                 value: messageShape.graphicalProperties.fillColorOne!.value,
                 isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
             },
             strokeColor: {
                 label: 'Stroke',
                 value: messageShape.graphicalProperties.strokeColor!.value,
                 isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
             },
         }
     })
@@ -73,38 +81,45 @@ export class BeginEndCreator implements IShapeCreator {
                     label: 'X',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 y: {
                     label: 'Y',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 width: {
                     label: 'Width',
                     value: '120',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 height: {
                     label: 'Height',
                     value: '40',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 pivot: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
 
                 strokeColor: {
                     label: 'Stroke Color',
                     value: '#000000',
-                    isReadable: true
+                    isReadable: true,
+                    editorType: EditorType.COLOR_EDITOR
                 },
 
                 fillColorOne: {
                     label: 'Fill Color One',
                     value: '#ffffff',
-                    isReadable: true
+                    isReadable: true,
+                    editorType: EditorType.COLOR_EDITOR
                 }
             },
             zIndex: 0,

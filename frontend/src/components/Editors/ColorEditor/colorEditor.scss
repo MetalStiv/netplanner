@@ -1,0 +1,130 @@
+@import '../../../styles/common/variables';
+@import '../../../styles/common/global.scss';
+
+.color-picker {
+    position: relative;
+
+    .color-picker-modal {
+        position: absolute;
+        right: 0px;
+        bottom: calc(100% + 10px);
+        z-index: 2;
+
+        padding: 16px;
+        border-radius: 12px;
+        background: $black;
+        box-shadow: 0 6px 12px $lightgray;
+
+        .react-colorful {
+            width: 150px;
+            height: 150px;
+        }
+
+        .react-colorful__saturation {
+            margin: 15px 0;
+            border-radius: 5px;
+            border-bottom: none;
+        }
+
+        .react-colorful__hue {
+            height: 20px;
+            order: -1;
+        }
+
+        .react-colorful__hue,
+        .react-colorful__alpha {
+            height: 14px;
+            border-radius: 8px;
+        }
+
+        .react-colorful__hue-pointer,
+        .react-colorful__alpha-pointer {
+            width: 16px;
+            border-radius: 5px;
+        }
+
+        .hex-input {
+            width: 80px;
+            margin: 0 auto;
+            position: relative;
+            margin-bottom: 8px;
+
+            &::before {
+                content: "#";
+                color: $white;
+                position: absolute;
+                left: 2px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            input {
+                &:focus {
+                    outline: none;
+                    border-bottom-color: $blue;
+                }
+
+                display:block;
+                background-color: transparent;
+                border: 2px solid $dark;
+                padding: 2px;
+                padding-left: 14px;
+                color: $white;
+                width: 100%;
+            }
+
+            .invalid {
+                border-color: red !important;
+            }
+        }
+
+        .color-examples {
+            display: flex;
+            margin-bottom: 8px;
+
+            &>button {
+                @include button-default;
+                padding: 0;
+                width: 16px;
+                height: 16px;
+                border-radius: 4px;
+                margin-right: 8px;
+                cursor: pointer;
+            }
+
+            .example-white {
+                background-color: #ffffff;
+            }
+
+            .example-black {
+                background-color: #000000;
+            }
+
+            .example-red {
+                background-color: #ff0000;
+            }
+
+            .example-green {
+                background-color: #00ff00;
+            }
+
+            .example-blue {
+                background-color: #0000ff;
+            }
+        }
+
+        .control-btns {
+            display: flex;
+            justify-content: end;
+
+            button {
+                @include button-default;
+                cursor: pointer;
+                background-color: $blue;
+                color: $white;
+                padding: 2px 8px;
+                font-size: 10px;
+            }
+        }
+    }
+}

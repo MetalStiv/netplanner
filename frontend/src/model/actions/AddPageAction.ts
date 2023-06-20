@@ -1,4 +1,4 @@
-import titleUniqueization from "../../common/helpers/titleUniquezation";
+// import titleUniqueization from "../../common/helpers/titleUniquezation";
 import { IMessage } from "../message/IMessage";
 // import Page from "../projectData/Page";
 import Project from "../projectData/Project";
@@ -7,9 +7,11 @@ import { IAction } from "./IAction";
 
 export class AddPageAction implements IAction {
     private currentProject: Project;
+    private name: string | null = null;
 
-    constructor(currentProject: Project) {
+    constructor(currentProject: Project, name?: string) {
         this.currentProject = currentProject;
+        name && (this.name = name);
     }
 
     do(): boolean {
@@ -25,11 +27,12 @@ export class AddPageAction implements IAction {
             type: ActionType.ADD_PAGE,
             data: {
                 newPage: {
-                    name: titleUniqueization('Page', this.currentProject.getPages()),
-                    layers: [{
-                        name: 'Layer',
-                        zIndex: 1,
-                    }]
+                    name: this.name ?? '',
+                    // name: titleUniqueization('Page', this.currentProject.getPages()),
+                    // layers: [{
+                    //     name: 'Layer',
+                    //     zIndex: 1,
+                    // }]
                 },
             }
         }

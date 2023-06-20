@@ -11,7 +11,7 @@ export const addLayerHandler: ActionHandler = async (project, message) => {
     };
     const newLayer: Layer =
         new Layer(message.data.newLayer!.id,
-            message.data.newLayer!.zIndex,
+            message.data.newLayer!.zIndex!,
             message.data.newLayer!.name,
             []);
 

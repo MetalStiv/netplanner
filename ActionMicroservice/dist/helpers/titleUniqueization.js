@@ -36,53 +36,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addLayerHandler = void 0;
-var mongodb_1 = require("mongodb");
-var actionType_1 = require("../actionType");
-var titleUniqueization_1 = require("../helpers/titleUniqueization");
-var addLayerHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
-    function uniqLayerTitle(name) {
-        return (0, titleUniqueization_1.default)(name.length ? name : 'Layer', collections.layerCollection);
-    }
-    function getZIndex(pageId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var count;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, collections.layerCollection.countDocuments({ pageId: new mongodb_1.ObjectId(pageId) })];
-                    case 1:
-                        count = _a.sent();
-                        return [2 /*return*/, count * 1000];
-                }
-            });
+function titleUniqueization(title, collection, renamingItemID) {
+    if (renamingItemID === void 0) { renamingItemID = ''; }
+    return __awaiter(this, void 0, void 0, function () {
+        var getTitleQueueCount, copyIndex;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    getTitleQueueCount = function (copyIndex) {
+                        if (copyIndex === void 0) { copyIndex = 0; }
+                        return __awaiter(this, void 0, void 0, function () {
+                            var document, _a;
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
+                                    case 0: return [4 /*yield*/, collection.findOne({ _id: { $ne: renamingItemID }, name: (title + (copyIndex === 0 ? '' : "_".concat(copyIndex))) })];
+                                    case 1:
+                                        document = _b.sent();
+                                        if (!document) return [3 /*break*/, 3];
+                                        return [4 /*yield*/, getTitleQueueCount(copyIndex + 1)];
+                                    case 2:
+                                        _a = _b.sent();
+                                        return [3 /*break*/, 4];
+                                    case 3:
+                                        _a = copyIndex;
+                                        _b.label = 4;
+                                    case 4: return [2 /*return*/, _a];
+                                }
+                            });
+                        });
+                    };
+                    return [4 /*yield*/, getTitleQueueCount()];
+                case 1:
+                    copyIndex = _a.sent();
+                    if (copyIndex > 0) {
+                        title += "_".concat(copyIndex);
+                    }
+                    return [2 /*return*/, title];
+            }
         });
-    }
-    var uniqTitle, zIndex, newLayer, messageCopy;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                if (message.type !== actionType_1.ActionType.ADD_LAYER) {
-                    return [2 /*return*/, Promise.reject('Wrong handler')];
-                }
-                return [4 /*yield*/, uniqLayerTitle(message.data.newLayer.name)];
-            case 1:
-                uniqTitle = _a.sent();
-                return [4 /*yield*/, getZIndex(message.pageId)];
-            case 2:
-                zIndex = _a.sent();
-                newLayer = {
-                    _id: new mongodb_1.ObjectId(),
-                    name: uniqTitle,
-                    pageId: new mongodb_1.ObjectId(message.pageId),
-                    zIndex: zIndex
-                };
-                collections.layerCollection.insertOne(newLayer);
-                messageCopy = JSON.parse(JSON.stringify(message));
-                messageCopy.data.newLayer.id = newLayer._id.toString();
-                messageCopy.data.newLayer.name = uniqTitle;
-                messageCopy.data.newLayer.zIndex = zIndex;
-                return [2 /*return*/, messageCopy];
-        }
     });
-}); };
-exports.addLayerHandler = addLayerHandler;
+}
+exports.default = titleUniqueization;

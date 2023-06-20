@@ -3,6 +3,7 @@ import { ShapeType } from "../ShapeType";
 import { TShapeInflater } from "../shapeInflaters";
 import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 import { IMessageShape } from "../../message/IMessageShape";
+import { EditorType } from "../../EditorType";
 
 interface ICircleGraphicalProps extends IShapeGraphicalProps {
     r: IGraphicalProperty,
@@ -28,31 +29,37 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
                 value: messageShape.graphicalProperties.y.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             pivot: {
                 label: 'Pivot',
                 value: '0',
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             r: {
                 label: "Radius",
                 value: messageShape.graphicalProperties.r!.value,
-                isReadable: true
+                isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             strokeColor: {
                 label: "Stroke Color",
-                value: messageShape.graphicalProperties.r!.value,
-                isReadable: true
+                value: messageShape.graphicalProperties.strokeColor!.value,
+                isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
             },
             fillColorOne: {
                 label: "Fill Color One",
-                value: messageShape.graphicalProperties.r!.value,
-                isReadable: true
+                value: messageShape.graphicalProperties.fillColorOne!.value,
+                isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
             },
         }
     })
@@ -67,31 +74,37 @@ export class CircleCreator implements IShapeCreator {
                     label: 'X',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 y: {
                     label: 'Y',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 pivot: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 r: {
                     label: 'Radius',
                     value: '15',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 strokeColor: {
                     label: 'Stroke Color',
                     value: '#000000',
                     isReadable: true,
+                    editorType: EditorType.COLOR_EDITOR
                 },
                 fillColorOne: {
                     label: 'Fill Color One',
                     value: '#ffffff',
                     isReadable: true,
+                    editorType: EditorType.COLOR_EDITOR
                 },
             },
             zIndex: 0,

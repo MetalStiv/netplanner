@@ -1,17 +1,16 @@
 import { ObjectId } from "mongodb";
 import { IDatadaseCollections } from "../app";
 import { IMessage } from "../dto/IMessage";
-import { IProjectMeta } from "../model/IProjectMeta";
 import { addLayerHandler } from "./addLayerHandler";
 import { addPageHandler } from "./addPageHandler";
 import { addShapeHandler } from "./addShapeHandler";
 import { changeGraphicalPropertiesHandler } from "./changeGraphicalPropertiesHandler";
 
-export type ActionHandler = (collections: IDatadaseCollections, message: IMessage) => Promise<boolean>
+export type ActionHandler = (collections: IDatadaseCollections, message: IMessage) => Promise<IMessage | Error>
 
 export interface IActionHandlers {
     handlers: ActionHandler[],
-    handle: (collections: IDatadaseCollections, message: IMessage) => Promise<boolean>
+    handle: (collections: IDatadaseCollections, message: IMessage) => Promise<IMessage>
 }
 
 export const actionHandlers: IActionHandlers = {
@@ -23,21 +22,17 @@ export const actionHandlers: IActionHandlers = {
     ),
 
     handle(collections: IDatadaseCollections, message: IMessage) {
-        let result: boolean = false;
-        this.handlers.every(async handler => {
-            if (await handler(collections, message)) {
-                result = true;
-                return (false);
-            }
-            return true;
-        })
         collections.projectMetaCollection.findOneAndUpdate({
             _id: new ObjectId(message.projectId)
         },
-        {
-            $set: { lastModifyTime: new Date }
+            {
+                $set: { lastModifyTime: new Date }
+            });
+
+        return Promise.allSettled(this.handlers.map(handler => handler(collections, message))).then(results => {
+            const fulfilledResult = results.find(result => result.status === "fulfilled");
+            return fulfilledResult.status === "fulfilled" ? fulfilledResult.value : {};
         });
-        return Promise.resolve(result);
     }
 }
 

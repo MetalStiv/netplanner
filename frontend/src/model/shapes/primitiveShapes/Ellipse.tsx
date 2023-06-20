@@ -3,6 +3,7 @@ import { ShapeType } from "../ShapeType";
 import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 import { TShapeInflater } from "../shapeInflaters";
 import { IMessageShape } from "../../message/IMessageShape";
+import { EditorType } from "../../EditorType";
 
 interface IEllipseGraphicalProps extends IShapeGraphicalProps {
     strokeColor: IGraphicalProperty,
@@ -29,36 +30,43 @@ export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShap
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
                 value: messageShape.graphicalProperties.y.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             pivot: {
                 label: 'Pivot',
                 value: '0',
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             rx: {
                 label: "rx",
                 value: messageShape.graphicalProperties.rx!.value,
-                isReadable: true
+                isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             ry: {
                 label: "ry",
                 value: messageShape.graphicalProperties.ry!.value,
-                isReadable: true
+                isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             strokeColor: {
                 label: "Stroke Color",
                 value: messageShape.graphicalProperties.strokeColor!.value,
-                isReadable: true
+                isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
             },
             fillColorOne: {
                 label: "Fill Color One",
                 value: messageShape.graphicalProperties.fillColorOne!.value,
-                isReadable: true
+                isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
             },
         }
     })
@@ -73,36 +81,43 @@ export class EllipseCreator implements IShapeCreator {
                     label: 'X',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 y: {
                     label: 'Y',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 pivot: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 rx: {
                     label: 'Radius X',
                     value: '30',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 ry: {
                     label: 'Radius Y',
                     value: '20',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 strokeColor: {
                     label: 'Stroke Color',
                     value: '#000000',
                     isReadable: true,
+                    editorType: EditorType.COLOR_EDITOR
                 },
                 fillColorOne: {
                     label: 'Fill Color One',
                     value: '#ffffff',
                     isReadable: true,
+                    editorType: EditorType.COLOR_EDITOR
                 },
             },
             zIndex: 0,

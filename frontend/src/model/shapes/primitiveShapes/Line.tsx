@@ -3,6 +3,7 @@ import { ShapeType } from "../ShapeType";
 import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 import { TShapeInflater } from "../shapeInflaters";
 import { IMessageShape } from "../../message/IMessageShape";
+import { EditorType } from "../../EditorType";
 
 interface ILineGraphicalProps extends IShapeGraphicalProps {
     x2: IGraphicalProperty,
@@ -28,31 +29,37 @@ export const lineInflater: TShapeInflater = async (messageShape: IMessageShape) 
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
                 value: messageShape.graphicalProperties.y.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             pivot: {
                 label: 'Pivot',
                 value: messageShape.graphicalProperties.pivot!.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             x2: {
                 label: 'x2',
                 value: messageShape.graphicalProperties.x2!.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             y2: {
                 label: 'y2',
                 value: messageShape.graphicalProperties.y2!.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             strokeColor: {
                 label: 'Stroke Color',
                 value: messageShape.graphicalProperties.strokeColor!.value,
                 isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
             }
         }
     })
@@ -67,31 +74,37 @@ export class LineCreator implements IShapeCreator {
                     label: 'X',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 y: {
                     label: 'Y',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 pivot: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 x2: {
                     label: 'x2',
                     value: '15',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 y2: {
                     label: 'y2',
                     value: '20',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 strokeColor: {
                     label: 'Stroke Color',
                     value: '#000000',
                     isReadable: true,
+                    editorType: EditorType.COLOR_EDITOR
                 }
             },
             zIndex: 0,

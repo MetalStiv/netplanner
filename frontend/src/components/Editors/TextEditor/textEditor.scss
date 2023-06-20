@@ -1,0 +1,10 @@
+@import '../../../styles/common/variables';
+
+input.textEditor-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid $blue !important;
+    outline: none;
+    background-color: transparent;
+    color: $dark;
+}

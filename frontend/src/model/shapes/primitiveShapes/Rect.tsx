@@ -3,6 +3,7 @@ import { ShapeType } from "../ShapeType";
 import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 import { TShapeInflater } from "../shapeInflaters";
 import { IMessageShape } from "../../message/IMessageShape";
+import { EditorType } from "../../EditorType";
 
 interface IRectGraphicalProps extends IShapeGraphicalProps {
     width: IGraphicalProperty,
@@ -29,36 +30,43 @@ export const rectInflater: TShapeInflater = async (messageShape: IMessageShape) 
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
                 value: messageShape.graphicalProperties.y.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             pivot: {
                 label: 'Pivot',
                 value: messageShape.graphicalProperties.pivot!.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             width: {
                 label: 'Width',
                 value: messageShape.graphicalProperties.width!.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             height: {
                 label: 'Height',
                 value: messageShape.graphicalProperties.height!.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             strokeColor: {
                 label: 'Stroke Color',
                 value: messageShape.graphicalProperties.strokeColor!.value,
                 isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
             },
             fillColorOne: {
                 label: 'Fill Color One',
                 value: messageShape.graphicalProperties.fillColorOne!.value,
                 isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
             },
         }
     })
@@ -73,36 +81,43 @@ export class RectCreator implements IShapeCreator {
                     label: 'X',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 y: {
                     label: 'Y',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 pivot: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 width: {
                     label: 'Width',
                     value: '45',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 height: {
                     label: 'Height',
                     value: '30',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 strokeColor: {
                     label: 'Stroke Color',
                     value: '#000000',
                     isReadable: true,
+                    editorType: EditorType.COLOR_EDITOR
                 },
                 fillColorOne: {
                     label: 'Fill Color One',
                     value: '#ffffff',
                     isReadable: true,
+                    editorType: EditorType.COLOR_EDITOR
                 },
             },
             zIndex: 0,

@@ -4,9 +4,8 @@ import { ActionHandler } from "./actionHandlers";
 
 export const changeGraphicalPropertiesHandler: ActionHandler = async (collections, message) => {
     if (message.type !== ActionType.CHANGE_GRAPHICAL_PROPERTY) {
-        return false;
+        return Promise.reject('Wrong handler');
     };
-    console.log(message)
 
     collections.shapeCollection.findOneAndUpdate(
         {
@@ -18,6 +17,5 @@ export const changeGraphicalPropertiesHandler: ActionHandler = async (collection
         }
     )
 
-    // message.data.newShape.id = newShape._id.toString();
-    return true;
+    return message;
 }

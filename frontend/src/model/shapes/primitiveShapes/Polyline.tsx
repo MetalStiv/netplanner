@@ -3,6 +3,7 @@ import { ShapeType } from "../ShapeType";
 import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 import { TShapeInflater } from "../shapeInflaters";
 import { IMessageShape } from "../../message/IMessageShape";
+import { EditorType } from "../../EditorType";
 
 interface IPolylineGraphicalProps extends IShapeGraphicalProps {
     points: [number, number][],
@@ -28,22 +29,26 @@ export const polylineInflater: TShapeInflater = async (messageShape: IMessageSha
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
                 value: messageShape.graphicalProperties.y.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             pivot: {
                 label: 'Pivot',
                 value: messageShape.graphicalProperties.pivot!.value,
                 isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             points: [[15, -30], [40, 45], [50, -70]],
             strokeColor: {
                 label: 'Stroke Color',
                 value: messageShape.graphicalProperties.strokeColor!.value,
                 isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
             }
         }
     })
@@ -58,22 +63,26 @@ export class PolylineCreator implements IShapeCreator {
                     label: 'X',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 y: {
                     label: 'Y',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 pivot: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
                 },
                 points: [[15, -30], [40, 45], [50, -70]],
                 strokeColor: {
                     label: 'Stroke',
                     value: '#000000',
                     isReadable: true,
+                    editorType: EditorType.COLOR_EDITOR
                 },
             },
             zIndex: 0,
