@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import IProjectMeta from "../../../model/projectData/IProjectMeta";
 
 interface IGroupTreeElement {
@@ -12,6 +12,7 @@ interface IGroupTreeElement {
 
 const GroupTreeElement: React.FC<IGroupTreeElement> = ({name, id, projects, shift, setSelectedGroupId, selectedGroupId}) => {
     const [open, setOpen] = useState<boolean>(false);
+    const contentRef = useRef<HTMLDivElement>(null);
 
     return (
         <>
@@ -36,6 +37,19 @@ const GroupTreeElement: React.FC<IGroupTreeElement> = ({name, id, projects, shif
                 }
                 {name}
             </div>
+
+            {/* <div className="content-parent" ref={contentRef} style={open ? {height: contentRef.current!.scrollHeight+"px"} : {height: "0px"}}>
+                <div className="content">
+                {
+                    projects
+                        .filter(p => p.isGroup)
+                        .filter(g => g.groupId === id)
+                        .map(g => <GroupTreeElement name={g.name} id={g.id} projects={projects} 
+                            setSelectedGroupId={setSelectedGroupId} selectedGroupId={selectedGroupId} shift={shift+1} />)
+                }
+                </div>
+            </div> */}
+
             {
                 open && <>
                     {
@@ -45,7 +59,7 @@ const GroupTreeElement: React.FC<IGroupTreeElement> = ({name, id, projects, shif
                             .map(g => <GroupTreeElement name={g.name} id={g.id} projects={projects} 
                                 setSelectedGroupId={setSelectedGroupId} selectedGroupId={selectedGroupId} shift={shift+1} />)
                     }
-                </>
+                </>  
             }
         </>
     )

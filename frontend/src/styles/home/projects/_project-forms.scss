@@ -186,6 +186,8 @@
                 .group-tree-element {
                     display: flex;
                     font-size: 18px;
+                    border: 2px solid transparent;
+                    border-radius: 15px;
 
                     .tree-element-icon {
                         margin-right: 6px;
@@ -194,13 +196,19 @@
 
                 .selected-group-tree-element {
                     display: flex;
-                    font-size: 17px;
+                    font-size: 18px;
                     border: 2px solid $lightblue;
                     border-radius: 15px;
 
                     .tree-element-icon {
                         margin-right: 6px;
                     }
+                }
+
+                .content-parent {
+                    height: 0px;
+                    overflow: hidden;
+                    transition: height ease 0.4s;
                 }
             }
 
