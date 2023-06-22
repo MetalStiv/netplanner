@@ -16,4 +16,9 @@ export enum ShapeType {
     COMMENTARY = "COMMENTARY",
     POINTER = "POINTER",
     PAGE_POINTER = "POINTER",
+
+    DOOR = "DOOR",
+    WINDOW = "WINDOW",
+    WALL = "WALL",
+    ROOM = "ROOM",
 }

@@ -28,6 +28,7 @@ import PagesPanel from './leftPanelBar/PagesPanel';
 import LayersPanel from './leftPanelBar/LayersPanel';
 import ObjectPropertiesPanel from './rightPanelBar/ObjectPropertiesPanel';
 import GraphicalPropertiesPanel from './rightPanelBar/GraphicalPropertiesPanel';
+import floorPlanGroup from '../../model/shapes/floorplanShapes/FloorPlanGroup';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {
@@ -61,6 +62,7 @@ const ProjectPage: React.FC = observer(() => {
         const newProject = new Project([
             primitiveGroup,
             blockDiagramGroup,
+            floorPlanGroup,
         ] as IShapeGroup[], 'project', projectId)
         projectStore.setProject(newProject);
         projectStore.setProjectToLoadId(projectId);

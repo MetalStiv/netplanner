@@ -136,13 +136,16 @@ class Circle implements IShape {
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
+            transform={`rotate(${this.config.graphicalProperties.pivot.value} 
+                ${+this.config.graphicalProperties.x.value + (+this.config.graphicalProperties.r.value / 2)} 
+                ${+this.config.graphicalProperties.y.value + (+this.config.graphicalProperties.r.value / 2)})`}
             d={`
-        M ${this.config.graphicalProperties.x.value},${(+this.config.graphicalProperties.y.value) + (+this.config.graphicalProperties.r.value)} 
-        a ${(this.config.graphicalProperties.r.value)},${(this.config.graphicalProperties.r.value)} 0 1,
-            1 ${(+this.config.graphicalProperties.r.value) * 2},0 
-        a ${(this.config.graphicalProperties.r.value)},${(this.config.graphicalProperties.r.value)} 0 1,
-            1 -${(+this.config.graphicalProperties.r.value) * 2},0
-        `} />
+                M ${this.config.graphicalProperties.x.value},${(+this.config.graphicalProperties.y.value) + (+this.config.graphicalProperties.r.value)} 
+                a ${(this.config.graphicalProperties.r.value)},${(this.config.graphicalProperties.r.value)} 0 1,
+                    1 ${(+this.config.graphicalProperties.r.value) * 2},0 
+                a ${(this.config.graphicalProperties.r.value)},${(this.config.graphicalProperties.r.value)} 0 1,
+                    1 -${(+this.config.graphicalProperties.r.value) * 2},0
+            `} />
     }
 }
 

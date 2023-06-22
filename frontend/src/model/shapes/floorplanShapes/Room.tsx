@@ -5,24 +5,27 @@ import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "
 import { IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
-interface IOperationProps extends IShapeGraphicalProps {
+interface IRoomProps extends IShapeGraphicalProps {
     width: IGraphicalProperty,
     height: IGraphicalProperty,
     fillColorOne: IGraphicalProperty,
-    strokeColor: IGraphicalProperty,
+    leftWidth: IGraphicalProperty,
+    rightWidth: IGraphicalProperty,
+    topWidth: IGraphicalProperty,
+    bottomWidth: IGraphicalProperty,
 }
 
-export interface IOperationConfig extends IShapeConfig {
+export interface IRoomConfig extends IShapeConfig {
     id?: string,
-    graphicalProperties: IOperationProps,
+    graphicalProperties: IRoomProps,
     zIndex: number,
 }
 
-export const operationInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type !== ShapeType.OPERATION) {
+export const roomInflater: TShapeInflater = async (messageShape: IMessageShape) => {
+    if (messageShape.type !== ShapeType.ROOM) {
         return null
     }
-    return new Operation({
+    return new Room({
         id: messageShape.id,
         zIndex: messageShape.zIndex,
         graphicalProperties: {
@@ -38,18 +41,35 @@ export const operationInflater: TShapeInflater = async (messageShape: IMessageSh
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-
             fillColorOne: {
                 label: 'Fill Color One',
                 value: messageShape.graphicalProperties.fillColorOne!.value,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
-            strokeColor: {
-                label: 'Stroke',
-                value: messageShape.graphicalProperties.strokeColor!.value,
+            leftWidth: {
+                label: "Left width",
+                value: messageShape.graphicalProperties.leftWidth!.value,
                 isReadable: true,
-                editorType: EditorType.COLOR_EDITOR
+                editorType: EditorType.TEXT_EDITOR
+            },
+            rightWidth: {
+                label: "Right width",
+                value: messageShape.graphicalProperties.rightWidth!.value,
+                isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
+            },
+            topWidth: {
+                label: "Top width",
+                value: messageShape.graphicalProperties.topWidth!.value,
+                isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
+            },
+            bottomWidth: {
+                label: "Bottom width",
+                value: messageShape.graphicalProperties.bottomWidth!.value,
+                isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
             },
             width: {
                 label: "Width",
@@ -73,10 +93,10 @@ export const operationInflater: TShapeInflater = async (messageShape: IMessageSh
     })
 }
 
-export class OperationCreator implements IShapeCreator {
-    type: ShapeType = ShapeType.OPERATION;
+export class RoomCreator implements IShapeCreator {
+    type: ShapeType = ShapeType.ROOM;
     create() {
-        return new Operation({
+        return new Room({
             graphicalProperties: {
                 x: {
                     label: 'X',
@@ -98,41 +118,58 @@ export class OperationCreator implements IShapeCreator {
                 },
                 width: {
                     label: 'Width',
-                    value: '120',
+                    value: '300',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 height: {
                     label: 'Height',
-                    value: '80',
+                    value: '250',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                strokeColor: {
-                    label: 'Stroke Color',
+                fillColorOne: {
+                    label: 'Fill Color One',
                     value: '#000000',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
                 },
-
-                fillColorOne: {
-                    label: 'Fill Color One',
-                    value: '#ffffff',
+                leftWidth: {
+                    label: "Left width",
+                    value: '20',
                     isReadable: true,
-                    editorType: EditorType.COLOR_EDITOR
-                }
+                    editorType: EditorType.TEXT_EDITOR
+                },
+                rightWidth: {
+                    label: "Right width",
+                    value: '20',
+                    isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
+                },
+                topWidth: {
+                    label: "Top width",
+                    value: '20',
+                    isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
+                },
+                bottomWidth: {
+                    label: "Bottom width",
+                    value: '20',
+                    isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
+                },
             },
             zIndex: 0,
         });
     }
 }
 
-class Operation implements IShape {
-    type: ShapeType = ShapeType.OPERATION;
-    config: IOperationConfig;
+class Room implements IShape {
+    type: ShapeType = ShapeType.ROOM;
+    config: IRoomConfig;
     isVisible: boolean = true;
 
-    constructor(obj: IOperationConfig) {
+    constructor(obj: IRoomConfig) {
         this.config = obj;
         this.config.zIndex = obj.zIndex ?? 0;
     }
@@ -145,7 +182,7 @@ class Operation implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphicalProperties.strokeColor?.value}
+            stroke="none"
             fill={this.config.graphicalProperties.fillColorOne?.value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
@@ -157,13 +194,33 @@ class Operation implements IShape {
             d={`
                 M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value} 
                 l 0 ${this.config.graphicalProperties.height.value}
-                l ${this.config.graphicalProperties.width.value} 0
+                l ${this.config.graphicalProperties.leftWidth.value} 0
                 l 0 -${this.config.graphicalProperties.height.value}
-                l -${this.config.graphicalProperties.width.value} 0
+                l -${this.config.graphicalProperties.leftWidth.value} 0
+
+                m ${this.config.graphicalProperties.leftWidth.value} 0
+                l ${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.leftWidth.value} 0
+                l 0 ${this.config.graphicalProperties.topWidth.value}
+                l -${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.leftWidth.value} 0
+                l 0 -${this.config.graphicalProperties.topWidth.value}
+
+                m ${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.leftWidth.value}
+                    ${this.config.graphicalProperties.topWidth.value} 
+                l -${this.config.graphicalProperties.rightWidth.value} 0
+                l 0 ${+this.config.graphicalProperties.height.value - +this.config.graphicalProperties.topWidth.value}
+                l ${this.config.graphicalProperties.rightWidth.value} 0
+                l 0 -${+this.config.graphicalProperties.height.value - +this.config.graphicalProperties.topWidth.value}
+
+                m -${this.config.graphicalProperties.rightWidth.value}
+                    ${+this.config.graphicalProperties.height.value - +this.config.graphicalProperties.topWidth.value} 
+                l -${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.rightWidth.value - +this.config.graphicalProperties.leftWidth.value} 0
+                l 0 -${this.config.graphicalProperties.bottomWidth.value}
+                l ${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.rightWidth.value - +this.config.graphicalProperties.leftWidth.value} 0
+                l 0 ${this.config.graphicalProperties.bottomWidth.value}
                 `}
         />
     }
 }
 
 
-export default Operation;
+export default Room;

@@ -12,6 +12,10 @@ import { ellipseInflater } from "./primitiveShapes/Ellipse";
 import { lineInflater } from "./primitiveShapes/Line";
 import { polylineInflater } from "./primitiveShapes/Polyline";
 import { rectInflater } from "./primitiveShapes/Rect";
+import { doorInflater } from "./floorplanShapes/Door";
+import { windowInflater } from "./floorplanShapes/Window";
+import { wallInflater } from "./floorplanShapes/Wall";
+import { roomInflater } from "./floorplanShapes/Room";
 
 export type TShapeInflater = (message: IMessageShape) => Promise<IShape | null>;
 
@@ -35,7 +39,13 @@ export const shapeInflaters: IShapeInflaters = {
         modificationInflater,
         inputOutputInflater,
         repeatInflater,
+
+        doorInflater,
+        windowInflater,
+        wallInflater,
+        roomInflater,
     ],
+    
     async inflate(message: IMessageShape) {
         let result: IShape | null = null;
         await this.inflaters.every(async inflater => {

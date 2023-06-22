@@ -5,24 +5,24 @@ import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "
 import { IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
-interface IOperationProps extends IShapeGraphicalProps {
+interface IDoorProps extends IShapeGraphicalProps {
     width: IGraphicalProperty,
     height: IGraphicalProperty,
     fillColorOne: IGraphicalProperty,
     strokeColor: IGraphicalProperty,
 }
 
-export interface IOperationConfig extends IShapeConfig {
+export interface IDoorConfig extends IShapeConfig {
     id?: string,
-    graphicalProperties: IOperationProps,
+    graphicalProperties: IDoorProps,
     zIndex: number,
 }
 
-export const operationInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type !== ShapeType.OPERATION) {
+export const doorInflater: TShapeInflater = async (messageShape: IMessageShape) => {
+    if (messageShape.type !== ShapeType.DOOR) {
         return null
     }
-    return new Operation({
+    return new Door({
         id: messageShape.id,
         zIndex: messageShape.zIndex,
         graphicalProperties: {
@@ -38,18 +38,11 @@ export const operationInflater: TShapeInflater = async (messageShape: IMessageSh
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-
-            fillColorOne: {
-                label: 'Fill Color One',
-                value: messageShape.graphicalProperties.fillColorOne!.value,
+            pivot: {
+                label: "Pivot",
+                value: messageShape.graphicalProperties.pivot!.value,
                 isReadable: true,
-                editorType: EditorType.COLOR_EDITOR
-            },
-            strokeColor: {
-                label: 'Stroke',
-                value: messageShape.graphicalProperties.strokeColor!.value,
-                isReadable: true,
-                editorType: EditorType.COLOR_EDITOR
+                editorType: EditorType.TEXT_EDITOR
             },
             width: {
                 label: "Width",
@@ -63,20 +56,26 @@ export const operationInflater: TShapeInflater = async (messageShape: IMessageSh
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            pivot: {
-                label: "Pivot",
-                value: messageShape.graphicalProperties.pivot!.value,
+            fillColorOne: {
+                label: 'Fill Color One',
+                value: messageShape.graphicalProperties.fillColorOne!.value,
                 isReadable: true,
-                editorType: EditorType.TEXT_EDITOR
-            }
+                editorType: EditorType.COLOR_EDITOR
+            },
+            strokeColor: {
+                label: 'Stroke',
+                value: messageShape.graphicalProperties.strokeColor!.value,
+                isReadable: true,
+                editorType: EditorType.COLOR_EDITOR
+            },
         }
     })
 }
 
-export class OperationCreator implements IShapeCreator {
-    type: ShapeType = ShapeType.OPERATION;
+export class DoorCreator implements IShapeCreator {
+    type: ShapeType = ShapeType.DOOR;
     create() {
-        return new Operation({
+        return new Door({
             graphicalProperties: {
                 x: {
                     label: 'X',
@@ -90,24 +89,25 @@ export class OperationCreator implements IShapeCreator {
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
+                width: {
+                    label: 'Width',
+                    value: '60',
+                    isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
+                },
+                height: {
+                    label: 'Height',
+                    value: '60',
+                    isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
+                },
                 pivot: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                width: {
-                    label: 'Width',
-                    value: '120',
-                    isReadable: true,
-                    editorType: EditorType.TEXT_EDITOR
-                },
-                height: {
-                    label: 'Height',
-                    value: '80',
-                    isReadable: true,
-                    editorType: EditorType.TEXT_EDITOR
-                },
+
                 strokeColor: {
                     label: 'Stroke Color',
                     value: '#000000',
@@ -127,12 +127,12 @@ export class OperationCreator implements IShapeCreator {
     }
 }
 
-class Operation implements IShape {
-    type: ShapeType = ShapeType.OPERATION;
-    config: IOperationConfig;
+class Door implements IShape {
+    type: ShapeType = ShapeType.DOOR;
+    config: IDoorConfig;
     isVisible: boolean = true;
 
-    constructor(obj: IOperationConfig) {
+    constructor(obj: IDoorConfig) {
         this.config = obj;
         this.config.zIndex = obj.zIndex ?? 0;
     }
@@ -155,15 +155,21 @@ class Operation implements IShape {
                 ${+this.config.graphicalProperties.x.value + (+this.config.graphicalProperties.width.value / 2)} 
                 ${+this.config.graphicalProperties.y.value + (+this.config.graphicalProperties.height.value / 2)})`}
             d={`
-                M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value} 
-                l 0 ${this.config.graphicalProperties.height.value}
-                l ${this.config.graphicalProperties.width.value} 0
-                l 0 -${this.config.graphicalProperties.height.value}
-                l -${this.config.graphicalProperties.width.value} 0
+                M ${+this.config.graphicalProperties.x.value + +this.config.graphicalProperties.width.value},
+                    ${(+this.config.graphicalProperties.y.value)} 
+                l 0 ${+this.config.graphicalProperties.height.value * 0.05}
+                l -${+this.config.graphicalProperties.width.value} 0
+                l 0 -${+this.config.graphicalProperties.height.value * 0.05}
+                l ${+this.config.graphicalProperties.width.value} 0
+                l 0 ${+this.config.graphicalProperties.height.value}
+
+                m -${+this.config.graphicalProperties.width.value} -${+this.config.graphicalProperties.height.value * 0.95}
+                a ${this.config.graphicalProperties.width.value} ${+this.config.graphicalProperties.height.value * 0.95}
+                    0 0 0 ${+this.config.graphicalProperties.width.value} ${+this.config.graphicalProperties.height.value * 0.95}
+                l 0 -${+this.config.graphicalProperties.height.value * 0.95}
                 `}
         />
     }
 }
 
-
-export default Operation;
+export default Door;

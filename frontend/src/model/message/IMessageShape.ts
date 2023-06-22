@@ -15,6 +15,10 @@ export interface IMessageShape {
         width?: IGraphicalProperty,
         height?: IGraphicalProperty,
         pivot?: IGraphicalProperty,
+        leftWidth?: IGraphicalProperty,
+        rightWidth?: IGraphicalProperty,
+        topWidth?: IGraphicalProperty,
+        bottomWidth?: IGraphicalProperty,
 
         strokeColor?: IGraphicalProperty,
         strokeWidth?: IGraphicalProperty,

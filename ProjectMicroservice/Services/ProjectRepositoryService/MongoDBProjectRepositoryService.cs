@@ -126,7 +126,9 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
             return true;
         }
 
-        var userInvite = await (await _inviteCollection.FindAsync(i => i.UserId == userId)).SingleAsync();
+        var userInvite = await (await _inviteCollection
+            .FindAsync(i => i.UserId == userId && i.ProjectId == projectId))
+                .SingleAsync();
         if (userInvite == null)
         {
             return false;

@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.actionHandlers = void 0;
 var mongodb_1 = require("mongodb");
 var addLayerHandler_1 = require("./addLayerHandler");
@@ -20,4 +20,4 @@ exports.actionHandlers = {
         });
     }
 };
-exports.default = exports.actionHandlers;
+exports["default"] = exports.actionHandlers;

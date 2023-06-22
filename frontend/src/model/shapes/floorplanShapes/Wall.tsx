@@ -5,24 +5,23 @@ import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "
 import { IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
-interface IOperationProps extends IShapeGraphicalProps {
+interface IWallProps extends IShapeGraphicalProps {
     width: IGraphicalProperty,
     height: IGraphicalProperty,
     fillColorOne: IGraphicalProperty,
-    strokeColor: IGraphicalProperty,
 }
 
-export interface IOperationConfig extends IShapeConfig {
+export interface IWallConfig extends IShapeConfig {
     id?: string,
-    graphicalProperties: IOperationProps,
+    graphicalProperties: IWallProps,
     zIndex: number,
 }
 
-export const operationInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type !== ShapeType.OPERATION) {
+export const wallInflater: TShapeInflater = async (messageShape: IMessageShape) => {
+    if (messageShape.type !== ShapeType.WALL) {
         return null
     }
-    return new Operation({
+    return new Wall({
         id: messageShape.id,
         zIndex: messageShape.zIndex,
         graphicalProperties: {
@@ -42,12 +41,6 @@ export const operationInflater: TShapeInflater = async (messageShape: IMessageSh
             fillColorOne: {
                 label: 'Fill Color One',
                 value: messageShape.graphicalProperties.fillColorOne!.value,
-                isReadable: true,
-                editorType: EditorType.COLOR_EDITOR
-            },
-            strokeColor: {
-                label: 'Stroke',
-                value: messageShape.graphicalProperties.strokeColor!.value,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
@@ -73,10 +66,10 @@ export const operationInflater: TShapeInflater = async (messageShape: IMessageSh
     })
 }
 
-export class OperationCreator implements IShapeCreator {
-    type: ShapeType = ShapeType.OPERATION;
+export class WallCreator implements IShapeCreator {
+    type: ShapeType = ShapeType.WALL;
     create() {
-        return new Operation({
+        return new Wall({
             graphicalProperties: {
                 x: {
                     label: 'X',
@@ -98,26 +91,19 @@ export class OperationCreator implements IShapeCreator {
                 },
                 width: {
                     label: 'Width',
-                    value: '120',
+                    value: '600',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 height: {
                     label: 'Height',
-                    value: '80',
+                    value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                strokeColor: {
-                    label: 'Stroke Color',
-                    value: '#000000',
-                    isReadable: true,
-                    editorType: EditorType.COLOR_EDITOR
-                },
-
                 fillColorOne: {
                     label: 'Fill Color One',
-                    value: '#ffffff',
+                    value: '#000000',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
                 }
@@ -127,12 +113,12 @@ export class OperationCreator implements IShapeCreator {
     }
 }
 
-class Operation implements IShape {
-    type: ShapeType = ShapeType.OPERATION;
-    config: IOperationConfig;
+class Wall implements IShape {
+    type: ShapeType = ShapeType.WALL;
+    config: IWallConfig;
     isVisible: boolean = true;
 
-    constructor(obj: IOperationConfig) {
+    constructor(obj: IWallConfig) {
         this.config = obj;
         this.config.zIndex = obj.zIndex ?? 0;
     }
@@ -145,7 +131,7 @@ class Operation implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphicalProperties.strokeColor?.value}
+            stroke="none"
             fill={this.config.graphicalProperties.fillColorOne?.value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
@@ -166,4 +152,4 @@ class Operation implements IShape {
 }
 
 
-export default Operation;
+export default Wall;

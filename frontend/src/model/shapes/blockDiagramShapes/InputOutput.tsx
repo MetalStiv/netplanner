@@ -151,6 +151,9 @@ class InputOutput implements IShape {
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
+            transform={`rotate(${this.config.graphicalProperties.pivot.value} 
+                ${+this.config.graphicalProperties.x.value + (+this.config.graphicalProperties.width.value / 2)} 
+                ${+this.config.graphicalProperties.y.value + (+this.config.graphicalProperties.height.value / 2)})`}
             d={`
                 M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value}
                 m ${+this.config.graphicalProperties.height.value / 4} 0

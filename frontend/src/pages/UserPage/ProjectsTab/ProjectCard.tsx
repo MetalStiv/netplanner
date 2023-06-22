@@ -34,7 +34,8 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
         if (res.status !== 200) {
             alert(res.statusText)
         }
-        projectsMetaStore.hideById(projectId);
+        // projectsMetaStore.hideById(projectId);
+        updateProjects();
     }
 
     const changeName = (el: HTMLInputElement) => {
