@@ -38,13 +38,17 @@ class Layer implements ILayer {
     [isVisibleSym]: boolean;
     [isCurrentSym]: boolean;
 
-    constructor(id: string = "reqertert", zIndex: number, title: string = "Layer", shapes: IShape[]) {
+    constructor(id: string = "reqertert", zIndex: number, title: string = "Layer", shapes: IShape[], isVisible: boolean = true) {
         this[idSym] = id;
         this[titleSym] = title;
         this[zIndexSym] = zIndex;
         this[shapesSym] = shapes;
-        this[isVisibleSym] = true;
+        this[isVisibleSym] = isVisible;
         this[isCurrentSym] = true;
+
+        !isVisible && this[shapesSym].forEach(item => {
+            item.isVisible = false;
+        })
     }
 
     changeVisible(val: boolean) {

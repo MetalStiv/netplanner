@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActionType = void 0;
 var ActionType;
 (function (ActionType) {
@@ -10,6 +10,7 @@ var ActionType;
     ActionType["ADD_LAYER"] = "ADD_LAYER";
     ActionType["REMOVE_LAYER"] = "REMOVE_LAYER";
     ActionType["RENAME_LAYER"] = "RENAME_LAYER";
+    ActionType["CHANGE_LAYER_VISIBLE"] = "CHANGE_LAYER_VISIBLE";
     ActionType["ADD_SHAPE"] = "ADD_SHAPE";
     ActionType["CHANGE_GRAPHICAL_PROPERTY"] = "CHANGE_GRAPHICAL_PROPERTY";
 })(ActionType = exports.ActionType || (exports.ActionType = {}));

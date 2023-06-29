@@ -4,6 +4,7 @@ export interface IMessageShape {
     id?: string,
     type: string,
     zIndex: number,
+    isVisible: boolean,
     graphicalProperties: {
         x: IGraphicalProperty,
         y: IGraphicalProperty,

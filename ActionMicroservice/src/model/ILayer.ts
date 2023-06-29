@@ -5,5 +5,6 @@ export interface ILayer {
     _id: ObjectId,
     name: string,
     pageId: ObjectId,
-    zIndex: number
+    zIndex: number,
+    isVisible: boolean
 }

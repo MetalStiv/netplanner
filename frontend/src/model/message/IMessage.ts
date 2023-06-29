@@ -17,11 +17,13 @@ export interface IMessage {
                 id: string,
                 name: string,
                 zIndex: number,
+                isVisible: boolean,
                 shapes: IMessageShape[]
             }]
         }],
         newShape?: IMessageShape,
         newLayer?: IMessageLayer,
+        isVisible?: boolean,
         newPage?: IMessagePage,
         graphicalProperties?: IShapeGraphicalProps
     }

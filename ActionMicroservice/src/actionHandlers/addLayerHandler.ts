@@ -24,7 +24,8 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
         _id: new ObjectId(),
         name: uniqTitle,
         pageId: new ObjectId(message.pageId),
-        zIndex: zIndex
+        zIndex: zIndex,
+        isVisible: true
     };
 
     collections.layerCollection.insertOne(newLayer);

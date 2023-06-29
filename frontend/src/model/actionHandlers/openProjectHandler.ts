@@ -16,7 +16,8 @@ export const openProjectHandler: ActionHandler = async (project, message) => {
                 (await Promise.all(l.shapes.map(async s => {
                     const shape: IShape | null = await shapeInflaters.inflate(s);
                     return shape
-                }))).filter((x): x is IShape => x !== null)
+                }))).filter((x): x is IShape => x !== null),
+                l.isVisible
 
             ))));
         newPage.setCurrentLayer(newPage.getLayers()[0].getID());

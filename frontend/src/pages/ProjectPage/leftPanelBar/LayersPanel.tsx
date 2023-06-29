@@ -6,6 +6,7 @@ import { AddLayerAction } from '../../../model/actions/AddLayerAction';
 import { useRootStore } from '../../../providers/rootProvider';
 import { TActionStore } from '../../../stores/actionStore';
 import { TProjectStore } from '../../../stores/projectStore';
+import { ChangeLayerVisibleAction } from '../../../model/actions/ChangeLayerVisibleAction';
 
 
 // interface ILayersPanelProps {
@@ -152,12 +153,16 @@ const LayersPanel = () => {
                             <div className='layer-icon'
                                 onClick={function (e) {
                                     e.stopPropagation();
-                                    currentPage.setLayers(currentPage.getLayers().map(item => {
-                                        if (item.getID() === layer.getID()) {
-                                            item.changeVisible(!item.isVisible());
-                                        }
-                                        return item;
-                                    }))
+
+                                    const changeLayerVisibleAction = new ChangeLayerVisibleAction(layer, !layer.isVisible());
+                                    actionStore.push(changeLayerVisibleAction);
+
+                                    // currentPage.setLayers(currentPage.getLayers().map(item => {
+                                    //     if (item.getID() === layer.getID()) {
+                                    //         item.changeVisible(!item.isVisible());
+                                    //     }
+                                    //     return item;
+                                    // }))
                                     //updatePageCallback(currentPage);
                                 }}>
                                 {layer.isVisible() ? visibleIcon : invisibleIcon}

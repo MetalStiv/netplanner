@@ -40,6 +40,7 @@ export class DrawShapeAction implements IAction {
             data: {
                 newShape: {
                     zIndex: this.shape.config.zIndex!,
+                    isVisible: this.shape.isVisible,
                     type: this.shape.type,
                     graphicalProperties: this.shape.config.graphicalProperties
                 },

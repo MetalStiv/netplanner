@@ -94,7 +94,8 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
                 id: l._id.toString(),
                 name: l.name,
                 shapes: shapeTrees,
-                zIndex: l.zIndex
+                zIndex: l.zIndex,
+                isVisible: l.isVisible
             }
         }))
         return {
