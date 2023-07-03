@@ -254,8 +254,8 @@ app.MapGet("/getId", (
     [SwaggerResponse(500, "Some failure")]
         [AllowAnonymous] async (HttpContext http,
         IUserRepositoryService userRepositoryService,
-        [SwaggerParameter("email", Required = true)] string email) => {
-            var user = await userRepositoryService.GetByEmailAsync(email);
+        [SwaggerParameter("mail", Required = true)] string mail) => {
+            var user = await userRepositoryService.GetByEmailAsync(mail);
             if (user == null)
             {
                 return "";

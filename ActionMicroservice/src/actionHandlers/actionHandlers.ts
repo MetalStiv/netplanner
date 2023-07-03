@@ -5,6 +5,7 @@ import { addLayerHandler } from "./addLayerHandler";
 import { addPageHandler } from "./addPageHandler";
 import { addShapeHandler } from "./addShapeHandler";
 import { changeGraphicalPropertiesHandler } from "./changeGraphicalPropertiesHandler";
+import { cursorPositionHandler } from "./cursorPositionHandler";
 
 export type ActionHandler = (collections: IDatadaseCollections, message: IMessage) => Promise<IMessage | Error>
 
@@ -15,6 +16,7 @@ export interface IActionHandlers {
 
 export const actionHandlers: IActionHandlers = {
     handlers: new Array(
+        cursorPositionHandler,
         addShapeHandler,
         addLayerHandler,
         addPageHandler,

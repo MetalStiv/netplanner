@@ -1,5 +1,6 @@
 export enum ActionType {
     OPEN_PROJECT = "OPEN_PROJECT",
+    CURSOR_POSITION = "CURSOR_POSITION",
 
     ADD_PAGE = "ADD_PAGE",
     REMOVE_PAGE = "REMOVE_PAGE",

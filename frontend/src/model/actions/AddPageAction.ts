@@ -6,6 +6,8 @@ import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
 export class AddPageAction implements IAction {
+    storeHistory: boolean = true;
+    
     private currentProject: Project;
     private name: string | null = null;
 

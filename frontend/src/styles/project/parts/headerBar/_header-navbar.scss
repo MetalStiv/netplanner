@@ -29,6 +29,17 @@ header {
                     margin-right: 60px;
                     display: flex;
                     align-items: center;
+
+                    .user-cursor-addictive {
+                        border: 2px solid $lightblue;
+                        background-color: $white; 
+                        text-align: center;
+                        color: $lightblue;
+                        margin-top: 1vh;
+                        height: 28px; 
+                        width: 28px;
+                        border-radius: 50%
+                    }
                 }
 
                 .share-btn {

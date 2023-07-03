@@ -9,6 +9,7 @@ export interface IMessage {
     pageId?: string,
     layerId?: string,
     shapeId?: string,
+    senderId?: string,
     data: {
         pages?: [{
             id: string,
@@ -23,6 +24,7 @@ export interface IMessage {
         newShape?: IMessageShape,
         newLayer?: IMessageLayer,
         newPage?: IMessagePage,
-        graphicalProperties?: IShapeGraphicalProps
+        graphicalProperties?: IShapeGraphicalProps,
+        coords?: {x: number, y: number},
     }
 }

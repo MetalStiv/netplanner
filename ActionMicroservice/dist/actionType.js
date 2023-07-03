@@ -4,6 +4,7 @@ exports.ActionType = void 0;
 var ActionType;
 (function (ActionType) {
     ActionType["OPEN_PROJECT"] = "OPEN_PROJECT";
+    ActionType["CURSOR_POSITION"] = "CURSOR_POSITION";
     ActionType["ADD_PAGE"] = "ADD_PAGE";
     ActionType["REMOVE_PAGE"] = "REMOVE_PAGE";
     ActionType["RENAME_PAGE"] = "RENAME_PAGE";

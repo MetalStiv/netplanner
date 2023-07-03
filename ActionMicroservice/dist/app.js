@@ -107,13 +107,15 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                         userId = decoded.Id;
                     }
                 });
-                console.log('open');
                 metadata = { userId: userId, projectId: projectId };
                 clients.set(ws, metadata);
+                console.log("Socs");
+                clients.forEach(function (meta, w) {
+                    console.log(meta);
+                });
                 pageFilter = { "projectId": new mongoDB.ObjectId(projectId) };
-                return [4 /*yield*/, collections.pageCollection.find(pageFilter)];
-            case 1: return [4 /*yield*/, (_a.sent()).toArray()];
-            case 2:
+                return [4 /*yield*/, (collections.pageCollection.find(pageFilter)).toArray()];
+            case 1:
                 pages = _a.sent();
                 return [4 /*yield*/, Promise.all(pages.map(function (p) { return __awaiter(void 0, void 0, void 0, function () {
                         var layerFilter, layers, layerTrees;
@@ -121,9 +123,8 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                             switch (_a.label) {
                                 case 0:
                                     layerFilter = { "pageId": new mongoDB.ObjectId(p._id) };
-                                    return [4 /*yield*/, collections.layerCollection.find(layerFilter)];
-                                case 1: return [4 /*yield*/, (_a.sent()).toArray()];
-                                case 2:
+                                    return [4 /*yield*/, (collections.layerCollection.find(layerFilter)).toArray()];
+                                case 1:
                                     layers = _a.sent();
                                     return [4 /*yield*/, Promise.all(layers.map(function (l) { return __awaiter(void 0, void 0, void 0, function () {
                                             var shapeFilter, shapes, shapeTrees;
@@ -131,9 +132,8 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                                                 switch (_a.label) {
                                                     case 0:
                                                         shapeFilter = { "layerId": new mongoDB.ObjectId(l._id) };
-                                                        return [4 /*yield*/, collections.shapeCollection.find(shapeFilter)];
-                                                    case 1: return [4 /*yield*/, (_a.sent()).toArray()];
-                                                    case 2:
+                                                        return [4 /*yield*/, (collections.shapeCollection.find(shapeFilter)).toArray()];
+                                                    case 1:
                                                         shapes = _a.sent();
                                                         shapeTrees = shapes.map(function (s) { return ({
                                                             id: s._id.toString(),
@@ -150,7 +150,7 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                                                 }
                                             });
                                         }); }))];
-                                case 3:
+                                case 2:
                                     layerTrees = _a.sent();
                                     return [2 /*return*/, {
                                             id: p._id.toString(),
@@ -160,7 +160,7 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                             }
                         });
                     }); }))];
-            case 3:
+            case 2:
                 pageTrees = _a.sent();
                 sendMessage = {
                     type: actionType_1.ActionType.OPEN_PROJECT,

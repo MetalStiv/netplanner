@@ -29,6 +29,7 @@ import LayersPanel from './leftPanelBar/LayersPanel';
 import ObjectPropertiesPanel from './rightPanelBar/ObjectPropertiesPanel';
 import GraphicalPropertiesPanel from './rightPanelBar/GraphicalPropertiesPanel';
 import floorPlanGroup from '../../model/shapes/floorplanShapes/FloorPlanGroup';
+import { CursorPositionAction } from '../../model/actions/CursorPositionAction';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {

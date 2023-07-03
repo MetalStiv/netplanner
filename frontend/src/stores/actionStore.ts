@@ -27,9 +27,13 @@ export const createActionStore = () => {
         },
 
         push(action: IAction) {
-            this[actionsSymbol].length === this[maxSizeSymbol] && this[actionsSymbol].shift();
-            this[actionsSymbol].push(action);
-            // console.log(JSON.stringify(action.getMessage()));
+            if (action.storeHistory){
+                this[actionsSymbol].length === this[maxSizeSymbol] && this[actionsSymbol].shift();
+                this[actionsSymbol].push(action);
+            }
+            // else {
+            //     console.log(JSON.stringify(action.getMessage()))
+            // }
             this[messageSenderSymbol] && this[messageSenderSymbol]!(JSON.stringify(action.getMessage()))
         },
 

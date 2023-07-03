@@ -5,6 +5,8 @@ import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
 export class AddLayerAction implements IAction {
+    storeHistory: boolean = true;
+    
     private currentPage: Page;
     private name: string | null = null;
 

@@ -8,11 +8,16 @@ import { useRootStore } from '../../providers/rootProvider';
 import { TActionStore } from '../../stores/actionStore';
 import { observer } from 'mobx-react-lite';
 import { RangeInput } from '../../components';
+import { useSprings, animated } from '@react-spring/web'
 import Page from '../../model/projectData/Page';
 import IShape, { IShapeGraphicalProps } from '../../model/shapes/IShape';
 import { DrawShapeAction } from '../../model/actions/DrawShapeAction';
 import { ILayer } from '../../model/projectData/Layer';
 import { TProjectStore } from '../../stores/projectStore';
+import { CursorPositionAction } from '../../model/actions/CursorPositionAction';
+import { cursorUpdateTime } from '../../common/constants';
+import { TUsersStore } from '../../stores/usersStore';
+import { TUserStore } from '../../stores/userStore';
 
 interface SVGCanvasProps {
     // currentPage: Page,
@@ -29,8 +34,11 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     creatorOnDrop, getCursorCoordsCallback, getClickedShapeConfigCallback }: SVGCanvasProps) => {
     const [scale, setScale] = useState<number>(1);
     const [translate, setTranslate] = useState({ x: 0, y: 0 });
+    const [cursorCoords, setCursorCoords] = useState({ x: 0, y: 0});
     const svgCanvas: React.MutableRefObject<SVGSVGElement | null> = useRef(null);
     const projectStore: TProjectStore = useRootStore().getProjectStore();
+    const usersStore: TUsersStore = useRootStore()!.getUsersStore();
+    const userStore: TUserStore = useRootStore()!.getUserStore();
     const project = projectStore.getProject();
     const actionStore: TActionStore = useRootStore().getActionStore();
 
@@ -72,9 +80,81 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     //const userStore = useRootStore()?.getUserStore()
 
     useEffect(() => {
+        const handleMouseMove = (event: MouseEvent) => {
+            setCursorCoords({ x: event.clientX, y: event.clientY });
+        };
+    
+        window.addEventListener('mousemove', handleMouseMove);
+    
+        return () => {
+          window.removeEventListener(
+            'mousemove',
+            handleMouseMove
+          );
+        };
+    }, [setCursorCoords]);
+
+    useEffect(() => {
         svgCanvas.current?.addEventListener('wheel', wheelHandler);
         return () => svgCanvas.current?.removeEventListener('wheel', wheelHandler);
     });
+
+    const [lastCursorUpdateTime, setLastCursorUpdateTime] = useState<number>(0);
+
+    useEffect(() => {
+        const coords = transformOuterCoordsToSVGCoords({
+            x: cursorCoords.x,
+            y: cursorCoords.y,
+        })
+        if (Date.now()-lastCursorUpdateTime > cursorUpdateTime){
+            actionStore.push(new CursorPositionAction(projectStore.getProject()?.getCurrentPage()!, coords))
+            setLastCursorUpdateTime(Date.now());
+        }
+    
+        // const interval = setInterval(() => {
+        //     const coords = transformOuterCoordsToSVGCoords({
+        //         x: cursorCoords.x,
+        //         y: cursorCoords.y,
+        //     })
+        //     actionStore.push(new CursorPositionAction(projectStore.getProject()?.getCurrentPage()!, coords))
+        // }, cursorUpdateTime);
+        
+        // return () => clearInterval(interval);
+    }, [cursorCoords])
+
+    useEffect(() => {
+        const coords = transformOuterCoordsToSVGCoords({
+            x: cursorCoords.x,
+            y: cursorCoords.y,
+        })
+        const interval = setInterval(() => {
+            actionStore.push(new CursorPositionAction(projectStore.getProject()?.getCurrentPage()!, coords))
+        }, cursorUpdateTime);
+        
+          return () => clearInterval(interval);
+    }, [cursorCoords])
+
+    const cursorAnimations = useSprings(
+        (project?.getCursors().filter(c => c.pageId === currentPage?.getID())
+            .filter(c => c.userId !== (userStore.getData())?.id))!.length,
+        (project?.getCursors().filter(c => c.pageId === currentPage?.getID())
+            .filter(c => c.userId !== (userStore.getData())?.id))!.map(c => ({
+            from: {
+                cx: c.prevCoord.x,
+                cy: c.prevCoord.y,
+                r: "20", 
+                fill: c.color,
+                userId: c.userId, 
+            },
+            to: {
+                cx: c.coord.x,
+                cy: c.coord.y,
+                r: "20", 
+                fill: c.color,
+                userId: c.userId,
+            },
+            config: { duration: cursorUpdateTime }
+        })));
 
     // function moveSVGAt(shapeID: string, toSVGCoords: { x: number, y: number }, shift?: { x: number, y: number }) {
     //     currentPage?.setLayers(currentPage.getLayers().map(layer => {
@@ -307,7 +387,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
 
         const newShape: IShape = creatorOnDrop!.create();
         let drawShapeAction = new DrawShapeAction(newShape, currentPage?.getCurrentLayer()!, dropCoords)
-        // drawShapeAction.do() && actionStore.push(drawShapeAction)
         actionStore.push(drawShapeAction);
     }
 
@@ -414,6 +493,16 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                         {currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(s => {
                             return s.render(svgDragNDrop, svgSelect, layer.getZIndex());
                         }))}
+                        {cursorAnimations.map(a => <animated.path 
+                                d={`M${a.cx.get()} ${a.cy.get()} l32 12 l-15 5 l-4 16Z`}
+                                fill={a.fill} stroke="#5B5959" stroke-width="2">
+                                    <title>{usersStore.getData().find(u => u.id === a.userId.get())?.name}</title>
+                            </animated.path>)
+                        }
+                        {/* {cursorAnimations.map(a => <animated.circle cx={a.cx} cy={a.cy} r={a.r} fill={a.fill}>
+                                <title>{usersStore.getData().find(u => u.id === a.userId.get())?.name}</title>
+                            </animated.circle>)
+                        } */}
                     </g>
                 </svg>
             </div>

@@ -6,6 +6,8 @@ import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
 export class DrawShapeAction implements IAction {
+    storeHistory: boolean = true;
+    
     private shape: IShape;
     private currentLayer: Layer;
     private dropCoords: { x: number, y: number };

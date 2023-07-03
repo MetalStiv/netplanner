@@ -4,6 +4,8 @@ import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
 export class ChangeShapePropertyAction implements IAction {
+    storeHistory: boolean = true;
+    
     // private graphProps: IShapeGraphicalProps;
     // private property: string;
     private shape: IShape;

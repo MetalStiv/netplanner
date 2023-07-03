@@ -53,6 +53,7 @@ const publicKey = fs.readFileSync("/app/RsaKeys/public.pem", "utf8");
 
 wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     let queryData = require('url').parse(req.url, true).query;
+    
     let token: string = queryData.token;
     let projectId: string = queryData.projectId;
 
@@ -70,20 +71,23 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
         }
     });
 
-    console.log('open');
     // check user rights!
 
     const metadata: IMetadata = { userId, projectId };
     clients.set(ws, metadata);
+    console.log("Socs");
+    clients.forEach((meta, w) => {
+        console.log(meta)
+    });
 
     const pageFilter: mongoDB.Filter<IPage> = { "projectId": new mongoDB.ObjectId(projectId) };
-    const pages: IPage[] = await (await collections.pageCollection.find(pageFilter)).toArray();
+    const pages: IPage[] = await (collections.pageCollection.find(pageFilter)).toArray();
     const pageTrees: IPageTree[] = await Promise.all(pages.map(async p => {
         const layerFilter: mongoDB.Filter<ILayer> = { "pageId": new mongoDB.ObjectId(p._id) };
-        const layers: ILayer[] = await (await collections.layerCollection.find(layerFilter)).toArray();
+        const layers: ILayer[] = await (collections.layerCollection.find(layerFilter)).toArray();
         const layerTrees: ILayerTree[] = await Promise.all(layers.map(async l => {
             const shapeFilter: mongoDB.Filter<IShape> = { "layerId": new mongoDB.ObjectId(l._id) };
-            const shapes: IShape[] = await (await collections.shapeCollection.find(shapeFilter)).toArray();
+            const shapes: IShape[] = await (collections.shapeCollection.find(shapeFilter)).toArray();
             const shapeTrees: IShapeTree[] = shapes.map(s => ({
                 id: s._id.toString(),
                 type: s.type,
