@@ -1,5 +1,18 @@
 #objectPropertiesPanel {
+    height: 100%;
+    padding: 10px 0;
+
+    @include custom-scrollbar;
+
     .panel-title {
+        position: relative;
+        color: $darkgray;
+        font-size: 16px;
+        line-height: 19px;
+        border-bottom: 1px solid $bluegray;
+        padding: 0 8px 4px;
+        margin: 0 14px 20px;
+
         .plus {
             position: absolute;
             right: 0;
@@ -8,15 +21,11 @@
             padding: 8px;
             cursor: pointer;
         }
-
-        position: relative;
-        color: $bluegray;
-        font-size: 16px;
-        line-height: 19px;
-        border-bottom: 1px solid $bluegray;
-        padding: 0 8px 4px;
-        margin: 0 14px 20px;
     }
 
-    padding: 10px 0;
+
+    .panel-content {
+        height: 100%;
+        overflow-y: auto;
+    }
 }

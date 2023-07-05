@@ -30,7 +30,7 @@ export const inputOutputInflater: TShapeInflater = async (messageShape: IMessage
                 label: "X",
                 value: messageShape.graphicalProperties.x.value,
                 isReadable: true,
-                editorType: EditorType.COLOR_EDITOR
+                editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",

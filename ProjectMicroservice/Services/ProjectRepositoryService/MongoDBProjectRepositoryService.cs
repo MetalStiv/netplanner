@@ -37,7 +37,7 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
                 var newPage = new Page(pageName, newProjectMeta.Id!);
                 await _pageCollection.InsertOneAsync(newPage);
 
-                var newLayer = new Layer(layerName, newPage.Id!, 10000);
+                var newLayer = new Layer(layerName, newPage.Id!, 0, true);
                 await _layerCollection.InsertOneAsync(newLayer);
             });
         await task;

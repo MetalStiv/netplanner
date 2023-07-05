@@ -1,6 +1,5 @@
 import { IMessage } from "../message/IMessage";
 import Layer from "../projectData/Layer";
-import Page from "../projectData/Page";
 import IShape from "../shapes/IShape";
 import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
@@ -19,7 +18,7 @@ export class DrawShapeAction implements IAction {
     do(): boolean {
         this.shape.config.graphicalProperties.x.value = this.dropCoords.x.toString();
         this.shape.config.graphicalProperties.y.value = this.dropCoords.y.toString();
-        this.shape.config.zIndex = this.currentLayer.getZIndex();
+        this.shape.config.zIndex = this.currentLayer.getShapes().length + 1;
         this.currentLayer.addShape(this.shape);
         console.log(this.shape)
         return true;
@@ -33,13 +32,14 @@ export class DrawShapeAction implements IAction {
     getMessage(): IMessage {
         this.shape.config.graphicalProperties.x.value = this.dropCoords.x.toString();
         this.shape.config.graphicalProperties.y.value = this.dropCoords.y.toString();
+        let zIndex = this.currentLayer.getShapes().length + 1;
 
         return {
             type: ActionType.ADD_SHAPE,
             layerId: this.currentLayer.getID(),
             data: {
                 newShape: {
-                    zIndex: this.shape.config.zIndex!,
+                    ...{ zIndex },
                     isVisible: this.shape.isVisible,
                     type: this.shape.type,
                     graphicalProperties: this.shape.config.graphicalProperties

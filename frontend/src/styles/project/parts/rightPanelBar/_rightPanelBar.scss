@@ -32,19 +32,23 @@
         transition: background-color .1s;
     }
 
-    .content {
-        .react-page-split__divider--vertical {
-            cursor: row-resize;
-            height: 1px;
-            border-top: 4px solid $white;
-            border-bottom: 4px solid $white;
-            background: $dark;
-        }
-
-        // overflow-x: scroll;
-        background-color: $white;
-        width: 100%;
+    // .content {
+    .react-page-split__panel {
+        overflow-y: hidden;
     }
+
+    .react-page-split__divider--vertical {
+        cursor: row-resize;
+        height: 1px;
+        border-top: 4px solid $white;
+        border-bottom: 4px solid $white;
+        background: $dark;
+    }
+
+    // overflow-x: scroll;
+    background-color: $white;
+    // width: 100%;
+    // }
 
     // position: absolute;
     // top: 0;
@@ -56,8 +60,9 @@
     min-width: $rightPanelWidth;
     max-width: $rightPanelWidth;
     border-left:1px solid $black;
+    // overflow-x: scroll;
 }
 
-.react-page-split__panel {
-    overflow: visible;
-}
+// .react-page-split__panel {
+//     overflow: visible;
+// }

@@ -6,8 +6,9 @@
 
     .color-picker-modal {
         position: absolute;
-        right: 0px;
-        bottom: calc(100% + 10px);
+        left: -100px;
+        top: calc(100% + 10px);
+        // bottom: calc(100% + 10px);
         z-index: 2;
 
         padding: 16px;
