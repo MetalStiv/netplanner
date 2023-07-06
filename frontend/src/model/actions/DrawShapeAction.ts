@@ -18,23 +18,21 @@ export class DrawShapeAction implements IAction {
         this.dropCoords = dropCoords;
     }
 
-    do(): boolean {
-        this.shape.config.graphicalProperties.x.value = this.dropCoords.x.toString();
-        this.shape.config.graphicalProperties.y.value = this.dropCoords.y.toString();
-        this.shape.config.zIndex = this.currentLayer.getZIndex();
-        this.currentLayer.addShape(this.shape);
-        console.log(this.shape)
-        return true;
-    }
-
     undo(): void {
         // const layer = this.currentPage.getLayers().find(layer => layer.getShapes().some(elem => elem === this.shape));
         // layer?.removeShape(this.shape);
     }
 
-    getMessage(): IMessage {
+    do(): IMessage {
         this.shape.config.graphicalProperties.x.value = this.dropCoords.x.toString();
         this.shape.config.graphicalProperties.y.value = this.dropCoords.y.toString();
+
+        const messageProperties: {l: string, v: string}[] = []
+        let graphicalProperty: keyof typeof this.shape.config.graphicalProperties; 
+        for (graphicalProperty in this.shape.config.graphicalProperties){
+            messageProperties.push({l: graphicalProperty, 
+                v: this.shape.config.graphicalProperties[graphicalProperty].value})
+        }
 
         return {
             type: ActionType.ADD_SHAPE,
@@ -43,7 +41,7 @@ export class DrawShapeAction implements IAction {
                 newShape: {
                     zIndex: this.shape.config.zIndex!,
                     type: this.shape.type,
-                    graphicalProperties: this.shape.config.graphicalProperties
+                    graphicalProperties: messageProperties
                 },
                 // zIndex: this.shape.config.zIndex?.toString()
             }

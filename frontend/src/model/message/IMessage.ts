@@ -1,4 +1,4 @@
-import { IMessageShape } from "./IMessageShape"
+import { IMessageGraphicalProperty, IMessageShape } from "./IMessageShape"
 import { IShapeGraphicalProps } from "../shapes/IShape"
 import { IMessageLayer } from "./IMessageLayer"
 import { IMessagePage } from "./IMessagePage"
@@ -24,7 +24,7 @@ export interface IMessage {
         newShape?: IMessageShape,
         newLayer?: IMessageLayer,
         newPage?: IMessagePage,
-        graphicalProperties?: IShapeGraphicalProps,
+        graphicalProperties?: IMessageGraphicalProperty[],
         coords?: {x: number, y: number},
     }
 }

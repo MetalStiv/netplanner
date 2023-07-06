@@ -30,6 +30,7 @@ import ObjectPropertiesPanel from './rightPanelBar/ObjectPropertiesPanel';
 import GraphicalPropertiesPanel from './rightPanelBar/GraphicalPropertiesPanel';
 import floorPlanGroup from '../../model/shapes/floorplanShapes/FloorPlanGroup';
 import { CursorPositionAction } from '../../model/actions/CursorPositionAction';
+import UserCursor from '../../model/projectData/UserCursor';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {

@@ -22,27 +22,26 @@ export class ChangeShapePropertyAction implements IAction {
     }
     // getKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T) =>
     // obj[key];
-
-    do(): boolean {
-        this.shape.config.graphicalProperties = this.newProperties;
-        // this.graphProps[this.property as keyof IShapeGraphicalProps].value = this.nextState;
-
-        // this.getKeyValue<keyof IShapeGraphicalProps, IShapeGraphicalProps>(this.property)(this.graphProps)
-        return true;
-    }
     undo(): void {
         this.shape.config.graphicalProperties = this.oldProperties;
         // this.item.value = this.prevState;
         // this.graphProps[this.property as keyof IShapeGraphicalProps].value = this.prevState;
     }
 
-    getMessage(): IMessage {
+    do(): IMessage {
+        const messageProperties: {l: string, v: string}[] = []
+        let graphicalProperty: keyof typeof this.shape.config.graphicalProperties; 
+        for (graphicalProperty in this.shape.config.graphicalProperties){
+            messageProperties.push({l: graphicalProperty, 
+                v: this.shape.config.graphicalProperties[graphicalProperty].value})
+        }
+
         return {
             type: ActionType.CHANGE_GRAPHICAL_PROPERTY,
             layerId: this.layerID,
             shapeId: this.shape.config.id,
             data: {
-                graphicalProperties: this.newProperties
+                graphicalProperties: messageProperties
                 // id, property
             }
         }

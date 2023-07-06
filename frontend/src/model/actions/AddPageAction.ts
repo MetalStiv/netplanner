@@ -16,15 +16,11 @@ export class AddPageAction implements IAction {
         name && (this.name = name);
     }
 
-    do(): boolean {
-        return true;
-    }
-
     undo(): void {
         // this.currentPage
     }
 
-    getMessage(): IMessage {
+    do(): IMessage {
         return {
             type: ActionType.ADD_PAGE,
             data: {

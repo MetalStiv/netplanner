@@ -1,14 +1,14 @@
 import IShapeCreator from "../IShapeCreator";
 import { ShapeType } from "../ShapeType";
-import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 import { TShapeInflater } from "../shapeInflaters";
-import { IMessageShape } from "../../message/IMessageShape";
+import { IMessageGraphicalProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
 interface ILineGraphicalProps extends IShapeGraphicalProps {
-    x2: IGraphicalProperty,
-    y2: IGraphicalProperty,
-    strokeColor: IGraphicalProperty,
+    [GraphicalPropertyTypes.X2]: IGraphicalProperty,
+    [GraphicalPropertyTypes.Y2]: IGraphicalProperty,
+    [GraphicalPropertyTypes.STROKE_COLOR]: IGraphicalProperty,
 }
 
 interface ILineConfig extends IShapeConfig {
@@ -25,39 +25,39 @@ export const lineInflater: TShapeInflater = async (messageShape: IMessageShape) 
         id: messageShape.id,
         zIndex: messageShape.zIndex,
         graphicalProperties: {
-            x: {
+            [GraphicalPropertyTypes.X]: {
                 label: "X",
-                value: messageShape.graphicalProperties.x.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.X)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            y: {
+            [GraphicalPropertyTypes.Y]: {
                 label: "Y",
-                value: messageShape.graphicalProperties.y.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            pivot: {
+            [GraphicalPropertyTypes.PIVOT]: {
                 label: 'Pivot',
-                value: messageShape.graphicalProperties.pivot!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            x2: {
+            [GraphicalPropertyTypes.X2]: {
                 label: 'x2',
-                value: messageShape.graphicalProperties.x2!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.X2)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            y2: {
+            [GraphicalPropertyTypes.Y2]: {
                 label: 'y2',
-                value: messageShape.graphicalProperties.y2!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.Y2)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            strokeColor: {
+            [GraphicalPropertyTypes.STROKE_COLOR]: {
                 label: 'Stroke Color',
-                value: messageShape.graphicalProperties.strokeColor!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             }
@@ -70,37 +70,37 @@ export class LineCreator implements IShapeCreator {
     create() {
         return new Line({
             graphicalProperties: {
-                x: {
+                [GraphicalPropertyTypes.X]: {
                     label: 'X',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                y: {
+                [GraphicalPropertyTypes.Y]: {
                     label: 'Y',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                pivot: {
+                [GraphicalPropertyTypes.PIVOT]: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                x2: {
+                [GraphicalPropertyTypes.X2]: {
                     label: 'x2',
                     value: '15',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                y2: {
+                [GraphicalPropertyTypes.Y2]: {
                     label: 'y2',
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                strokeColor: {
+                [GraphicalPropertyTypes.STROKE_COLOR]: {
                     label: 'Stroke Color',
                     value: '#000000',
                     isReadable: true,
@@ -123,6 +123,45 @@ class Line implements IShape {
         this.zIndex = obj.zIndex ?? 0;
     }
 
+    updateGraphicalProperties(m: IMessageGraphicalProperty[]){
+        this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
+            label: 'X',
+            value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.Y] = {
+            label: 'Y',
+            value: m.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.X2] = {
+            label: 'Width',
+            value: m.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.Y2] = {
+            label: 'Height',
+            value: m.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT] = {
+            label: 'Pivot',
+            value: m.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR] = {
+            label: 'Stroke Color',
+            value: m.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
+            isReadable: true,
+            editorType: EditorType.COLOR_EDITOR
+        };
+    }
+
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
         layerZIndex: number) {
@@ -131,14 +170,14 @@ class Line implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphicalProperties.strokeColor.value ?? 'black'}
+            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value ?? 'black'}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={
-                `M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value}
-                l ${this.config.graphicalProperties.x2.value},${this.config.graphicalProperties.y2.value}`
+                `M ${this.config.graphicalProperties[GraphicalPropertyTypes.X].value},${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value}
+                l ${this.config.graphicalProperties[GraphicalPropertyTypes.X2].value},${this.config.graphicalProperties[GraphicalPropertyTypes.Y2].value}`
             } />
     }
 }

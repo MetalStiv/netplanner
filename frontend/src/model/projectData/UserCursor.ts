@@ -24,20 +24,13 @@ class UserCursor {
     }
 
     async moveCursor(coord: {x: number, y: number}){
-        // const xStep: number = (coord.x-this.coord.x)/interpolationSteps;
-        // const yStep: number = (coord.x-this.coord.x)/interpolationSteps;
-
-        // for (let i = 0; i < interpolationSteps; i++) {
-        //     this.coord.x += xStep;
-        //     this.coord.y += yStep;
-        //     console.log(i+" - "+this.coord.x+" "+this.coord.y)
-        //     await new Promise(r => setTimeout(r, 1000/interpolationSteps)); 
-        // }
         this.prevCoord.x = this.coord.x;
         this.prevCoord.y = this.coord.y;
 
         this.coord.x = coord.x;
         this.coord.y = coord.y;
+
+        this.actionTime = Date.now();
     }
 }
 

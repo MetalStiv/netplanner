@@ -18,6 +18,7 @@ import { CursorPositionAction } from '../../model/actions/CursorPositionAction';
 import { cursorUpdateTime } from '../../common/constants';
 import { TUsersStore } from '../../stores/usersStore';
 import { TUserStore } from '../../stores/userStore';
+import UserCursor from '../../model/projectData/UserCursor';
 
 interface SVGCanvasProps {
     // currentPage: Page,
@@ -108,6 +109,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         })
         if (Date.now()-lastCursorUpdateTime > cursorUpdateTime){
             actionStore.push(new CursorPositionAction(projectStore.getProject()?.getCurrentPage()!, coords))
+            projectStore.getProject()?.killOldCursors()
             setLastCursorUpdateTime(Date.now());
         }
     
@@ -127,11 +129,18 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
             x: cursorCoords.x,
             y: cursorCoords.y,
         })
-        const interval = setInterval(() => {
+        const intervalCursorPositions = setInterval(() => {
             actionStore.push(new CursorPositionAction(projectStore.getProject()?.getCurrentPage()!, coords))
         }, cursorUpdateTime);
+
+        const intervalKillOldCursors = setInterval(() => {
+            projectStore.getProject()?.killOldCursors()
+        }, cursorUpdateTime);
         
-          return () => clearInterval(interval);
+        return () => {
+            clearInterval(intervalCursorPositions);
+            clearInterval(intervalKillOldCursors);
+        }
     }, [cursorCoords])
 
     const cursorAnimations = useSprings(

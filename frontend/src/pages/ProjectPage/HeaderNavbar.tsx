@@ -1,8 +1,6 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useRef, useState } from 'react';
 import IUser from '../../model/IUser';
-import avatar from '../../assets/images/user-avatar.png';
 import { useRootStore } from '../../providers/rootProvider';
-//import { useRootStore } from '../providers/rootProvider';
 
 const HeaderNavbar: React.FC = () => {
     const userStore = useRootStore()?.getUserStore()
@@ -11,13 +9,15 @@ const HeaderNavbar: React.FC = () => {
 
     const [collapsePanelIsOpen, setCollapsePanelIsOpen] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<string>('Page 1');
+    const [showCursorsPanel, setShowCursorsPanel] = useState<boolean>(false);
+    const userCursorAddictive = useRef<HTMLDivElement | null>(null);
 
     const pageButtonClickHandler = (e: SyntheticEvent<HTMLElement, MouseEvent>) => {
         setCurrentPage(e.currentTarget.innerText);
         setCollapsePanelIsOpen(false);
     }
 
-    const maxCursorQuantity: number = 5;
+    const maxCursorQuantity: number = 6;
 
     return (
         <div id="header-navbar">
@@ -44,7 +44,7 @@ const HeaderNavbar: React.FC = () => {
                                             </div>
                                         }
                                         if (index === maxCursorQuantity){
-                                            return <div className="user-cursor-addictive">
+                                            return <div ref={userCursorAddictive} className="user-cursor-addictive" onClick={() => setShowCursorsPanel(!showCursorsPanel)}>
                                                 +{projectStore.getProject()?.getCursors()!.filter(c => c.userId !== userStore.getData()?.id)!.length!-maxCursorQuantity}
                                                 </div>
                                         }
@@ -64,6 +64,37 @@ const HeaderNavbar: React.FC = () => {
                     <img className='user-image' src={userStore?.getData()?.avatarBase64} alt={userStore?.getData()?.name} />
                 </div>
             </div>
+
+            {
+                showCursorsPanel && <div className="cursor-panel" style={{left: +(userCursorAddictive.current?.offsetLeft || 0)-250}}>
+                    {
+                        projectStore.getProject()?.getCursors()!
+                            .filter(c => c.userId !== userStore.getData()?.id)!
+                            .map((c, index) => {
+                                if (index < maxCursorQuantity){
+                                    return ''
+                                }
+                                else {
+                                    const u: IUser = usersStore.getData()?.find(u => u.id === c.userId)! ?? "lawf";
+                                    return <>
+                                        {
+                                            index > maxCursorQuantity && <hr className="separator" />
+                                        }
+                                        <div className="addicitve-user-info">
+                                            <img key={"icon_"+u.id} src={u.avatarBase64} alt={u.name}
+                                                style={{border: '2px solid '+c.color, marginTop: '1vh', height: '28px', width: '28px', borderRadius: '50%'}}/>
+                                            <div className="addicitve-user-name">
+                                            {
+                                                usersStore.getData().find(u => u.id === c.userId)?.name
+                                            }
+                                            </div>
+                                        </div>
+                                    </>
+                                }
+                            })
+                    }
+                </div>
+            }
         </div>
     )
 }

@@ -1,6 +1,6 @@
 export interface IGraphicalProperty {
-    label: string,
-    value: string,
+    l: string,
+    v: string,
 }
 
 export interface IShapeGraphicalProperties {

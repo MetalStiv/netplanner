@@ -16,13 +16,9 @@ export class CursorPositionAction implements IAction {
         this.cursorCoords = cursorCoords;
     }
 
-    do(): boolean {
-        return true;
-    }
-
     undo(): void {}
 
-    getMessage(): IMessage {
+    do(): IMessage {
         return {
             type: ActionType.CURSOR_POSITION,
             pageId: this.currentPage.getID(),

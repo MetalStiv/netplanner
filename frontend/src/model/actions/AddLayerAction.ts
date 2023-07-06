@@ -15,16 +15,11 @@ export class AddLayerAction implements IAction {
         name && (this.name = name);
     }
 
-    do(): boolean {
-        return true;
-    }
-
     undo(): void {
         // this.currentPage
     }
 
-    getMessage(): IMessage {
-
+    do(): IMessage {
         return {
             type: ActionType.ADD_LAYER,
             pageId: this.currentPage.getID(),

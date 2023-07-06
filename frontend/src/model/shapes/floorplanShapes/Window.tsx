@@ -1,15 +1,15 @@
 import IShapeCreator from "../IShapeCreator";
 import { TShapeInflater } from "../shapeInflaters";
 import { ShapeType } from "../ShapeType";
-import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
-import { IMessageShape } from "../../message/IMessageShape";
+import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import { IMessageGraphicalProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
 interface IWindowProps extends IShapeGraphicalProps {
-    width: IGraphicalProperty,
-    height: IGraphicalProperty,
-    fillColorOne: IGraphicalProperty,
-    strokeColor: IGraphicalProperty,
+    [GraphicalPropertyTypes.WIDTH]: IGraphicalProperty,
+    [GraphicalPropertyTypes.HEIGHT]: IGraphicalProperty,
+    [GraphicalPropertyTypes.FILL_COLOR_ONE]: IGraphicalProperty,
+    [GraphicalPropertyTypes.STROKE_COLOR]: IGraphicalProperty,
 }
 
 export interface IWindowConfig extends IShapeConfig {
@@ -26,45 +26,45 @@ export const windowInflater: TShapeInflater = async (messageShape: IMessageShape
         id: messageShape.id,
         zIndex: messageShape.zIndex,
         graphicalProperties: {
-            x: {
+            [GraphicalPropertyTypes.X]: {
                 label: "X",
-                value: messageShape.graphicalProperties.x.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.X)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            y: {
+            [GraphicalPropertyTypes.Y]: {
                 label: "Y",
-                value: messageShape.graphicalProperties.y.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            pivot: {
+            [GraphicalPropertyTypes.PIVOT]: {
                 label: "Pivot",
-                value: messageShape.graphicalProperties.pivot!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            width: {
+            [GraphicalPropertyTypes.WIDTH]: {
                 label: "Width",
-                value: messageShape.graphicalProperties.width!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            height: {
+            [GraphicalPropertyTypes.HEIGHT]: {
                 label: "Height",
-                value: messageShape.graphicalProperties.height!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            fillColorOne: {
+            [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
                 label: 'Fill Color One',
-                value: messageShape.graphicalProperties.fillColorOne!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
-            strokeColor: {
+            [GraphicalPropertyTypes.STROKE_COLOR]: {
                 label: 'Stroke',
-                value: messageShape.graphicalProperties.strokeColor!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
@@ -77,45 +77,45 @@ export class WindowCreator implements IShapeCreator {
     create() {
         return new Window({
             graphicalProperties: {
-                x: {
+                [GraphicalPropertyTypes.X]: {
                     label: 'X',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                y: {
+                [GraphicalPropertyTypes.Y]: {
                     label: 'Y',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                width: {
+                [GraphicalPropertyTypes.WIDTH]: {
                     label: 'Width',
                     value: '80',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                height: {
+                [GraphicalPropertyTypes.HEIGHT]: {
                     label: 'Height',
                     value: '19',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                pivot: {
+                [GraphicalPropertyTypes.PIVOT]: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
 
-                strokeColor: {
+                [GraphicalPropertyTypes.STROKE_COLOR]: {
                     label: 'Stroke Color',
                     value: '#000000',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
                 },
 
-                fillColorOne: {
+                [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
                     label: 'Fill Color One',
                     value: '#ffffff',
                     isReadable: true,
@@ -137,6 +137,52 @@ class Window implements IShape {
         this.config.zIndex = obj.zIndex ?? 0;
     }
 
+    updateGraphicalProperties(m: IMessageGraphicalProperty[]){
+        this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
+            label: 'X',
+            value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.Y] = {
+            label: 'Y',
+            value: m.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH] = {
+            label: 'Width',
+            value: m.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT] = {
+            label: 'Height',
+            value: m.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT] = {
+            label: 'Pivot',
+            value: m.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR] = {
+            label: 'Stroke Color',
+            value: m.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
+            isReadable: true,
+            editorType: EditorType.COLOR_EDITOR
+        };
+
+        this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE] = {
+            label: 'Fill Color One',
+            value: m.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
+            isReadable: true,
+            editorType: EditorType.COLOR_EDITOR
+        }
+    }
+
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
         layerZIndex: number) {
@@ -145,26 +191,26 @@ class Window implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphicalProperties.strokeColor?.value}
-            fill={this.config.graphicalProperties.fillColorOne?.value}
+            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
+            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
             fillRule="evenodd"
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
-            transform={`rotate(${this.config.graphicalProperties.pivot.value} 
-                ${+this.config.graphicalProperties.x.value + (+this.config.graphicalProperties.width.value / 2)} 
-                ${+this.config.graphicalProperties.y.value + (+this.config.graphicalProperties.height.value / 2)})`}
+            transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value} 
+                ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
+                ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}
             d={`
-                M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value} 
-                l ${this.config.graphicalProperties.width.value} 0
-                l 0 ${+this.config.graphicalProperties.height.value * 0.5}
-                l -${this.config.graphicalProperties.width.value} 0
-                l 0 -${+this.config.graphicalProperties.height.value * 0.5}
-                m 0 ${+this.config.graphicalProperties.height.value * 0.5}
-                l 0 ${+this.config.graphicalProperties.height.value * 0.5}
-                l ${this.config.graphicalProperties.width.value} 0
-                l 0 -${+this.config.graphicalProperties.height.value * 0.5}
+                M ${this.config.graphicalProperties[GraphicalPropertyTypes.X].value},${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
+                l ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
+                l -${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
+                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
+                m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
+                l ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
+                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
             `}
         />
     }

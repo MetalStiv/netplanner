@@ -1,15 +1,15 @@
 import IShapeCreator from "../IShapeCreator";
 import { ShapeType } from "../ShapeType";
-import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
 import { TShapeInflater } from "../shapeInflaters";
-import { IMessageShape } from "../../message/IMessageShape";
+import { IMessageGraphicalProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
 interface IRectGraphicalProps extends IShapeGraphicalProps {
-    width: IGraphicalProperty,
-    height: IGraphicalProperty,
-    strokeColor: IGraphicalProperty,
-    fillColorOne: IGraphicalProperty
+    [GraphicalPropertyTypes.WIDTH]: IGraphicalProperty,
+    [GraphicalPropertyTypes.HEIGHT]: IGraphicalProperty,
+    [GraphicalPropertyTypes.STROKE_COLOR]: IGraphicalProperty,
+    [GraphicalPropertyTypes.FILL_COLOR_ONE]: IGraphicalProperty
 }
 
 interface IRectConfig extends IShapeConfig {
@@ -26,45 +26,45 @@ export const rectInflater: TShapeInflater = async (messageShape: IMessageShape) 
         id: messageShape.id,
         zIndex: messageShape.zIndex,
         graphicalProperties: {
-            x: {
+            [GraphicalPropertyTypes.X]: {
                 label: "X",
-                value: messageShape.graphicalProperties.x.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.X)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            y: {
+            [GraphicalPropertyTypes.Y]: {
                 label: "Y",
-                value: messageShape.graphicalProperties.y.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            pivot: {
+            [GraphicalPropertyTypes.PIVOT]: {
                 label: 'Pivot',
-                value: messageShape.graphicalProperties.pivot!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            width: {
+            [GraphicalPropertyTypes.WIDTH]: {
                 label: 'Width',
-                value: messageShape.graphicalProperties.width!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            height: {
+            [GraphicalPropertyTypes.HEIGHT]: {
                 label: 'Height',
-                value: messageShape.graphicalProperties.height!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            strokeColor: {
+            [GraphicalPropertyTypes.STROKE_COLOR]: {
                 label: 'Stroke Color',
-                value: messageShape.graphicalProperties.strokeColor!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
-            fillColorOne: {
+            [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
                 label: 'Fill Color One',
-                value: messageShape.graphicalProperties.fillColorOne!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
@@ -77,43 +77,43 @@ export class RectCreator implements IShapeCreator {
     create() {
         return new Rect({
             graphicalProperties: {
-                x: {
+                [GraphicalPropertyTypes.X]: {
                     label: 'X',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                y: {
+                [GraphicalPropertyTypes.Y]: {
                     label: 'Y',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                pivot: {
+                [GraphicalPropertyTypes.PIVOT]: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                width: {
+                [GraphicalPropertyTypes.WIDTH]: {
                     label: 'Width',
                     value: '45',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                height: {
+                [GraphicalPropertyTypes.HEIGHT]: {
                     label: 'Height',
                     value: '30',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                strokeColor: {
+                [GraphicalPropertyTypes.STROKE_COLOR]: {
                     label: 'Stroke Color',
                     value: '#000000',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
                 },
-                fillColorOne: {
+                [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
                     label: 'Fill Color One',
                     value: '#ffffff',
                     isReadable: true,
@@ -136,6 +136,52 @@ class Rect implements IShape {
         this.zIndex = obj.zIndex ?? 0;
     }
 
+    updateGraphicalProperties(m: IMessageGraphicalProperty[]){
+        this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
+            label: 'X',
+            value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.Y] = {
+            label: 'Y',
+            value: m.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH] = {
+            label: 'Width',
+            value: m.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT] = {
+            label: 'Height',
+            value: m.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT] = {
+            label: 'Pivot',
+            value: m.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR] = {
+            label: 'Stroke Color',
+            value: m.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
+            isReadable: true,
+            editorType: EditorType.COLOR_EDITOR
+        };
+
+        this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE] = {
+            label: 'Fill Color One',
+            value: m.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
+            isReadable: true,
+            editorType: EditorType.COLOR_EDITOR
+        }
+    }
+
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
         layerZIndex: number) {
@@ -144,17 +190,17 @@ class Rect implements IShape {
             key={this.config.id}
             data-type={this.type}
             role="shape"
-            stroke={this.config.graphicalProperties.strokeColor.value ?? 'black'}
-            fill={this.config.graphicalProperties.fillColorOne.value ?? 'black'}
+            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value ?? 'black'}
+            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value ?? 'black'}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             d={
-                `M${this.config.graphicalProperties.x.value} ${this.config.graphicalProperties.y.value} 
-                h ${this.config.graphicalProperties.width.value ?? 15}
-                v ${this.config.graphicalProperties.height.value ?? 10}
-                h -${this.config.graphicalProperties.width.value ?? 15}
+                `M${this.config.graphicalProperties[GraphicalPropertyTypes.X].value} ${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
+                h ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value ?? 15}
+                v ${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value ?? 10}
+                h -${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value ?? 15}
                 Z`
             }
         />

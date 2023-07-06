@@ -112,7 +112,9 @@ class Project implements IProject {
     }
 
     addCursor(userCursor: UserCursor){
-        this[userCursorsSym] = [...this[userCursorsSym], userCursor]
+        if (!this[userCursorsSym].find(c => c.userId === userCursor.userId)){
+            this[userCursorsSym] = [...this[userCursorsSym], userCursor]
+        }
     }
 
     async moveCursor(userId: string, coord: {x: number, y: number}){

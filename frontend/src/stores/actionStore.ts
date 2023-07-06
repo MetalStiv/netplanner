@@ -31,10 +31,7 @@ export const createActionStore = () => {
                 this[actionsSymbol].length === this[maxSizeSymbol] && this[actionsSymbol].shift();
                 this[actionsSymbol].push(action);
             }
-            // else {
-            //     console.log(JSON.stringify(action.getMessage()))
-            // }
-            this[messageSenderSymbol] && this[messageSenderSymbol]!(JSON.stringify(action.getMessage()))
+            this[messageSenderSymbol] && this[messageSenderSymbol]!(JSON.stringify(action.do()))
         },
 
         pop() {

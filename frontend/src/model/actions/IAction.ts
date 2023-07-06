@@ -2,7 +2,6 @@ import { IMessage } from "../message/IMessage";
 
 export interface IAction {
     storeHistory: boolean,
-    do(): boolean,
+    do(): IMessage,
     undo(): void,
-    getMessage(): IMessage
 }

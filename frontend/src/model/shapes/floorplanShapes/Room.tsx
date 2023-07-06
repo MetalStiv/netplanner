@@ -1,18 +1,18 @@
 import IShapeCreator from "../IShapeCreator";
 import { TShapeInflater } from "../shapeInflaters";
 import { ShapeType } from "../ShapeType";
-import IShape, { IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
-import { IMessageShape } from "../../message/IMessageShape";
+import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
+import { IMessageGraphicalProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
 interface IRoomProps extends IShapeGraphicalProps {
-    width: IGraphicalProperty,
-    height: IGraphicalProperty,
-    fillColorOne: IGraphicalProperty,
-    leftWidth: IGraphicalProperty,
-    rightWidth: IGraphicalProperty,
-    topWidth: IGraphicalProperty,
-    bottomWidth: IGraphicalProperty,
+    [GraphicalPropertyTypes.WIDTH]: IGraphicalProperty,
+    [GraphicalPropertyTypes.HEIGHT]: IGraphicalProperty,
+    [GraphicalPropertyTypes.FILL_COLOR_ONE]: IGraphicalProperty,
+    [GraphicalPropertyTypes.LEFT_WIDTH]: IGraphicalProperty,
+    [GraphicalPropertyTypes.RIGHT_WIDTH]: IGraphicalProperty,
+    [GraphicalPropertyTypes.TOP_WIDTH]: IGraphicalProperty,
+    [GraphicalPropertyTypes.BOTTOM_WIDTH]: IGraphicalProperty,
 }
 
 export interface IRoomConfig extends IShapeConfig {
@@ -29,63 +29,63 @@ export const roomInflater: TShapeInflater = async (messageShape: IMessageShape) 
         id: messageShape.id,
         zIndex: messageShape.zIndex,
         graphicalProperties: {
-            x: {
+            [GraphicalPropertyTypes.X]: {
                 label: "X",
-                value: messageShape.graphicalProperties.x.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.X)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            y: {
+            [GraphicalPropertyTypes.Y]: {
                 label: "Y",
-                value: messageShape.graphicalProperties.y.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            fillColorOne: {
+            [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
                 label: 'Fill Color One',
-                value: messageShape.graphicalProperties.fillColorOne!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
-            leftWidth: {
+            [GraphicalPropertyTypes.LEFT_WIDTH]: {
                 label: "Left width",
-                value: messageShape.graphicalProperties.leftWidth!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.LEFT_WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            rightWidth: {
+            [GraphicalPropertyTypes.RIGHT_WIDTH]: {
                 label: "Right width",
-                value: messageShape.graphicalProperties.rightWidth!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.RIGHT_WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            topWidth: {
+            [GraphicalPropertyTypes.TOP_WIDTH]: {
                 label: "Top width",
-                value: messageShape.graphicalProperties.topWidth!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.TOP_WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            bottomWidth: {
+            [GraphicalPropertyTypes.BOTTOM_WIDTH]: {
                 label: "Bottom width",
-                value: messageShape.graphicalProperties.bottomWidth!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.BOTTOM_WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            width: {
+            [GraphicalPropertyTypes.WIDTH]: {
                 label: "Width",
-                value: messageShape.graphicalProperties.width!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            height: {
+            [GraphicalPropertyTypes.HEIGHT]: {
                 label: "Height",
-                value: messageShape.graphicalProperties.height!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            pivot: {
+            [GraphicalPropertyTypes.PIVOT]: {
                 label: "Pivot",
-                value: messageShape.graphicalProperties.pivot!.value,
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             }
@@ -98,61 +98,61 @@ export class RoomCreator implements IShapeCreator {
     create() {
         return new Room({
             graphicalProperties: {
-                x: {
+                [GraphicalPropertyTypes.X]: {
                     label: 'X',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                y: {
+                [GraphicalPropertyTypes.Y]: {
                     label: 'Y',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                pivot: {
+                [GraphicalPropertyTypes.PIVOT]: {
                     label: 'Pivot',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                width: {
+                [GraphicalPropertyTypes.WIDTH]: {
                     label: 'Width',
                     value: '300',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                height: {
+                [GraphicalPropertyTypes.HEIGHT]: {
                     label: 'Height',
                     value: '250',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                fillColorOne: {
+                [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
                     label: 'Fill Color One',
                     value: '#000000',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
                 },
-                leftWidth: {
+                [GraphicalPropertyTypes.LEFT_WIDTH]: {
                     label: "Left width",
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                rightWidth: {
+                [GraphicalPropertyTypes.RIGHT_WIDTH]: {
                     label: "Right width",
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                topWidth: {
+                [GraphicalPropertyTypes.TOP_WIDTH]: {
                     label: "Top width",
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                bottomWidth: {
+                [GraphicalPropertyTypes.BOTTOM_WIDTH]: {
                     label: "Bottom width",
                     value: '20',
                     isReadable: true,
@@ -174,6 +174,69 @@ class Room implements IShape {
         this.config.zIndex = obj.zIndex ?? 0;
     }
 
+    updateGraphicalProperties(m: IMessageGraphicalProperty[]){
+        this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
+            label: 'X',
+            value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.Y] = {
+            label: 'Y',
+            value: m.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH] = {
+            label: 'Width',
+            value: m.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT] = {
+            label: 'Height',
+            value: m.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT] = {
+            label: 'Pivot',
+            value: m.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE] = {
+            label: 'Fill Color One',
+            value: m.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
+            isReadable: true,
+            editorType: EditorType.COLOR_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH] = {
+            label: 'Left width',
+            value: m.find(p => p.l === GraphicalPropertyTypes.LEFT_WIDTH)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH] = {
+            label: 'Right width',
+            value: m.find(p => p.l === GraphicalPropertyTypes.RIGHT_WIDTH)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH] = {
+            label: 'Top width',
+            value: m.find(p => p.l === GraphicalPropertyTypes.TOP_WIDTH)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.BOTTOM_WIDTH] = {
+            label: 'Bottom width',
+            value: m.find(p => p.l === GraphicalPropertyTypes.BOTTOM_WIDTH)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+    }
+
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
         handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
         layerZIndex: number) {
@@ -183,40 +246,40 @@ class Room implements IShape {
             data-type={this.type}
             role="shape"
             stroke="none"
-            fill={this.config.graphicalProperties.fillColorOne?.value}
+            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
-            transform={`rotate(${this.config.graphicalProperties.pivot.value} 
-                ${+this.config.graphicalProperties.x.value + (+this.config.graphicalProperties.width.value / 2)} 
-                ${+this.config.graphicalProperties.y.value + (+this.config.graphicalProperties.height.value / 2)})`}
+            transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value} 
+                ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
+                ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}
             d={`
-                M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value} 
-                l 0 ${this.config.graphicalProperties.height.value}
-                l ${this.config.graphicalProperties.leftWidth.value} 0
-                l 0 -${this.config.graphicalProperties.height.value}
-                l -${this.config.graphicalProperties.leftWidth.value} 0
+                M ${this.config.graphicalProperties[GraphicalPropertyTypes.X].value},${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
+                l 0 ${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
+                l ${this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
+                l 0 -${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
+                l -${this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
 
-                m ${this.config.graphicalProperties.leftWidth.value} 0
-                l ${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.leftWidth.value} 0
-                l 0 ${this.config.graphicalProperties.topWidth.value}
-                l -${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.leftWidth.value} 0
-                l 0 -${this.config.graphicalProperties.topWidth.value}
+                m ${this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
+                l 0 ${this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value}
+                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
+                l 0 -${this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value}
 
-                m ${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.leftWidth.value}
-                    ${this.config.graphicalProperties.topWidth.value} 
-                l -${this.config.graphicalProperties.rightWidth.value} 0
-                l 0 ${+this.config.graphicalProperties.height.value - +this.config.graphicalProperties.topWidth.value}
-                l ${this.config.graphicalProperties.rightWidth.value} 0
-                l 0 -${+this.config.graphicalProperties.height.value - +this.config.graphicalProperties.topWidth.value}
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value}
+                    ${this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value} 
+                l -${this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value} 0
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value - +this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value}
+                l ${this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value} 0
+                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value - +this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value}
 
-                m -${this.config.graphicalProperties.rightWidth.value}
-                    ${+this.config.graphicalProperties.height.value - +this.config.graphicalProperties.topWidth.value} 
-                l -${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.rightWidth.value - +this.config.graphicalProperties.leftWidth.value} 0
-                l 0 -${this.config.graphicalProperties.bottomWidth.value}
-                l ${+this.config.graphicalProperties.width.value - +this.config.graphicalProperties.rightWidth.value - +this.config.graphicalProperties.leftWidth.value} 0
-                l 0 ${this.config.graphicalProperties.bottomWidth.value}
+                m -${this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value}
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value - +this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value} 
+                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
+                l 0 -${this.config.graphicalProperties[GraphicalPropertyTypes.BOTTOM_WIDTH].value}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
+                l 0 ${this.config.graphicalProperties[GraphicalPropertyTypes.BOTTOM_WIDTH].value}
                 `}
         />
     }
