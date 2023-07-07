@@ -9,13 +9,13 @@ import { useRootStore } from "../../../providers/rootProvider";
 import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
 import { TUsersStore } from "../../../stores/usersStore";
 
-interface IShareModalFormProps{
+interface IShareModalFormProps {
     projectMeta: IProjectMeta,
     close: () => void,
     updateProjects: () => void
 }
 
-const ShareModalForm: React.FC<IShareModalFormProps> = observer(({projectMeta, close, updateProjects}) => {
+const ShareModalForm: React.FC<IShareModalFormProps> = observer(({ projectMeta, close, updateProjects }) => {
     const lang: LanguageData | null = useLanguageContext();
     const [emailValue, setEmailValue] = useState<string>();
     const [permissionValue, setPermissionValue] = useState<string>('0');
@@ -28,18 +28,18 @@ const ShareModalForm: React.FC<IShareModalFormProps> = observer(({projectMeta, c
             email: emailValue,
             permission: permissionValue,
         })
-        if (invite.status === 200){
+        if (invite.status === 200) {
             updateProjects()
         }
     }
 
     const revokeInvite = async (id: string) => {
         const invite = await projectMicroservice.delete('revokeInvite', { data: { id: id } })
-        if (invite.status === 200){
+        if (invite.status === 200) {
             updateProjects()
-        } 
+        }
     }
-    
+
     return (
         <React.Fragment>
             <div className="modal">
@@ -47,7 +47,7 @@ const ShareModalForm: React.FC<IShareModalFormProps> = observer(({projectMeta, c
                     <div className="show-form-panel">
                         <div className="show-form-header">
                             <div className="show-form-title">
-                                {lang?.langText.userPage.projectTab.sharingForm.title+projectMeta.name}
+                                {lang?.langText.userPage.projectTab.sharingForm.title + projectMeta.name}
                             </div>
                             <div className="close-icon" onClick={() => close()}>x
                             </div>
@@ -74,38 +74,38 @@ const ShareModalForm: React.FC<IShareModalFormProps> = observer(({projectMeta, c
                         </div>
 
                         <div className="show-form-data">
-                        {
-                            projectMeta.invites.map(i => (
-                                <div className="invite-data-row" key={i.id}>
-                                    <div className="invite-data-icon">
-                                        <img src={usersStore.getData()?.find(u => u.id === i.userId)!.avatarBase64} />
-                                    </div>
-                                    <div className="invite-data-user-name">{usersStore.getData().find(u => u.id === i.userId)?.name}</div>
-                                    <div className="invite-data-permission">{i.permission === 0 ? lang?.langText.userPage.projectTab.sharingForm.fullAccess : 
-                                        lang?.langText.userPage.projectTab.sharingForm.readonly}</div>
-                                    <div className="invite-data-state">
-                                    {
-                                        i.state === 0 ? <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="15" cy="15" r="13.5" stroke="#FED059" stroke-width="3"/>
-                                                <path d="M12 5L15 16" stroke="#FED059" stroke-width="2" stroke-linecap="round"/>
-                                                <path d="M20 20L15 15.88" stroke="#FED059" stroke-width="2" stroke-linecap="round"/>
-                                            </svg>
-                                            : i.state === 1 ? <svg width="31" height="29" viewBox="0 0 31 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M3 13.2903L13.4167 27" stroke="#80FF54" stroke-width="4" stroke-linecap="round"/>
-                                                    <path d="M28 2L14.4583 26.1935" stroke="#80FF54" stroke-width="4" stroke-linecap="round"/>
+                            {
+                                projectMeta.invites.map(i => (
+                                    <div className="invite-data-row" key={i.id}>
+                                        <div className="invite-data-icon">
+                                            <img src={usersStore.getData()?.find(u => u.id === i.userId)!.avatarBase64} />
+                                        </div>
+                                        <div className="invite-data-user-name">{usersStore.getData().find(u => u.id === i.userId)?.name}</div>
+                                        <div className="invite-data-permission">{i.permission === 0 ? lang?.langText.userPage.projectTab.sharingForm.fullAccess :
+                                            lang?.langText.userPage.projectTab.sharingForm.readonly}</div>
+                                        <div className="invite-data-state">
+                                            {
+                                                i.state === 0 ? <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="15" cy="15" r="13.5" stroke="#FED059" strokeWidth="3" />
+                                                    <path d="M12 5L15 16" stroke="#FED059" strokeWidth="2" strokeLinecap="round" />
+                                                    <path d="M20 20L15 15.88" stroke="#FED059" strokeWidth="2" strokeLinecap="round" />
                                                 </svg>
-                                            : <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M26 2L3 27" stroke="#FF7557" stroke-width="4" stroke-linecap="round"/>
-                                                <path d="M3.91992 2L25.9999 27" stroke="#FF7557" stroke-width="4" stroke-linecap="round"/>
-                                            </svg>
-                                    }
+                                                    : i.state === 1 ? <svg width="31" height="29" viewBox="0 0 31 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M3 13.2903L13.4167 27" stroke="#80FF54" strokeWidth="4" strokeLinecap="round" />
+                                                        <path d="M28 2L14.4583 26.1935" stroke="#80FF54" strokeWidth="4" strokeLinecap="round" />
+                                                    </svg>
+                                                        : <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M26 2L3 27" stroke="#FF7557" strokeWidth="4" strokeLinecap="round" />
+                                                            <path d="M3.91992 2L25.9999 27" stroke="#FF7557" strokeWidth="4" strokeLinecap="round" />
+                                                        </svg>
+                                            }
+                                        </div>
+                                        <button className="invite-data-revoke-button" onClick={() => revokeInvite(i.id)}>
+                                            {lang?.langText.userPage.projectTab.sharingForm.revoke}
+                                        </button>
                                     </div>
-                                    <button className="invite-data-revoke-button" onClick={() => revokeInvite(i.id)}>
-                                        {lang?.langText.userPage.projectTab.sharingForm.revoke}
-                                    </button>
-                                </div>
-                            ))
-                        }
+                                ))
+                            }
                         </div>
                     </div>
                 </div>

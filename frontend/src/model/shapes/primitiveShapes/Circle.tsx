@@ -27,13 +27,13 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
         graphicalProperties: {
             x: {
                 label: "X",
-                value: messageShape.graphicalProperties.x.value,
+                value: messageShape.graphicalProperties.x,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
-                value: messageShape.graphicalProperties.y.value,
+                value: messageShape.graphicalProperties.y,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
@@ -45,19 +45,19 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
             },
             r: {
                 label: "Radius",
-                value: messageShape.graphicalProperties.r!.value,
+                value: messageShape.graphicalProperties.r!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             strokeColor: {
                 label: "Stroke Color",
-                value: messageShape.graphicalProperties.strokeColor!.value,
+                value: messageShape.graphicalProperties.strokeColor!,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
             fillColorOne: {
                 label: "Fill Color One",
-                value: messageShape.graphicalProperties.fillColorOne!.value,
+                value: messageShape.graphicalProperties.fillColorOne!,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },

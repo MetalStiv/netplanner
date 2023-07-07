@@ -25,6 +25,6 @@ export interface IMessage {
         newLayer?: IMessageLayer,
         isVisible?: boolean,
         newPage?: IMessagePage,
-        graphicalProperties?: IShapeGraphicalProps
+        graphicalProperties?: { x: string, y: string, pivot: string }
     }
 }

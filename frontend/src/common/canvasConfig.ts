@@ -19,10 +19,8 @@ interface ICanvasConfig {
 export const Portrait: ICanvasConfig = {
     a4Width: 1050,
     a4Height: 1485,
-    // widthInSheets: 17,
-    // heightInSheets: 12,
-    widthInSheets: 1,
-    heightInSheets: 1,
+    widthInSheets: 17,
+    heightInSheets: 12,
     offsetX: 200,
     offsetY: 100,
     get canvasWidth(): number { return this.a4Width * this.widthInSheets + this.offsetX * 2 },

@@ -28,13 +28,13 @@ export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShap
         graphicalProperties: {
             x: {
                 label: "X",
-                value: messageShape.graphicalProperties.x.value,
+                value: messageShape.graphicalProperties.x,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
-                value: messageShape.graphicalProperties.y.value,
+                value: messageShape.graphicalProperties.y,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
@@ -46,25 +46,25 @@ export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShap
             },
             rx: {
                 label: "rx",
-                value: messageShape.graphicalProperties.rx!.value,
+                value: messageShape.graphicalProperties.rx!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             ry: {
                 label: "ry",
-                value: messageShape.graphicalProperties.ry!.value,
+                value: messageShape.graphicalProperties.ry!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             strokeColor: {
                 label: "Stroke Color",
-                value: messageShape.graphicalProperties.strokeColor!.value,
+                value: messageShape.graphicalProperties.strokeColor!,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
             fillColorOne: {
                 label: "Fill Color One",
-                value: messageShape.graphicalProperties.fillColorOne!.value,
+                value: messageShape.graphicalProperties.fillColorOne!,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },

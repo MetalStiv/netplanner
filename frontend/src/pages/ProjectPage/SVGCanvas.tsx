@@ -28,10 +28,10 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     creatorOnDrop, getCursorCoordsCallback, getClickedShapeConfigCallback }: SVGCanvasProps) => {
     const [scale, setScale] = useState<number>(1);
     const [translate, setTranslate] = useState(
-        // { x: (canvasConfig.canvasWidth - canvasConfig.a4Width) / 2, y: -(canvasConfig.canvasHeight - canvasConfig.a4Height) / 2 }
+        { x: -canvasConfig.canvasWidth / 2, y: -canvasConfig.canvasHeight / 2 }
         // { x: canvasConfig.offsetX - , y: -(canvasConfig.canvasHeight - canvasConfig.a4Height) / 2 }
-        // { x: 30, y: 30 }
-        { x: 0, y: 0 }
+        // { x: -300, y: -300 }
+        // { x: 0, y: 0 }
     );
     const [isDrag, setIsDrag] = useState(false);
     const projectStore: TProjectStore = useRootStore().getProjectStore();
@@ -78,8 +78,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     //const userStore = useRootStore()?.getUserStore()
 
     useEffect(() => {
-        (svgCanvas.current?.closest('#canvas') as HTMLDivElement).addEventListener('wheel', wheelHandler);
-        return () => (svgCanvas.current?.closest('#canvas') as HTMLDivElement).removeEventListener('wheel', wheelHandler);
+        (svgCanvas.current?.closest('#canvas') as HTMLDivElement)?.addEventListener('wheel', wheelHandler);
+        return () => (svgCanvas.current?.closest('#canvas') as HTMLDivElement)?.removeEventListener('wheel', wheelHandler);
     });
 
     // function moveSVGAt(shapeID: string, toSVGCoords: { x: number, y: number }, shift?: { x: number, y: number }) {
@@ -270,7 +270,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
             })
             return typeof (curObj) !== 'undefined';
         });
-        const userCoords = toUserCoordSystem({ x: +curObj!.config.graphicalProperties.x.value, y: +curObj!.config.graphicalProperties.y.value });
+        // const userCoords = toUserCoordSystem({ x: +curObj!.config.graphicalProperties.x.value, y: +curObj!.config.graphicalProperties.y.value });
         const config: IShapeProps = {
             id: curObj!.config.id!,
             type: curObj!.type,
@@ -280,8 +280,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
             // },
             graphProps: {
                 ...curObj!.config.graphicalProperties,
-                x: { ...curObj!.config.graphicalProperties.x, value: userCoords.x.toString() },
-                y: { ...curObj!.config.graphicalProperties.y, value: userCoords.y.toString() }
+                x: { ...curObj!.config.graphicalProperties.x, value: curObj!.config.graphicalProperties.x.value },
+                y: { ...curObj!.config.graphicalProperties.y, value: curObj!.config.graphicalProperties.y.value }
                 // w: {
                 //     label: 'width',
                 //     value: `${Math.round(e.currentTarget?.getBBox().width ?? e.domRect.width)}`,
@@ -467,10 +467,13 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                         <pattern id="gridPattern" width={canvasConfig.gridStep / scale} height={canvasConfig.gridStep / scale} patternUnits="userSpaceOnUse">
                             <rect width={canvasConfig.gridStep / scale} height={canvasConfig.gridStep / scale} fill="url(#subgridPattern)" stroke={canvasConfig.gridColor} strokeWidth="1" />
                         </pattern>
+                        <pattern id="a4Pattern" width={canvasConfig.a4Width} height={canvasConfig.a4Height} patternUnits="userSpaceOnUse">
+                            <path d={`M ${canvasConfig.a4Width} 0 L 0 0 0 ${canvasConfig.a4Height}`} fill="none" stroke={canvasConfig.sheetStrokeColor} strokeWidth="2" />
+                        </pattern>
                         <g id="gridRect" x={canvasConfig.offsetX} y={canvasConfig.offsetY}>
                             <rect width={canvasConfig.canvasWidth - canvasConfig.offsetX * 2} height={canvasConfig.canvasHeight - canvasConfig.offsetY * 2} fill={canvasConfig.sheetFillColor} />
-                            <rect
-                                width={canvasConfig.canvasWidth - canvasConfig.offsetX * 2} height={canvasConfig.canvasHeight - canvasConfig.offsetY * 2} fill="url(#gridPattern)" stroke={canvasConfig.sheetStrokeColor} strokeWidth={2} />
+                            <rect width={canvasConfig.canvasWidth - canvasConfig.offsetX * 2} height={canvasConfig.canvasHeight - canvasConfig.offsetY * 2} fill="url(#a4Pattern)" />
+                            <rect width={canvasConfig.canvasWidth - canvasConfig.offsetX * 2} height={canvasConfig.canvasHeight - canvasConfig.offsetY * 2} fill="url(#gridPattern)" stroke={canvasConfig.sheetStrokeColor} strokeWidth={2} />
                         </g>
                     </defs>
                     <g style={{ transform: `matrix(${scale}, 0, 0, ${scale}, ${translate.x}, ${translate.y}) ` }}>

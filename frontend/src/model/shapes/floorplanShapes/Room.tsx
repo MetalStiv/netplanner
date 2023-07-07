@@ -31,61 +31,61 @@ export const roomInflater: TShapeInflater = async (messageShape: IMessageShape) 
         graphicalProperties: {
             x: {
                 label: "X",
-                value: messageShape.graphicalProperties.x.value,
+                value: messageShape.graphicalProperties.x,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
-                value: messageShape.graphicalProperties.y.value,
+                value: messageShape.graphicalProperties.y,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             fillColorOne: {
                 label: 'Fill Color One',
-                value: messageShape.graphicalProperties.fillColorOne!.value,
+                value: messageShape.graphicalProperties.fillColorOne!,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
             leftWidth: {
                 label: "Left width",
-                value: messageShape.graphicalProperties.leftWidth!.value,
+                value: messageShape.graphicalProperties.leftWidth!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             rightWidth: {
                 label: "Right width",
-                value: messageShape.graphicalProperties.rightWidth!.value,
+                value: messageShape.graphicalProperties.rightWidth!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             topWidth: {
                 label: "Top width",
-                value: messageShape.graphicalProperties.topWidth!.value,
+                value: messageShape.graphicalProperties.topWidth!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             bottomWidth: {
                 label: "Bottom width",
-                value: messageShape.graphicalProperties.bottomWidth!.value,
+                value: messageShape.graphicalProperties.bottomWidth!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             width: {
                 label: "Width",
-                value: messageShape.graphicalProperties.width!.value,
+                value: messageShape.graphicalProperties.width!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             height: {
                 label: "Height",
-                value: messageShape.graphicalProperties.height!.value,
+                value: messageShape.graphicalProperties.height!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             pivot: {
                 label: "Pivot",
-                value: messageShape.graphicalProperties.pivot!.value,
+                value: messageShape.graphicalProperties.pivot!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             }

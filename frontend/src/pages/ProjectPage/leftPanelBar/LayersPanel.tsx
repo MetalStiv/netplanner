@@ -8,7 +8,6 @@ import { TActionStore } from '../../../stores/actionStore';
 import { TProjectStore } from '../../../stores/projectStore';
 import { ChangeLayerVisibleAction } from '../../../model/actions/ChangeLayerVisibleAction';
 
-
 // interface ILayersPanelProps {
 //     // currentPage: Page,
 //     //updatePageCallback: (page: Page) => void,
@@ -156,14 +155,6 @@ const LayersPanel = () => {
 
                                     const changeLayerVisibleAction = new ChangeLayerVisibleAction(layer, !layer.isVisible());
                                     actionStore.push(changeLayerVisibleAction);
-
-                                    // currentPage.setLayers(currentPage.getLayers().map(item => {
-                                    //     if (item.getID() === layer.getID()) {
-                                    //         item.changeVisible(!item.isVisible());
-                                    //     }
-                                    //     return item;
-                                    // }))
-                                    //updatePageCallback(currentPage);
                                 }}>
                                 {layer.isVisible() ? visibleIcon : invisibleIcon}
                             </div>

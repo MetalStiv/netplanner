@@ -33,6 +33,14 @@ export class DrawShapeAction implements IAction {
         this.shape.config.graphicalProperties.x.value = this.dropCoords.x.toString();
         this.shape.config.graphicalProperties.y.value = this.dropCoords.y.toString();
         let zIndex = this.currentLayer.getShapes().length + 1;
+        const graphProp = Object.assign(
+            Object.fromEntries(Object.entries(this.shape.config.graphicalProperties).map(([key, { value }]) => [key, value])),
+            {
+                x: this.shape.config.graphicalProperties.x.value,
+                y: this.shape.config.graphicalProperties.y.value,
+                pivot: this.shape.config.graphicalProperties.pivot.value,
+            }
+        )
 
         return {
             type: ActionType.ADD_SHAPE,
@@ -42,7 +50,7 @@ export class DrawShapeAction implements IAction {
                     ...{ zIndex },
                     isVisible: this.shape.isVisible,
                     type: this.shape.type,
-                    graphicalProperties: this.shape.config.graphicalProperties
+                    graphicalProperties: graphProp
                 },
                 // zIndex: this.shape.config.zIndex?.toString()
             }

@@ -35,13 +35,20 @@ export class ChangeShapePropertyAction implements IAction {
     }
 
     getMessage(): IMessage {
+        const graphProps = Object.assign(
+            Object.fromEntries(Object.entries(this.newProperties).map(([key, { value }]) => [key, value])),
+            {
+                x: this.newProperties.x.value,
+                y: this.newProperties.y.value,
+                pivot: this.newProperties.pivot.value
+            }
+        )
         return {
             type: ActionType.CHANGE_GRAPHICAL_PROPERTY,
             layerId: this.layerID,
             shapeId: this.shape.config.id,
             data: {
-                graphicalProperties: this.newProperties
-                // id, property
+                graphicalProperties: graphProps
             }
         }
     }

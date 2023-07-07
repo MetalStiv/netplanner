@@ -4,7 +4,7 @@ import { addLayerHandler } from "./addLayerHandler";
 import { addPageHandler } from "./addPageHandler";
 import { addShapeHandler } from "./addShapeHandler";
 import { changeGraphicalPropertyHandler } from "./changeGraphicalPropertyHandler";
-import { сhangeLayerVisibleHandler } from "./changeLayerVisibleHandler";
+import { changeLayerVisibleHandler } from "./changeLayerVisibleHandler";
 import { openProjectHandler } from "./openProjectHandler";
 
 export type ActionHandler = (project: Project, message: IMessage) => Promise<Project>
@@ -21,7 +21,7 @@ export const actionHandlers: IActionHandlers = {
         addLayerHandler,
         addPageHandler,
         changeGraphicalPropertyHandler,
-        сhangeLayerVisibleHandler
+        changeLayerVisibleHandler
     ),
 
     async handle(project: Project, message: IMessage) {

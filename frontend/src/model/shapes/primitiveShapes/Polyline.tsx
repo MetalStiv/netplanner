@@ -27,26 +27,26 @@ export const polylineInflater: TShapeInflater = async (messageShape: IMessageSha
         graphicalProperties: {
             x: {
                 label: "X",
-                value: messageShape.graphicalProperties.x.value,
+                value: messageShape.graphicalProperties.x,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
-                value: messageShape.graphicalProperties.y.value,
+                value: messageShape.graphicalProperties.y,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             pivot: {
                 label: 'Pivot',
-                value: messageShape.graphicalProperties.pivot!.value,
+                value: messageShape.graphicalProperties.pivot!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             points: [[15, -30], [40, 45], [50, -70]],
             strokeColor: {
                 label: 'Stroke Color',
-                value: messageShape.graphicalProperties.strokeColor!.value,
+                value: messageShape.graphicalProperties.strokeColor!,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             }

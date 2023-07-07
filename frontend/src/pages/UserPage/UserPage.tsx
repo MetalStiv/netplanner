@@ -33,19 +33,19 @@ const UserPage: React.FC = observer(() => {
         const userIds: Set<string> = new Set<string>();
         projects.forEach((project: IProjectMeta) => {
             userIds.add(project.ownerId);
-            if (project.invites){
+            if (project.invites) {
                 project.invites.forEach(i => userIds.add(i.userId))
             }
         });
-        const users = await userMicroservice.get<IUser[]>('getUsersByIds', { params: {ids: Array.from(userIds)}})
-        if (users.status === 200){
+        const users = await userMicroservice.get<IUser[]>('getUsersByIds', { params: { ids: Array.from(userIds) } })
+        if (users.status === 200) {
             usersStore?.setData(users.data)
         }
     }, [usersStore])
 
     const getActiveInvites = useCallback(async () => {
         const invites = await projectMicroservice.get<IInvite[]>('getActiveInvites')
-        if (invites.status === 200){
+        if (invites.status === 200) {
             userStore?.setInvites(invites.data)
         }
     }, [])
@@ -56,10 +56,12 @@ const UserPage: React.FC = observer(() => {
         const openShareFormId = projectsMetaStore.getData().find(p => p.showSharingForm === true)?.id ?? "";
         const openMoveFormId = projectsMetaStore.getData().find(p => p.showMoveForm === true)?.id ?? "";
 
-        if (projects.status === 200){
-            const data = projects.data.map((item: IProjectMeta) => ({...item, "hide": false, 
+        if (projects.status === 200) {
+            const data = projects.data.map((item: IProjectMeta) => ({
+                ...item, "hide": false,
                 "showMenu": item.id === openMenuId, "showMoveForm": item.id === openMoveFormId,
-                "showSharingForm": item.id === openShareFormId}));
+                "showSharingForm": item.id === openShareFormId
+            }));
             await getUsers(data);
             await getActiveInvites();
             projectsMetaStore?.setData(data);
@@ -67,12 +69,12 @@ const UserPage: React.FC = observer(() => {
 
         setIsLoading(false);
     }, [projectsMetaStore, getUsers, getActiveInvites])
-    
+
     const acceptInvite = async (id: string) => {
         const res = await projectMicroservice.post("/acceptInvite", {
             id: id
         })
-        if (res.status === 200){
+        if (res.status === 200) {
             getProjects()
         }
     };
@@ -81,7 +83,7 @@ const UserPage: React.FC = observer(() => {
         const res = await projectMicroservice.post("/declineInvite", {
             id: id
         })
-        if (res.status === 200){
+        if (res.status === 200) {
             getProjects()
         }
     };
@@ -121,24 +123,24 @@ const UserPage: React.FC = observer(() => {
                         }
                     </div>
                     {
-                            userStore.getInvites().length === 0 ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    onClick={() => setShowNotifications(!showNotifications)} style={{cursor: "pointer"}}>
-                                    <path d="M14.8572 19.4285C14.0953 20.5714 13.1429 21.1428 12.0001 21.1428C10.8572 21.1428 9.90482 20.5714 9.14291 19.4285M17.8109 17.7143H6.18917C5.14727 17.7143 4.30264 16.8696 4.30264 15.8277C4.30264 15.4858 4.39557 15.1503 4.57148 14.8571C5.69322 12.9875 6.28577 10.8483 6.28577 8.66799V7.42854C6.28577 4.90381 8.33247 2.85711 10.8572 2.85711H13.1429C15.6676 2.85711 17.7143 4.90381 17.7143 7.42854V8.66799C17.7143 10.8483 18.3069 12.9875 19.4286 14.8571C19.9647 15.7505 19.675 16.9094 18.7816 17.4454C18.4884 17.6213 18.1529 17.7143 17.8109 17.7143V17.7143Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                : <svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    onClick={() => setShowNotifications(!showNotifications)} style={{cursor: "pointer"}}>
-                                    <path d="M14.8572 21.4285C14.0953 22.5714 13.1429 23.1428 12.0001 23.1428C10.8572 23.1428 9.90482 22.5714 9.14291 21.4285M17.8109 19.7143H6.18917C5.14727 19.7143 4.30264 18.8696 4.30264 17.8277C4.30264 17.4858 4.39557 17.1503 4.57148 16.8571C5.69322 14.9875 6.28577 12.8483 6.28577 10.668V9.42854C6.28577 6.90381 8.33247 4.85711 10.8572 4.85711H13.1429C15.6676 4.85711 17.7143 6.90381 17.7143 9.42854V10.668C17.7143 12.8483 18.3069 14.9875 19.4286 16.8571C19.9647 17.7505 19.675 18.9094 18.7816 19.4454C18.4884 19.6213 18.1529 19.7143 17.8109 19.7143V19.7143Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <circle cx="17" cy="5" r="4" fill="#599BFF" stroke="#434345" stroke-width="2"/>
-                                </svg>
+                        userStore.getInvites().length === 0 ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            onClick={() => setShowNotifications(!showNotifications)} style={{ cursor: "pointer" }}>
+                            <path d="M14.8572 19.4285C14.0953 20.5714 13.1429 21.1428 12.0001 21.1428C10.8572 21.1428 9.90482 20.5714 9.14291 19.4285M17.8109 17.7143H6.18917C5.14727 17.7143 4.30264 16.8696 4.30264 15.8277C4.30264 15.4858 4.39557 15.1503 4.57148 14.8571C5.69322 12.9875 6.28577 10.8483 6.28577 8.66799V7.42854C6.28577 4.90381 8.33247 2.85711 10.8572 2.85711H13.1429C15.6676 2.85711 17.7143 4.90381 17.7143 7.42854V8.66799C17.7143 10.8483 18.3069 12.9875 19.4286 14.8571C19.9647 15.7505 19.675 16.9094 18.7816 17.4454C18.4884 17.6213 18.1529 17.7143 17.8109 17.7143V17.7143Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                            : <svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                onClick={() => setShowNotifications(!showNotifications)} style={{ cursor: "pointer" }}>
+                                <path d="M14.8572 21.4285C14.0953 22.5714 13.1429 23.1428 12.0001 23.1428C10.8572 23.1428 9.90482 22.5714 9.14291 21.4285M17.8109 19.7143H6.18917C5.14727 19.7143 4.30264 18.8696 4.30264 17.8277C4.30264 17.4858 4.39557 17.1503 4.57148 16.8571C5.69322 14.9875 6.28577 12.8483 6.28577 10.668V9.42854C6.28577 6.90381 8.33247 4.85711 10.8572 4.85711H13.1429C15.6676 4.85711 17.7143 6.90381 17.7143 9.42854V10.668C17.7143 12.8483 18.3069 14.9875 19.4286 16.8571C19.9647 17.7505 19.675 18.9094 18.7816 19.4454C18.4884 19.6213 18.1529 19.7143 17.8109 19.7143V19.7143Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <circle cx="17" cy="5" r="4" fill="#599BFF" stroke="#434345" strokeWidth="2" />
+                            </svg>
                     }
                 </div>
 
                 {
                     showNotifications && <div className="notification-menu-container">
-                        <div className="notification-menu-tail" style={{right: (nameRef.current?.clientWidth!+140)}}>
+                        <div className="notification-menu-tail" style={{ right: (nameRef.current?.clientWidth! + 140) }}>
                         </div>
 
-                        <div className="notification-menu" style={{right: (nameRef.current?.clientWidth!+100)}}>
+                        <div className="notification-menu" style={{ right: (nameRef.current?.clientWidth! + 100) }}>
                             <div className="panel-notification">
                                 {
                                     userStore.getInvites().length === 0 ?
@@ -148,7 +150,7 @@ const UserPage: React.FC = observer(() => {
                                                 index > 0 && <hr className="separator" />
                                             }
                                             <span className="inviter-name">{i.inviterName}</span>
-                                            <span>{i.isGroup ? lang!.langText.headerMenu.inviteTextGroup 
+                                            <span>{i.isGroup ? lang!.langText.headerMenu.inviteTextGroup
                                                 : lang!.langText.headerMenu.inviteTextProject}</span>
                                             <span className="project-name">'{i.projectName}'</span>
                                             <div className="button-group">
@@ -284,7 +286,7 @@ const UserPage: React.FC = observer(() => {
                     </div>
                     <div className="tab-panel">
                         <TabPanel>
-                            <ProjectsTab getProjects={getProjects} isLoading={isLoading}/>
+                            <ProjectsTab getProjects={getProjects} isLoading={isLoading} />
                         </TabPanel>
                         <TabPanel>
                             <p>Empty panel</p>

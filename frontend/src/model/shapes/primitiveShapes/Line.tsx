@@ -27,37 +27,37 @@ export const lineInflater: TShapeInflater = async (messageShape: IMessageShape) 
         graphicalProperties: {
             x: {
                 label: "X",
-                value: messageShape.graphicalProperties.x.value,
+                value: messageShape.graphicalProperties.x,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             y: {
                 label: "Y",
-                value: messageShape.graphicalProperties.y.value,
+                value: messageShape.graphicalProperties.y,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             pivot: {
                 label: 'Pivot',
-                value: messageShape.graphicalProperties.pivot!.value,
+                value: messageShape.graphicalProperties.pivot!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             x2: {
                 label: 'x2',
-                value: messageShape.graphicalProperties.x2!.value,
+                value: messageShape.graphicalProperties.x2!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             y2: {
                 label: 'y2',
-                value: messageShape.graphicalProperties.y2!.value,
+                value: messageShape.graphicalProperties.y2!,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             strokeColor: {
                 label: 'Stroke Color',
-                value: messageShape.graphicalProperties.strokeColor!.value,
+                value: messageShape.graphicalProperties.strokeColor!,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             }

@@ -5,7 +5,7 @@ import Layer from "../projectData/Layer";
 // import { shapeInflaters } from "../shapeInflaters";
 import { ActionHandler } from "./actionHandlers";
 
-export const сhangeLayerVisibleHandler: ActionHandler = async (project, message) => {
+export const changeLayerVisibleHandler: ActionHandler = async (project, message) => {
     if (message.type !== ActionType.CHANGE_LAYER_VISIBLE) {
         return project;
     };

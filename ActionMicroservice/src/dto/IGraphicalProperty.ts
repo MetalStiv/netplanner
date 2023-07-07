@@ -1,9 +1,9 @@
-export interface IGraphicalProperty {
-    label: string,
-    value: string,
-}
+// export interface IGraphicalProperty {
+//     value: string,
+// }
 
 export interface IShapeGraphicalProperties {
-    x: IGraphicalProperty,
-    y: IGraphicalProperty,
+    x: string,
+    y: string,
+    pivot: string
 }
