@@ -6,6 +6,8 @@ import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
 export class ChangeLayerVisibleAction implements IAction {
+    storeHistory: boolean = true;
+    
     private layer: Layer;
     private prevVal: boolean;
     private newVal: boolean;
@@ -16,16 +18,17 @@ export class ChangeLayerVisibleAction implements IAction {
         this.newVal = newVal;
     }
 
-    do(): boolean {
-        return true;
+    do(): IMessage {
+        return {
+            type: ActionType.CHANGE_LAYER_VISIBLE,
+            layerId: this.layer.getID(),
+            data: {
+                isVisible: this.newVal
+            }
+        }
     }
 
-    undo(): void {
-        // this.currentPage
-    }
-
-    getMessage(): IMessage {
-
+    undo(): IMessage {
         return {
             type: ActionType.CHANGE_LAYER_VISIBLE,
             layerId: this.layer.getID(),
