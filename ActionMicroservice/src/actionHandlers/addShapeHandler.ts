@@ -7,7 +7,6 @@ export const addShapeHandler: ActionHandler = async (collections, message) => {
     if (message.type !== ActionType.ADD_SHAPE) {
         return Promise.reject('Wrong handler');
     };
-    // console.log(message)
     const newShape: IShape = {
         _id: new ObjectId(),
         type: message.data.newShape.type,
@@ -16,7 +15,7 @@ export const addShapeHandler: ActionHandler = async (collections, message) => {
         graphicalProperties: message.data.newShape.graphicalProperties
     };
 
-    collections.shapeCollection.insertOne(newShape)
+    await collections.shapeCollection.insertOne(newShape)
 
     message.data.newShape.id = newShape._id.toString();
     return message;

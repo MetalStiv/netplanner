@@ -7,7 +7,7 @@ export const changeGraphicalPropertiesHandler: ActionHandler = async (collection
         return Promise.reject('Wrong handler');
     };
 
-    collections.shapeCollection.findOneAndUpdate(
+    await collections.shapeCollection.findOneAndUpdate(
         {
             layerId: new ObjectId(message.layerId),
             _id: new ObjectId(message.shapeId)

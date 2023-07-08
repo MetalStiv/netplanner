@@ -27,7 +27,7 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
         zIndex: zIndex
     };
 
-    collections.layerCollection.insertOne(newLayer);
+    await collections.layerCollection.insertOne(newLayer);
 
     const messageCopy = JSON.parse(JSON.stringify(message));
 

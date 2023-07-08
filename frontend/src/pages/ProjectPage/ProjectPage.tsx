@@ -18,7 +18,7 @@ import { TActionStore } from '../../stores/actionStore';
 import { observer } from 'mobx-react-lite';
 import blockDiagramGroup from '../../model/shapes/blockDiagramShapes/BlockDiagramGroup';
 import primitiveGroup from '../../model/shapes/primitiveShapes/PrimitivesGroup';
-import { IShapeGraphicalProps } from '../../model/shapes/IShape';
+import IShape, { IShapeGraphicalProps } from '../../model/shapes/IShape';
 import Project, { IProject } from '../../model/projectData/Project';
 import IShapeGroup from '../../model/shapes/IShapeGroup';
 import { IAction } from '../../model/actions/IAction';
@@ -31,6 +31,8 @@ import GraphicalPropertiesPanel from './rightPanelBar/GraphicalPropertiesPanel';
 import floorPlanGroup from '../../model/shapes/floorplanShapes/FloorPlanGroup';
 import { CursorPositionAction } from '../../model/actions/CursorPositionAction';
 import UserCursor from '../../model/projectData/UserCursor';
+import { DeleteShapeAction } from '../../model/actions/DeleteShapeAction';
+import { ILayer } from '../../model/projectData/Layer';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {
@@ -93,21 +95,32 @@ const ProjectPage: React.FC = observer(() => {
     }, []);
 
     useEffect(() => {
-        const onKeypress = (e: KeyboardEvent) => {
+        const onKeyDown = (e: KeyboardEvent) => {
             console.log(e);
+            console.log(selectedShapeProps);
+            if (e.code === 'Delete') {
+                const currentLayer: ILayer = projectStore.getProject()
+                    ?.getCurrentPage()
+                    .getCurrentLayer()!
+                const deleteShapeAction = new DeleteShapeAction(currentLayer.getShapes()
+                    .find((s: IShape) => s.config.id === selectedShapeProps!.id)!,
+                    currentLayer?.getID());
+                actionStore.push(deleteShapeAction);
+            }
             if (e.ctrlKey && e.code === 'KeyZ') {
-                // app?.addAction(new UndoAction(app.actionsHistory));
-                const message: IAction | null = actionStore.pop();
-                // console.log(message);
+                actionStore.back();
+            }
+            if (e.ctrlKey && e.code === 'KeyY') {
+                actionStore.forward();
             }
         }
 
-        document.addEventListener('keypress', onKeypress);
+        document.addEventListener('keydown', onKeyDown);
 
         return () => {
-            document.removeEventListener('keypress', onKeypress);
+            document.removeEventListener('keydown', onKeyDown);
         };
-    }, []);
+    }, [selectedShapeProps]);
 
     return (
         <div id="projectPage">
@@ -165,7 +178,7 @@ const ProjectPage: React.FC = observer(() => {
                                 <div style={{ minHeight: 150 }}>
                                     <GraphicalPropertiesPanel
                                         shapeProps={selectedShapeProps}
-                                        onChange={(props) => setSelectedShapeProps({ ...selectedShapeProps!, graphProps: props })}
+                                        onChange={(props) => {setSelectedShapeProps({ ...selectedShapeProps!, graphProps: props })}}
                                     />
                                 </div>
                             </VerticalPageSplit>

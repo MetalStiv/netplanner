@@ -76,7 +76,9 @@ var addLayerHandler = function (collections, message) { return __awaiter(void 0,
                     pageId: new mongodb_1.ObjectId(message.pageId),
                     zIndex: zIndex
                 };
-                collections.layerCollection.insertOne(newLayer);
+                return [4 /*yield*/, collections.layerCollection.insertOne(newLayer)];
+            case 3:
+                _a.sent();
                 messageCopy = JSON.parse(JSON.stringify(message));
                 messageCopy.data.newLayer.id = newLayer._id.toString();
                 messageCopy.data.newLayer.name = uniqTitle;

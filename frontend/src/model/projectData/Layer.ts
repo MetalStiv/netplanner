@@ -26,7 +26,7 @@ export interface ILayer {
     getShapes(): IShape[],
     setShapes(shapes: IShape[]): void,
     addShape(shape: IShape): void,
-    removeShape(shape: IShape): void,
+    removeShapeById(id: string): void,
     //copy(layer: ILayer): void,
 }
 
@@ -87,9 +87,9 @@ class Layer implements ILayer {
         shape.config.zIndex = this[shapesSym].length;
         this[shapesSym] = [...this[shapesSym], shape];
     }
-    removeShape(delShape: IShape) {
+    removeShapeById(id: string){
         this.setShapes(
-            this[shapesSym].filter(shape => shape !== delShape)
+            this[shapesSym].filter(shape => shape.config.id !== id)
         );
     }
 }

@@ -36,22 +36,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.changeGraphicalPropertiesHandler = void 0;
+exports.deleteShapeHandler = void 0;
 var mongodb_1 = require("mongodb");
 var actionType_1 = require("../actionType");
-var changeGraphicalPropertiesHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
+var deleteShapeHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (message.type !== actionType_1.ActionType.CHANGE_GRAPHICAL_PROPERTY) {
+                if (message.type !== actionType_1.ActionType.DELETE_SHAPE) {
                     return [2 /*return*/, Promise.reject('Wrong handler')];
                 }
                 ;
-                return [4 /*yield*/, collections.shapeCollection.findOneAndUpdate({
-                        layerId: new mongodb_1.ObjectId(message.layerId),
+                return [4 /*yield*/, collections.shapeCollection.deleteOne({
                         _id: new mongodb_1.ObjectId(message.shapeId)
-                    }, {
-                        $set: { graphicalProperties: message.data.graphicalProperties }
                     })];
             case 1:
                 _a.sent();
@@ -59,4 +56,4 @@ var changeGraphicalPropertiesHandler = function (collections, message) { return 
         }
     });
 }); };
-exports.changeGraphicalPropertiesHandler = changeGraphicalPropertiesHandler;
+exports.deleteShapeHandler = deleteShapeHandler;

@@ -8,7 +8,7 @@ export const addShapeHandler: ActionHandler = async (project, message) => {
         return project;
     };
 
-    const newShape: IShape | null = await shapeInflaters.inflate(message.data.newShape!);
+    const newShape: IShape | null = await shapeInflaters.inflate(message.data!.newShape!);
     if (newShape) {
         project.getCurrentPage() //.getPages()..find(p => p.getID() === message.pageId)
             ?.getLayers().find(l => l.getID() === message.layerId)

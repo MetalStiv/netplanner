@@ -10,7 +10,7 @@ export interface IMessage {
     layerId?: string,
     shapeId?: string,
     senderId?: string,
-    data: {
+    data?: {
         pages?: [{
             id: string,
             name: string,

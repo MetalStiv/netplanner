@@ -16,7 +16,18 @@ export class CursorPositionAction implements IAction {
         this.cursorCoords = cursorCoords;
     }
 
-    undo(): void {}
+    undo(): IMessage {
+        return {
+            type: ActionType.CURSOR_POSITION,
+            pageId: this.currentPage.getID(),
+            data: {
+                coords: {
+                    x: this.cursorCoords.x,
+                    y: this.cursorCoords.y
+                }
+            }
+        }
+    }
 
     do(): IMessage {
         return {

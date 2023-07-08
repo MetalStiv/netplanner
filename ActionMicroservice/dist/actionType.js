@@ -12,5 +12,6 @@ var ActionType;
     ActionType["REMOVE_LAYER"] = "REMOVE_LAYER";
     ActionType["RENAME_LAYER"] = "RENAME_LAYER";
     ActionType["ADD_SHAPE"] = "ADD_SHAPE";
+    ActionType["DELETE_SHAPE"] = "DELETE_SHAPE";
     ActionType["CHANGE_GRAPHICAL_PROPERTY"] = "CHANGE_GRAPHICAL_PROPERTY";
 })(ActionType = exports.ActionType || (exports.ActionType = {}));

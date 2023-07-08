@@ -14,7 +14,7 @@ export const changeGraphicalPropertyHandler: ActionHandler = async (project, mes
 
     console.log(searchedShape)
     if (searchedShape)
-        searchedShape.updateGraphicalProperties(message.data.graphicalProperties!)
+        searchedShape.updateGraphicalProperties(message.data!.graphicalProperties!)
     //     searchedShape.config.graphicalProperties = message.data.graphicalProperties!;
 
     project.setIsLoading(false);

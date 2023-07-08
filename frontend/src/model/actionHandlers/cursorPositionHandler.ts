@@ -7,19 +7,11 @@ export const cursorPositionHandler: ActionHandler = async (project, message) => 
         return project;
     };
 
-    console.log(message)
-    console.log(project)
-
-    // if (message.senderId === ){
-    //     project.setIsLoading(false);
-    //     return project;
-    // }
-
     if (project?.getCursors().find(c => c.userId === message.senderId)){
-        project.moveCursor(message.senderId!, message.data.coords!);
+        project.moveCursor(message.senderId!, message.data!.coords!);
     }
     else {
-        project.addCursor(new UserCursor(message.senderId!, message.pageId!, message.data.coords!))
+        project.addCursor(new UserCursor(message.senderId!, message.pageId!, message.data!.coords!))
     }
 
     project.setIsLoading(false);

@@ -1,8 +1,5 @@
 import { ActionType } from "../actions/ActionType";
 import Layer from "../projectData/Layer";
-// import { IMessageShape } from "../IMessageShape";
-// import IShape from "../IShape";
-// import { shapeInflaters } from "../shapeInflaters";
 import { ActionHandler } from "./actionHandlers";
 
 export const addLayerHandler: ActionHandler = async (project, message) => {
@@ -10,9 +7,9 @@ export const addLayerHandler: ActionHandler = async (project, message) => {
         return project;
     };
     const newLayer: Layer =
-        new Layer(message.data.newLayer!.id,
-            message.data.newLayer!.zIndex!,
-            message.data.newLayer!.name,
+        new Layer(message.data!.newLayer!.id,
+            message.data!.newLayer!.zIndex!,
+            message.data!.newLayer!.name,
             []);
 
     if (newLayer) {

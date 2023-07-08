@@ -210,11 +210,13 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         }
         const shapeID = e.currentTarget.id;
         let movableShape: IShape | undefined = undefined;
+        let oldShape: IShape | undefined = undefined;
         let layerID = "";
         currentPage?.getLayers().every(layer => {
             const curShape = layer.getShapes().find(shape => shape.config.id === shapeID);
             if (curShape) {
                 movableShape = curShape;
+                oldShape = JSON.parse(JSON.stringify(curShape));
                 layerID = layer.getID();
                 return false;
             }
@@ -252,7 +254,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         svgCanvas.current!.onmousemove = onMouseMove;
         svgCanvas.current!.onmouseup = () => {
             if (isMoved) {
-                const moveShapeAction = new ChangeShapePropertyAction(movableShape!, layerID, movableShape!.config.graphicalProperties);
+                const moveShapeAction = new ChangeShapePropertyAction(oldShape!, layerID, movableShape!.config.graphicalProperties);
                 actionStore.push(moveShapeAction);
                 isMoved = false;
             }

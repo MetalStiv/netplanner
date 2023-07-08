@@ -13,11 +13,11 @@ export const addPageHandler: ActionHandler = async (project, message) => {
     console.log(message)
 
     const newPage: Page =
-        new Page(message.data.newPage!.id,
-            message.data.newPage!.name,
+        new Page(message.data!.newPage!.id,
+            message.data!.newPage!.name,
             []);
 
-    message.data.newPage?.layers!
+    message.data!.newPage?.layers!
         .map(layer => new Layer(layer.id, layer.zIndex!, layer.name, []))
         .forEach(layer => newPage.addLayer(layer));
 

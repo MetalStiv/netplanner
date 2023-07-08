@@ -1,33 +1,20 @@
 import { IMessage } from "../message/IMessage";
-import Layer from "../projectData/Layer";
-import Page from "../projectData/Page";
-import IShape, { GraphicalPropertyTypes } from "../shapes/IShape";
+import IShape from "../shapes/IShape";
 import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
-export class DrawShapeAction implements IAction {
+export class DeleteShapeAction implements IAction {
     storeHistory: boolean = true;
-    
-    private shape: IShape;
-    private currentLayer: Layer;
-    private dropCoords: { x: number, y: number };
 
-    constructor(shape: IShape, currentLayer: Layer, dropCoords: { x: number, y: number }) {
+    private shape: IShape;
+    private layerId: string;
+
+    constructor(shape: IShape, layerId: string) {
         this.shape = shape;
-        this.currentLayer = currentLayer;
-        this.dropCoords = dropCoords;
+        this.layerId = layerId;
     }
 
     undo(): IMessage {
-        return {
-            type: ActionType.DELETE_SHAPE,
-        }
-    }
-
-    do(): IMessage {
-        this.shape.config.graphicalProperties[GraphicalPropertyTypes.X].value = this.dropCoords.x.toString();
-        this.shape.config.graphicalProperties[GraphicalPropertyTypes.Y].value = this.dropCoords.y.toString();
-
         const messageProperties: {l: string, v: string}[] = []
         let graphicalProperty: keyof typeof this.shape.config.graphicalProperties; 
         for (graphicalProperty in this.shape.config.graphicalProperties){
@@ -37,15 +24,21 @@ export class DrawShapeAction implements IAction {
 
         return {
             type: ActionType.ADD_SHAPE,
-            layerId: this.currentLayer.getID(),
+            layerId: this.layerId,
             data: {
                 newShape: {
                     zIndex: this.shape.config.zIndex!,
                     type: this.shape.type,
                     graphicalProperties: messageProperties
                 },
-                // zIndex: this.shape.config.zIndex?.toString()
             }
+        }
+    }
+
+    do(): IMessage {
+        return {
+            type: ActionType.DELETE_SHAPE,
+            shapeId: this.shape.config.id
         }
     }
 }

@@ -5,6 +5,7 @@ import { addPageHandler } from "./addPageHandler";
 import { addShapeHandler } from "./addShapeHandler";
 import { changeGraphicalPropertyHandler } from "./changeGraphicalPropertyHandler";
 import { cursorPositionHandler } from "./cursorPositionHandler";
+import { deleteShapeHandler } from "./deleteShapeHandler";
 import { openProjectHandler } from "./openProjectHandler";
 
 export type ActionHandler = (project: Project, message: IMessage) => Promise<Project>
@@ -19,6 +20,7 @@ export const actionHandlers: IActionHandlers = {
         cursorPositionHandler,
         openProjectHandler,
         addShapeHandler,
+        deleteShapeHandler,
         addLayerHandler,
         addPageHandler,
         changeGraphicalPropertyHandler

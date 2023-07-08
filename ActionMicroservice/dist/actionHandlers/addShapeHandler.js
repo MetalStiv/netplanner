@@ -42,20 +42,25 @@ var actionType_1 = require("../actionType");
 var addShapeHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
     var newShape;
     return __generator(this, function (_a) {
-        if (message.type !== actionType_1.ActionType.ADD_SHAPE) {
-            return [2 /*return*/, Promise.reject('Wrong handler')];
+        switch (_a.label) {
+            case 0:
+                if (message.type !== actionType_1.ActionType.ADD_SHAPE) {
+                    return [2 /*return*/, Promise.reject('Wrong handler')];
+                }
+                ;
+                newShape = {
+                    _id: new mongodb_1.ObjectId(),
+                    type: message.data.newShape.type,
+                    layerId: new mongodb_1.ObjectId(message.layerId),
+                    zIndex: message.data.newShape.zIndex,
+                    graphicalProperties: message.data.newShape.graphicalProperties
+                };
+                return [4 /*yield*/, collections.shapeCollection.insertOne(newShape)];
+            case 1:
+                _a.sent();
+                message.data.newShape.id = newShape._id.toString();
+                return [2 /*return*/, message];
         }
-        ;
-        newShape = {
-            _id: new mongodb_1.ObjectId(),
-            type: message.data.newShape.type,
-            layerId: new mongodb_1.ObjectId(message.layerId),
-            zIndex: message.data.newShape.zIndex,
-            graphicalProperties: message.data.newShape.graphicalProperties
-        };
-        collections.shapeCollection.insertOne(newShape);
-        message.data.newShape.id = newShape._id.toString();
-        return [2 /*return*/, message];
     });
 }); };
 exports.addShapeHandler = addShapeHandler;

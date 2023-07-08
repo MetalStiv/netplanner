@@ -2,16 +2,19 @@ import { SendMessage } from "react-use-websocket";
 import { IAction } from "../model/actions/IAction";
 
 const actionsSymbol: unique symbol = Symbol()
+const forwardActionsSymbol: unique symbol = Symbol()
 const maxSizeSymbol: unique symbol = Symbol()
 const messageSenderSymbol: unique symbol = Symbol()
 
 export interface IActionStore {
     [actionsSymbol]: IAction[],
+    [forwardActionsSymbol]: IAction[],
     [maxSizeSymbol]: number,
     [messageSenderSymbol]: SendMessage | null,
     setMessageSender: (sendMessage: SendMessage) => void,
     push: (action: IAction) => void,
-    pop: () => IAction | null,
+    back: () => void,
+    forward: () => void,
 
     clearStore: () => void
 }
@@ -19,6 +22,7 @@ export interface IActionStore {
 export const createActionStore = () => {
     const store: IActionStore = {
         [actionsSymbol]: [],
+        [forwardActionsSymbol]: [],
         [maxSizeSymbol]: 1000,
         [messageSenderSymbol]: null,
 
@@ -30,12 +34,28 @@ export const createActionStore = () => {
             if (action.storeHistory){
                 this[actionsSymbol].length === this[maxSizeSymbol] && this[actionsSymbol].shift();
                 this[actionsSymbol].push(action);
+                this[forwardActionsSymbol] = []
             }
             this[messageSenderSymbol] && this[messageSenderSymbol]!(JSON.stringify(action.do()))
         },
 
-        pop() {
-            return this[actionsSymbol].pop() ?? null;
+        back() {
+            const action: IAction | undefined = this[actionsSymbol].pop()
+            if (!action){
+                return;
+            }
+            this[forwardActionsSymbol].push(action);
+            this[messageSenderSymbol] && this[messageSenderSymbol]!(JSON.stringify(action.undo()))
+        },
+
+        forward() {
+            const action: IAction | undefined = this[forwardActionsSymbol].pop()
+            if (!action){
+                return;
+            }
+            this[actionsSymbol].length === this[maxSizeSymbol] && this[actionsSymbol].shift();
+            this[actionsSymbol].push(action);
+            this[messageSenderSymbol] && this[messageSenderSymbol]!(JSON.stringify(action.do()))
         },
 
         clearStore() {

@@ -16,8 +16,10 @@ export class AddPageAction implements IAction {
         name && (this.name = name);
     }
 
-    undo(): void {
-        // this.currentPage
+    undo(): IMessage {
+        return {
+            type: ActionType.DELETE_PAGE,
+        }
     }
 
     do(): IMessage {
