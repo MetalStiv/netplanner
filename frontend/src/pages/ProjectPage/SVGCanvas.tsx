@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef, ReactElement } from 'react';
+import React, { useEffect, useState, useRef, ReactHTMLElement } from 'react';
 import { IShapeProps } from '../../pages/ProjectPage/ProjectPage'
 import IShapeCreator from '../../model/shapes/IShapeCreator';
-// import Page from '../../model/Page';
 import ICanvasConfig from '../../common/canvasConfig';
 import { ChangeShapePropertyAction } from '../../model/actions/ChangeShapePropertyAction';
 import { useRootStore } from '../../providers/rootProvider';
@@ -34,9 +33,14 @@ interface SVGCanvasProps {
 const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     creatorOnDrop, getCursorCoordsCallback, getClickedShapeConfigCallback }: SVGCanvasProps) => {
     const [scale, setScale] = useState<number>(1);
-    const [translate, setTranslate] = useState({ x: 0, y: 0 });
+    const [translate, setTranslate] = useState(
+        { x: -canvasConfig.canvasWidth / 2, y: -canvasConfig.canvasHeight / 2 }
+        // { x: canvasConfig.offsetX - , y: -(canvasConfig.canvasHeight - canvasConfig.a4Height) / 2 }
+        // { x: -300, y: -300 }
+        // { x: 0, y: 0 }
+    );
+    const [isDrag, setIsDrag] = useState(false);
     const [cursorCoords, setCursorCoords] = useState({ x: 0, y: 0});
-    const svgCanvas: React.MutableRefObject<SVGSVGElement | null> = useRef(null);
     const projectStore: TProjectStore = useRootStore().getProjectStore();
     const usersStore: TUsersStore = useRootStore()!.getUsersStore();
     const userStore: TUserStore = useRootStore()!.getUserStore();
@@ -44,6 +48,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     const actionStore: TActionStore = useRootStore().getActionStore();
 
     const [currentPage, setCurrentPage] = useState(projectStore.getProject()?.getCurrentPage());
+
+    const svgCanvas: React.MutableRefObject<SVGSVGElement | null> = useRef(null);
 
     useEffect(() => {
         project?.getCurrentPage() && setCurrentPage(project?.getCurrentPage())
@@ -204,8 +210,10 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
 
     const svgDragNDrop = (e: React.MouseEvent<SVGGeometryElement>) => {
         const cur = e.currentTarget;
+        cur.style.cursor = 'grabbing';
         const shift = {
             x: (e.clientX / scale - cur.getBoundingClientRect().left / scale), // смещение позиции курсора от позиции элемента по x
+            // y: (e.clientY / scale - cur.getBoundingClientRect().top / scale), // по y
             y: (e.clientY / scale - cur.getBoundingClientRect().top / scale), // по y
         }
         const shapeID = e.currentTarget.id;
@@ -222,17 +230,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
             }
             return true;
         })
-        // const wrapper = React.createElement('g', null, React.cloneElement(e.currentTarget as unknown as ReactElement<SVGGeometryElement>)) as any as SVGGElement;
-        // svgCanvas.current?.appendChild(wrapper as Node);
-        // e.currentTarget.style.transform = 'translate(0px,0px)';
-        // wrapper.style.transform = 'translate(0,0)';
-        // const shadow = document.createElement('g');
-        // const shadowInner = e.currentTarget.cloneNode(true) as SVGGeometryElement;
-        // shadow.appendChild(shadowInner);
-
         const curRect = e.currentTarget.getBBox();
-        // let el = e.currentTarget;
-        // console.log(el)
         let isMoved = false;
         function onMouseMove(event: MouseEvent) {
             !isMoved && (isMoved = true);
@@ -260,7 +258,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
             }
             svgCanvas.current!.onmousemove = null;
             svgCanvas.current!.onmouseup = null;
-
+            cur.style.cursor = 'auto';
         }
     }
 
@@ -363,6 +361,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
             })
             return typeof (curObj) !== 'undefined';
         });
+        // const userCoords = toUserCoordSystem({ x: +curObj!.config.graphicalProperties.x.value, y: +curObj!.config.graphicalProperties.y.value });
         const config: IShapeProps = {
             id: curObj!.config.id!,
             type: curObj!.type,
@@ -372,6 +371,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
             // },
             graphProps: {
                 ...curObj!.config.graphicalProperties,
+                x: { ...curObj!.config.graphicalProperties.x, value: curObj!.config.graphicalProperties.x.value },
+                y: { ...curObj!.config.graphicalProperties.y, value: curObj!.config.graphicalProperties.y.value }
                 // w: {
                 //     label: 'width',
                 //     value: `${Math.round(e.currentTarget?.getBBox().width ?? e.domRect.width)}`,
@@ -401,15 +402,55 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         actionStore.push(drawShapeAction);
     }
 
-    function toScale(nextScale: number, originPoint?: { x: number, y: number }) {
-        const g = svgCanvas.current!.querySelector('#elementsGroup') as SVGSVGElement;
-        originPoint ??= { x: g.getBBox().x + g.getBBox().width / 2, y: g.getBBox().y + g.getBBox().height / 2 };
-        console.log(originPoint)
+    const fitToBorder = (translatePoint: { x: number, y: number }, scaleVal: number = scale) => {
+        // return;
+        const canvasWidth = (svgCanvas.current?.closest('#canvas') as HTMLDivElement).offsetWidth;
+        const canvasHeight = (svgCanvas.current?.closest('#canvas') as HTMLDivElement).offsetHeight;
+
+        // левая граница
+        if (translatePoint.x > 0)
+            translatePoint.x = 0;
+
+        // правая граница
+        if (translatePoint.x - canvasWidth < -(canvasConfig.canvasWidth) * scaleVal)
+            translatePoint.x = -(canvasConfig.canvasWidth * scaleVal - canvasWidth);
+
+        // верхняя граница
+        if (translatePoint.y > 0)
+            translatePoint.y = 0;
+
+        // нижняя граница
+        if (translatePoint.y - canvasHeight < -(canvasConfig.canvasHeight) * scaleVal)
+            translatePoint.y = -(canvasConfig.canvasHeight * scaleVal - canvasHeight);
+
+        // центровка, если вьюпорт больше канвы
+        if (canvasConfig.canvasWidth * scaleVal < canvasWidth) {
+            translatePoint.x = canvasWidth / 2 - canvasConfig.canvasWidth * scaleVal / 2;
+
+            if (canvasConfig.canvasHeight * scaleVal < canvasHeight) {
+                translatePoint.y = canvasHeight / 2 - canvasConfig.canvasHeight * scaleVal / 2;
+            }
+        }
+    }
+
+    function toScale(nextScale: number, originPoint: { x: number, y: number } = { x: canvasConfig.canvasWidth / 2, y: canvasConfig.canvasHeight / 2 }) {
+        // const g = svgCanvas.current!.querySelector('#elementsGroup') as SVGSVGElement;
+        // const g = svgCanvas.current as SVGElement;
+        // originPoint ??= { x: canvasConfig.a4Width / 2, y: canvasConfig.a4Height / 2 };
+        // originPoint = transformOuterCoordsToSVGCoords(originPoint);
+        // console.log(originPoint)
+
+
+        // setTimeout(() => {
         const divis = nextScale / scale;
-        setTranslate({
+
+        const translatePoint: { x: number, y: number } = {
             x: divis * (translate.x - originPoint.x) + originPoint.x,
             y: divis * (translate.y - originPoint.y) + originPoint.y
-        });
+        }
+
+        fitToBorder(translatePoint, nextScale);
+        setTranslate(translatePoint);
         setScale(nextScale);
     }
 
@@ -436,6 +477,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
 
     const onPointerDownHandler = (e: React.PointerEvent<SVGSVGElement>) => {
         if ((e.target as SVGAElement).getAttribute('role') === 'shape') { return; }
+        setIsDrag(true);
         const initialPoint = {
             x: e.clientX,
             y: e.clientY,
@@ -445,75 +487,130 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                 x: ev.clientX,
                 y: ev.clientY,
             }
-            setTranslate({
+            let translatePoint: { x: number, y: number } = {
                 x: translate.x + (currentPoint.x - initialPoint.x),
                 y: translate.y + (currentPoint.y - initialPoint.y)
-            })
+            };
+
+            fitToBorder(translatePoint);
+            setTranslate(translatePoint);
         }
-        e.currentTarget.onpointerup = (ev: PointerEvent) => {
+        const unset = (ev: PointerEvent) => {
             (ev.currentTarget! as SVGSVGElement).onpointerup = null;
             (ev.currentTarget! as SVGSVGElement).onpointermove = null;
+            setIsDrag(false);
         }
+        e.currentTarget.onpointerleave = unset;
+        e.currentTarget.onpointerup = unset;
     }
+
+    const toUserCoordSystem = (coords: { x: number, y: number }) => ({ ...coords, y: (canvasConfig.canvasHeight - canvasConfig.offsetY * 2) - coords.y });
+    const fromUserCoordSystem = toUserCoordSystem;
+
     return (
         <>
-            <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()}
-            //style={{ width: canvasConfig.canvasWidth * scale, height: canvasConfig.canvasHeight * scale }}
-            // style={{ width: canvasConfig.canvasWidth, height: canvasConfig.canvasHeight }}
-            >
+            <div id="canvas" onDrop={onDropHandler} onDragOver={e => e.preventDefault()} className={isDrag ? 'drag' : ''} >
                 <svg
-                    ref={svgCanvas}
-                    // viewBox={`0 0 ${canvasConfig.canvasWidth} ${canvasConfig.canvasHeight}`}
-                    // xmlns="http://www.w3.org/2000/svg"
-                    // onClick={svgClickHandler}
-                    // onWheel={onWheelHandler}
                     onPointerDown={onPointerDownHandler}
-                    // onMouseMoveCapture={onMousemoveCaptureHandler}
-                    style={{
-                        backgroundColor: canvasConfig.sheetFillColor,
-                        backgroundPosition: `${translate.x}px ${translate.y}px`,
-                        // backgroundSize: `${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
-                        // ${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
-                        // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px,
-                        // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px,
-                        // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px,
-                        // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px
-                        // `,
-                        backgroundSize: `${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
-                        ${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
-                        ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px,
-                        ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px,
-                        ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px,
-                        ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px
-                        `,
-                        backgroundRepeat: 'repeat',
-                        backgroundImage: `linear-gradient(0deg, ${canvasConfig.sheetStrokeColor} 1px, transparent 0px), 
-                        linear-gradient(90deg, ${canvasConfig.sheetStrokeColor} 1px, transparent 0px),
-                        repeating-linear-gradient(90deg, transparent 0 ${canvasConfig.gridStep - 1}px, ${canvasConfig.gridColor} 0px ${canvasConfig.gridStep}px),
-                        repeating-linear-gradient(0deg, transparent 0 ${canvasConfig.gridStep - 1}px, ${canvasConfig.gridColor} 0px ${canvasConfig.gridStep}px),
-                        repeating-linear-gradient(90deg, transparent 0 ${canvasConfig.subgridStep - 1}px, ${canvasConfig.subgridColor} 0px ${canvasConfig.subgridStep}px),
-                        repeating-linear-gradient(0deg, transparent 0 ${canvasConfig.subgridStep - 1}px, ${canvasConfig.subgridColor} 0px ${canvasConfig.subgridStep}px)
-                        `
-                    }}
+
+                    // style={{
+                    //     backgroundColor: canvasConfig.sheetFillColor,
+                    //     backgroundPosition: `${translate.x}px ${translate.y}px`,
+                    //     // backgroundSize: `${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
+                    //     // ${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
+                    //     // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px,
+                    //     // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px,
+                    //     // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px,
+                    //     // ${(Math.floor(svgCanvas.current!.getBoundingClientRect().width / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px ${(Math.floor(svgCanvas.current!.getBoundingClientRect().height / canvasConfig.gridStep) + 1) * canvasConfig.gridStep}px
+                    //     // `,
+                    //     backgroundSize: `${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
+                    //     ${canvasConfig.a4Width * scale - 1}px ${canvasConfig.a4Height * scale - 1}px,
+                    //     ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px,
+                    //     ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px,
+                    //     ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px,
+                    //     ${canvasConfig.gridStep}px ${canvasConfig.gridStep}px
+                    //     `,
+                    //     backgroundRepeat: 'repeat',
+                    //     backgroundImage: `linear-gradient(0deg, ${canvasConfig.sheetStrokeColor} 1px, transparent 0px), 
+                    //     linear-gradient(90deg, ${canvasConfig.sheetStrokeColor} 1px, transparent 0px),
+                    //     repeating-linear-gradient(90deg, transparent 0 ${canvasConfig.gridStep - 1}px, ${canvasConfig.gridColor} 0px ${canvasConfig.gridStep}px),
+                    //     repeating-linear-gradient(0deg, transparent 0 ${canvasConfig.gridStep - 1}px, ${canvasConfig.gridColor} 0px ${canvasConfig.gridStep}px),
+                    //     repeating-linear-gradient(90deg, transparent 0 ${canvasConfig.subgridStep - 1}px, ${canvasConfig.subgridColor} 0px ${canvasConfig.subgridStep}px),
+                    //     repeating-linear-gradient(0deg, transparent 0 ${canvasConfig.subgridStep - 1}px, ${canvasConfig.subgridColor} 0px ${canvasConfig.subgridStep}px)
+                    //     `
+                    // }}
+                    preserveAspectRatio='xMinYMin meet'
+                    width={canvasConfig.canvasWidth}
+                    height={canvasConfig.canvasHeight}
+
+                // width="100%"
+                // height="100%"
+                // style={{ transform: `matrix(${scale}, 0, 0, ${scale}, ${translate.x}, ${translate.y})` }}
+
+                // viewBox={`0 0 ${canvasConfig.canvasWidth} ${canvasConfig.canvasHeight}`}
+                // viewBox={`0 0 1920 768`}
                 >
-                    <g id="elementsGroup" style={{
-                        // outline: '2px solid #000000',
-                        transform: `matrix(${scale}, 0, 0, ${scale}, ${translate.x}, ${translate.y})`,
-                        // transformOrigin: 'center
-                    }}>
-                        {currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(s => {
-                            return s.render(svgDragNDrop, svgSelect, layer.getZIndex());
-                        }))}
-                        {cursorAnimations.map(a => <animated.path 
-                                d={`M${a.cx.get()} ${a.cy.get()} l32 12 l-15 5 l-4 16Z`}
-                                fill={a.fill} stroke="#5B5959" stroke-width="2">
-                                    <title>{usersStore.getData().find(u => u.id === a.userId.get())?.name}</title>
-                            </animated.path>)
-                        }
-                        {/* {cursorAnimations.map(a => <animated.circle cx={a.cx} cy={a.cy} r={a.r} fill={a.fill}>
-                                <title>{usersStore.getData().find(u => u.id === a.userId.get())?.name}</title>
-                            </animated.circle>)
-                        } */}
+                    <defs>
+                        <pattern id="subgridPattern" width={canvasConfig.subgridStep / scale} height={canvasConfig.subgridStep / scale} patternUnits="userSpaceOnUse">
+                            <path d={`M ${canvasConfig.subgridStep / scale} 0 L 0 0 0 ${canvasConfig.subgridStep / scale}`} fill="none" stroke={canvasConfig.subgridColor} strokeWidth="1" />
+                        </pattern>
+                        <pattern id="gridPattern" width={canvasConfig.gridStep / scale} height={canvasConfig.gridStep / scale} patternUnits="userSpaceOnUse">
+                            <rect width={canvasConfig.gridStep / scale} height={canvasConfig.gridStep / scale} fill="url(#subgridPattern)" stroke={canvasConfig.gridColor} strokeWidth="1" />
+                        </pattern>
+                        <pattern id="a4Pattern" width={canvasConfig.a4Width} height={canvasConfig.a4Height} patternUnits="userSpaceOnUse">
+                            <path d={`M ${canvasConfig.a4Width} 0 L 0 0 0 ${canvasConfig.a4Height}`} fill="none" stroke={canvasConfig.sheetStrokeColor} strokeWidth="2" />
+                        </pattern>
+                        <g id="gridRect" x={canvasConfig.offsetX} y={canvasConfig.offsetY}>
+                            <rect width={canvasConfig.canvasWidth - canvasConfig.offsetX * 2} height={canvasConfig.canvasHeight - canvasConfig.offsetY * 2} fill={canvasConfig.sheetFillColor} />
+                            <rect width={canvasConfig.canvasWidth - canvasConfig.offsetX * 2} height={canvasConfig.canvasHeight - canvasConfig.offsetY * 2} fill="url(#a4Pattern)" />
+                            <rect width={canvasConfig.canvasWidth - canvasConfig.offsetX * 2} height={canvasConfig.canvasHeight - canvasConfig.offsetY * 2} fill="url(#gridPattern)" stroke={canvasConfig.sheetStrokeColor} strokeWidth={2} />
+                        </g>
+                    </defs>
+                    <g style={{ transform: `matrix(${scale}, 0, 0, ${scale}, ${translate.x}, ${translate.y}) ` }}>
+                        <svg
+                            ref={svgCanvas}
+                            // fill="url(#gridRect)"
+                            // x={(canvasConfig.canvasWidth - canvasConfig.a4Width) / 2}
+                            // y={(canvasConfig.canvasHeight - canvasConfig.a4Height) / 2}
+                            // width={canvasConfig.a4Width}
+                            // height={canvasConfig.a4Height}
+                            // width="100%"
+                            // height="100%"
+                            width={canvasConfig.canvasWidth - canvasConfig.offsetX * 2}
+                            height={canvasConfig.canvasHeight - canvasConfig.offsetY * 2}
+                            x={canvasConfig.offsetX}
+                            y={canvasConfig.offsetY}
+
+
+                        // x={canvasConfig.offsetX}
+                        // y={canvasConfig.offsetY}
+                        // stroke='black'
+                        // strokeWidth={2}
+                        // viewBox={`0 0 ${canvasConfig.a4Width}px ${canvasConfig.a4Height}px`}
+                        // xmlns="http://www.w3.org/2000/svg"
+                        // onClick={svgClickHandler}
+                        // onWheel={onWheelHandler}
+                        // onPointerDown={onPointerDownHandler}
+                        // onMouseMoveCapture={onMousemoveCaptureHandler}
+                        // style={{ background: 'red', overflow: 'visible', fill: 'red' }}
+                        >
+                            <use href="#gridRect" />
+                            <g id="elementsGroup" style={{
+                                // outline: '2px solid #000000',
+                                // transform: `matrix(${scale}, 0, 0, ${scale}, ${translate.x}, ${translate.y})`,
+                                // transformOrigin: 'center
+                            }}>
+                                {currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(s => {
+                                    return s.render(svgDragNDrop, svgSelect, layer.getZIndex());
+                                }))}
+                                {cursorAnimations.map(a => <animated.path 
+                                        d={`M${a.cx.get()} ${a.cy.get()} l32 12 l-15 5 l-4 16Z`}
+                                        fill={a.fill} stroke="#5B5959" stroke-width="2">
+                                        <title>{usersStore.getData().find(u => u.id === a.userId.get())?.name}</title>
+                                    </animated.path>)
+                                }
+                            </g>
+                        </svg>
                     </g>
                 </svg>
             </div>

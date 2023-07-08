@@ -48,7 +48,8 @@ export const addPageHandler: ActionHandler = async (collections, message) => {
                 _id: layerObjId,
                 name: layer.name,
                 pageId: new ObjectId(messageCopy.data.newPage.id),
-                zIndex: layer.zIndex
+                zIndex: layer.zIndex,
+                isVisible: layer.isVisible
             }
         })
         )
@@ -59,12 +60,14 @@ export const addPageHandler: ActionHandler = async (collections, message) => {
             _id: objId,
             name: 'Layer',
             pageId: new ObjectId(messageCopy.data.newPage.id),
+            isVisible: true,
             zIndex: 1
         }];
         messageCopy.data.newPage.layers = [{
             name: newLayers[0].name,
             id: objId.toString(),
             zIndex: newLayers[0].zIndex,
+            isVisible: true,
             shapes: []
         }];
     }

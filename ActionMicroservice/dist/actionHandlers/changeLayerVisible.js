@@ -36,56 +36,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addLayerHandler = void 0;
+exports.changeLayerVisibleHandler = void 0;
 var mongodb_1 = require("mongodb");
 var actionType_1 = require("../actionType");
-var titleUniqueization_1 = require("../helpers/titleUniqueization");
-var addLayerHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
-    function uniqLayerTitle(name) {
-        return (0, titleUniqueization_1.default)(name.length ? name : 'Layer', collections.layerCollection);
-    }
-    function getZIndex(pageId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var count;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, collections.layerCollection.countDocuments({ pageId: new mongodb_1.ObjectId(pageId) })];
-                    case 1:
-                        count = _a.sent();
-                        return [2 /*return*/, count * 1000];
-                }
-            });
-        });
-    }
-    var uniqTitle, zIndex, newLayer, messageCopy;
+var changeLayerVisibleHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                if (message.type !== actionType_1.ActionType.ADD_LAYER) {
-                    return [2 /*return*/, Promise.reject('Wrong handler')];
-                }
-                return [4 /*yield*/, uniqLayerTitle(message.data.newLayer.name)];
-            case 1:
-                uniqTitle = _a.sent();
-                return [4 /*yield*/, getZIndex(message.pageId)];
-            case 2:
-                zIndex = _a.sent();
-                newLayer = {
-                    _id: new mongodb_1.ObjectId(),
-                    name: uniqTitle,
-                    pageId: new mongodb_1.ObjectId(message.pageId),
-                    zIndex: zIndex,
-                    isVisible: true
-                };
-                return [4 /*yield*/, collections.layerCollection.insertOne(newLayer)];
-            case 3:
-                _a.sent();
-                messageCopy = JSON.parse(JSON.stringify(message));
-                messageCopy.data.newLayer.id = newLayer._id.toString();
-                messageCopy.data.newLayer.name = uniqTitle;
-                messageCopy.data.newLayer.zIndex = zIndex;
-                return [2 /*return*/, messageCopy];
+        if (message.type !== actionType_1.ActionType.CHANGE_LAYER_VISIBLE) {
+            return [2 /*return*/, Promise.reject('Wrong handler')];
         }
+        collections.layerCollection.findOneAndUpdate({
+            _id: new mongodb_1.ObjectId(message.layerId)
+        }, {
+            $set: { isVisible: message.data.isVisible }
+        });
+        return [2 /*return*/, message];
     });
 }); };
-exports.addLayerHandler = addLayerHandler;
+exports.changeLayerVisibleHandler = changeLayerVisibleHandler;

@@ -14,10 +14,10 @@ interface IEditorSwitcherProps extends IEditorProps {
     type: EditorType
 }
 
-const editors = [
-    TextEditor,
-    ColorEditor
-]
+// const editors = [
+//     TextEditor,
+//     ColorEditor
+// ]
 
 const Editor = ({ defaultValue, onChange, textClassName, inputClassName, type }: IEditorSwitcherProps) => {
     let editor: React.FC<IEditorProps> | null = null;

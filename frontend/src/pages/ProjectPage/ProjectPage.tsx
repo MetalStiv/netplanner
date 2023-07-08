@@ -170,19 +170,19 @@ const ProjectPage: React.FC = observer(() => {
                     </section>
 
                     <aside id="rightPanelBar">
-                        <div className="content">
-                            <VerticalPageSplit resize={Limit}>
-                                <div style={{ minHeight: 150 }}>
-                                    <ObjectPropertiesPanel shapeProps={selectedShapeProps} />
-                                </div>
-                                <div style={{ minHeight: 150 }}>
-                                    <GraphicalPropertiesPanel
-                                        shapeProps={selectedShapeProps}
-                                        onChange={(props) => {setSelectedShapeProps({ ...selectedShapeProps!, graphProps: props })}}
-                                    />
-                                </div>
-                            </VerticalPageSplit>
-                        </div>
+                        {/* <div className="content"> */}
+                        <VerticalPageSplit resize={Limit}>
+                            <div style={{ minHeight: 150 }}>
+                                <ObjectPropertiesPanel shapeProps={selectedShapeProps} />
+                            </div>
+                            <div style={{ minHeight: 150 }}>
+                                <GraphicalPropertiesPanel
+                                    shapeProps={selectedShapeProps}
+                                    onChange={(props) => setSelectedShapeProps({ ...selectedShapeProps!, graphProps: props })}
+                                />
+                            </div>
+                        </VerticalPageSplit>
+                        {/* </div> */}
                     </aside>
                 </HorizontalPageSplit>
             </main>

@@ -1,6 +1,7 @@
 #shapesPanel {
     padding: 10px 0;
     height: 100%;
+    @include custom-scrollbar;
 
     .panel-title {
         color: $bluegray;
@@ -13,8 +14,8 @@
     }
 
     .panel-content {
-        height: 100%;
-        overflow: scroll;
+        height: calc(100% - $headerHeight);
+        overflow: auto;
         padding: 10px 14px;
     }
 

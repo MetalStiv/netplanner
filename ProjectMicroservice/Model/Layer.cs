@@ -19,10 +19,14 @@ public record Layer
     [BsonElement("zIndex")]
     public int ZIndex { get; private set; }
 
-    public Layer(string name, string pageId, int zIndex)
+    [BsonElement("isVisible")]
+    public bool isVisible { get; private set; }
+
+    public Layer(string name, string pageId, int zIndex, bool isVisible)
     {
         this.Name = name;
         this.PageId = pageId;
         this.ZIndex = zIndex;
+        this.isVisible = isVisible;
     }
 }

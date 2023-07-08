@@ -1,4 +1,6 @@
 #pagesPanel {
+    @include custom-scrollbar;
+
     .collapse-panel {
         position: relative;
         overflow: visible;

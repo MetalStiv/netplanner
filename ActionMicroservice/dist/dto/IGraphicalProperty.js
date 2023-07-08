@@ -1,2 +1,5 @@
 "use strict";
-exports.__esModule = true;
+// export interface IGraphicalProperty {
+//     value: string,
+// }
+Object.defineProperty(exports, "__esModule", { value: true });

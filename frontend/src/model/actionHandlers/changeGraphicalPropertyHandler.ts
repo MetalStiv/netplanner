@@ -12,10 +12,8 @@ export const changeGraphicalPropertyHandler: ActionHandler = async (project, mes
         ?.getLayers().find(layer => layer.getID() === message.layerId)
         ?.getShapes().find(shape => shape.config.id! === message.shapeId);
 
-    console.log(searchedShape)
     if (searchedShape)
         searchedShape.updateGraphicalProperties(message.data!.graphicalProperties!)
-    //     searchedShape.config.graphicalProperties = message.data.graphicalProperties!;
 
     project.setIsLoading(false);
     return project;

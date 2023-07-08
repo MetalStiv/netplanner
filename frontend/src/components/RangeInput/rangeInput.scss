@@ -3,6 +3,9 @@
 .scale-slider {
     display: flex;
     align-items: center;
+    padding: 8px 8px 8px 16px;
+    border-radius: 8px;
+    background-color: rgba($color: $lightgray, $alpha: .2);
 
     .slider-range {
         position: relative;
@@ -13,7 +16,7 @@
             width: 100%;
             height: 4px;
             border-radius: 50rem;
-            background: $lightgray;
+            background-color: $gray;
             outline: none;
             opacity: 0.7;
             -webkit-transition: .2s;
@@ -82,7 +85,7 @@
             font-weight: 400;
             line-height: 1.5;
             color: $darkgray;
-            background-color: transparent;
+            background-color: $white;
             border: 2px solid $lightgray;
             border-radius:8px;
             transition: border-color .2s;

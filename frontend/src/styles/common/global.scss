@@ -1,4 +1,4 @@
-@use '_variables' as v;
+// @use '_variables' as v;
 
 h1,
 h2,
@@ -14,6 +14,59 @@ p {
 
 body {
     margin: 0;
+}
+
+@property --thumb-color {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: white;
+}
+
+@keyframes scrollFadeIn {
+    0% {
+        --thumb-color: #fff;
+    }
+
+    100% {
+        --thumb-color: #aaa;
+    }
+}
+
+@keyframes scrollFadeOut {
+    0% {
+        --thumb-color: #aaa;
+    }
+
+    100% {
+        --thumb-color: #fff;
+    }
+}
+
+@mixin custom-scrollbar {
+    scrollbar-color: $blue $background;
+    scrollbar-width: thin;
+    animation: scrollFadeOut .5s forwards;
+
+    ::-webkit-scrollbar {
+        width: 16px;
+        position: absolute;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: transparent;
+        border-radius: 40px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 40px;
+        border: 5px solid transparent;
+        background-clip: content-box;
+        background-color: var(--thumb-color);
+    }
+
+    &:hover {
+        animation: scrollFadeIn .2s ease forwards;
+    }
 }
 
 @mixin button-default {
@@ -52,8 +105,6 @@ body {
 }
 
 @media all and (max-width:1200px) {
-
-
     html {
         overflow-y: hidden;
     }

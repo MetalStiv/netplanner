@@ -1,6 +1,8 @@
 $panel-title-height: 43px;
 
 #layersPanel {
+    @include custom-scrollbar;
+
     .panel-title-container {
         .panel-title {
             .plus {
@@ -99,7 +101,7 @@ $panel-title-height: 43px;
         }
 
         height: calc(100% - $panel-title-height);
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 
     height: calc(100% - $pages-panel-height);

@@ -22,7 +22,7 @@ const GraphicalPropertiesPanel = ({ shapeProps, onChange }: IGraphicalProperties
             <p className="panel-title">
                 <span>{lang?.langText.projectPage.graphPanel.title}</span>
             </p>
-            {shapeProps && <div className="">
+            {shapeProps && <div className="panel-content">
                 <div className="">
                     {
                         shapeProps && Object.entries(shapeProps.graphProps)

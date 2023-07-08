@@ -198,10 +198,10 @@ class Operation implements IShape {
             onMouseDown={handlerMouseDown}
             onClick={handlerClick}
             transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value} 
-                ${+this.config.graphicalProperties.x.value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
-                ${+this.config.graphicalProperties.y.value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}
+                ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
+                ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}
             d={`
-                M ${this.config.graphicalProperties.x.value},${this.config.graphicalProperties.y.value} 
+                M ${this.config.graphicalProperties[GraphicalPropertyTypes.X].value},${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
                 l 0 ${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
                 l ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
                 l 0 -${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}

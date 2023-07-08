@@ -23,6 +23,7 @@ export interface IMessage {
         }[],
         newShape?: IShapeTree,
         newLayer?: ILayerTree,
+        isVisible?: boolean,
         newPage?: IPageTree,
         graphicalProperties?: IShapeGraphicalProperties
     }
