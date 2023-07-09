@@ -1,11 +1,11 @@
 import { IMessage } from "../message/IMessage";
 import Layer from "../projectData/Layer";
-import Page from "../projectData/Page";
 import IShape, { GraphicalPropertyTypes } from "../shapes/IShape";
 import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
-export class DrawShapeAction implements IAction {
+export class AddShapeAction implements IAction {
+    uid: string;
     storeHistory: boolean = true;
     
     private shape: IShape;
@@ -16,11 +16,13 @@ export class DrawShapeAction implements IAction {
         this.shape = shape;
         this.currentLayer = currentLayer;
         this.dropCoords = dropCoords;
+        this.uid = (+new Date).toString(36).slice(-5);
     }
 
     undo(): IMessage {
         return {
             type: ActionType.DELETE_SHAPE,
+            shapeId: this.shape.config.id
         }
     }
 
@@ -37,6 +39,7 @@ export class DrawShapeAction implements IAction {
 
         return {
             type: ActionType.ADD_SHAPE,
+            uid: this.uid,
             layerId: this.currentLayer.getID(),
             data: {
                 newShape: {
@@ -47,5 +50,9 @@ export class DrawShapeAction implements IAction {
                 // zIndex: this.shape.config.zIndex?.toString()
             }
         }
+    }
+
+    setShapeId(id: string): void {
+        this.shape.config.id = id
     }
 }

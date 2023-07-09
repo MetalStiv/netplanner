@@ -4,6 +4,7 @@ import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
 export class DeleteShapeAction implements IAction {
+    uid: string;
     storeHistory: boolean = true;
 
     private shape: IShape;
@@ -12,6 +13,7 @@ export class DeleteShapeAction implements IAction {
     constructor(shape: IShape, layerId: string) {
         this.shape = shape;
         this.layerId = layerId;
+        this.uid = (+new Date).toString(36).slice(-5);
     }
 
     undo(): IMessage {

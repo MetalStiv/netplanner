@@ -1,10 +1,10 @@
-// import titleUniqueization from "../../common/helpers/titleUniquezation";
 import { IMessage } from "../message/IMessage";
 import Page from "../projectData/Page";
 import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
 export class AddLayerAction implements IAction {
+    uid: string;
     storeHistory: boolean = true;
     
     private currentPage: Page;
@@ -13,6 +13,7 @@ export class AddLayerAction implements IAction {
     constructor(currentPage: Page, name?: string) {
         this.currentPage = currentPage;
         name && (this.name = name);
+        this.uid = (+new Date).toString(36).slice(-5);
     }
 
     undo(): IMessage {
@@ -24,6 +25,7 @@ export class AddLayerAction implements IAction {
     do(): IMessage {
         return {
             type: ActionType.ADD_LAYER,
+            uid: this.uid,
             pageId: this.currentPage.getID(),
             data: {
                 newLayer: {

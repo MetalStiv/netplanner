@@ -4,10 +4,9 @@ import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
 export class ChangeShapePropertyAction implements IAction {
+    uid: string;
     storeHistory: boolean = true;
     
-    // private graphProps: IShapeGraphicalProps;
-    // private property: string;
     private shape: IShape;
     private layerID: string;
     private oldProperties: IShapeGraphicalProps;
@@ -16,21 +15,11 @@ export class ChangeShapePropertyAction implements IAction {
     constructor(shape: IShape, layerID: string, newProperties: IShapeGraphicalProps) {
         this.shape = shape;
         this.layerID = layerID;
-        // this.currentPage = currentPage;
-        // this.oldProperties = { ...shape.config.graphicalProperties };
-        
         this.oldProperties = Object.assign({}, shape.config.graphicalProperties);
-        // let graphicalProperty: keyof typeof this.shape.config.graphicalProperties;
-        // for (graphicalProperty in this.shape.config.graphicalProperties){
-        //     this.oldProperties({l: graphicalProperty, 
-        //         v: this.shape.config.graphicalProperties[graphicalProperty].value})
-        // }
-
         this.newProperties = newProperties;
-        console.log(this)
+        this.uid = (+new Date).toString(36).slice(-5);
     }
-    // getKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T) =>
-    // obj[key];
+
     undo(): IMessage {
         const messageProperties: {l: string, v: string}[] = []
         let graphicalProperty: keyof typeof this.oldProperties; 

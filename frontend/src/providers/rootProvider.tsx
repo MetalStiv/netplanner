@@ -34,7 +34,7 @@ export const RootProvider: React.FC<Props> = ({ children }) => {
             console.log("New message");
             console.log(message.data);
             const handledProject: Project =
-                await actionHandlers.handle(store.getProjectStore().getProject()!, JSON.parse(message!.data));
+                await actionHandlers.handle(store.getProjectStore().getProject()!, JSON.parse(message!.data), store.getActionStore().getActions());
             console.log("New project");
             console.log(handledProject);
             store.getProjectStore().setProject(handledProject);

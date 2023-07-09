@@ -8,12 +8,15 @@ import { cursorPositionHandler } from "./cursorPositionHandler";
 import { deleteShapeHandler } from "./deleteShapeHandler";
 import { changeLayerVisibleHandler } from "./changeLayerVisibleHandler";
 import { openProjectHandler } from "./openProjectHandler";
+import { IAction } from "../actions/IAction";
+import { renameLayerHandler } from "./renameLayerHandler";
+import { renamePageHandler } from "./renamePageHandler";
 
-export type ActionHandler = (project: Project, message: IMessage) => Promise<Project>
+export type ActionHandler = (project: Project, message: IMessage, actionStory: IAction[]) => Promise<Project>
 
 export interface IActionHandlers {
     handlers: ActionHandler[],
-    handle: (project: Project, message: IMessage) => Promise<Project>
+    handle: (project: Project, message: IMessage, actionStory: IAction[]) => Promise<Project>
 }
 
 export const actionHandlers: IActionHandlers = {
@@ -23,12 +26,14 @@ export const actionHandlers: IActionHandlers = {
         addShapeHandler,
         deleteShapeHandler,
         addLayerHandler,
+        renameLayerHandler,
         addPageHandler,
+        renamePageHandler,
         changeGraphicalPropertyHandler,
         changeLayerVisibleHandler
     ],
 
-    async handle(project: Project, message: IMessage) {
+    async handle(project: Project, message: IMessage, actionStory: IAction[]) {
         let result: Project = new Project(project.getShapesGroups(), project.getTitle(), project.getID());
         result.setIsLoading(true);
         if (project.getPages()) {
@@ -41,7 +46,7 @@ export const actionHandlers: IActionHandlers = {
         }
 
         this.handlers.every(async handler => {
-            result = await handler(result, message);
+            result = await handler(result, message, actionStory);
             if (result.isLoading() === true) {
                 return false;
             }

@@ -7,6 +7,8 @@ import { useRootStore } from '../../../providers/rootProvider';
 import { TActionStore } from '../../../stores/actionStore';
 import { TProjectStore } from '../../../stores/projectStore';
 import { ChangeLayerVisibleAction } from '../../../model/actions/ChangeLayerVisibleAction';
+import { RenameLayerAction } from '../../../model/actions/RenameLayer';
+import Layer from '../../../model/projectData/Layer';
 
 // interface ILayersPanelProps {
 //     // currentPage: Page,
@@ -44,19 +46,28 @@ const LayersPanel = () => {
         <path d="M16.5 1.5L10.8975 7.1025" stroke="#6B6B70" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>;
 
-    const changeTitleHandler = (el: HTMLInputElement, layerID: string) => {
+    const changeTitleHandler = (el: HTMLInputElement, layerId: string) => {
         setEditingLayerIndex(-1);
         let newTitle = el.value.trim();
 
         if (newTitle.length) {
-            newTitle = titleUniqueization(newTitle, currentPage.getLayers(), "234123413");
+            // newTitle = titleUniqueization(newTitle, currentPage.getLayers(), "234123413");
 
-            currentPage.setLayers(currentPage.getLayers().map(item => {
-                if (item.getID() === layerID) {
-                    item.setTitle(newTitle);
-                }
-                return item;
-            }))
+            // currentPage.setLayers(currentPage.getLayers().map(item => {
+            //     if (item.getID() === layerID) {
+            //         item.setTitle(newTitle);
+            //     }
+            //     return item;
+            // }))
+            let layer: Layer | undefined;
+            project?.getPages().forEach(p => p.getLayers()
+                .forEach(l => {
+                    if (l.getID() === layerId){
+                        layer = l;
+                    }
+                }))
+            const renameLayerAction = new RenameLayerAction(layer!, newTitle);
+            actionStore.push(renameLayerAction);
             setTitle("");
         }
     }

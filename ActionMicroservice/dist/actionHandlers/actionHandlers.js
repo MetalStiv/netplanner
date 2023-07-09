@@ -9,8 +9,10 @@ var changeGraphicalPropertiesHandler_1 = require("./changeGraphicalPropertiesHan
 var cursorPositionHandler_1 = require("./cursorPositionHandler");
 var deleteShapeAction_1 = require("./deleteShapeAction");
 var changeLayerVisible_1 = require("./changeLayerVisible");
+var renameLayer_1 = require("./renameLayer");
+var renamePage_1 = require("./renamePage");
 exports.actionHandlers = {
-    handlers: new Array(cursorPositionHandler_1.cursorPositionHandler, addShapeHandler_1.addShapeHandler, deleteShapeAction_1.deleteShapeHandler, addLayerHandler_1.addLayerHandler, changeLayerVisible_1.changeLayerVisibleHandler, addPageHandler_1.addPageHandler, changeGraphicalPropertiesHandler_1.changeGraphicalPropertiesHandler),
+    handlers: new Array(cursorPositionHandler_1.cursorPositionHandler, addShapeHandler_1.addShapeHandler, deleteShapeAction_1.deleteShapeHandler, addLayerHandler_1.addLayerHandler, renameLayer_1.renameLayerHandler, changeLayerVisible_1.changeLayerVisibleHandler, addPageHandler_1.addPageHandler, renamePage_1.renamePageHandler, changeGraphicalPropertiesHandler_1.changeGraphicalPropertiesHandler),
     handle: function (collections, message) {
         collections.projectMetaCollection.findOneAndUpdate({
             _id: new mongodb_1.ObjectId(message.projectId)

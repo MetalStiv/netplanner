@@ -10,7 +10,7 @@ import { RangeInput } from '../../components';
 import { useSprings, animated } from '@react-spring/web'
 import Page from '../../model/projectData/Page';
 import IShape, { IShapeGraphicalProps } from '../../model/shapes/IShape';
-import { DrawShapeAction } from '../../model/actions/DrawShapeAction';
+import { AddShapeAction } from '../../model/actions/AddShapeAction';
 import { ILayer } from '../../model/projectData/Layer';
 import { TProjectStore } from '../../stores/projectStore';
 import { CursorPositionAction } from '../../model/actions/CursorPositionAction';
@@ -398,7 +398,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         })
 
         const newShape: IShape = creatorOnDrop!.create();
-        let drawShapeAction = new DrawShapeAction(newShape, currentPage?.getCurrentLayer()!, dropCoords)
+        let drawShapeAction = new AddShapeAction(newShape, currentPage?.getCurrentLayer()!, dropCoords)
         actionStore.push(drawShapeAction);
     }
 

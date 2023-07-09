@@ -15,6 +15,7 @@ export interface IActionStore {
     push: (action: IAction) => void,
     back: () => void,
     forward: () => void,
+    getActions: () => IAction[],
 
     clearStore: () => void
 }
@@ -56,6 +57,10 @@ export const createActionStore = () => {
             this[actionsSymbol].length === this[maxSizeSymbol] && this[actionsSymbol].shift();
             this[actionsSymbol].push(action);
             this[messageSenderSymbol] && this[messageSenderSymbol]!(JSON.stringify(action.do()))
+        },
+
+        getActions(): IAction[]{
+            return this[actionsSymbol]
         },
 
         clearStore() {

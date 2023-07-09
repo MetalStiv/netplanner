@@ -25,6 +25,7 @@ export interface IMessage {
         newLayer?: ILayerTree,
         isVisible?: boolean,
         newPage?: IPageTree,
+        name: string,
         graphicalProperties?: IShapeGraphicalProperties
     }
 }

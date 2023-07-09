@@ -4,6 +4,7 @@ import { IMessagePage } from "./IMessagePage"
 
 export interface IMessage {
     type: string,
+    uid?: string,
     projectId?: string,
     pageId?: string,
     layerId?: string,
@@ -27,5 +28,6 @@ export interface IMessage {
         newPage?: IMessagePage,
         graphicalProperties?: IMessageGraphicalProperty[],
         coords?: {x: number, y: number},
+        name?: string,
     }
 }

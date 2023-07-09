@@ -10,6 +10,7 @@ import { AddPageAction } from '../../../model/actions/AddPageAction';
 import { useRootStore } from '../../../providers/rootProvider';
 import { TActionStore } from '../../../stores/actionStore';
 import { TProjectStore } from '../../../stores/projectStore';
+import { RenamePageAction } from '../../../model/actions/RenamePage';
 
 // interface PagesPanelProps {
 //     currentProject: IProject,
@@ -49,19 +50,22 @@ const PagesPanel = () => {
         console.log(currentProject.getCurrentPage())
     }
 
-    const changeTitleHandler = (el: HTMLInputElement, pageID: string) => {
+    const changeTitleHandler = (el: HTMLInputElement, pageId: string) => {
         setEditingPageIndex(-1);
         let newTitle = el.value.trim();
 
         if (newTitle.length) {
-            newTitle = titleUniqueization(newTitle, currentProject.getPages(), pageID);
+            // newTitle = titleUniqueization(newTitle, currentProject.getPages(), pageID);
 
-            currentProject.setPages(currentProject.getPages().map(item => {
-                if (item.getID() === pageID) {
-                    item.setTitle(newTitle);
-                }
-                return item;
-            }))
+            // currentProject.setPages(currentProject.getPages().map(item => {
+            //     if (item.getID() === pageID) {
+            //         item.setTitle(newTitle);
+            //     }
+            //     return item;
+            // }))
+            const page = projectStore.getProject()!.getPages().find(p => p.getID() === pageId)
+            const renamePageAction = new RenamePageAction(page!, newTitle);
+            actionStore.push(renamePageAction);
             setTitle("");
         }
     }

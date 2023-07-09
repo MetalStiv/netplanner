@@ -2,15 +2,20 @@ import { shapeInflaters } from "../shapes/shapeInflaters";
 import IShape from "../shapes/IShape";
 import { ActionHandler } from "./actionHandlers";
 import { ActionType } from "../actions/ActionType";
+import { AddShapeAction } from "../actions/AddShapeAction";
 
-export const addShapeHandler: ActionHandler = async (project, message) => {
+export const addShapeHandler: ActionHandler = async (project, message, actionStory) => {
     if (message.type !== ActionType.ADD_SHAPE) {
         return project;
     };
 
+    const action = actionStory.find(a => a.uid === message.uid)! as AddShapeAction;
+    action && action.setShapeId(message.data!.newShape!.id!);
+    console.log(action);
+
     const newShape: IShape | null = await shapeInflaters.inflate(message.data!.newShape!);
     if (newShape) {
-        project.getCurrentPage() //.getPages()..find(p => p.getID() === message.pageId)
+        project.getCurrentPage()
             ?.getLayers().find(l => l.getID() === message.layerId)
             ?.addShape(newShape);
     }

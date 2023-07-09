@@ -8,6 +8,8 @@ import { changeGraphicalPropertiesHandler } from "./changeGraphicalPropertiesHan
 import { cursorPositionHandler } from "./cursorPositionHandler";
 import { deleteShapeHandler } from "./deleteShapeAction";
 import { changeLayerVisibleHandler } from "./changeLayerVisible";
+import { renameLayerHandler } from "./renameLayer";
+import { renamePageHandler } from "./renamePage";
 
 export type ActionHandler = (collections: IDatadaseCollections, message: IMessage) => Promise<IMessage | Error>
 
@@ -22,8 +24,10 @@ export const actionHandlers: IActionHandlers = {
         addShapeHandler,
         deleteShapeHandler,
         addLayerHandler,
+        renameLayerHandler,
         changeLayerVisibleHandler,
         addPageHandler,
+        renamePageHandler,
         changeGraphicalPropertiesHandler
     ),
 

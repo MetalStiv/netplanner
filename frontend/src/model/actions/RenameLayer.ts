@@ -3,37 +3,39 @@ import Layer from "../projectData/Layer";
 import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
-export class ChangeLayerVisibleAction implements IAction {
+export class RenameLayerAction implements IAction {
     uid: string;
     storeHistory: boolean = true;
     
     private layer: Layer;
-    private prevVal: boolean;
-    private newVal: boolean;
+    private newName: string;
+    private oldName: string;
 
-    constructor(layer: Layer, newVal: boolean) {
+    constructor(layer: Layer, newName: string) {
         this.layer = layer;
-        this.prevVal = layer.isVisible();
-        this.newVal = newVal;
+        this.newName = newName;
+        this.oldName = layer.getTitle()
         this.uid = (+new Date).toString(36).slice(-5);
-    }
-
-    do(): IMessage {
-        return {
-            type: ActionType.CHANGE_LAYER_VISIBLE,
-            layerId: this.layer.getID(),
-            data: {
-                isVisible: this.newVal
-            }
-        }
     }
 
     undo(): IMessage {
         return {
-            type: ActionType.CHANGE_LAYER_VISIBLE,
+            type: ActionType.RENAME_LAYER,
+            uid: this.uid,
             layerId: this.layer.getID(),
             data: {
-                isVisible: this.newVal
+                name: this.oldName
+            }
+        }
+    }
+
+    do(): IMessage {
+        return {
+            type: ActionType.RENAME_LAYER,
+            uid: this.uid,
+            layerId: this.layer.getID(),
+            data: {
+                name: this.newName
             }
         }
     }

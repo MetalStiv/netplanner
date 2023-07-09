@@ -1,11 +1,10 @@
 import { IMessage } from "../message/IMessage";
-import Layer from "../projectData/Layer";
 import Page from "../projectData/Page";
-import IShape from "../shapes/IShape";
 import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
 export class CursorPositionAction implements IAction {
+    uid: string;
     storeHistory: boolean = false;
     
     private currentPage: Page;
@@ -14,6 +13,7 @@ export class CursorPositionAction implements IAction {
     constructor(currentPage: Page, cursorCoords: { x: number, y: number }) {
         this.currentPage = currentPage;
         this.cursorCoords = cursorCoords;
+        this.uid = (+new Date).toString(36).slice(-5);
     }
 
     undo(): IMessage {
