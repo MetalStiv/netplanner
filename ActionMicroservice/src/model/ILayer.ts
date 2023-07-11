@@ -1,5 +1,4 @@
 import { ObjectId } from "mongodb";
-import { IShape } from "./IShape";
 
 export interface ILayer {
     _id: ObjectId,

@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { ActionType } from "../actionType";
+import { titleUniqueization } from "../helpers/titleUniqueization";
 import { ActionHandler } from "./actionHandlers";
-import titleUniqueization from "../helpers/titleUniqueization";
 
 export const addPageHandler: ActionHandler = async (collections, message) => {
     if (message.type !== ActionType.ADD_PAGE) {
@@ -9,14 +9,15 @@ export const addPageHandler: ActionHandler = async (collections, message) => {
     }
 
     function uniqPageTitle(name: string) {
-        return titleUniqueization(name.length ? name : 'Page', collections.pageCollection);
+        return titleUniqueization({title: name.length ? name : 'Page', collection: collections.pageCollection, 
+            parentField: 'projectId', parentId: message.projectId});
     }
 
     const uniqTitle = await uniqPageTitle(message.data.newPage.name);
 
     const newPage = {
-        _id: new ObjectId(),
-        name: uniqTitle,
+        _id: message.data.newPage.id ? new ObjectId(message.data.newPage.id) : new ObjectId(),
+        name: message.data.newPage.name || uniqTitle,
         projectId: new ObjectId(message.projectId)
     };
 

@@ -26,6 +26,7 @@ export interface IProject {
     setPages: (page: Page[]) => void,
     getPages: () => Page[],
     addPage: (newPage: Page) => void,
+    deletePageById: (id: string) => void,
     getCurrentPage: () => Page,
     setCurrentPage: (pageID: string) => void,
 
@@ -101,6 +102,12 @@ class Project implements IProject {
     addPage(newPage: Page) {
         this.getPages().forEach(page => page.isCurrent() && page.setIsCurrent(false))
         this.setPages([...this.getPages(), newPage]);
+    }
+
+    deletePageById(id: string){
+        const ind = this[pagesSym].findIndex(p => p.getID() === id)
+        this[pagesSym] = [...this[pagesSym].slice(0, ind), ...this[pagesSym].slice(ind+1, this[pagesSym].length)]
+        console.log(this[pagesSym])
     }
 
     getCursors(){

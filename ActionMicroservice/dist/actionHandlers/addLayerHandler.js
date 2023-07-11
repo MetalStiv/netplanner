@@ -42,7 +42,8 @@ var actionType_1 = require("../actionType");
 var titleUniqueization_1 = require("../helpers/titleUniqueization");
 var addLayerHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
     function uniqLayerTitle(name) {
-        return (0, titleUniqueization_1["default"])(name.length ? name : 'Layer', collections.layerCollection);
+        return (0, titleUniqueization_1.titleUniqueization)({ title: name.length ? name : 'Layer', collection: collections.layerCollection,
+            parentField: 'pageId', parentId: message.pageId });
     }
     function getZIndex(pageId) {
         return __awaiter(this, void 0, void 0, function () {
@@ -71,19 +72,39 @@ var addLayerHandler = function (collections, message) { return __awaiter(void 0,
             case 2:
                 zIndex = _a.sent();
                 newLayer = {
-                    _id: new mongodb_1.ObjectId(),
-                    name: uniqTitle,
+                    _id: message.data.newLayer.id ? new mongodb_1.ObjectId(message.data.newLayer.id) : new mongodb_1.ObjectId(),
+                    name: message.data.newLayer.name || uniqTitle,
                     pageId: new mongodb_1.ObjectId(message.pageId),
-                    zIndex: zIndex,
-                    isVisible: true
+                    zIndex: message.data.newLayer.zIndex || zIndex,
+                    isVisible: message.data.newLayer.isVisible === undefined ? true
+                        : message.data.newLayer.isVisible
                 };
                 return [4 /*yield*/, collections.layerCollection.insertOne(newLayer)];
             case 3:
                 _a.sent();
+                message.data.newLayer.shapes.forEach(function (s) { return __awaiter(void 0, void 0, void 0, function () {
+                    var newShape;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                newShape = {
+                                    _id: new mongodb_1.ObjectId(s.id),
+                                    type: s.type,
+                                    layerId: new mongodb_1.ObjectId(message.data.newLayer.id),
+                                    zIndex: s.zIndex,
+                                    graphicalProperties: s.graphicalProperties
+                                };
+                                return [4 /*yield*/, collections.shapeCollection.insertOne(newShape)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
                 messageCopy = JSON.parse(JSON.stringify(message));
                 messageCopy.data.newLayer.id = newLayer._id.toString();
-                messageCopy.data.newLayer.name = uniqTitle;
-                messageCopy.data.newLayer.zIndex = zIndex;
+                messageCopy.data.newLayer.name = newLayer.name;
+                messageCopy.data.newLayer.zIndex = newLayer.zIndex;
                 return [2 /*return*/, messageCopy];
         }
     });

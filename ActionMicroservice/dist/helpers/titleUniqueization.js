@@ -36,44 +36,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-function titleUniqueization(title, collection, renamingItemID) {
-    if (renamingItemID === void 0) { renamingItemID = ''; }
-    return __awaiter(this, void 0, void 0, function () {
-        var getTitleQueueCount, copyIndex;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    getTitleQueueCount = function (copyIndex) {
-                        if (copyIndex === void 0) { copyIndex = 0; }
-                        return __awaiter(this, void 0, void 0, function () {
-                            var document, _a;
-                            return __generator(this, function (_b) {
-                                switch (_b.label) {
-                                    case 0: return [4 /*yield*/, collection.findOne({ _id: { $ne: renamingItemID }, name: (title + (copyIndex === 0 ? '' : "_".concat(copyIndex))) })];
-                                    case 1:
-                                        document = _b.sent();
-                                        if (!document) return [3 /*break*/, 3];
-                                        return [4 /*yield*/, getTitleQueueCount(copyIndex + 1)];
-                                    case 2:
-                                        _a = _b.sent();
-                                        return [3 /*break*/, 4];
-                                    case 3:
-                                        _a = copyIndex;
-                                        _b.label = 4;
-                                    case 4: return [2 /*return*/, _a];
-                                }
-                            });
-                        });
-                    };
-                    return [4 /*yield*/, getTitleQueueCount()];
+exports.titleUniqueization = void 0;
+var mongodb_1 = require("mongodb");
+var titleUniqueization = function (_a) {
+    var title = _a.title, collection = _a.collection, _b = _a.renamingItemID, renamingItemID = _b === void 0 ? '' : _b, _c = _a.parentField, parentField = _c === void 0 ? "" : _c, _d = _a.parentId, parentId = _d === void 0 ? "" : _d;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var count;
+        var _e;
+        return __generator(this, function (_f) {
+            switch (_f.label) {
+                case 0: return [4 /*yield*/, collection.find((_e = {}, _e[parentField] = new mongodb_1.ObjectId(parentId), _e)).toArray()];
                 case 1:
-                    copyIndex = _a.sent();
-                    if (copyIndex > 0) {
-                        title += "_".concat(copyIndex);
+                    count = (_f.sent()).length;
+                    if (count > 0) {
+                        title += "_".concat(count);
                     }
                     return [2 /*return*/, title];
             }
         });
     });
-}
-exports["default"] = titleUniqueization;
+};
+exports.titleUniqueization = titleUniqueization;

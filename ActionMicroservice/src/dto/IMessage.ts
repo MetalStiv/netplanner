@@ -12,20 +12,12 @@ export interface IMessage {
     layerId?: string,
     shapeId?: string,
     data: {
-        pages?: {
-            id: string,
-            name: string,
-            layers: {
-                id: string,
-                name: string,
-                shapes: IShapeTree[]
-            }[]
-        }[],
+        pages?: IPageTree[],
         newShape?: IShapeTree,
         newLayer?: ILayerTree,
         isVisible?: boolean,
         newPage?: IPageTree,
-        name: string,
+        name?: string,
         graphicalProperties?: IShapeGraphicalProperties
     }
 }

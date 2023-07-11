@@ -1,4 +1,5 @@
 import { ActionType } from "../actions/ActionType";
+import { AddPageAction } from "../actions/AddPageAction";
 import Layer from "../projectData/Layer";
 import Page from "../projectData/Page";
 // import { IMessageShape } from "../IMessageShape";
@@ -6,11 +7,14 @@ import Page from "../projectData/Page";
 // import { shapeInflaters } from "../shapeInflaters";
 import { ActionHandler } from "./actionHandlers";
 
-export const addPageHandler: ActionHandler = async (project, message) => {
+export const addPageHandler: ActionHandler = async (project, message, actionStory) => {
     if (message.type !== ActionType.ADD_PAGE) {
         return project;
     };
-    console.log(message)
+    
+    const action = actionStory.find(a => a.uid === message.uid)! as AddPageAction;
+    action && action.setPageId(message.data?.newPage!.id!);
+    console.log(action);
 
     const newPage: Page =
         new Page(message.data!.newPage!.id,

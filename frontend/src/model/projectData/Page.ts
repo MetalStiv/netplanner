@@ -24,7 +24,7 @@ const titleSym: unique symbol = Symbol();
 const layersSym: unique symbol = Symbol();
 const isCurrentSym: unique symbol = Symbol();
 
-class Page implements Page {
+class Page {
     [idSym]: string;
     [titleSym]: string;
     [layersSym]: ILayer[];
@@ -79,6 +79,15 @@ class Page implements Page {
             }
         });
         this[layersSym] = [...this.getLayers(), newLayer];
+    }
+
+    removeLayerById(layerId: string){
+        const ind: number = this[layersSym].findIndex(l => l.getID() === layerId)
+        // if (this[layersSym][ind].isCurrent()){
+        //     this[layersSym][ind-1].setIsCurrent(true);
+        // }
+        this[layersSym] = [...this[layersSym].slice(0, ind-1), 
+            ...this[layersSym].slice(ind+1, this[layersSym].length)]
     }
 
     getCurrentLayer(): ILayer {

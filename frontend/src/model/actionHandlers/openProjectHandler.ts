@@ -12,8 +12,8 @@ export const openProjectHandler: ActionHandler = async (project, message) => {
 
     const pages: Page[] = await Promise.all(message.data!.pages!.map(async p => {
         const newPage = new Page(p.id, p.name,
-            await Promise.all(p.layers.map(async l => new Layer(l.id, l.zIndex, l.name,
-                (await Promise.all(l.shapes.map(async s => {
+            await Promise.all(p.layers!.map(async l => new Layer(l.id, l.zIndex!, l.name,
+                (await Promise.all(l.shapes!.map(async s => {
                     const shape: IShape | null = await shapeInflaters.inflate(s);
                     return shape
                 }))).filter((x): x is IShape => x !== null),

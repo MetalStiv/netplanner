@@ -11,17 +11,7 @@ export interface IMessage {
     shapeId?: string,
     senderId?: string,
     data?: {
-        pages?: [{
-            id: string,
-            name: string,
-            layers: [{
-                id: string,
-                name: string,
-                zIndex: number,
-                isVisible: boolean,
-                shapes: IMessageShape[]
-            }]
-        }],
+        pages?: IMessagePage[],
         newShape?: IMessageShape,
         newLayer?: IMessageLayer,
         isVisible?: boolean,

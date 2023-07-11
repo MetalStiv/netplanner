@@ -9,16 +9,18 @@ export class AddPageAction implements IAction {
     
     private currentProject: Project;
     private name: string | null = null;
+    private pageId: string | undefined;
 
     constructor(currentProject: Project, name?: string) {
         this.currentProject = currentProject;
         name && (this.name = name);
         this.uid = (+new Date).toString(36).slice(-5);
-    }
+    } 
 
     undo(): IMessage {
         return {
             type: ActionType.DELETE_PAGE,
+            pageId: this.pageId,
         }
     }
 
@@ -32,5 +34,9 @@ export class AddPageAction implements IAction {
                 },
             }
         }
+    }
+
+    setPageId(id: string){
+        this.pageId = id
     }
 }

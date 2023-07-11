@@ -11,13 +11,14 @@ import { useRootStore } from '../../../providers/rootProvider';
 import { TActionStore } from '../../../stores/actionStore';
 import { TProjectStore } from '../../../stores/projectStore';
 import { RenamePageAction } from '../../../model/actions/RenamePage';
+import { observer } from 'mobx-react-lite';
 
 // interface PagesPanelProps {
 //     currentProject: IProject,
 //     //updateProjectCallback: (pages: Page[]) => void,
 // }
 
-const PagesPanel = () => {
+const PagesPanel = observer(() => {
     const [collapsePanelIsOpen, setCollapsePanelIsOpen] = useState<boolean>(false);
     const [editingPageIndex, setEditingPageIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
@@ -123,6 +124,6 @@ const PagesPanel = () => {
             </div>
         </div>
     )
-}
+})
 
 export default PagesPanel;

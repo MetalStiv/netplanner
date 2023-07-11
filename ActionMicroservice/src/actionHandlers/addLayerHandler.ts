@@ -2,7 +2,8 @@ import { Collection, ObjectId } from "mongodb";
 import { ActionType } from "../actionType";
 import { ILayer } from "../model/ILayer";
 import { ActionHandler } from "./actionHandlers";
-import titleUniqueization from "../helpers/titleUniqueization";
+import { IShape } from "../model/IShape";
+import { titleUniqueization } from "../helpers/titleUniqueization";
 
 export const addLayerHandler: ActionHandler = async (collections, message) => {
     if (message.type !== ActionType.ADD_LAYER) {
@@ -10,7 +11,8 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
     }
 
     function uniqLayerTitle(name: string) {
-        return titleUniqueization(name.length ? name : 'Layer', collections.layerCollection);
+        return titleUniqueization({title: name.length ? name : 'Layer', collection: collections.layerCollection,
+            parentField: 'pageId', parentId: message.pageId});
     }
 
     async function getZIndex(pageId: string) {
@@ -21,20 +23,33 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
     const uniqTitle = await uniqLayerTitle(message.data.newLayer.name);
     const zIndex = await getZIndex(message.pageId);
     const newLayer: ILayer = {
-        _id: new ObjectId(),
-        name: uniqTitle,
+        _id: message.data.newLayer.id ? new ObjectId(message.data.newLayer.id) : new ObjectId(),
+        name: message.data.newLayer.name || uniqTitle,
         pageId: new ObjectId(message.pageId),
-        zIndex: zIndex,
-        isVisible: true
+        zIndex: message.data.newLayer.zIndex || zIndex,
+        isVisible: message.data.newLayer.isVisible === undefined ? true
+            : message.data.newLayer.isVisible
     };
 
     await collections.layerCollection.insertOne(newLayer);
+    
+    message.data.newLayer.shapes.forEach(async s => {
+        const newShape: IShape = {
+            _id: new ObjectId(s.id),
+            type: s.type,
+            layerId: new ObjectId(message.data.newLayer.id),
+            zIndex: s.zIndex,
+            graphicalProperties: s.graphicalProperties
+        };
+    
+        await collections.shapeCollection.insertOne(newShape)
+    })
 
     const messageCopy = JSON.parse(JSON.stringify(message));
 
     messageCopy.data.newLayer.id = newLayer._id.toString();
-    messageCopy.data.newLayer.name = uniqTitle;
-    messageCopy.data.newLayer.zIndex = zIndex;
+    messageCopy.data.newLayer.name = newLayer.name;
+    messageCopy.data.newLayer.zIndex = newLayer.zIndex;
 
     return messageCopy;
 }

@@ -9,6 +9,7 @@ export class AddLayerAction implements IAction {
     
     private currentPage: Page;
     private name: string | null = null;
+    private layerId: string | undefined;
 
     constructor(currentPage: Page, name?: string) {
         this.currentPage = currentPage;
@@ -19,6 +20,7 @@ export class AddLayerAction implements IAction {
     undo(): IMessage {
         return {
             type: ActionType.DELETE_LAYER,
+            layerId: this.layerId,
         }
     }
 
@@ -30,10 +32,12 @@ export class AddLayerAction implements IAction {
             data: {
                 newLayer: {
                     name: this.name ?? '',
-                    // name: titleUniqueization('Layer', this.currentPage.getLayers()),
-                    // zIndex: this.currentPage.getLayers().length * 1000,
                 }
             }
         }
+    }
+
+    setLayerId(id: string){
+        this.layerId = id;
     }
 }

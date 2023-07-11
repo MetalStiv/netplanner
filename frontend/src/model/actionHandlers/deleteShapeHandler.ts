@@ -1,5 +1,4 @@
 import { ActionType } from "../actions/ActionType";
-import Layer from "../projectData/Layer";
 import { ActionHandler } from "./actionHandlers";
 
 export const deleteShapeHandler: ActionHandler = async (project, message) => {

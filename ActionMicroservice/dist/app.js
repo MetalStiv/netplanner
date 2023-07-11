@@ -109,7 +109,6 @@ wsServer.on('connection', function (ws, req) { return __awaiter(void 0, void 0, 
                 });
                 metadata = { userId: userId, projectId: projectId };
                 clients.set(ws, metadata);
-                console.log("Socs");
                 clients.forEach(function (meta, w) {
                     console.log(meta);
                 });

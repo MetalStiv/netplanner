@@ -75,7 +75,6 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
 
     const metadata: IMetadata = { userId, projectId };
     clients.set(ws, metadata);
-    console.log("Socs");
     clients.forEach((meta, w) => {
         console.log(meta)
     });

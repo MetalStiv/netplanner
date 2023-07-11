@@ -10,6 +10,8 @@ import { deleteShapeHandler } from "./deleteShapeAction";
 import { changeLayerVisibleHandler } from "./changeLayerVisible";
 import { renameLayerHandler } from "./renameLayer";
 import { renamePageHandler } from "./renamePage";
+import { deleteLayerHandler } from "./deleteLayerHandler";
+import { deletePageHandler } from "./deletePageHandler";
 
 export type ActionHandler = (collections: IDatadaseCollections, message: IMessage) => Promise<IMessage | Error>
 
@@ -25,9 +27,11 @@ export const actionHandlers: IActionHandlers = {
         deleteShapeHandler,
         addLayerHandler,
         renameLayerHandler,
+        deleteLayerHandler,
         changeLayerVisibleHandler,
         addPageHandler,
         renamePageHandler,
+        deletePageHandler,
         changeGraphicalPropertiesHandler
     ),
 

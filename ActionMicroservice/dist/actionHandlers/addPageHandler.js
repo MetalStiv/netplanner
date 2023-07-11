@@ -42,7 +42,8 @@ var actionType_1 = require("../actionType");
 var titleUniqueization_1 = require("../helpers/titleUniqueization");
 var addPageHandler = function (collections, message) { return __awaiter(void 0, void 0, void 0, function () {
     function uniqPageTitle(name) {
-        return (0, titleUniqueization_1["default"])(name.length ? name : 'Page', collections.pageCollection);
+        return (0, titleUniqueization_1.titleUniqueization)({ title: name.length ? name : 'Page', collection: collections.pageCollection,
+            parentField: 'projectId', parentId: message.projectId });
     }
     var uniqTitle, newPage, messageCopy, newLayers, newShapes, objId;
     return __generator(this, function (_a) {
@@ -55,8 +56,8 @@ var addPageHandler = function (collections, message) { return __awaiter(void 0, 
             case 1:
                 uniqTitle = _a.sent();
                 newPage = {
-                    _id: new mongodb_1.ObjectId(),
-                    name: uniqTitle,
+                    _id: message.data.newPage.id ? new mongodb_1.ObjectId(message.data.newPage.id) : new mongodb_1.ObjectId(),
+                    name: message.data.newPage.name || uniqTitle,
                     projectId: new mongodb_1.ObjectId(message.projectId)
                 };
                 messageCopy = JSON.parse(JSON.stringify(message));
