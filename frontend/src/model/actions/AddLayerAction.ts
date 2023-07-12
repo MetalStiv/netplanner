@@ -32,6 +32,7 @@ export class AddLayerAction implements IAction {
             data: {
                 newLayer: {
                     name: this.name ?? '',
+                    shapes: [],
                 }
             }
         }

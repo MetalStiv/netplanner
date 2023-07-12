@@ -7,6 +7,13 @@ export const deleteShapeHandler: ActionHandler = async (collections, message) =>
         return Promise.reject('Wrong handler');
     };
 
+    collections.projectMetaCollection.findOneAndUpdate({
+        _id: new ObjectId(message.projectId)
+    },
+        {
+            $set: { lastModifyTime: new Date }
+        });
+
     await collections.shapeCollection.deleteOne(
         {
             _id: new ObjectId(message.shapeId)

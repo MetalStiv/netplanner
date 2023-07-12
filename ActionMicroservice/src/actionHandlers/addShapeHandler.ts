@@ -7,6 +7,14 @@ export const addShapeHandler: ActionHandler = async (collections, message) => {
     if (message.type !== ActionType.ADD_SHAPE) {
         return Promise.reject('Wrong handler');
     };
+
+    collections.projectMetaCollection.findOneAndUpdate({
+        _id: new ObjectId(message.projectId)
+    },
+        {
+            $set: { lastModifyTime: new Date }
+        });
+        
     const newShape: IShape = {
         _id: new ObjectId(),
         type: message.data.newShape.type,

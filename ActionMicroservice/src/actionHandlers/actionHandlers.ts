@@ -36,13 +36,6 @@ export const actionHandlers: IActionHandlers = {
     ),
 
     handle(collections: IDatadaseCollections, message: IMessage) {
-        collections.projectMetaCollection.findOneAndUpdate({
-            _id: new ObjectId(message.projectId)
-        },
-            {
-                $set: { lastModifyTime: new Date }
-            });
-
         return Promise.allSettled(this.handlers.map(handler => handler(collections, message))).then(results => {
             const fulfilledResult = results.find(result => result.status === "fulfilled");
             return fulfilledResult.status === "fulfilled" ? fulfilledResult.value : {};

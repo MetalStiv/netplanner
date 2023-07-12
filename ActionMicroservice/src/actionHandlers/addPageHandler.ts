@@ -8,6 +8,13 @@ export const addPageHandler: ActionHandler = async (collections, message) => {
         return Promise.reject('Wrong handler');
     }
 
+    collections.projectMetaCollection.findOneAndUpdate({
+        _id: new ObjectId(message.projectId)
+    },
+        {
+            $set: { lastModifyTime: new Date }
+        });
+
     function uniqPageTitle(name: string) {
         return titleUniqueization({title: name.length ? name : 'Page', collection: collections.pageCollection, 
             parentField: 'projectId', parentId: message.projectId});

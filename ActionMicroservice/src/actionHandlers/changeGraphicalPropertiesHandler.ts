@@ -7,6 +7,13 @@ export const changeGraphicalPropertiesHandler: ActionHandler = async (collection
         return Promise.reject('Wrong handler');
     };
 
+    collections.projectMetaCollection.findOneAndUpdate({
+        _id: new ObjectId(message.projectId)
+    },
+        {
+            $set: { lastModifyTime: new Date }
+        });
+        
     await collections.shapeCollection.findOneAndUpdate(
         {
             layerId: new ObjectId(message.layerId),

@@ -63,15 +63,6 @@ class Page {
         this[layersSym] = layers;
     }
 
-    // addLayer(title: string = "Layer") {
-    //     this.getLayers().forEach(item => {
-    //         if (item.getIsCurrent()) {
-    //             item.setIsCurrent(false);
-    //         }
-    //     });
-    //     this[layersSym] = [...this.getLayers(), new Layer("eirotwert", this.getLayers().length, "hlkjhlk", [])];
-    // }
-
     addLayer(newLayer: ILayer) {
         this.getLayers().forEach(item => {
             if (item.isCurrent()) {
@@ -83,10 +74,11 @@ class Page {
 
     removeLayerById(layerId: string){
         const ind: number = this[layersSym].findIndex(l => l.getID() === layerId)
+        console.log(ind)
         // if (this[layersSym][ind].isCurrent()){
         //     this[layersSym][ind-1].setIsCurrent(true);
         // }
-        this[layersSym] = [...this[layersSym].slice(0, ind-1), 
+        this[layersSym] = [...this[layersSym].slice(0, ind), 
             ...this[layersSym].slice(ind+1, this[layersSym].length)]
     }
 

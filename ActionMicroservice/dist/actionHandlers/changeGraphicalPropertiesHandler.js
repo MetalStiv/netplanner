@@ -47,6 +47,11 @@ var changeGraphicalPropertiesHandler = function (collections, message) { return 
                     return [2 /*return*/, Promise.reject('Wrong handler')];
                 }
                 ;
+                collections.projectMetaCollection.findOneAndUpdate({
+                    _id: new mongodb_1.ObjectId(message.projectId)
+                }, {
+                    $set: { lastModifyTime: new Date }
+                });
                 return [4 /*yield*/, collections.shapeCollection.findOneAndUpdate({
                         layerId: new mongodb_1.ObjectId(message.layerId),
                         _id: new mongodb_1.ObjectId(message.shapeId)

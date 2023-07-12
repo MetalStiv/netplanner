@@ -9,6 +9,13 @@ export const deletePageHandler: ActionHandler = async (collections, message) => 
         return Promise.reject('Wrong handler');
     };
 
+    collections.projectMetaCollection.findOneAndUpdate({
+        _id: new ObjectId(message.projectId)
+    },
+        {
+            $set: { lastModifyTime: new Date }
+        });
+        
     const pages: IPage[] =  await collections.pageCollection
         .find({projectId: new ObjectId(message.projectId)}).toArray();
     if (!pages.filter(p => p._id.toString() !== message.pageId!)[0]){

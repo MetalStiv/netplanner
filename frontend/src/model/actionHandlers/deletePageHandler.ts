@@ -10,10 +10,10 @@ export const deletePageHandler: ActionHandler = async (project, message) => {
     if (!project.getPages().filter(p => p.getID() !== message.pageId)[0]){
         return project
     }
-    project.setCurrentPage(project.getPages().filter(p => p.getID() !== message.pageId)[0].getID())
-    console.log(project.getCurrentPage());
-    
-    project.deletePageById(message.pageId!);
+    if (project.getPages().find(p => p.getID() === message.pageId)?.isCurrent()){
+        project.setCurrentPage(project.getPages().filter(p => p.getID() !== message.pageId)[0].getID())
+    }
 
+    project.deletePageById(message.pageId!);
     return project;
 }

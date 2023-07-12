@@ -52,6 +52,11 @@ var addPageHandler = function (collections, message) { return __awaiter(void 0, 
                 if (message.type !== actionType_1.ActionType.ADD_PAGE) {
                     return [2 /*return*/, Promise.reject('Wrong handler')];
                 }
+                collections.projectMetaCollection.findOneAndUpdate({
+                    _id: new mongodb_1.ObjectId(message.projectId)
+                }, {
+                    $set: { lastModifyTime: new Date }
+                });
                 return [4 /*yield*/, uniqPageTitle(message.data.newPage.name)];
             case 1:
                 uniqTitle = _a.sent();

@@ -47,6 +47,11 @@ var deleteShapeHandler = function (collections, message) { return __awaiter(void
                     return [2 /*return*/, Promise.reject('Wrong handler')];
                 }
                 ;
+                collections.projectMetaCollection.findOneAndUpdate({
+                    _id: new mongodb_1.ObjectId(message.projectId)
+                }, {
+                    $set: { lastModifyTime: new Date }
+                });
                 return [4 /*yield*/, collections.shapeCollection.deleteOne({
                         _id: new mongodb_1.ObjectId(message.shapeId)
                     })];

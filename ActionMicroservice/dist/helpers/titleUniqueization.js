@@ -49,7 +49,7 @@ var titleUniqueization = function (_a) {
                 case 1:
                     count = (_f.sent()).length;
                     if (count > 0) {
-                        title += "_".concat(count);
+                        title += "_".concat(count + 1);
                     }
                     return [2 /*return*/, title];
             }

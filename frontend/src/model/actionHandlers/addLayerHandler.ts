@@ -11,7 +11,7 @@ export const addLayerHandler: ActionHandler = async (project, message, actionSto
     };
 
     const action = actionStory.find(a => a.uid === message.uid)! as AddLayerAction;
-    action && action.setLayerId(message.pageId!);
+    action && action.setLayerId(message.data?.newLayer?.id!);
     console.log(action);
 
     const newLayer: Layer =

@@ -48,6 +48,11 @@ var addShapeHandler = function (collections, message) { return __awaiter(void 0,
                     return [2 /*return*/, Promise.reject('Wrong handler')];
                 }
                 ;
+                collections.projectMetaCollection.findOneAndUpdate({
+                    _id: new mongodb_1.ObjectId(message.projectId)
+                }, {
+                    $set: { lastModifyTime: new Date }
+                });
                 newShape = {
                     _id: new mongodb_1.ObjectId(),
                     type: message.data.newShape.type,

@@ -10,6 +10,13 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
         return Promise.reject('Wrong handler');
     }
 
+    collections.projectMetaCollection.findOneAndUpdate({
+        _id: new ObjectId(message.projectId)
+    },
+        {
+            $set: { lastModifyTime: new Date }
+        });
+
     function uniqLayerTitle(name: string) {
         return titleUniqueization({title: name.length ? name : 'Layer', collection: collections.layerCollection,
             parentField: 'pageId', parentId: message.pageId});
@@ -32,18 +39,21 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
     };
 
     await collections.layerCollection.insertOne(newLayer);
-    
-    message.data.newLayer.shapes.forEach(async s => {
-        const newShape: IShape = {
-            _id: new ObjectId(s.id),
-            type: s.type,
-            layerId: new ObjectId(message.data.newLayer.id),
-            zIndex: s.zIndex,
-            graphicalProperties: s.graphicalProperties
-        };
-    
-        await collections.shapeCollection.insertOne(newShape)
-    })
+
+    if (message.data.newLayer.shapes){
+        for await (const s of message.data.newLayer.shapes)
+        {
+            const newShape: IShape = {
+                _id: new ObjectId(s.id),
+                type: s.type,
+                layerId: new ObjectId(message.data.newLayer.id),
+                zIndex: s.zIndex,
+                graphicalProperties: s.graphicalProperties
+            };
+        
+            await collections.shapeCollection.insertOne(newShape)
+        }
+    }
 
     const messageCopy = JSON.parse(JSON.stringify(message));
 
