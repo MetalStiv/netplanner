@@ -48,7 +48,6 @@ const PagesPanel = observer(() => {
         setCollapsePanelIsOpen(false);
         currentProject.setCurrentPage(pageID);
         projectStore.update();
-        console.log(currentProject.getCurrentPage())
     }
 
     const changeTitleHandler = (el: HTMLInputElement, pageId: string) => {

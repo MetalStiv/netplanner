@@ -147,7 +147,6 @@ const LayersPanel = observer(() => {
                                     item.getID() === layer.getID() && item.setIsCurrent(true);
                                     return item;
                                 })));
-                                console.log(project)
                             }}
                             draggable
                             onDragStart={e => {

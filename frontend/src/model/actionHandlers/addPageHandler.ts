@@ -14,7 +14,6 @@ export const addPageHandler: ActionHandler = async (project, message, actionStor
     
     const action = actionStory.find(a => a.uid === message.uid)! as AddPageAction;
     action && action.setPageId(message.data?.newPage!.id!);
-    console.log(action);
 
     const newPage: Page =
         new Page(message.data!.newPage!.id,

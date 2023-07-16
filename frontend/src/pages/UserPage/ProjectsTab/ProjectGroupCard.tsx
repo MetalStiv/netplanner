@@ -55,7 +55,6 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
             : "project-group-card-visible"}`}
             onDoubleClick={() => {
                 projectsMetaStore.inGroup(projectId)
-                console.log(projectsMetaStore.getCurrentGroupId())
             }}
         >
             <div className="base-info">

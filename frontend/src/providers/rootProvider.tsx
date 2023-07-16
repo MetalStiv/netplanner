@@ -1,7 +1,6 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { createRootStore, TRootStore } from "../stores/rootStore";
 import { useLocalObservable } from 'mobx-react-lite';
-import { makePersistable } from 'mobx-persist-store';
 import useWebSocket from "react-use-websocket";
 import { getAccessToken } from "axios-jwt";
 import actionHandlers from "../model/actionHandlers/actionHandlers";
@@ -17,20 +16,6 @@ const WEB_SOCKET_URL: string = "ws://localhost:3005/ws?token=";
 
 export const RootProvider: React.FC<Props> = ({ children }) => {
     const store = useLocalObservable(createRootStore);
-    // makePersistable(store, { 
-    //     name: 'rootStore', 
-    //     properties: [{
-    //         key: 'getUserStore',
-    //         serialize: v => {
-    //             return v.call(this).getData()
-    //         },
-    //         deserialize: v => {
-    //             return v.split(',');
-    //         }
-    //     }],
-    //     storage: window.localStorage
-    // });
-
     const [currentVal, setCurrentVal] = useState<boolean>(false);
 
     const updateWebSocket = () => setCurrentVal(!currentVal);
@@ -55,7 +40,7 @@ export const RootProvider: React.FC<Props> = ({ children }) => {
             store.getProjectStore().rerender();
         }
         handleMessage(lastMessage);
-    }, [lastMessage])
+    }, [lastMessage, store])
 
     return (
         <RootStoreContext.Provider value={store}>

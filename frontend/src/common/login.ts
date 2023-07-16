@@ -1,4 +1,4 @@
-import { setAuthTokens, clearAuthTokens } from "axios-jwt";
+import { setAuthTokens, clearAuthTokens, getAccessToken } from "axios-jwt";
 import { userCleanMicroservice } from "./axiosMicroservices";
 import IUser from "../model/IUser";
 import jwt_decode from "jwt-decode";
@@ -43,6 +43,11 @@ export const login = async (params: ISignInForm): Promise<IUser> => {
     timeZoneId: response.data.timeZone,
   };
   return user;
+}
+
+export const getUserId = () => {
+  let decoded: IJwtData = jwt_decode(getAccessToken()!);
+  return decoded.Id;
 }
 
 export const logout = () => {

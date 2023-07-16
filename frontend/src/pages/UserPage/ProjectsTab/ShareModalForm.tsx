@@ -6,7 +6,6 @@ import IInvite from "../../../model/projectData/IInvite";
 import IProjectMeta from "../../../model/projectData/IProjectMeta";
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 import { useRootStore } from "../../../providers/rootProvider";
-import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
 import { TUsersStore } from "../../../stores/usersStore";
 
 interface IShareModalFormProps {

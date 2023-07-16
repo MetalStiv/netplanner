@@ -11,7 +11,6 @@ export const addShapeHandler: ActionHandler = async (project, message, actionSto
 
     const action = actionStory.find(a => a.uid === message.uid)! as AddShapeAction;
     action && action.setShapeId(message.data!.newShape!.id!);
-    console.log(action);
 
     const newShape: IShape | null = await shapeInflaters.inflate(message.data!.newShape!);
     if (newShape) {

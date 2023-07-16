@@ -107,7 +107,6 @@ class Project implements IProject {
     deletePageById(id: string){
         const ind = this[pagesSym].findIndex(p => p.getID() === id)
         this[pagesSym] = [...this[pagesSym].slice(0, ind), ...this[pagesSym].slice(ind+1, this[pagesSym].length)]
-        console.log(this[pagesSym])
     }
 
     getCursors(){

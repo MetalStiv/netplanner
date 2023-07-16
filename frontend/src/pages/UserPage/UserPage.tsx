@@ -14,6 +14,7 @@ import { projectMicroservice, userMicroservice } from "../../common/axiosMicrose
 import IProjectMeta from "../../model/projectData/IProjectMeta";
 import IInvite from "../../model/projectData/IInvite";
 import IUser from "../../model/IUser";
+import { updateInfoTime } from "../../common/constants";
 
 const UserPage: React.FC = observer(() => {
     const lang: LanguageData | null = useLanguageContext();
@@ -88,8 +89,19 @@ const UserPage: React.FC = observer(() => {
         }
     };
 
+    const getUserInfo = useCallback(async () => {
+        const res = await userMicroservice.get<IUser>("/whois")
+        if (res.status === 200) {
+            userStore.setData(res.data)
+        }
+    }, [])
+
     useEffect(() => {
-        getProjects()
+        const interval = setInterval(() => {
+            getUserInfo();
+            getProjects();
+        }, updateInfoTime)
+        return () => clearInterval(interval)
     }, [getProjects])
 
     return (

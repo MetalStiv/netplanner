@@ -74,10 +74,6 @@ class Page {
 
     removeLayerById(layerId: string){
         const ind: number = this[layersSym].findIndex(l => l.getID() === layerId)
-        console.log(ind)
-        // if (this[layersSym][ind].isCurrent()){
-        //     this[layersSym][ind-1].setIsCurrent(true);
-        // }
         this[layersSym] = [...this[layersSym].slice(0, ind), 
             ...this[layersSym].slice(ind+1, this[layersSym].length)]
     }

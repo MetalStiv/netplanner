@@ -133,6 +133,32 @@ app.MapPost("/login",
     .Accepts<LoginDto>("application/json")
     .Produces<UserLoginDto>(StatusCodes.Status200OK);
 
+app.MapGet("/whoIs", 
+    [SwaggerOperation(
+        Summary = "Returns user info",
+        Description = "Requires login")]
+    [SwaggerResponse(500, "Some failure")]
+    [Authorize] async (HttpContext http, 
+        ITokenService tokenService, 
+        IUserRepositoryService userRepositoryService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
+
+            var user = await userRepositoryService.GetByIdAsync(userId);
+            await http.Response.WriteAsJsonAsync(new UserLoginDto(
+                "",
+                "",
+                user!.Name,
+                user.Email,
+                user.AvatarBase64!,
+                user.TimeZone
+            ));
+            return;
+        }
+)
+    .Accepts<LoginDto>("application/json")
+    .Produces<UserLoginDto>(StatusCodes.Status200OK);
+
 app.MapPost("/refreshToken", 
     [SwaggerOperation(
         Summary = "Refresh token",

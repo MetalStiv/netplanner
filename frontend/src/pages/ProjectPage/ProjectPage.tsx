@@ -29,10 +29,17 @@ import LayersPanel from './leftPanelBar/LayersPanel';
 import ObjectPropertiesPanel from './rightPanelBar/ObjectPropertiesPanel';
 import GraphicalPropertiesPanel from './rightPanelBar/GraphicalPropertiesPanel';
 import floorPlanGroup from '../../model/shapes/floorplanShapes/FloorPlanGroup';
-import { CursorPositionAction } from '../../model/actions/CursorPositionAction';
-import UserCursor from '../../model/projectData/UserCursor';
 import { DeleteShapeAction } from '../../model/actions/DeleteShapeAction';
 import { ILayer } from '../../model/projectData/Layer';
+import IProjectMeta from '../../model/projectData/IProjectMeta';
+import { projectMicroservice, userMicroservice } from '../../common/axiosMicroservices';
+import IUser from '../../model/IUser';
+import { TUserStore } from '../../stores/userStore';
+import { TUsersStore } from '../../stores/usersStore';
+import IInvite from '../../model/projectData/IInvite';
+import { TProjectsMetaStore } from '../../stores/projectsMetaStore';
+import { getUserId } from '../../common/login';
+import { updateInfoTime } from '../../common/constants';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {
@@ -58,7 +65,10 @@ const ProjectPage: React.FC = observer(() => {
     const workspaceDivRef = useRef<HTMLDivElement>(null);
 
     const lang: LanguageData | null = useLanguageContext();
+    const userStore: TUserStore = useRootStore().getUserStore();
+    const usersStore: TUsersStore = useRootStore().getUsersStore();
     const actionStore: TActionStore = useRootStore().getActionStore();
+    const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
     const projectStore: TProjectStore = useRootStore()!.getProjectStore();
     // const project = projectStore.getProject();
 
@@ -96,8 +106,6 @@ const ProjectPage: React.FC = observer(() => {
 
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
-            console.log(e);
-            console.log(selectedShapeProps);
             if (e.code === 'Delete') {
                 const currentLayer: ILayer = projectStore.getProject()
                     ?.getCurrentPage()
@@ -121,6 +129,71 @@ const ProjectPage: React.FC = observer(() => {
             document.removeEventListener('keydown', onKeyDown);
         };
     }, [selectedShapeProps]);
+
+    const getUsers = useCallback(async (projects: IProjectMeta[]) => {
+        const userIds: Set<string> = new Set<string>();
+        projects.forEach((project: IProjectMeta) => {
+            userIds.add(project.ownerId);
+            if (project.invites) {
+                project.invites.forEach(i => userIds.add(i.userId))
+            }
+        });
+        const users = await userMicroservice.get<IUser[]>('getUsersByIds', { params: { ids: Array.from(userIds) } })
+        if (users.status === 200) {
+            usersStore?.setData(users.data)
+        }
+    }, [usersStore])
+
+    const getActiveInvites = useCallback(async () => {
+        const invites = await projectMicroservice.get<IInvite[]>('getActiveInvites')
+        if (invites.status === 200) {
+            userStore?.setInvites(invites.data)
+        }
+    }, [])
+
+    const getProjects = useCallback(async () => {
+        projectStore.getProject()?.setIsLoading(true)
+        let projects = await projectMicroservice.get<IProjectMeta[]>('getProjects')
+        const openMenuId = projectsMetaStore.getData().find(p => p.showMenu === true)?.id ?? "";
+        const openShareFormId = projectsMetaStore.getData().find(p => p.showSharingForm === true)?.id ?? "";
+        const openMoveFormId = projectsMetaStore.getData().find(p => p.showMoveForm === true)?.id ?? "";
+
+        if (projects.status === 200) {
+            const data = projects.data.map((item: IProjectMeta) => ({
+                ...item, "hide": false,
+                "showMenu": item.id === openMenuId, "showMoveForm": item.id === openMoveFormId,
+                "showSharingForm": item.id === openShareFormId
+            }));
+            await getUsers(data);
+            await getActiveInvites();
+            projectsMetaStore?.setData(data);
+        }
+        projectStore.getProject()?.setIsLoading(false)
+    }, [projectsMetaStore, getUsers, getActiveInvites])
+
+    const getUserInfo = useCallback(async () => {
+        const res = await userMicroservice.get<IUser>("/whois")
+        if (res.status === 200) {
+            res.data.id = getUserId()
+            userStore.setData(res.data)
+        }
+    }, [])
+
+    const update = useCallback(() => {
+        getUserInfo();
+        getProjects();
+    }, [getUserInfo, getProjects])
+
+    useEffect(() => {
+        update()
+    }, [])
+
+    useEffect(() => {
+        const interval = setInterval(() => { 
+           getUsers(projectsMetaStore.getData().filter(p => p.id === projectStore.getProject()?.getID()))
+        }, updateInfoTime)
+        return () => clearInterval(interval)
+    }, [update])
 
     return (
         <div id="projectPage">
