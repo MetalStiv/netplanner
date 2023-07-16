@@ -174,7 +174,7 @@ class Room implements IShape {
         this.config.zIndex = obj.zIndex ?? 0;
     }
 
-    updateGraphicalProperties(m: IMessageGraphicalProperty[]){
+    updateGraphicalProperties(m: IMessageGraphicalProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
             label: 'X',
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
@@ -238,19 +238,25 @@ class Room implements IShape {
     }
 
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        layerZIndex: number) {
+        handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
+        handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
+        layerZIndex: number,
+        isSelected: boolean,
+    ) {
         return <path
-            id={this.config.id}
+            className={isSelected ? 'selected' : ''}
+            data-id={this.config.id}
             key={this.config.id}
             data-type={this.type}
             role="shape"
+            tabIndex={-1}
             stroke="none"
             fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
-            onClick={handlerClick}
+            onFocus={handlerFocus}
+            onBlur={handlerBlur}
             transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}

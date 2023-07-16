@@ -216,7 +216,8 @@
                         }
 
                         &:not([value=""])+label,
-                        &:hover+label {
+                        &:hover+label,
+                        &:valid+label {
                             top: 0px;
                             font-size: 12px;
                             transition: top .2s, font-size .2s;

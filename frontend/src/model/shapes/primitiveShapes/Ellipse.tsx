@@ -136,7 +136,7 @@ class Ellipse implements IShape {
         this.zIndex = obj.zIndex ?? 0;
     }
 
-    updateGraphicalProperties(m: IMessageGraphicalProperty[]){
+    updateGraphicalProperties(m: IMessageGraphicalProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
             label: 'X',
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
@@ -182,19 +182,25 @@ class Ellipse implements IShape {
     }
 
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        layerZIndex: number) {
+        handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
+        handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
+        layerZIndex: number,
+        isSelected: boolean,
+    ) {
         return <path
-            id={this.config.id}
+            className={isSelected ? 'selected' : ''}
+            data-id={this.config.id}
             key={this.config.id}
             data-type={this.type}
             role="shape"
+            tabIndex={-1}
             stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value ?? 'black'}
             fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value ?? 'black'}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
-            onClick={handlerClick}
+            onFocus={handlerFocus}
+            onBlur={handlerBlur}
             d={`
                 M ${(+this.config.graphicalProperties[GraphicalPropertyTypes.X].value) +
                 (+this.config.graphicalProperties[GraphicalPropertyTypes.RX].value)},${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value}

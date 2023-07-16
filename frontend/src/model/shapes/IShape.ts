@@ -45,17 +45,21 @@ export interface IGraphicalProperty {
 export interface IShapeConfig {
     id?: string,
     graphicalProperties: IShapeGraphicalProps,
-    zIndex?: number,
+    zIndex?: number
 }
 
 export interface IShape {
     type: ShapeType,
     config: IShapeConfig,
     isVisible: boolean,
+    overallWidth?: number,
+    overallHeight?: number,
     updateGraphicalProperties: (m: IMessageGraphicalProperty[]) => void,
     render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        handlerClick: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        layerZIndex: number): JSX.Element;
+        handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
+        handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
+        layerZIndex: number,
+        isSelected?: boolean): JSX.Element;
 }
 
 export default IShape;
