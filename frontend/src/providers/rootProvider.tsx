@@ -5,6 +5,7 @@ import useWebSocket from "react-use-websocket";
 import { getAccessToken } from "axios-jwt";
 import actionHandlers from "../model/actionHandlers/actionHandlers";
 import Project from "../model/projectData/Project";
+import { ActionType } from "../model/actions/ActionType";
 
 export const RootStoreContext = React.createContext<TRootStore>(createRootStore());
 
@@ -31,7 +32,10 @@ export const RootProvider: React.FC<Props> = ({ children }) => {
             if (!message) {
                 return;
             }
-            console.log(message.data);
+            if (JSON.parse(message.data).type === ActionType.NO_RIGHTS){
+                alert("Not enough rights!")
+                return
+            }
             const handledProject: Project =
                 await actionHandlers.handle(store.getProjectStore().getProject()!, JSON.parse(message!.data), store.getActionStore().getActions());
             console.log("New project");

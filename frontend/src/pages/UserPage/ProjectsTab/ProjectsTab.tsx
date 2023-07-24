@@ -70,7 +70,7 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
         if (addProject.status !== 200) {
             alert(addProject.statusText)
         }
-        projectsMetaStore.updateOrInsert(addProject.data)
+        getProjects();
     }
 
     const addProjectGroup = async () => {

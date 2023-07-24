@@ -39,7 +39,8 @@ export const ru: ILanguage = {
             passwordsDoesNotMatch: "Пароли не совпадают",
             registrationEmailError: "Пользователь с таким e-mail уже существует",
             invalidUserError: "Пользователь не существует или не подтвержден",
-            passwordError: "Неверный пароль"
+            passwordError: "Неверный пароль",
+            emailSent: "НА ЭЛЕКТРОННУЮ ПОЧТУ ОТПРАВЛЕНО ПИСЬМО ДЛЯ ПОДТВЕРЖДЕНИЯ РЕГИСТРАЦИИ",
         }
     },
     userPage: {

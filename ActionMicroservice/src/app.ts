@@ -6,6 +6,8 @@ import { ILayerTree } from './dto/ILayerTree';
 import { IMessage } from './dto/IMessage';
 import { IPageTree } from './dto/IPageTree';
 import { IShapeTree } from './dto/IShapeTree';
+import { userRightsChecker } from './helpers/userRightsChecker';
+import { IInvite } from './model/IInvite';
 import { ILayer } from './model/ILayer';
 import { IPage } from './model/IPage';
 import { IProjectMeta } from './model/IProjectMeta';
@@ -19,6 +21,7 @@ const DB_PAGE_COLLECTION_NAME: string = process.env.DB_PAGE_COLLECTION_NAME;
 const DB_LAYER_COLLECTION_NAME: string = process.env.DB_LAYER_COLLECTION_NAME;
 const DB_SHAPE_COLLECTION_NAME: string = process.env.DB_SHAPE_COLLECTION_NAME;
 const DB_PROJECT_META_COLLECTION_NAME: string = process.env.DB_PROJECT_META_COLLECTION_NAME;
+const DB_INVITE_COLLECTION_NAME: string = process.env.DB_INVITE_COLLECTION_NAME;
 
 const WebSocket = require('ws');
 const wsServer = new WebSocket.Server({ port: PORT });
@@ -34,6 +37,7 @@ export interface IDatadaseCollections {
     layerCollection: mongoDB.Collection<ILayer>,
     shapeCollection: mongoDB.Collection<IShape>,
     projectMetaCollection: mongoDB.Collection<IProjectMeta>,
+    inviteCollection: mongoDB.Collection<IInvite>
 }
 
 const collections: IDatadaseCollections = {
@@ -41,11 +45,13 @@ const collections: IDatadaseCollections = {
     layerCollection: mongoDatabase.collection<ILayer>(DB_LAYER_COLLECTION_NAME),
     shapeCollection: mongoDatabase.collection<IShape>(DB_SHAPE_COLLECTION_NAME),
     projectMetaCollection: mongoDatabase.collection<IProjectMeta>(DB_PROJECT_META_COLLECTION_NAME),
+    inviteCollection: mongoDatabase.collection<IInvite>(DB_INVITE_COLLECTION_NAME),
 }
 
 interface IMetadata {
     userId: string,
-    projectId: string
+    projectId: string,
+    userRights: number,
 }
 
 const clients = new Map<WebSocket, IMetadata>();
@@ -65,19 +71,22 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     let userId: string = '';
     jwt.verify(token, publicKey, (err, decoded) => {
         if (err) {
+            ws.send(JSON.stringify({type: ActionType.NO_RIGHTS}));
             ws.close();
         } else {
             userId = decoded.Id;
         }
     });
 
-    // check user rights!
+    const userRights: number = await userRightsChecker(userId, projectId, collections);
+    if (userRights === 0){
+        ws.send(JSON.stringify({type: ActionType.NO_RIGHTS}));
+        ws.close();
+        return
+    }
 
-    const metadata: IMetadata = { userId, projectId };
+    const metadata: IMetadata = { userId, projectId, userRights };
     clients.set(ws, metadata);
-    clients.forEach((meta, w) => {
-        console.log(meta)
-    });
 
     const pageFilter: mongoDB.Filter<IPage> = { "projectId": new mongoDB.ObjectId(projectId) };
     const pages: IPage[] = await (collections.pageCollection.find(pageFilter)).toArray();
@@ -121,6 +130,7 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
         let message: IMessage = JSON.parse(event.data);
         message.senderId = clients.get(ws).userId;
         message.projectId = clients.get(ws).projectId;
+        message.senderRights = clients.get(ws).userRights;
 
         actionHandlers.handle(collections, message).then(response => {
             if (!response) {

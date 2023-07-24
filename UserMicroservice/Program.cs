@@ -20,6 +20,8 @@ var jwtSettings = new JwtSettings(
     Environment.GetEnvironmentVariable("JWT_ISSUER") ?? ""
 );
 
+var frontUrl = "http://localhost:3000/";
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(c => c.EnableAnnotations());
@@ -58,6 +60,7 @@ app.MapPost("/register",
         Summary = "Register new user",
         Description = "Not requires login")]
     [SwaggerResponse(520, "Email is already used")]
+    [SwaggerResponse(521, "Email is unreachable")]
     [SwaggerResponse(500, "Some failure")]
     [AllowAnonymous] async (HttpContext http,
         IUserRepositoryService userRepositoryService,
@@ -76,9 +79,11 @@ app.MapPost("/register",
                 http.Response.StatusCode = 520;
                 return;
             }
-
+            using(var cts = new CancellationTokenSource())
+            {
+                await mailService.SendAuthMailAsync(user, cts.Token);
+            }
             await userRepositoryService.AddAsync(user);
-            await mailService.SendAuthMailAsync(user);
             return;
         }
 )
@@ -228,19 +233,21 @@ app.MapGet("/verify",
             var user = await userRepositoryService.GetByEmailAsync(email);
             if (user == null)
             {
-                http.Response.StatusCode = 520;
+                http.Response.StatusCode = 520; 
                 return;
             }
 
             if (user.VerificationCode != code)
             {
-                http.Response.StatusCode = 521;
-                return;
+                http.Response.StatusCode = 521; 
+                return;;
             }
 
             user.Verified = true;
 
             await userRepositoryService.UpdateAsync(user);
+
+            http.Response.Redirect(frontUrl);  
             return;
         }
 )

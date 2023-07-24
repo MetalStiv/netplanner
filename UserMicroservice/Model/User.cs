@@ -56,7 +56,12 @@ public record User
             builder.Append(c);
         }
         this.VerificationCode = builder.ToString();
-        this.AvatarBase64 = string.Empty;
+
+        var rand = new Random();
+        var files = Directory.GetFiles(Constants.DEFAULT_AVATARS_DIRECTORY,"*.b64");
+        var avatarFile = files[rand.Next(files.Length)];
+        this.AvatarBase64 = File.ReadAllText(avatarFile);
+
         this.TimeZone = 18;
     }
 }

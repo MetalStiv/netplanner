@@ -10,7 +10,7 @@ public class MyMailService : UserMicroservice.Services.MailService.IMailService
     {
         _mailSettings = mailSettings;
     }
-    public async Task SendAuthMailAsync(User user)
+    public async Task SendAuthMailAsync(User user, CancellationToken ct)
     {
         var email = new MimeMessage();
         email.From.Add(new MailboxAddress(_mailSettings.DisplayName, _mailSettings.Mail));
@@ -33,9 +33,11 @@ public class MyMailService : UserMicroservice.Services.MailService.IMailService
         email.Body = bodyBuilder.ToMessageBody();
 
         using var smtp = new SmtpClient();
-        smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.Auto);
-        smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-        await smtp.SendAsync(email);
-        smtp.Disconnect(true);
+        await smtp.ConnectAsync(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.Auto, ct);
+        await smtp.AuthenticateAsync(_mailSettings.Mail, _mailSettings.Password, ct);
+        smtp.Timeout = 3000;
+        var res = smtp.Send(email);
+        Console.WriteLine(res);
+        await smtp.DisconnectAsync(true, ct);
     }
 }

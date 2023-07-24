@@ -97,6 +97,9 @@ const UserPage: React.FC = observer(() => {
     }, [])
 
     useEffect(() => {
+        getUserInfo();
+        getProjects();
+        
         const interval = setInterval(() => {
             getUserInfo();
             getProjects();

@@ -39,7 +39,8 @@ export const eng: ILanguage = {
             passwordsDoesNotMatch: "Passwords does not match",
             registrationEmailError: "Email is already used",
             invalidUserError: "User doesn't registred",
-            passwordError: "Wrong password"
+            passwordError: "Wrong password",
+            emailSent: "AN EMAIL HAS BEEN SENT TO YOU TO CONFIRM YOUR REGISTRATION",
         }
     },
     userPage: {

@@ -23,6 +23,7 @@ const LoginPanel: React.FC = () => {
 
     const [registrationEmailError, setRegistrationEmailError] = useState<boolean>(false);
     const [invalidUserError, setinvalidUserError] = useState<boolean>(false);
+    const [messageWasSent, setMessageWasSent] = useState<boolean>(false);
     const [passwordError, setPasswordError] = useState<boolean>(false);
 
     const signIn = useFormik({
@@ -65,12 +66,18 @@ const LoginPanel: React.FC = () => {
             passwordConfirmation: '',
         },
         onSubmit: async (values: IRegisterForm) => {
+            setRegistrationEmailError(false);
+            setinvalidUserError(false);
+            setMessageWasSent(false);
             let res = await userCleanMicroservice.post('register', {
                 email: values.email,
                 password: values.password
             });
             if (res.status === 520){
                 setRegistrationEmailError(true)
+            }
+            if (res.status === 200){
+                setMessageWasSent(true)
             }
         },
         validationSchema: Yup.object({
@@ -98,13 +105,19 @@ const LoginPanel: React.FC = () => {
         register.validateForm();
     }, []);
 
+    const clearMessages = () => {
+        setRegistrationEmailError(false);
+        setinvalidUserError(false);
+        setMessageWasSent(false);
+    }
+
     return (
         <>
             <h1>NETPLANNER</h1>
             <Tabs>
                 <TabList>
                     <Tab>{lang!.langText.loginPage.userForm.signIn}</Tab>
-                    <Tab>{lang!.langText.loginPage.userForm.register}</Tab>
+                    <Tab onFocus={() => clearMessages()}>{lang!.langText.loginPage.userForm.register}</Tab>
                 </TabList>
 
                 <TabPanel>
@@ -175,8 +188,8 @@ const LoginPanel: React.FC = () => {
                                     id="email"
                                     name="email"
                                     type="text"
-                                    onChange={e => {
-                                        setRegistrationEmailError(false)
+                                    onChange={(e) => {
+                                        clearMessages();
                                         register.handleChange(e)
                                     }}
                                     value={register.values.email}
@@ -231,11 +244,18 @@ const LoginPanel: React.FC = () => {
                         {
                             registrationEmailError && <small>{lang!.langText.loginPage.userForm.registrationEmailError}</small>
                         }
-                        <div style={{ textAlign: 'center' }}>
-                            <button className="btn btn-blue" type="submit">
-                                {lang!.langText.loginPage.userForm.buttonRegister}
-                            </button>
-                        </div>
+                        {
+                            messageWasSent ? <div style={{ textAlign: 'center' }}>
+                                    <button className="btn btn-blue" disabled={true}>
+                                        {lang!.langText.loginPage.userForm.emailSent}
+                                    </button>
+                                </div>
+                                : <div style={{ textAlign: 'center' }}>
+                                    <button className="btn btn-blue" type="submit">
+                                        {lang!.langText.loginPage.userForm.buttonRegister}
+                                    </button>
+                                </div>
+                        }
                     </form>
                 </TabPanel>
             </Tabs>

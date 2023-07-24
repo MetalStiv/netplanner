@@ -7,6 +7,7 @@ import { IPageTree } from "./IPageTree";
 export interface IMessage {
     type: ActionType,
     senderId?: string,
+    senderRights?: number,
     projectId?: string,
     pageId?: string,
     layerId?: string,

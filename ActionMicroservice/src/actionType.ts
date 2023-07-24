@@ -1,4 +1,5 @@
 export enum ActionType {
+    NO_RIGHTS = "NO_RIGHTS",
     OPEN_PROJECT = "OPEN_PROJECT",
     CURSOR_POSITION = "CURSOR_POSITION",
 

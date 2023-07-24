@@ -36,7 +36,8 @@ interface ILanguage {
             passwordsDoesNotMatch: string,
             registrationEmailError: string,
             invalidUserError: string,
-            passwordError: string
+            passwordError: string,
+            emailSent: string,
         }
     },
     userPage: {
