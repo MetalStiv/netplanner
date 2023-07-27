@@ -13,12 +13,14 @@ export const userCleanMicroservice = axios.create({
 export const userMicroservice = axios.create({
     baseURL: USER_BASE_URL,
     timeout: 2000,
+    headers: {"Access-Control-Allow-Origin": "*"},
     validateStatus: () => true
 });
 
 export const projectMicroservice = axios.create({
     baseURL: PROJECT_BASE_URL,
     timeout: 2000,
+    headers: {"Access-Control-Allow-Origin": "*"},
     validateStatus: () => true
 });
 

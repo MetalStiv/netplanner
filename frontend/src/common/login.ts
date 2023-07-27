@@ -26,7 +26,7 @@ interface ILoginResponse {
 export const login = async (params: ISignInForm): Promise<IUser> => {
   const response = await userCleanMicroservice.post<ILoginResponse>('login', params)
   if (response.status !== 200){
-    throw new Error(response.status.toString())
+    window.location.reload();
   }
 
   setAuthTokens({

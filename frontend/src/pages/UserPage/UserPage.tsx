@@ -15,6 +15,7 @@ import IProjectMeta from "../../model/projectData/IProjectMeta";
 import IInvite from "../../model/projectData/IInvite";
 import IUser from "../../model/IUser";
 import { updateInfoTime } from "../../common/constants";
+import { useNavigate } from "react-router-dom";
 
 const UserPage: React.FC = observer(() => {
     const lang: LanguageData | null = useLanguageContext();
@@ -29,6 +30,7 @@ const UserPage: React.FC = observer(() => {
     const projectsTabRef = useRef<HTMLDivElement>(null);
     const settingsTabRef = useRef<HTMLDivElement>(null);
     const nameRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
 
     const getUsers = useCallback(async (projects: IProjectMeta[]) => {
         const userIds: Set<string> = new Set<string>();
@@ -42,12 +44,18 @@ const UserPage: React.FC = observer(() => {
         if (users.status === 200) {
             usersStore?.setData(users.data)
         }
+        if (users.status === 401){
+            navigate("/");
+        }
     }, [usersStore])
 
     const getActiveInvites = useCallback(async () => {
         const invites = await projectMicroservice.get<IInvite[]>('getActiveInvites')
         if (invites.status === 200) {
             userStore?.setInvites(invites.data)
+        }
+        if (invites.status === 401){
+            navigate("/");
         }
     }, [])
 
@@ -67,6 +75,9 @@ const UserPage: React.FC = observer(() => {
             await getActiveInvites();
             projectsMetaStore?.setData(data);
         }
+        if (projects.status === 401){
+            navigate("/");
+        }
 
         setIsLoading(false);
     }, [projectsMetaStore, getUsers, getActiveInvites])
@@ -78,6 +89,9 @@ const UserPage: React.FC = observer(() => {
         if (res.status === 200) {
             getProjects()
         }
+        if (res.status === 401){
+            navigate("/");
+        }
     };
 
     const declineInvite = async (id: string) => {
@@ -87,12 +101,18 @@ const UserPage: React.FC = observer(() => {
         if (res.status === 200) {
             getProjects()
         }
+        if (res.status === 401){
+            navigate("/");
+        }
     };
 
     const getUserInfo = useCallback(async () => {
         const res = await userMicroservice.get<IUser>("/whois")
         if (res.status === 200) {
             userStore.setData(res.data)
+        }
+        if (res.status === 401){
+            navigate("/");
         }
     }, [])
 
@@ -160,7 +180,7 @@ const UserPage: React.FC = observer(() => {
                                 {
                                     userStore.getInvites().length === 0 ?
                                         lang!.langText.headerMenu.noMessages
-                                        : userStore.getInvites().map((i, index) => <div className="notification">
+                                        : userStore.getInvites().map((i, index) => <div className="notification" key={i.id}>
                                             {
                                                 index > 0 && <hr className="separator" />
                                             }

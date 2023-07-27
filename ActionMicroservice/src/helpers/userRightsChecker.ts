@@ -11,6 +11,7 @@ export const userRightsChecker = async (userId: string, projectId: string, colle
     if (project.ownerId.toString() === userId){
         res = 2;
     }
+
     if ((await collections.inviteCollection.find({
             userId: new ObjectId(userId),
             projectId: new ObjectId(projectId),
@@ -27,5 +28,15 @@ export const userRightsChecker = async (userId: string, projectId: string, colle
         }).toArray()).length > 0){
             res = 2
         }
+
+    if (project.goupId){
+        const groupRights = await userRightsChecker(userId, project.goupId.toString(), collections);
+        if (groupRights == 1){
+            res = 1
+        }
+        if (groupRights == 2){
+            res = 2
+        }
+    }
     return res;
 }

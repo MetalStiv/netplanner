@@ -6,7 +6,7 @@ const searchFilterSymbol: unique symbol = Symbol()
 
 interface IProjectsMetaStore {
     [projectsMetaSymbol]: IProjectMeta[],
-    [searchFilterSymbol]: string | undefined,
+    [searchFilterSymbol]: string,
     [groupPathSymbol]: string[],
 
     getData: () => IProjectMeta[],
@@ -23,8 +23,8 @@ interface IProjectsMetaStore {
     outGroup: () => void,
     toGroup: (id: string | null) => void,
     getGroups: () => string[],
-    getSearchFilter: () => string | undefined,
-    setSearchFilter: (filter : string | undefined) => void,
+    getSearchFilter: () => string,
+    setSearchFilter: (filter : string) => void,
 
     clearStore: () => void,
 }
@@ -33,7 +33,7 @@ export const createProjectsMetaStore = () => {
     const store: IProjectsMetaStore = {
         [projectsMetaSymbol]: [],
         [groupPathSymbol]: [],
-        [searchFilterSymbol]: undefined,
+        [searchFilterSymbol]: "",
 
         getData(){
             return this[projectsMetaSymbol];
@@ -110,14 +110,14 @@ export const createProjectsMetaStore = () => {
             return this[searchFilterSymbol];
         },
 
-        setSearchFilter(filter: string | undefined){
+        setSearchFilter(filter: string){
             this[searchFilterSymbol] = filter;
         },
 
         clearStore(){
             this[projectsMetaSymbol] = [];
             this[groupPathSymbol] = [];
-            this[searchFilterSymbol] = undefined;
+            this[searchFilterSymbol] = "";
         }
     };
 

@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { projectMicroservice, userMicroservice } from "../../../common/axiosMicroservices";
 import IUser from "../../../model/IUser";
 import IInvite from "../../../model/projectData/IInvite";
@@ -16,8 +17,9 @@ interface IShareModalFormProps {
 
 const ShareModalForm: React.FC<IShareModalFormProps> = observer(({ projectMeta, close, updateProjects }) => {
     const lang: LanguageData | null = useLanguageContext();
-    const [emailValue, setEmailValue] = useState<string>();
+    const [emailValue, setEmailValue] = useState<string>('');
     const [permissionValue, setPermissionValue] = useState<string>('0');
+    const navigate = useNavigate();
 
     const usersStore: TUsersStore = useRootStore()!.getUsersStore();
 
@@ -30,12 +32,18 @@ const ShareModalForm: React.FC<IShareModalFormProps> = observer(({ projectMeta, 
         if (invite.status === 200) {
             updateProjects()
         }
+        if (invite.status === 401){
+            navigate("/");
+        }
     }
 
     const revokeInvite = async (id: string) => {
         const invite = await projectMicroservice.delete('revokeInvite', { data: { id: id } })
         if (invite.status === 200) {
             updateProjects()
+        }
+        if (invite.status === 401){
+            navigate("/");
         }
     }
 
@@ -62,7 +70,7 @@ const ShareModalForm: React.FC<IShareModalFormProps> = observer(({ projectMeta, 
                                 onChange={e => setEmailValue(e.currentTarget.value)}
                             />
 
-                            <select className="show-form-sent-permission" value={permissionValue}>
+                            <select className="show-form-sent-permission" value={permissionValue} onChange={() => void undefined}>
                                 <option value='0' onClick={() => setPermissionValue('0')}>{lang?.langText.userPage.projectTab.sharingForm.fullAccess}</option>
                                 <option value='1' onClick={() => setPermissionValue('1')}>{lang?.langText.userPage.projectTab.sharingForm.readonly}</option>
                             </select>

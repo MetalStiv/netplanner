@@ -142,12 +142,18 @@ const ProjectPage: React.FC = observer(() => {
         if (users.status === 200) {
             usersStore?.setData(users.data)
         }
+        if (users.status === 401){
+            navigate("/");
+        }
     }, [usersStore])
 
     const getActiveInvites = useCallback(async () => {
         const invites = await projectMicroservice.get<IInvite[]>('getActiveInvites')
         if (invites.status === 200) {
             userStore?.setInvites(invites.data)
+        }
+        if (invites.status === 401){
+            navigate("/");
         }
     }, [])
 
@@ -168,6 +174,9 @@ const ProjectPage: React.FC = observer(() => {
             await getActiveInvites();
             projectsMetaStore?.setData(data);
         }
+        if (projects.status === 401){
+            navigate("/");
+        }
         projectStore.getProject()?.setIsLoading(false)
     }, [projectsMetaStore, getUsers, getActiveInvites])
 
@@ -176,6 +185,9 @@ const ProjectPage: React.FC = observer(() => {
         if (res.status === 200) {
             res.data.id = getUserId()
             userStore.setData(res.data)
+        }
+        if (res.status === 401){
+            navigate("/");
         }
     }, [])
 

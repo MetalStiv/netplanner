@@ -99,14 +99,68 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
     public async Task<ProjectMeta> GetProjectByIdAsync(string projectId) =>
         await (await _projectMetaCollection.FindAsync(p => p.Id == projectId)).SingleAsync();
 
+    public async Task<List<ProjectMeta>?> GetDirectoryProjectsAsync(string projectId)
+    {
+        var projects = await (await _projectMetaCollection.FindAsync(p => p.GroupId == projectId)).ToListAsync();
+        var childs = new List<ProjectMeta>();
+
+        var groups = projects.FindAll(p => p.IsGroup == true);
+        if (!(groups is null))
+        {
+            foreach (var g in groups)
+            {
+                var temp = await GetDirectoryProjectsAsync(g.Id!);
+                if (!(temp is null))
+                {
+                    childs.AddRange(temp);
+                }
+
+            }
+        }
+        // projects.FindAll(p => p.IsGroup == true)
+        //     .ForEach(async p => {
+        //         var temp = await GetDirectoryProjectsAsync(p.Id!);
+        //         if (!(temp is null))
+        //         {
+        //             childs.AddRange(temp);
+        //         }
+        //     });
+        return projects;
+    }
     public async Task<List<ProjectMeta>?> GetProjectsAsync(string userId)
     {
         var ownedProjects = await (await _projectMetaCollection.FindAsync(p => p.OwnerId == userId)).ToListAsync();
         var invitedProjectIds = (await (await _inviteCollection.FindAsync(i => i.UserId == userId && i.State == 1)).ToListAsync())
             .Select(i => i.ProjectId).ToList();
         var subscribedProjects = await (await _projectMetaCollection.FindAsync(p => invitedProjectIds.Contains(p.Id!))).ToListAsync();
+        var subscribedChilds = new List<ProjectMeta>();
 
-        return ownedProjects.Concat(subscribedProjects).ToList();
+        var subscribedGroups = subscribedProjects.FindAll(p => p.IsGroup == true);
+        if (!(subscribedGroups is null))
+        {
+            foreach (var g in subscribedGroups)
+            {
+                var temp = await GetDirectoryProjectsAsync(g.Id!);
+                if (!(temp is null))
+                {
+                    subscribedChilds.AddRange(temp);
+                }
+
+            }
+        }
+        // subscribedProjects.FindAll(p => p.IsGroup == true)
+        //     .ForEach(async p => {
+        //         var temp = await GetDirectoryProjectsAsync(p.Id!);
+        //         if (!(temp is null))
+        //         {
+        //             subscribedChilds.AddRange(temp);
+        //         }
+        //     });
+        Console.WriteLine(ownedProjects.Count);
+        Console.WriteLine(subscribedProjects.Count);    
+        Console.WriteLine(subscribedChilds.Count);
+        return ownedProjects.Concat(subscribedProjects).ToList()
+            .Concat(subscribedChilds).ToList();
     }
     
     public async Task<List<Invite>> GetProjectInvitesAsync(string projectId) =>

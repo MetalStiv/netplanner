@@ -35,6 +35,9 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
             alert(res.statusText)
         }
         // projectsMetaStore.hideById(projectId);
+        if (res.status === 401){
+            navigate("/");
+        }
         updateProjects();
     }
 
@@ -52,6 +55,9 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
             newProjectMeta.name = tempName;
             projectsMetaStore.updateOrInsert(newProjectMeta);
             setIsEdittingName(false);
+        }
+        if (res.status === 401){
+            navigate("/");
         }
     }
 
@@ -206,7 +212,7 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
                             projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).length > 0 ?
                                 projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1)
                                     .map((i, index) => 
-                                        index < maxSubscriberQuantity ? <img src={
+                                        index < maxSubscriberQuantity ? <img key={'im_'+i.id} src={
                                                 usersStore.getData()
                                                     .find(u => u.id === i.userId)?.avatarBase64
                                             } title={usersStore.getData().find(u => u.id === i.userId)?.name} />
@@ -227,6 +233,8 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
             </div>
 
             <div className="menu-icon-group">
+                <div className="full-rights-icon">{lang?.langText.userPage.projectTab.sharingForm.fullAccess}</div>
+
                 <div className="menu-icon" onClick={() => projectsMetaStore.switchShareFormById(projectId)}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d={"M7 11.5L13 14.5M13 5.5L7 8.5M16 19C14.3431 19 13 17.6569 13 16C13 14.3431 14.3431 " +

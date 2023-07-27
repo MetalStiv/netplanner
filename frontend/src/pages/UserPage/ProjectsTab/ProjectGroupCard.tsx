@@ -8,6 +8,7 @@ import { projectMicroservice } from "../../../common/axiosMicroservices";
 import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 import ShareModalForm from "./ShareModalForm";
+import { useNavigate } from "react-router-dom";
 
 interface IProjectGroupCardProps {
     projectId: string,
@@ -18,6 +19,7 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
     const usersStore: TUsersStore = useRootStore()!.getUsersStore();
     const lang: LanguageData | null = useLanguageContext();
+    const navigate = useNavigate();
 
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(projectsMetaStore.getById(projectId)!.name);
@@ -28,6 +30,9 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
         const res = await projectMicroservice.delete("removeProject", { data: { id: projectId } })
         if (res.status !== 200) {
             alert(res.statusText)
+        }
+        if (res.status === 401){
+            navigate("/");
         }
         projectsMetaStore.hideById(projectId);
     }
@@ -46,6 +51,9 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
             newProjectMeta.name = tempName;
             projectsMetaStore.updateOrInsert(newProjectMeta);
             setIsEdittingName(false);
+        }
+        if (res.status === 401){
+            navigate("/");
         }
     }
 
@@ -149,7 +157,7 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
                             projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).length > 0 ?
                                 projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1)
                                     .map((i, index) => 
-                                        index < maxSubscriberQuantity ? <img src={
+                                        index < maxSubscriberQuantity ? <img key={'im_'+i.id} src={
                                                 usersStore.getData()
                                                     .find(u => u.id === i.userId)?.avatarBase64
                                             } title={usersStore.getData().find(u => u.id === i.userId)?.name} />
@@ -177,6 +185,8 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
             </div>
 
             <div className="menu-icon-group">
+                <div className="readonly-rights-icon">{lang?.langText.userPage.projectTab.sharingForm.readonly}</div>
+
                 <div className="menu-icon" onClick={() => projectsMetaStore.switchShareFormById(projectId)}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d={"M7 11.5L13 14.5M13 5.5L7 8.5M16 19C14.3431 19 13 17.6569 13 16C13 14.3431 14.3431 " +

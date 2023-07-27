@@ -1,17 +1,15 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect } from "react";
 import { useRootStore } from "../../../providers/rootProvider";
 import { TProjectsMetaStore } from "../../../stores/projectsMetaStore";
 import { projectMicroservice, userMicroservice } from "../../../common/axiosMicroservices";
 import ProjectCard from "./ProjectCard";
-import IProjectMeta from "../../../model/projectData/IProjectMeta";
 import { observer } from "mobx-react-lite";
 import { TUsersStore } from "../../../stores/usersStore";
-import IUser from "../../../model/IUser";
 import ProjectGroupCard from "./ProjectGroupCard";
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
-import IInvite from "../../../model/projectData/IInvite";
 import { TUserStore } from "../../../stores/userStore";
 import { Loader } from "../../../components";
+import { useNavigate } from "react-router-dom";
 
 interface IProjectTabProps {
     getProjects: () => void,
@@ -23,6 +21,7 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
     const usersStore: TUsersStore = useRootStore()!.getUsersStore();
     const userStore: TUserStore = useRootStore()!.getUserStore();
     const lang: LanguageData | null = useLanguageContext();
+    const navigate = useNavigate();
 
     // const getUsers = useCallback(async (projects: IProjectMeta[]) => {
     //     const userIds: Set<string> = new Set<string>();
@@ -70,6 +69,9 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
         if (addProject.status !== 200) {
             alert(addProject.statusText)
         }
+        if (addProject.status === 401){
+            navigate("/");
+        }
         getProjects();
     }
 
@@ -81,6 +83,9 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
         })
         if (addProject.status !== 200) {
             alert(addProject.statusText)
+        }
+        if (addProject.status === 401){
+            navigate("/");
         }
         projectsMetaStore.updateOrInsert(addProject.data)
     }
@@ -95,27 +100,31 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
                 isLoading && <Loader />
             }
             <div id="navigation">
-                <div className="group-navigation-button-group">
-                    <button className="navigation-button" onClick={() => projectsMetaStore.outGroup()}>
-                        <svg width="12" height="19" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 16.8544V2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M10 7.85437L6 2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M6 1.99988L2 7.85425" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </button>
-                    <button className="navigation-button" onClick={() => projectsMetaStore.toGroup(null)}>
-                        <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2.37238 16.3739L7.62769 2.48022" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </button>
-                </div>
+                {
+                    (projectsMetaStore.getSearchFilter() === '' || projectsMetaStore.getSearchFilter() === undefined) &&
+                        <div className="group-navigation-button-group">
+                            <button className="navigation-button" onClick={() => projectsMetaStore.outGroup()}>
+                                <svg width="12" height="19" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 16.8544V2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M10 7.85437L6 2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M6 1.99988L2 7.85425" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
+                            <button className="navigation-button" onClick={() => projectsMetaStore.toGroup(null)}>
+                                <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.37238 16.3739L7.62769 2.48022" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                }
                 <div className="groups-container">
                     {
-                        (projectsMetaStore.getSearchFilter() === '' || projectsMetaStore.getSearchFilter() === undefined) &&
-                        projectsMetaStore.getGroups()
-                            .map(g => <div className="group-name" onClick={() => projectsMetaStore.toGroup(g)}>
-                                {projectsMetaStore.getById(g)?.name + ' / '}
-                            </div>)
+                        projectsMetaStore.getSearchFilter() === '' || projectsMetaStore.getSearchFilter() === undefined ?
+                            projectsMetaStore.getGroups()
+                                .map(g => <div className="group-name" onClick={() => projectsMetaStore.toGroup(g)}>
+                                    {projectsMetaStore.getById(g)?.name + ' / '}
+                                </div>)
+                            : <div className="group-name">{lang!.langText.userPage.projectTab.searchResult + ':'}</div>
                     }
                 </div>
             </div>
@@ -123,9 +132,7 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
                 <>
                     {
                         (projectsMetaStore?.getSearchFilter() !== undefined && projectsMetaStore?.getSearchFilter() !== '')
-                            ? <div className="start-menu">
-                                <div className="text text-transformed">{lang!.langText.userPage.projectTab.searchResult + ':'}</div>
-                            </div>
+                            ? ''
                             : <div className="start-menu">
                                 <div className={projectsMetaStore?.getData()
                                     .filter(p => p.groupId === projectsMetaStore.getCurrentGroupId()).length === 0 ? "text"

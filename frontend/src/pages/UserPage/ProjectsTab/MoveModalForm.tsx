@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { projectMicroservice, userMicroservice } from "../../../common/axiosMicroservices";
 import IProjectMeta from "../../../model/projectData/IProjectMeta";
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
@@ -18,6 +19,7 @@ const MoveModalForm: React.FC<IMoveModalFormProps> = observer(({projectMeta, clo
     const lang: LanguageData | null = useLanguageContext();
     const [selectedGroupId, setSelectedGroupId] = useState<string>('');
     const [showError, setShowError] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     const userStore: TUserStore = useRootStore()!.getUserStore();
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
@@ -34,6 +36,9 @@ const MoveModalForm: React.FC<IMoveModalFormProps> = observer(({projectMeta, clo
         if (res.status === 200){
             projectsMetaStore.switchMoveFormById(projectMeta.id);
             updateProjects();
+        }
+        if (res.status === 401){
+            navigate("/");
         }
     }
     

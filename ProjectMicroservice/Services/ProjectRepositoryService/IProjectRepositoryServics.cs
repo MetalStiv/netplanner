@@ -7,6 +7,7 @@ public interface IProjectRepositoryService
     Task RemoveAsync(string projectId);
     Task<ProjectMeta> GetProjectByIdAsync(string projectId);
     Task<List<ProjectMeta>?> GetProjectsAsync(string userId);
+    Task<List<ProjectMeta>?> GetDirectoryProjectsAsync(string projectId);
     Task AddInvite(Invite invite);
     Task UpdateInviteAsync(Invite invite);
     Task RemoveInviteAsync(string inviteId);

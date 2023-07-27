@@ -9,10 +9,12 @@ import IUser from "../../model/IUser";
 import { getBase64 } from "../../common/fileManipulations";
 import { timeZones } from "../../common/timezones";
 import { LanguageData, useLanguageContext } from "../../providers/languageProvider";
+import { useNavigate } from "react-router-dom";
 
 const SettingsTab: React.FC = observer(() => {
     const userStore: TUserStore = useRootStore()!.getUserStore();
     const lang: LanguageData | null = useLanguageContext();
+    const navigate = useNavigate();
     
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(userStore.getData()!.name);
@@ -38,6 +40,9 @@ const SettingsTab: React.FC = observer(() => {
             const currentUser: IUser = {...userStore.getData()!, "avatarBase64": newAvatarBase64};
             userStore.setData(currentUser)
         }
+        if (res.status === 401){
+            navigate("/");
+        }
     };
       
     const saveNameHandler = async () => {
@@ -48,7 +53,10 @@ const SettingsTab: React.FC = observer(() => {
             const currentUser: IUser = {...userStore.getData()!, "name": tempName};
             userStore.setData(currentUser)
             setIsEdittingName(false);
-        } 
+        }
+        if (res.status === 401){
+            navigate("/");
+        }
     }
 
     const changeTimeZone = async (id: number) => {
@@ -58,7 +66,10 @@ const SettingsTab: React.FC = observer(() => {
         if (res.status === 200){
             const currentUser: IUser = {...userStore.getData()!, "timeZoneId": id};
             userStore.setData(currentUser)
-        } 
+        }
+        if (res.status === 401){
+            navigate("/");
+        }
     }
 
     return (
@@ -255,17 +266,17 @@ const SettingsTab: React.FC = observer(() => {
                             <div className="subtitle">{lang!.langText.userPage.settingsTab.generalSettings.subtitle}</div>
                             <div className="panel-row">
                                 <div className="field-name">{lang!.langText.userPage.settingsTab.generalSettings.language+":"}</div>
-                                <select value={lang!.language}>
+                                <select value={lang!.language} onChange={() => void undefined}>
                                 {
-                                    lang!.languages.map(l => <option onClick={e => lang!.switchLanguage(l)}>
+                                    lang!.languages.map((l, ind) => <option key={ind} onClick={e => lang!.switchLanguage(l)}>
                                         {l}
                                     </option>)
                                 }
                                 </select>
                                 <div className="field-name">{lang!.langText.userPage.settingsTab.generalSettings.timezone+":"}</div>
-                                <select value={userStore.getData()?.timeZoneId}>
+                                <select value={userStore.getData()?.timeZoneId} onChange={() => void undefined}>
                                 {
-                                    timeZones.map(tz => <option value={tz.id} onClick={e => changeTimeZone(tz.id)}>
+                                    timeZones.map(tz => <option key={tz.id} value={tz.id} onClick={e => changeTimeZone(tz.id)}>
                                         {tz.text}
                                     </option>)
                                 }
