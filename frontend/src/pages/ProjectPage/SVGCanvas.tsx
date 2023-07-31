@@ -18,6 +18,7 @@ import { cursorUpdateTime } from '../../common/constants';
 import { TUsersStore } from '../../stores/usersStore';
 import { TUserStore } from '../../stores/userStore';
 import UserCursor from '../../model/projectData/UserCursor';
+import { toCartesianCoordSystem } from '../../common/helpers/CartesianCoordSystem';
 
 interface SVGCanvasProps {
   // currentPage: Page,
@@ -222,13 +223,40 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
   //   })))
   // }
 
-  const svgDragNDrop = (e: React.MouseEvent<SVGGeometryElement>) => {
+  const svgDragNDrop = (e: React.PointerEvent<SVGGeometryElement>) => {
     // selectedShapes.forEach((shapeId: string) => {
     const cur = e.currentTarget;
+    // if (selectedShapes.includes(cur.dataset.id!)) return;
     // const cur = currentPage?.getLayers().flatMap(layer=>layer.getShapes()).find(shape=>shape.config.id === shapeId)!;
     // const cur: SVGSVGElement = svgCanvas.current?.querySelector(`[data-id="${shapeId}"]`)!;
-    !selectedShapes.length && setSelectedShapes(prev => [...prev, cur.dataset.id!]);
-    const shapes: SVGSVGElement[] = selectedShapes.map(shapeId => svgCanvas.current?.querySelector(`[data-id="${shapeId}"]`)!);
+
+    // !selectedShapes.length && setSelectedShapes(prev => [...prev, cur.dataset.id!]);
+
+    let selectedShapesLocal: string[] = selectedShapes;
+    // let selectedShape: string | null = null;
+
+    // if (!selectedShapesLocal.length) {
+    //   selectedShapesLocal = [cur.dataset.id!];
+    // } else {
+    //   return;
+    // }
+    // !selectedShapes.length && (selectedShape = cur.dataset.id!);
+    if (!selectedShapesLocal.length) {
+      selectedShapesLocal = [cur.dataset.id!];
+    } else {
+      // shiftIsPressed && setSelectedShapes(prev => [...prev, cur.dataset.id!]);
+      // !shiftIsPressed && setSelectedShapes([]);
+      shiftIsPressed && (selectedShapesLocal = [...selectedShapesLocal, cur.dataset.id!]);
+      !shiftIsPressed && !selectedShapesLocal.includes(cur.dataset.id!) && (selectedShapesLocal = []);
+    }
+
+    // setSelectedShapes(selectedShapesLocal);
+    // !selectedShapesLocal.length && (selectedShapesLocal = [cur.dataset.id!]);
+    // ? (selectedShapes.includes(cur.dataset.id!) ? selectedShapesLocal : [...selectedShapesLocal, cur.dataset.id!])
+    // ? selectedShapesLocal
+    // : [cur.dataset.id!];
+
+    const shapes: SVGSVGElement[] = selectedShapesLocal.map(shapeId => svgCanvas.current?.querySelector(`[data-id="${shapeId}"]`)!);
     cur.style.cursor = 'grabbing';
     // const shift = {
     //   x: (e.clientX / scale - cur.getBoundingClientRect().left / scale), // смещение позиции курсора от позиции элемента по x
@@ -238,12 +266,12 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     const shifts = shapes.map(shape => ({
       x: (e.clientX / scale - shape.getBoundingClientRect().left / scale), // смещение позиции курсора от позиции элемента по x
       y: (e.clientY / scale - shape.getBoundingClientRect().top / scale), // по y
-    }))
+    }));
     // const shapeID = e.currentTarget.dataset.id!;
     let movableShapes: IShape[] = [];
     let oldShapes: IShape[] = [];
     let layerIDs: string[] = [];
-    selectedShapes.forEach(shapeId =>
+    selectedShapesLocal.forEach(shapeId =>
       currentPage?.getLayers().every(layer => {
         const curShape = layer.getShapes().find(shape => shape.config.id === shapeId);
         if (curShape) {
@@ -289,10 +317,13 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         // moveSVGAt(shape.config.id!, offset);
         moveSVGAt(shape.config.id!, toCoords, shifts[i]);
       })
+      // console.log(selectedShapes, selectedShapesLocal)
       wrapSelectedShapesInContour();
       svgSelect({ id: cur.dataset.id!, domRect: cur.getBBox() });
       // el.style.transform = `translate(${Math.trunc(toCoords.x - (shift?.x ?? 0)).toString()},${Math.trunc(toCoords.y - (shift?.y ?? 0)).toString()})`;
     }
+    svgSelect({ id: cur.dataset.id!, domRect: cur.getBBox() });
+
 
     svgCanvas.current!.onmousemove = onMouseMove;
     svgCanvas.current!.onmouseup = () => {
@@ -307,7 +338,9 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
       svgCanvas.current!.onmousemove = null;
       svgCanvas.current!.onmouseup = null;
       cur.style.cursor = 'auto';
+      setSelectedShapes(selectedShapesLocal);
     }
+
     // })
   }
 
@@ -374,7 +407,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     //const NS = svg.getAttribute('xmlns');
     const pt = svgCanvas.current!.createSVGPoint();
 
-    // pass event coordinates
     pt.x = e.clientX;
     pt.y = e.clientY;
   }
@@ -385,7 +417,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     //const NS = svgCanvas.getAttribute('xmlns');
     const pt = svgCanvas.current!.createSVGPoint();
 
-    // pass event coordinates
     pt.x = coords.x;
     pt.y = coords.y;
 
@@ -406,9 +437,9 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
   const [selectedShapes, setSelectedShapes] = useState<string[]>([]/*['64ac40f929a8cb47d17d3a39']*/);
   const [shiftIsPressed, setShiftIsPressed] = useState<boolean>(false);
   // const [controlsCoords, setControlsCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
-  const [controlsConfig, setControlsConfig] = useState<{ x: number, y: number, w: number, h: number, offset: number, opacity: number }>({ x: 0, y: 0, w: 0, h: 0, offset: 5, opacity: 0 });
+  const [controlsConfig, setControlsConfig] = useState<{ x: number, y: number, w: number, h: number, offset: number, isShow: boolean }>({ x: 0, y: 0, w: 0, h: 0, offset: 4, isShow: false });
 
-  function svgSelect(e: React.FocusEvent<SVGGeometryElement>): void;
+  function svgSelect(e: React.PointerEvent<SVGGeometryElement> | React.FocusEvent<SVGGeometryElement>): void;
   function svgSelect(e: { id: string, domRect: DOMRect }): void;
   function svgSelect(e: any): void {
     let curObj: IShape | undefined;
@@ -420,9 +451,19 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     });
     // !selectedShapes.length &&
     // shiftIsPressed && console.log('sh')
-    (shiftIsPressed || (!shiftIsPressed && !selectedShapes.length)) && setSelectedShapes(prev => [...prev, curObj!.config.id!]);
+    // if (shiftIsPressed || (!shiftIsPressed && !selectedShapes.length)) {
+    //   setSelectedShapes(prev => [...prev, curObj!.config.id!])
+    // } else {
+    //   setSelectedShapes([curObj!.config.id!]);
+    // };
+    // (shiftIsPressed || (!shiftIsPressed && !selectedShapes.length)) && setSelectedShapes(prev => [...prev, curObj!.config.id!]);
+    // setSelectedShapes(prev => (shiftIsPressed ? (selectedShapes.includes(curObj!.config.id!) ? prev : [...prev, curObj!.config.id!]) : [curObj!.config.id!]));
+
     // const userCoords = toUserCoordSystem({ x: +curObj!.config.graphicalProperties.x.value, y: +curObj!.config.graphicalProperties.y.value });
-    const userCoords = toCartesianCoordSystem({ x: +curObj!.config.graphicalProperties.x.value, y: +curObj!.config.graphicalProperties.y.value });
+    const userCoords = toCartesianCoordSystem({
+      x: +curObj!.config.graphicalProperties.x.value,
+      y: +curObj!.config.graphicalProperties.y.value
+    }, canvasConfig);
     const config: IShapeProps = {
       id: curObj!.config.id!,
       type: curObj!.type,
@@ -438,15 +479,13 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
   }
 
   const wrapSelectedShapesInContour = () => {
-    const rect = svgCanvas.current?.querySelector('#selectionContour');
-
     const shapes = selectedShapes.map(id => svgCanvas.current?.querySelector(`[data-id="${id}"]`))
       .filter(i => i) as SVGElement[];
     //currentPage?.getLayers().flatMap(layer => layer.getShapes()).find(shape => shape.config.id === selectedShapes);
 
-    if (rect && shapes.length) {
+    if (shapes.length) {
       const coords = shapes.map(shape => {
-        const clientRect = shape.getBoundingClientRect(); console.log(clientRect)
+        const clientRect = shape.getBoundingClientRect();
         return ({
           startCoords: transformOuterCoordsToSVGCoords({ x: clientRect.left, y: clientRect.top }),
           endCoords: transformOuterCoordsToSVGCoords({ x: clientRect.right, y: clientRect.bottom })
@@ -463,14 +502,21 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         y: (topBorderCoord - controlsConfig.offset),
         w: (rightBorderCoord - leftBorderCoord + controlsConfig.offset * 2),
         h: (bottomBorderCoord - topBorderCoord + controlsConfig.offset * 2),
-        opacity: 1
+        isShow: true
       })
     }
   }
 
   const hideContour = (e: React.FocusEvent) => {
     !shiftIsPressed && !(e.relatedTarget?.getAttribute('role') === 'control') && setSelectedShapes([]);
-    setControlsConfig({ ...controlsConfig, opacity: 0 })
+    selectedShapes.length
+      && (e.relatedTarget?.getAttribute('role') === 'shape')
+      && !selectedShapes.includes((e.relatedTarget as SVGGeometryElement).dataset.id!)
+      && setSelectedShapes([]);
+    // console.log('lost');
+    // console.log(shiftIsPressed && e.relatedTarget?.getAttribute('role') === 'shape')
+    // shiftIsPressed && (e.relatedTarget?.getAttribute('role') === 'shape') && setSelectedShapes(prev => [...prev, (e.relatedTarget as SVGGeometryElement).dataset.id!])
+    setControlsConfig({ ...controlsConfig, isShow: false });
   }
 
   useEffect(() => {
@@ -492,11 +538,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     };
   }, []);
 
-  // useEffect(() => {
-  //     console.log(shiftIsPressed);
-  // }, [translate]);
-
   useEffect(() => {
+    // console.log(controlsConfig)
     selectedShapes.length && wrapSelectedShapesInContour();
   }, [selectedShapes]);
 
@@ -617,31 +660,24 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     e.currentTarget.onpointerup = unset;
   }
 
-  // const toUserCoordSystem = (coords: { x: number, y: number }) => ({ ...coords, y: (canvasConfig.canvasHeight - canvasConfig.offsetY * 2) - coords.y });
-  // const fromUserCoordSystem = toUserCoordSystem;
-  const toCartesianCoordSystem = ({ x, y }: { x: number, y: number }) =>
-  ({
-    x: -((canvasConfig.canvasWidth - canvasConfig.offsetX * 2) / 2 - x),
-    y: ((canvasConfig.canvasHeight - canvasConfig.offsetY * 2) / 2 - y)
-  })
-  const fromCartesianCoordSystem = ({ x, y }: { x: number, y: number }) =>
-  ({
-    x: ((canvasConfig.canvasWidth - canvasConfig.offsetX * 2) / 2 + x),
-    y: ((canvasConfig.canvasHeight - canvasConfig.offsetY * 2) / 2 - y)
-  })
-
   enum ScaleControlType {
     LEFT_TOP = 'left-top',
     RIGHT_TOP = 'right-top',
     LEFT_BOTTOM = 'left-bottom',
-    RIGHT_BOTTOM = 'right-bottom'
+    RIGHT_BOTTOM = 'right-bottom',
+    TOP = 'top',
+    RIGHT = 'right',
+    BOTTOM = 'bottom',
+    LEFT = 'left'
   }
+  const proportionalScaleControls = [ScaleControlType.LEFT_TOP, ScaleControlType.RIGHT_TOP, ScaleControlType.LEFT_BOTTOM, ScaleControlType.RIGHT_BOTTOM];
   interface IScaleControlConfig {
     increment: (shift: { x: number, y: number }) => number,
     decrement: (shift: { x: number, y: number }) => number,
     isIncrease: (shift: { x: number, y: number }) => boolean,
     isDecrease: (shift: { x: number, y: number }) => boolean,
-    getCoords: (inititalCoords: { x: number, y: number }, summand: number) => { x: number | null, y: number | null }
+    getCoords: (inititalCoords: { x: number, y: number }, summand: number) => { x: number | null, y: number | null },
+    setSize: (shape: IShape, initVals: { w: number, h: number }, summand: number, minSize?: number) => boolean
   }
 
   interface IScaleControlHandlerConfig {
@@ -649,6 +685,10 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     [ScaleControlType.RIGHT_TOP]: IScaleControlConfig,
     [ScaleControlType.RIGHT_BOTTOM]: IScaleControlConfig,
     [ScaleControlType.LEFT_BOTTOM]: IScaleControlConfig,
+    [ScaleControlType.TOP]: IScaleControlConfig,
+    [ScaleControlType.RIGHT]: IScaleControlConfig,
+    [ScaleControlType.BOTTOM]: IScaleControlConfig,
+    [ScaleControlType.LEFT]: IScaleControlConfig,
   }
 
   const scaleControlsHandlerConfig: IScaleControlHandlerConfig = {
@@ -660,7 +700,13 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
       getCoords: (initialCoords, summand) => ({
         x: initialCoords.x - summand,
         y: initialCoords.y - summand
-      })
+      }),
+      setSize: (shape, initVals, summand, minSize = 10) => {
+        if (initVals.w + summand <= minSize || initVals.h + summand <= minSize) { return false }
+        shape.overallWidth = initVals.w + summand;
+        shape.overallHeight = initVals.h + summand;
+        return true;
+      }
     },
     [ScaleControlType.RIGHT_TOP]: {
       isIncrease: (shift) => shift.x > 0 || shift.y < 0,
@@ -670,7 +716,13 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
       getCoords: (initialCoords, summand) => ({
         x: null,
         y: initialCoords.y - summand
-      })
+      }),
+      setSize: (shape, initVals, summand, minSize = 10) => {
+        if (initVals.w + summand <= minSize || initVals.h + summand <= minSize) { return false }
+        shape.overallWidth = initVals.w + summand;
+        shape.overallHeight = initVals.h + summand;
+        return true;
+      }
     },
     [ScaleControlType.RIGHT_BOTTOM]: {
       isIncrease: (shift) => shift.x > 0 || shift.y > 0,
@@ -680,7 +732,13 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
       getCoords: (initialCoords, summand) => ({
         x: null,
         y: null
-      })
+      }),
+      setSize: (shape, initVals, summand, minSize = 10) => {
+        if (initVals.w + summand <= minSize || initVals.h + summand <= minSize) { return false }
+        shape.overallWidth = initVals.w + summand;
+        shape.overallHeight = initVals.h + summand;
+        return true;
+      }
     },
     [ScaleControlType.LEFT_BOTTOM]: {
       isIncrease: (shift) => shift.x < 0 || shift.y > 0,
@@ -690,7 +748,73 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
       getCoords: (initialCoords, summand) => ({
         x: initialCoords.x - summand,
         y: null
-      })
+      }),
+      setSize: (shape, initVals, summand, minSize = 10) => {
+        if (initVals.w + summand <= minSize || initVals.h + summand <= minSize) { return false }
+        shape.overallWidth = initVals.w + summand;
+        shape.overallHeight = initVals.h + summand;
+        return true;
+      }
+    },
+    [ScaleControlType.TOP]: {
+      isIncrease: (shift) => shift.y < 0,
+      increment: (shift) => -shift.y,
+      isDecrease: (shift) => shift.y > 0,
+      decrement: (shift) => -shift.y,
+      getCoords: (initialCoords, summand) => ({
+        x: null,
+        y: initialCoords.y - summand
+      }),
+      setSize: (shape, initVals, summand, minSize = 10) => {
+        if (initVals.h + summand <= minSize) return false;
+        shape.overallHeight = initVals.h + summand
+        return true;
+      }
+    },
+    [ScaleControlType.RIGHT]: {
+      isIncrease: (shift) => shift.x > 0,
+      increment: (shift) => shift.x,
+      isDecrease: (shift) => shift.x < 0,
+      decrement: (shift) => shift.x,
+      getCoords: (initialCoords, summand) => ({
+        x: null,
+        y: null
+      }),
+      setSize: (shape, initVals, summand, minSize = 10) => {
+        if (initVals.w + summand <= minSize) return false;
+        shape.overallWidth = initVals.w + summand
+        return true;
+      }
+    },
+    [ScaleControlType.BOTTOM]: {
+      isIncrease: (shift) => shift.y > 0,
+      increment: (shift) => shift.y,
+      isDecrease: (shift) => shift.y < 0,
+      decrement: (shift) => shift.y,
+      getCoords: (initialCoords, summand) => ({
+        x: null,
+        y: null
+      }),
+      setSize: (shape, initVals, summand, minSize = 10) => {
+        if (initVals.h + summand <= minSize) return false;
+        shape.overallHeight = initVals.h + summand
+        return true;
+      }
+    },
+    [ScaleControlType.LEFT]: {
+      isIncrease: (shift) => shift.x < 0,
+      increment: (shift) => -shift.x,
+      isDecrease: (shift) => shift.x > 0,
+      decrement: (shift) => -shift.x,
+      getCoords: (initialCoords, summand) => ({
+        x: initialCoords.x - summand,
+        y: null
+      }),
+      setSize: (shape, initVals, summand, minSize = 10) => {
+        if (initVals.w + summand <= minSize) return false;
+        shape.overallWidth = initVals.w + summand
+        return true;
+      }
     }
   }
 
@@ -698,9 +822,11 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     const inititalPoint = transformOuterCoordsToSVGCoords({ x: e.pageX, y: e.pageY });
     const id = selectedShapes[0];
     const shape = currentPage!.getLayers().flatMap(layer => layer.getShapes()).find(shape => shape.config.id === id);
-    const initialWidth = shape!.overallWidth!;
+    const initialSizes = {
+      w: shape!.overallWidth!,
+      h: shape!.overallHeight!,
+    }
     const initialCoords = { x: +shape!.config.graphicalProperties.x.value, y: +shape!.config.graphicalProperties.y.value };
-    const minSize = 10;
     svgCanvas.current!.onpointermove = (e: PointerEvent) => {
       const currentPoint = transformOuterCoordsToSVGCoords({ x: e.pageX, y: e.pageY });
       const shift = {
@@ -709,20 +835,34 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
       }
       if (scaleControlsHandlerConfig[type].isIncrease(shift)) {
         const increment = scaleControlsHandlerConfig[type].increment(shift);
-        shape!.overallWidth = initialWidth + increment;
+        if (!scaleControlsHandlerConfig[type].setSize(shape!, initialSizes, increment)) { return };
+        // if (type === ScaleControlType.TOP || type === ScaleControlType.BOTTOM) {
+        //   shape!.overallHeight = initialHeight + increment;
+        // } else {
+        //   shape!.overallWidth = initialWidth + increment;
+        //   //
+        // }
+        // shape!.overallWidth = initialWidth + increment;
         const newCoords = scaleControlsHandlerConfig[type].getCoords(initialCoords, increment);
         newCoords.x && (shape!.config.graphicalProperties.x.value = newCoords.x.toString());
         newCoords.y && (shape!.config.graphicalProperties.y.value = newCoords.y.toString());
       }
       if (scaleControlsHandlerConfig[type].isDecrease(shift)) {
         const decrement = scaleControlsHandlerConfig[type].decrement(shift);
-        const width = initialWidth + decrement;
-        if (width >= minSize) {
-          shape!.overallWidth = width;
-          const newCoords = scaleControlsHandlerConfig[type].getCoords(initialCoords, decrement);
-          newCoords.x && (shape!.config.graphicalProperties.x.value = newCoords.x.toString());
-          newCoords.y && (shape!.config.graphicalProperties.y.value = newCoords.y.toString());
-        }
+        if (!scaleControlsHandlerConfig[type].setSize(shape!, initialSizes, decrement)) { return }
+        // if (type === ScaleControlType.TOP || type === ScaleControlType.BOTTOM) {
+        //   if (initialHeight + decrement >= minSize) { shape!.overallHeight = initialHeight + decrement } else return;
+        // } else {
+        //   if (initialWidth + decrement >= minSize) { shape!.overallWidth = initialWidth + decrement } else return;
+        //   // shape!.overallWidth = initialWidth + decrement >= minSize ? initialWidth + decrement : minSize;
+        // }
+        // const width = initialWidth + decrement;
+        // if (width >= minSize) {
+        //   shape!.overallWidth = width;
+        const newCoords = scaleControlsHandlerConfig[type].getCoords(initialCoords, decrement);
+        newCoords.x && (shape!.config.graphicalProperties.x.value = newCoords.x.toString());
+        newCoords.y && (shape!.config.graphicalProperties.y.value = newCoords.y.toString());
+        // }
       }
       setControlsConfig({
         ...controlsConfig,
@@ -731,6 +871,20 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         w: shape!.overallWidth! + controlsConfig.offset * 2,
         h: shape!.overallHeight! + controlsConfig.offset * 2
       })
+      const cartesianCoords = toCartesianCoordSystem({
+        x: +shape!.config.graphicalProperties[GraphicalPropertyTypes.X].value,
+        y: +shape!.config.graphicalProperties[GraphicalPropertyTypes.Y].value
+      }, canvasConfig);
+      const config: IShapeProps = {
+        id: shape!.config.id!,
+        type: shape!.type,
+        graphProps: {
+          ...shape!.config.graphicalProperties,
+          [GraphicalPropertyTypes.X]: { ...shape!.config.graphicalProperties[GraphicalPropertyTypes.X], value: cartesianCoords.x.toString() },
+          [GraphicalPropertyTypes.Y]: { ...shape!.config.graphicalProperties[GraphicalPropertyTypes.Y], value: cartesianCoords.y.toString() },
+        }
+      }
+      getClickedShapeConfigCallback(config);
     }
     svgCanvas.current!.onpointerup = (e: PointerEvent) => {
       svgCanvas.current!.onpointermove = null;
@@ -748,6 +902,50 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     }
   }
 
+  function toDegrees(val: number) {
+    return (val < 0) ? (180 - Math.abs(val) + 180) : val
+  }
+  const rotateControlHandler = (e: React.PointerEvent) => {
+    const id = selectedShapes[0];
+    const shape = currentPage!.getLayers().flatMap(layer => layer.getShapes()).find(shape => shape.config.id === id);
+    const centerCoords = {
+      x: controlsConfig.x + controlsConfig.w / 2,
+      y: controlsConfig.y + controlsConfig.h / 2
+    };
+    const initAngle = +shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value;
+    svgCanvas.current!.onpointermove = (e: PointerEvent) => {
+      const cursor = transformOuterCoordsToSVGCoords({ x: e.clientX, y: e.clientY });
+      const angle = Math.atan2(cursor.x - centerCoords.x, -(cursor.y - centerCoords.y)) * (180 / Math.PI) + initAngle;
+
+      shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value = angle.toString();
+      const config: IShapeProps = {
+        id: shape!.config.id!,
+        type: shape!.type,
+        graphProps: {
+          ...shape!.config.graphicalProperties,
+          [GraphicalPropertyTypes.PIVOT]: { ...shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT], value: angle.toString() },
+        }
+      }
+      wrapSelectedShapesInContour();
+      // controlsConfig.rotateDeg = angle;
+      getClickedShapeConfigCallback(config);
+    }
+    svgCanvas.current!.onpointerup = (e: PointerEvent) => {
+      svgCanvas.current!.onpointermove = null;
+      svgCanvas.current!.onpointerup = null;
+      const newProps = shape!.config.graphicalProperties;
+      const currentLayer = currentPage?.getLayers().find(layer => layer.getShapes().some(curShape => curShape === shape!));
+      if (currentLayer && shape) {
+        const changePropAction = new ChangeShapePropertyAction(
+          shape!,
+          currentLayer.getID(),
+          newProps,
+        );
+        actionStore.push(changePropAction);
+      }
+      // controlsConfig.rotateDeg = 0;
+    }
+  }
 
 
   return (
@@ -835,6 +1033,28 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
             // onMouseMoveCapture={onMousemoveCaptureHandler}
             // style={{ background: 'red', overflow: 'visible', fill: 'red' }}
             >
+              {/* <filter id="outline">
+                <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="1" />
+                <feFlood flood-color='#1561d3' />
+                <feComposite in2="expanded" operator="in" />
+                <feComposite in="SourceGraphic" />
+              </filter> */}
+              <filter id="outlineFilter">
+                <feMorphology
+                  in="SourceGraphic"
+                  result="dilate-result"
+                  operator="dilate"
+                  radius="1"
+                />
+                <feComposite
+                  in="SourceGraphic"
+                  in2="dilate-result"
+                  result="xor-result"
+                  operator="xor"
+                />
+                {/* <feDropShadow dx="0" dy="0" stdDeviation="3"
+                  flood-color="#1561d3" /> */}
+              </filter>
               <g id="elementsGroup" style={{
                 // outline: '2px solid #000000',
                 // transform: `translate(-300, -3000)`,
@@ -843,33 +1063,42 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                 {currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(s => {
                   return s.render(
                     svgDragNDrop,
-                    // {
-                    // selectedShapes.forEach(id => svgDragNDrop(e, id));
-                    // const elem: SVGSVGElement = svgCanvas.current!.querySelector(`[data-id={${selectedShapes[0]}}]`)!;
-                    // svgSelect({ id: selectedShapes[0], domRect: elem.getBoundingClientRect() });
-                    // },
-                    svgSelect,
-                    // () => console.log(),
+                    // svgSelect,
                     hideContour,
-                    layer.getZIndex(), selectedShapes.includes(s.config.id!) ? true : false);
+                    layer.getZIndex(),
+                    selectedShapes.includes(s.config.id!),
+                  );
                 }))}
                 {cursorAnimations.map(a => <animated.path
                   d={`M${a.cx.get()} ${a.cy.get()} l32 12 l-15 5 l-4 16Z`}
                   fill={a.fill} stroke="#5B5959" strokeWidth="2">
                   <title>{usersStore.getData().find(u => u.id === a.userId.get())?.name}</title>
                 </animated.path>)}
-                {<g id='controls' transform={`translate(${controlsConfig.x},${controlsConfig.y})`} opacity={controlsConfig.opacity}>
-                  {/* <rect id='selectionContour' width={controlsConfig.w} height={controlsConfig.h} /> */}
+                {controlsConfig.isShow && <g id='controls' transform={`translate(${controlsConfig.x},${controlsConfig.y})`}>
                   <g id='selectionContour'>
                     <line x1={0} x2={controlsConfig.w} y1={0} y2={0} />
                     <line x1={controlsConfig.w} x2={controlsConfig.w} y1={0} y2={controlsConfig.h} />
                     <line x1={controlsConfig.w} x2={0} y1={controlsConfig.h} y2={controlsConfig.h} />
                     <line x1={0} x2={0} y1={controlsConfig.h} y2={0} />
-                    {/* <line x1={controlsConfig.x+controlsConfig.w} x2={controlsConfig.x+controlsConfig.w} y1={controlsConfig.y} y2={controlsConfig.y} />
-                    <line x1={controlsConfig.x} x2={controlsConfig.x+controlsConfig.w} y1={controlsConfig.y} y2={controlsConfig.y} />
-                    <line x1={controlsConfig.x} x2={controlsConfig.x+controlsConfig.w} y1={controlsConfig.y} y2={controlsConfig.y} /> */}
+                    <circle r="1" cx={controlsConfig.w / 2} cy={controlsConfig.h / 2} tabIndex={-1} />
                   </g>
-                  {selectedShapes.length === 1 && <g id='scaleControls'>
+                  {selectedShapes.length === 1 && <><g id='scaleControls'>
+                    <line x1={0} x2={controlsConfig.w} y1={0} y2={0} stroke='transparent'
+                      role='control' data-control='top' tabIndex={-1}
+                      onPointerDown={e => scaleControlHandler(e, ScaleControlType.TOP)}
+                      onBlur={hideContour} />
+                    <line x1={controlsConfig.w} x2={controlsConfig.w} y1={0} y2={controlsConfig.h} stroke='transparent'
+                      role='control' data-control='right' tabIndex={-1}
+                      onPointerDown={e => scaleControlHandler(e, ScaleControlType.RIGHT)}
+                      onBlur={hideContour} />
+                    <line x1={controlsConfig.w} x2={0} y1={controlsConfig.h} y2={controlsConfig.h} stroke='transparent'
+                      role='control' data-control='bottom' tabIndex={-1}
+                      onPointerDown={e => scaleControlHandler(e, ScaleControlType.BOTTOM)}
+                      onBlur={hideContour} />
+                    <line x1={0} x2={0} y1={controlsConfig.h} y2={0} stroke='transparent'
+                      role='control' data-control='left' tabIndex={-1}
+                      onPointerDown={e => scaleControlHandler(e, ScaleControlType.LEFT)}
+                      onBlur={hideContour} />
                     <circle role='control' data-control='left-top' r="5" tabIndex={-1}
                       onPointerDown={e => scaleControlHandler(e, ScaleControlType.LEFT_TOP)}
                       onBlur={hideContour}
@@ -886,7 +1115,20 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                       onPointerDown={e => scaleControlHandler(e, ScaleControlType.RIGHT_BOTTOM)}
                       onBlur={hideContour}
                     />
-                  </g>}
+                  </g>
+                    <g id='rotateControl'
+                      transform={`translate(${controlsConfig.w / 2 - 10},-24)`}
+                      onBlur={hideContour}>
+                      <path
+                        role='control'
+                        data-control='rotate'
+                        tabIndex={-1}
+                        onPointerDown={rotateControlHandler}
+                        d="M15.7733 13.3292C15.4851 14.1471 14.9388 14.8493 14.2169 15.3298C13.4949 15.8103 12.6363 16.0432 11.7704 15.9934C10.9046 15.9436 10.0784 15.6137 9.41631 15.0535C8.75424 14.4933 8.29217 13.7332 8.09972 12.8876C7.90728 12.042 7.99489 11.1567 8.34934 10.3652C8.7038 9.57374 9.3059 8.91887 10.0649 8.4993C10.824 8.07974 11.6988 7.91819 12.5576 8.03902C13.9223 8.23101 14.9173 9.23345 16 10M16 10V7M16 10H13" />
+                      <line x1={12} x2={12} y1={16} y2={24} strokeWidth={1} />
+                    </g>
+                    {/* <path transform={`translate(${controlsConfig.w},${controlsConfig.h})`} d="0,0c0,46.312-33.237,85.002-77.109,93.484v25.663l-69.76-40l69.76-40v23.494  c27.176-7.87,47.109-32.964,47.109-62.642c0-35.962-29.258-65.22-65.22-65.22s-65.22,29.258-65.22,65.22  c0,9.686,2.068,19.001,6.148,27.688l-27.154,12.754c-5.968-12.707-8.994-26.313-8.994-40.441C11.964,42.716,54.68,0,107.184,0  S202.403,42.716,202.403,95.22z" /> */}
+                  </>}
                 </g>}
               </g>
             </svg>

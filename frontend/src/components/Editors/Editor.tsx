@@ -35,7 +35,7 @@ const Editor = ({ defaultValue, onChange, textClassName, inputClassName, type }:
             break;
     }
 
-    return editor ? editor({ defaultValue, onChange, textClassName, inputClassName }) : <></>;
+    return editor ? editor({ defaultValue: !isNaN(+defaultValue) ? Math.round(+defaultValue).toString() : defaultValue, onChange, textClassName, inputClassName }) : <></>;
 }
 
 export default Editor;

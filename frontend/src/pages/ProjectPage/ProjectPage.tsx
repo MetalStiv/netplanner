@@ -189,8 +189,8 @@ const ProjectPage: React.FC = observer(() => {
     }, [])
 
     useEffect(() => {
-        const interval = setInterval(() => { 
-           getUsers(projectsMetaStore.getData().filter(p => p.id === projectStore.getProject()?.getID()))
+        const interval = setInterval(() => {
+            getUsers(projectsMetaStore.getData().filter(p => p.id === projectStore.getProject()?.getID()))
         }, updateInfoTime)
         return () => clearInterval(interval)
     }, [update])
@@ -250,6 +250,7 @@ const ProjectPage: React.FC = observer(() => {
                             </div>
                             <div style={{ minHeight: 150 }}>
                                 <GraphicalPropertiesPanel
+                                    canvasProps={orientation}
                                     shapeProps={selectedShapeProps}
                                     onChange={(props) => setSelectedShapeProps({ ...selectedShapeProps!, graphProps: props })}
                                 />
