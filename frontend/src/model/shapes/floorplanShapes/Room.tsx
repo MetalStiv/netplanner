@@ -237,8 +237,8 @@ class Room implements IShape {
         };
     }
 
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
+    render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
+        // handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
         layerZIndex: number,
         isSelected: boolean,
@@ -255,7 +255,7 @@ class Room implements IShape {
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
-            onFocus={handlerFocus}
+            // onFocus={handlerFocus}
             onBlur={handlerBlur}
             transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 

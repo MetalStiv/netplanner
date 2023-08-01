@@ -54,9 +54,10 @@ export interface IShape {
     isVisible: boolean,
     overallWidth?: number,
     overallHeight?: number,
+    isSelected?: boolean,
     updateGraphicalProperties: (m: IMessageGraphicalProperty[]) => void,
-    render(handlerMouseDown: (e: React.MouseEvent<SVGGeometryElement>) => void,
-        handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
+    render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
+        // handlerFocus: (e: React.FocusEvent<SVGGeometryElement> | React.PointerEvent<SVGGeometryElement> | undefined) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
         layerZIndex: number,
         isSelected?: boolean): JSX.Element;

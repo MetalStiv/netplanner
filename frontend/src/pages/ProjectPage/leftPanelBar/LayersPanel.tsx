@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
-import titleUniqueization from '../../../common/_helpers/titleUniquezation';
+import titleUniqueization from '../../../common/helpers/titleUniquezation';
 import Page from '../../../model/projectData/Page';
 import { AddLayerAction } from '../../../model/actions/AddLayerAction';
 import { useRootStore } from '../../../providers/rootProvider';
@@ -63,7 +63,7 @@ const LayersPanel = observer(() => {
             let layer: Layer | undefined;
             project?.getPages().forEach(p => p.getLayers()
                 .forEach(l => {
-                    if (l.getID() === layerId){
+                    if (l.getID() === layerId) {
                         layer = l;
                     }
                 }))
