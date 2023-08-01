@@ -37,12 +37,12 @@ const LoginPanel: React.FC = () => {
                 userStore?.setData(user)
                 navigate('/home')
             }
-            catch(e){
-                const errorCode = (e as Error).message;
-                if (errorCode === "520"){
+            catch(errorCode){
+                // const errorCode = (e as Error).message;
+                if (errorCode === 520){
                     setinvalidUserError(true)
                 }
-                if (errorCode === "521"){
+                if (errorCode === 521){
                     setPasswordError(true)
                 }
             }

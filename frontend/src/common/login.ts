@@ -2,6 +2,7 @@ import { setAuthTokens, clearAuthTokens, getAccessToken } from "axios-jwt";
 import { userCleanMicroservice } from "./axiosMicroservices";
 import IUser from "../model/IUser";
 import jwt_decode from "jwt-decode";
+import { Exception } from "sass";
 
 export interface ISignInForm {
     email: string,
@@ -26,7 +27,8 @@ interface ILoginResponse {
 export const login = async (params: ISignInForm): Promise<IUser> => {
   const response = await userCleanMicroservice.post<ILoginResponse>('login', params)
   if (response.status !== 200){
-    window.location.reload();
+    // window.location.reload();
+    throw response.status;
   }
 
   setAuthTokens({

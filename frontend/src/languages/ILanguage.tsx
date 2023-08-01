@@ -85,11 +85,11 @@ interface ILanguage {
         settingsTab: {
             userInfo: {
                 title: string,
-                changePhoto: string
+                changePhoto: string,
             },
             balance: {
                 title: string,
-                history: string
+                history: string,
             },
             generalSettings: {
                 title: string,
@@ -97,8 +97,17 @@ interface ILanguage {
                 language: string,
                 timezone: string,
                 password: string,
-                change: string
+                change: string,
             },
+            changePasswordForm: {
+                title: string,
+                oldPassword: string,
+                newPassword: string,
+                passwordConfirmation: string,
+                wrongPassword: string,
+                ok: string,
+                submit: string,
+            }
             personalRate: {
                 title: string
             },

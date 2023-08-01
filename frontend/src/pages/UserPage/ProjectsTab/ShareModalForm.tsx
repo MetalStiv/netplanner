@@ -1,9 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { projectMicroservice, userMicroservice } from "../../../common/axiosMicroservices";
-import IUser from "../../../model/IUser";
-import IInvite from "../../../model/projectData/IInvite";
+import { projectMicroservice } from "../../../common/axiosMicroservices";
 import IProjectMeta from "../../../model/projectData/IProjectMeta";
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 import { useRootStore } from "../../../providers/rootProvider";

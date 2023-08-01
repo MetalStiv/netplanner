@@ -1,15 +1,16 @@
 import React, { useRef, useState } from "react";
-import '../../styles/home/settings/index.scss';
-import avatarOverlay from "../../assets/images/avatar-overlay.png";
+import '../../../styles/home/settings/index.scss';
+import avatarOverlay from "../../../assets/images/avatar-overlay.png";
 import { observer } from "mobx-react-lite";
-import { useRootStore } from "../../providers/rootProvider";
-import { TUserStore } from "../../stores/userStore";
-import { userMicroservice } from "../../common/axiosMicroservices";
-import IUser from "../../model/IUser";
-import { getBase64 } from "../../common/fileManipulations";
-import { timeZones } from "../../common/timezones";
-import { LanguageData, useLanguageContext } from "../../providers/languageProvider";
+import { useRootStore } from "../../../providers/rootProvider";
+import { TUserStore } from "../../../stores/userStore";
+import { userMicroservice } from "../../../common/axiosMicroservices";
+import IUser from "../../../model/IUser";
+import { getBase64 } from "../../../common/fileManipulations";
+import { timeZones } from "../../../common/timezones";
+import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 import { useNavigate } from "react-router-dom";
+import ChangePasswordModalForm from "./ChangePasswordModalForm";
 
 const SettingsTab: React.FC = observer(() => {
     const userStore: TUserStore = useRootStore()!.getUserStore();
@@ -17,6 +18,7 @@ const SettingsTab: React.FC = observer(() => {
     const navigate = useNavigate();
     
     const [isEdittingName, setIsEdittingName] = useState<boolean>(false);
+    const [showChangePasswordForm, setShowChangePasswordForm] = useState<boolean>(false);
     const [tempName, setTempName] = useState<string>(userStore.getData()!.name);
     const [currentFile, setCurrentFile] = useState<File>();
     const inputFile = useRef<HTMLInputElement>(null);
@@ -154,7 +156,7 @@ const SettingsTab: React.FC = observer(() => {
                             <div className="email-container">
                                 <div className="field-name">Email:</div>
                                 <div className="field-value">{userStore.getData()?.email}</div>
-                                <span className="pencil-icon">
+                                {/* <span className="pencil-icon">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
                                         xmlns="http://www.w3.org/2000/svg"
                                         onClick={() => alert(1)}>
@@ -194,7 +196,7 @@ const SettingsTab: React.FC = observer(() => {
                                             5.41431ZM11.2929 8.70722L15.2929 12.7072L16.7071 11.293L12.7071 7.29301L11.2929 
                                             8.70722Z" fill="#176DEA"/>
                                     </svg>
-                                </span>
+                                </span> */}
                             </div>
                         </div>
                     </div>
@@ -284,7 +286,7 @@ const SettingsTab: React.FC = observer(() => {
                             </div>
                             <div className="panel-row">
                                 <div className="field-name">{lang!.langText.userPage.settingsTab.generalSettings.password}</div>
-                                <div className="change-link">{lang!.langText.userPage.settingsTab.generalSettings.change}</div>
+                                <div className="change-link" onClick={() => setShowChangePasswordForm(true)}>{lang!.langText.userPage.settingsTab.generalSettings.change}</div>
                             </div>
                         </div>
                     </div>
@@ -311,7 +313,9 @@ const SettingsTab: React.FC = observer(() => {
                         </div>
                     </div>
                 </div>
-
+                {
+                    showChangePasswordForm && <ChangePasswordModalForm close={() => setShowChangePasswordForm(false)} />
+                }
             </div>
         </div>
 

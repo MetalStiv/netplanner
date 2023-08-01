@@ -94,6 +94,15 @@ export const ru: ILanguage = {
                 title: "БАЛАНС",
                 history: "История"
             },
+            changePasswordForm: {
+                title: "Смена пароля",
+                oldPassword: "Старый пароль",
+                newPassword: "Новый пароль",
+                passwordConfirmation: "Подтверждение пароля",
+                wrongPassword: "Указан неверный текущий пароль",
+                ok: "Пароль был обновлен",
+                submit: "Сменить пароль",
+            },
             generalSettings: {
                 title: "ОСНОВНЫЕ НАСТРОЙКИ",
                 subtitle: "Настройки",

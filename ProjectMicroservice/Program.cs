@@ -106,8 +106,20 @@ app.MapGet("/getProjects",
         foreach(var p in projects!)
         {
             var invites = await projectRepositoryService.GetProjectInvitesAsync(p.Id!);
-            result.Add(new ProjectMetaDto(p.Id!, p.Name, p.OwnerId, p.GroupId!, p.CreationTime,
-                p.LastModifyTime, p.IsGroup, invites));
+            if (p.OwnerId == userId)
+            {
+                result.Add(new ProjectMetaDto(p.Id!, p.Name, p.OwnerId, p.GroupId!, p.CreationTime,
+                    p.LastModifyTime, p.IsGroup, invites, 0));
+            }
+            else
+            {
+                var activeInvite = invites.Find(i => i.UserId == userId && i.State == 1);
+                if (!(activeInvite is null))
+                {
+                    result.Add(new ProjectMetaDto(p.Id!, p.Name, p.OwnerId, p.GroupId!, p.CreationTime,
+                        p.LastModifyTime, p.IsGroup, invites, activeInvite.Permission));
+                }
+            }
         }
         await http.Response.WriteAsJsonAsync(result);
         // await http.Response.WriteAsJsonAsync(projects);

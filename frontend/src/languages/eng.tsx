@@ -94,6 +94,15 @@ export const eng: ILanguage = {
                 title: "BALANCE",
                 history: "History"
             },
+            changePasswordForm: {
+                title: "Change password",
+                oldPassword: "Old password",
+                newPassword: "New password",
+                passwordConfirmation: "Password confirmation",
+                wrongPassword: "Incorrect current password",
+                ok: "Password has been changed",
+                submit: "Change password",
+            },
             generalSettings: {
                 title: "GENERAL SETTINGS",
                 subtitle: "Settings",

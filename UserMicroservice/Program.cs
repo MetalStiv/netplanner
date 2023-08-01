@@ -90,6 +90,42 @@ app.MapPost("/register",
 )
     .Accepts<LoginDto>("application/json")
     .Produces(StatusCodes.Status200OK);
+
+
+app.MapPost("/changePassword", 
+    [SwaggerOperation(
+        Summary = "Change user's password",
+        Description = "Requires login")]
+    [SwaggerResponse(520, "Wrong old password")]
+    [SwaggerResponse(500, "Some failure")]
+    [Authorize] async (HttpContext http,
+        ITokenService tokenService,
+        IUserRepositoryService userRepositoryService,
+        UserMicroservice.Services.MailService.IMailService mailService) => {
+            var token = http.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var userId = tokenService.GetUserIdFromToken(token);
+            var user = await userRepositoryService.GetByIdAsync(userId);
+            var passwordChangeDto = await http.Request.ReadFromJsonAsync<PasswordChangeDto>();
+            if (passwordChangeDto == null)
+            {
+                http.Response.StatusCode = 500;
+                return;
+            };
+
+            if (!BCrypt.Net.BCrypt.Verify(passwordChangeDto.OldPassword + user!.Salt, user.PasswordHash))
+            {
+                http.Response.StatusCode = 520;
+                return;
+            }
+
+            user.ChangePassword(passwordChangeDto.NewPassword);
+            await userRepositoryService.UpdateAsync(user!);
+            http.Response.StatusCode = 200;
+            return;
+        }
+)
+    .Accepts<PasswordChangeDto>("application/json")
+    .Produces(StatusCodes.Status200OK);
  
 app.MapPost("/login", 
     [SwaggerOperation(

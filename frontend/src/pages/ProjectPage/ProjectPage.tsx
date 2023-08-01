@@ -219,7 +219,7 @@ const ProjectPage: React.FC = observer(() => {
                 onClose={() => navigate('/home')}
             />
             <header>
-                <HeaderNavbar />
+                <HeaderNavbar update={update} />
             </header>
             <main>
                 <HorizontalPageSplit resize={Limit}>

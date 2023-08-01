@@ -13,7 +13,8 @@ interface IProjectMeta {
     showMenu: boolean,
     showSharingForm: boolean,
     showMoveForm: boolean,
-    invites: IInvite[]
+    invites: IInvite[],
+    userRights: number,
 }
 
 export default IProjectMeta;

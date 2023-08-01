@@ -185,7 +185,13 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
             </div>
 
             <div className="menu-icon-group">
-                <div className="readonly-rights-icon">{lang?.langText.userPage.projectTab.sharingForm.readonly}</div>
+                {
+                    projectsMetaStore.getById(projectId)!.userRights === 0 ? 
+                        <div className="full-rights-icon">{lang?.langText.userPage.projectTab.sharingForm.fullAccess}</div>
+                        : projectsMetaStore.getById(projectId)!.userRights === 1 ?
+                            <div className="readonly-rights-icon">{lang?.langText.userPage.projectTab.sharingForm.readonly}</div>
+                             : ''
+                }
 
                 <div className="menu-icon" onClick={() => projectsMetaStore.switchShareFormById(projectId)}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

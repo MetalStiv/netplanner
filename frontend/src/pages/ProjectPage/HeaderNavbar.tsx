@@ -1,18 +1,36 @@
 import { observer } from 'mobx-react-lite';
 import React, { SyntheticEvent, useRef, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { logout } from '../../common/login';
 import IUser from '../../model/IUser';
+import { LanguageData, useLanguageContext } from '../../providers/languageProvider';
 import { useRootStore } from '../../providers/rootProvider';
+import { TProjectsMetaStore } from '../../stores/projectsMetaStore';
+import { TProjectStore } from '../../stores/projectStore';
+import { TUsersStore } from '../../stores/usersStore';
+import { TUserStore } from '../../stores/userStore';
+import ShareModalForm from '../UserPage/ProjectsTab/ShareModalForm';
 
-const HeaderNavbar: React.FC = observer(() => {
-    const userStore = useRootStore()?.getUserStore()
-    const usersStore = useRootStore()?.getUsersStore()
-    const projectStore = useRootStore()?.getProjectStore()
+interface IHeaderNavbarProps {
+    update: () => void,
+}
+
+const HeaderNavbar: React.FC<IHeaderNavbarProps> = observer(({update}) => {
+    const userStore: TUserStore = useRootStore()?.getUserStore();
+    const usersStore: TUsersStore = useRootStore()?.getUsersStore();
+    const projectStore: TProjectStore = useRootStore()?.getProjectStore();
+    const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
 
     const [collapsePanelIsOpen, setCollapsePanelIsOpen] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<string>('Page 1');
+    const [showSharingForm, setShowSharingForm] = useState<boolean>(false);
     const [showCursorsPanel, setShowCursorsPanel] = useState<boolean>(false);
+    const [showMenu, setShowMenu] = useState<boolean>(false);
     const userCursorAddictive = useRef<HTMLDivElement | null>(null);
 
+    const lang: LanguageData | null = useLanguageContext();
+    const navigate = useNavigate();
+    
     const pageButtonClickHandler = (e: SyntheticEvent<HTMLElement, MouseEvent>) => {
         setCurrentPage(e.currentTarget.innerText);
         setCollapsePanelIsOpen(false);
@@ -58,14 +76,44 @@ const HeaderNavbar: React.FC = observer(() => {
                         }
                     </div>
                     <div className="">
-                        <button className='share-btn'>SHARE</button>
+                        <button className='share-btn' onClick={() => setShowSharingForm(true)}>SHARE</button>
                     </div>
                 </div>
                 <div className="current-user">
                     <p className='name'>{userStore?.getData()?.name}</p>
-                    <img className='user-image' src={userStore?.getData()?.avatarBase64} alt={userStore?.getData()?.name} />
+                    <img className='user-image' src={userStore?.getData()?.avatarBase64} alt={userStore?.getData()?.name} 
+                        onClick={() => setShowMenu(!showMenu)} style={{ cursor: 'pointer' }}/>
+                    <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        onClick={() => setShowMenu(!showMenu)} style={{ cursor: 'pointer', marginLeft: '6px' }}>
+                        <path d="M1 1L5.5 5L10 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                 </div>
             </div>
+
+            {
+                showMenu &&
+                    <div className="main-menu">
+                        <div className="panel-menu">
+                            <div className="menu-text" onClick={() => navigate('/home')}>
+                                {lang!.langText.headerMenu.projects}
+                            </div>
+                            <hr className="separator" />
+                            <div className="menu-text" onClick={() => {
+                                logout();
+                                navigate('/');
+                            }}>
+                                {lang!.langText.headerMenu.exit}
+                            </div>
+                        </div>
+                    </div>
+            }
+
+            {
+                showSharingForm &&
+                    <ShareModalForm projectMeta={projectsMetaStore.getById(projectStore.getProject()?.getID()!)!} 
+                        close={() => setShowSharingForm(false)} 
+                        updateProjects={update} />
+            }
 
             {
                 showCursorsPanel && <div className="cursor-panel" style={{left: +(userCursorAddictive.current?.offsetLeft || 0)-250}}>

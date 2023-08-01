@@ -64,4 +64,9 @@ public record User
 
         this.TimeZone = 18;
     }
+
+    public void ChangePassword(string newPassword)
+    {
+        this.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword + this.Salt);
+    }
 }

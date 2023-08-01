@@ -95,7 +95,42 @@ header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding:4px 40px;
+        padding:4px 20px;
+    }
+
+    .main-menu {
+        position: fixed;
+        top: 50px;
+        right: 18px;
+        z-index: 1000;
+
+        .panel-menu {
+            background: $dark;
+            padding: 12px;
+            box-shadow: 0px 20px 34px rgba(85, 82, 95, 0.06);
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            width: fit-content;
+            min-width: 7vw;
+
+            .menu-text {
+                color: $white;
+                cursor: pointer;
+                line-height: normal;
+                font-size: 14px;
+                font-weight: 500;
+
+                &:hover {
+                    color: $gray;
+                }
+            }
+
+            .separator {
+                color: darkgray;
+                margin-top: 4px;
+                margin-bottom: 4px;
+            }
+        }
     }
 
     .cursor-panel {

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import bookImage from '../../assets/images/Book.png';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import SettingsTab from "./SettingsTab";
+import SettingsTab from "./SettingsTab/SettingsTab";
 import ProjectsTab from "./ProjectsTab/ProjectsTab";
 import useLogout from "../../common/customHooks/useLogout";
 import { observer } from "mobx-react-lite";
@@ -168,36 +168,36 @@ const UserPage: React.FC = observer(() => {
                                 <circle cx="17" cy="5" r="4" fill="#599BFF" stroke="#434345" strokeWidth="2" />
                             </svg>
                     }
-                </div>
 
-                {
-                    showNotifications && <div className="notification-menu-container">
-                        <div className="notification-menu-tail" style={{ right: (nameRef.current?.clientWidth! + 140) }}>
-                        </div>
+                    {
+                        showNotifications && <div className="notification-menu-container">
+                            <div className="notification-menu-tail" style={{ right: (nameRef.current?.clientWidth! + 140) }}>
+                            </div>
 
-                        <div className="notification-menu" style={{ right: (nameRef.current?.clientWidth! + 100) }}>
-                            <div className="panel-notification">
-                                {
-                                    userStore.getInvites().length === 0 ?
-                                        lang!.langText.headerMenu.noMessages
-                                        : userStore.getInvites().map((i, index) => <div className="notification" key={i.id}>
-                                            {
-                                                index > 0 && <hr className="separator" />
-                                            }
-                                            <span className="inviter-name">{i.inviterName}</span>
-                                            <span>{i.isGroup ? lang!.langText.headerMenu.inviteTextGroup
-                                                : lang!.langText.headerMenu.inviteTextProject}</span>
-                                            <span className="project-name">'{i.projectName}'</span>
-                                            <div className="button-group">
-                                                <button className="accept-button" onClick={() => acceptInvite(i.id)}>{lang!.langText.headerMenu.accept}</button>
-                                                <button className="decline-button" onClick={() => declineInvite(i.id)}>{lang!.langText.headerMenu.decline}</button>
-                                            </div>
-                                        </div>)
-                                }
+                            <div className="notification-menu" style={{ right: (nameRef.current?.clientWidth! + 100) }}>
+                                <div className="panel-notification">
+                                    {
+                                        userStore.getInvites().length === 0 ?
+                                            lang!.langText.headerMenu.noMessages
+                                            : userStore.getInvites().map((i, index) => <div className="notification" key={i.id}>
+                                                {
+                                                    index > 0 && <hr className="separator" />
+                                                }
+                                                <span className="inviter-name">{i.inviterName}</span>
+                                                <span>{i.isGroup ? lang!.langText.headerMenu.inviteTextGroup
+                                                    : lang!.langText.headerMenu.inviteTextProject}</span>
+                                                <span className="project-name">'{i.projectName}'</span>
+                                                <div className="button-group">
+                                                    <button className="accept-button" onClick={() => acceptInvite(i.id)}>{lang!.langText.headerMenu.accept}</button>
+                                                    <button className="decline-button" onClick={() => declineInvite(i.id)}>{lang!.langText.headerMenu.decline}</button>
+                                                </div>
+                                            </div>)
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
 
                 {
                     showMenu &&
