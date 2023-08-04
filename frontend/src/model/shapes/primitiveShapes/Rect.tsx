@@ -130,6 +130,7 @@ class Rect implements IShape {
     config: IRectConfig;
     isVisible: boolean = true;
     zIndex: number = 0;
+    
     get overallWidth() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }

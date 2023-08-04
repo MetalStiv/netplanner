@@ -117,6 +117,7 @@ class Circle implements IShape {
     type: ShapeType = ShapeType.CIRCLE;
     config: ICircleConfig;
     isVisible: boolean = true;
+    
     get overallWidth() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.R].value * 2;
     }

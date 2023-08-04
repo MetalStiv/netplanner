@@ -23,4 +23,10 @@ export enum ShapeType {
     WINDOW = "WINDOW",
     WALL = "WALL",
     ROOM = "ROOM",
+    STAIR = "STAIR",
+    STOVE = "STOVE",
+    TOILET = "TOILET",
+    SINK = "SINK",
+    SHOWER_CABIN = "SHOWER_CABIN",
+    BATH = "BATH",
 }

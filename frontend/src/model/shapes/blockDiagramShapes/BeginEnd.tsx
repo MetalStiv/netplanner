@@ -132,6 +132,19 @@ class BeginEnd implements IShape {
     config: IBeginEndConfig;
     isVisible: boolean = true;
 
+    get overallWidth() {
+        return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
+    }
+    set overallWidth(value: number) {
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString();
+    }
+    get overallHeight() {
+        return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
+    }
+    set overallHeight(value: number) {
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString();
+    }
+    
     constructor(obj: IBeginEndConfig) {
         this.config = obj;
         this.config.zIndex = obj.zIndex ?? 0;
@@ -197,6 +210,7 @@ class BeginEnd implements IShape {
             role="shape"
             tabIndex={-1}
             stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
+            fillRule="nonzero"
             fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
@@ -207,14 +221,16 @@ class BeginEnd implements IShape {
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}
             d={`
-                M ${this.config.graphicalProperties[GraphicalPropertyTypes.X].value},${(+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value) + +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value} 
-                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2},${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2} 0 1,
-                    0 0,${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
+                M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.5}
+                    ${(+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value)}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value} 0
+                
                 a ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2},${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2} 0 1,
-                    0 0,-${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
+                    1 0 ${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
                 l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value} 0
-                `}
+                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2},${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2} 0 1,
+                    1 0 -${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
+            `}
         />
     }
 }

@@ -16,6 +16,12 @@ import { doorInflater } from "./floorplanShapes/Door";
 import { windowInflater } from "./floorplanShapes/Window";
 import { wallInflater } from "./floorplanShapes/Wall";
 import { roomInflater } from "./floorplanShapes/Room";
+import { stairInflater } from "./floorplanShapes/Stair";
+import { sinkInflater } from "./floorplanShapes/Sink";
+import { showerCabinInflater } from "./floorplanShapes/ShowerCabin";
+import { bathInflater } from "./floorplanShapes/Bath";
+import { toiletInflater } from "./floorplanShapes/Toilet";
+import { stoveInflater } from "./floorplanShapes/Stove";
 
 export type TShapeInflater = (message: IMessageShape) => Promise<IShape | null>;
 
@@ -44,6 +50,12 @@ export const shapeInflaters: IShapeInflaters = {
         windowInflater,
         wallInflater,
         roomInflater,
+        stairInflater,
+        sinkInflater,
+        showerCabinInflater,
+        bathInflater,
+        toiletInflater,
+        stoveInflater,
     ],
     
     async inflate(message: IMessageShape) {

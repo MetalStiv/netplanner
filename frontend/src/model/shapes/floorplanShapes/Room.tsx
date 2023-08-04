@@ -169,6 +169,19 @@ class Room implements IShape {
     config: IRoomConfig;
     isVisible: boolean = true;
 
+    get overallWidth() {
+        return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
+    }
+    set overallWidth(value: number) {
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString();
+    }
+    get overallHeight() {
+        return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
+    }
+    set overallHeight(value: number) {
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString();
+    }
+
     constructor(obj: IRoomConfig) {
         this.config = obj;
         this.config.zIndex = obj.zIndex ?? 0;
@@ -252,6 +265,7 @@ class Room implements IShape {
             tabIndex={-1}
             stroke="none"
             fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
+            fillRule="nonzero"
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}

@@ -27,6 +27,8 @@ export enum GraphicalPropertyTypes {
     FILL_COLOR_TWO = 'fc2',
     FILL_HATCHING_SPACE = 'fh',
     FILL_HATCHING_DASH = 'fd',
+
+    STEP_QUANTITY = 'sq',
 }
 
 export interface IShapeGraphicalProps {

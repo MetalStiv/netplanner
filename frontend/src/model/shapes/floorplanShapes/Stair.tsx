@@ -5,24 +5,25 @@ import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShap
 import { IMessageGraphicalProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
-interface IWindowProps extends IShapeGraphicalProps {
+interface IStairProps extends IShapeGraphicalProps {
     [GraphicalPropertyTypes.WIDTH]: IGraphicalProperty,
     [GraphicalPropertyTypes.HEIGHT]: IGraphicalProperty,
     [GraphicalPropertyTypes.FILL_COLOR_ONE]: IGraphicalProperty,
     [GraphicalPropertyTypes.STROKE_COLOR]: IGraphicalProperty,
+    [GraphicalPropertyTypes.STEP_QUANTITY]: IGraphicalProperty,
 }
 
-export interface IWindowConfig extends IShapeConfig {
+export interface IStairConfig extends IShapeConfig {
     id?: string,
-    graphicalProperties: IWindowProps,
+    graphicalProperties: IStairProps,
     zIndex: number,
 }
 
-export const windowInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type !== ShapeType.WINDOW) {
+export const stairInflater: TShapeInflater = async (messageShape: IMessageShape) => {
+    if (messageShape.type !== ShapeType.STAIR) {
         return null
     }
-    return new Window({
+    return new Stair({
         id: messageShape.id,
         zIndex: messageShape.zIndex,
         graphicalProperties: {
@@ -68,14 +69,20 @@ export const windowInflater: TShapeInflater = async (messageShape: IMessageShape
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
+            [GraphicalPropertyTypes.STEP_QUANTITY]: {
+                label: "Steps",
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.STEP_QUANTITY)!.v,
+                isReadable: true,
+                editorType: EditorType.TEXT_EDITOR
+            },
         }
     })
 }
 
-export class WindowCreator implements IShapeCreator {
-    type: ShapeType = ShapeType.WINDOW;
+export class StairCreator implements IShapeCreator {
+    type: ShapeType = ShapeType.STAIR;
     create() {
-        return new Window({
+        return new Stair({
             graphicalProperties: {
                 [GraphicalPropertyTypes.X]: {
                     label: 'X',
@@ -91,13 +98,13 @@ export class WindowCreator implements IShapeCreator {
                 },
                 [GraphicalPropertyTypes.WIDTH]: {
                     label: 'Width',
-                    value: '80',
+                    value: '40',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.HEIGHT]: {
                     label: 'Height',
-                    value: '19',
+                    value: '140',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
@@ -120,16 +127,23 @@ export class WindowCreator implements IShapeCreator {
                     value: '#ffffff',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
-                }
+                },
+
+                [GraphicalPropertyTypes.STEP_QUANTITY]: {
+                    label: "Steps",
+                    value: '10',
+                    isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
+                },
             },
             zIndex: 0,
         });
     }
 }
 
-class Window implements IShape {
-    type: ShapeType = ShapeType.WINDOW;
-    config: IWindowConfig;
+class Stair implements IShape {
+    type: ShapeType = ShapeType.STAIR;
+    config: IStairConfig;
     isVisible: boolean = true;
 
     get overallWidth() {
@@ -145,7 +159,7 @@ class Window implements IShape {
         this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString();
     }
 
-    constructor(obj: IWindowConfig) {
+    constructor(obj: IStairConfig) {
         this.config = obj;
         this.config.zIndex = obj.zIndex ?? 0;
     }
@@ -193,7 +207,14 @@ class Window implements IShape {
             value: m.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR
-        }
+        };
+
+        this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY] = {
+            label: 'Steps',
+            value: m.find(p => p.l === GraphicalPropertyTypes.STEP_QUANTITY)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
     }
 
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
@@ -223,16 +244,27 @@ class Window implements IShape {
             d={`
                 M ${this.config.graphicalProperties[GraphicalPropertyTypes.X].value},${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
                 l ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
-                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
                 l -${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
-                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
-                m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
-                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
-                l ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
-                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
-            `}
+                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
+
+                m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.5} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.5} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
+                m -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.5} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.5} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.8}
+            ` +
+            Array.from({ length: +this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value-1 }, (_, i) => i)
+                .map(s => `m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.8/(+this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value-1)}
+                    l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.8/(+this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value-1)}
+                    l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.8/(+this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value-1)}
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
+                `).join(' ')
+            }
         />
     }
 }
 
-export default Window;
+export default Stair;

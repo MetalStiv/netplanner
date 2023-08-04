@@ -5,24 +5,24 @@ import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShap
 import { IMessageGraphicalProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
-interface IWindowProps extends IShapeGraphicalProps {
+interface IBathProps extends IShapeGraphicalProps {
     [GraphicalPropertyTypes.WIDTH]: IGraphicalProperty,
     [GraphicalPropertyTypes.HEIGHT]: IGraphicalProperty,
     [GraphicalPropertyTypes.FILL_COLOR_ONE]: IGraphicalProperty,
     [GraphicalPropertyTypes.STROKE_COLOR]: IGraphicalProperty,
 }
 
-export interface IWindowConfig extends IShapeConfig {
+export interface IBathConfig extends IShapeConfig {
     id?: string,
-    graphicalProperties: IWindowProps,
+    graphicalProperties: IBathProps,
     zIndex: number,
 }
 
-export const windowInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type !== ShapeType.WINDOW) {
+export const bathInflater: TShapeInflater = async (messageShape: IMessageShape) => {
+    if (messageShape.type !== ShapeType.BATH) {
         return null
     }
-    return new Window({
+    return new Bath({
         id: messageShape.id,
         zIndex: messageShape.zIndex,
         graphicalProperties: {
@@ -72,10 +72,10 @@ export const windowInflater: TShapeInflater = async (messageShape: IMessageShape
     })
 }
 
-export class WindowCreator implements IShapeCreator {
-    type: ShapeType = ShapeType.WINDOW;
+export class BathCreator implements IShapeCreator {
+    type: ShapeType = ShapeType.BATH;
     create() {
-        return new Window({
+        return new Bath({
             graphicalProperties: {
                 [GraphicalPropertyTypes.X]: {
                     label: 'X',
@@ -91,13 +91,13 @@ export class WindowCreator implements IShapeCreator {
                 },
                 [GraphicalPropertyTypes.WIDTH]: {
                     label: 'Width',
-                    value: '80',
+                    value: '300',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.HEIGHT]: {
                     label: 'Height',
-                    value: '19',
+                    value: '100',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
@@ -127,9 +127,9 @@ export class WindowCreator implements IShapeCreator {
     }
 }
 
-class Window implements IShape {
-    type: ShapeType = ShapeType.WINDOW;
-    config: IWindowConfig;
+class Bath implements IShape {
+    type: ShapeType = ShapeType.BATH;
+    config: IBathConfig;
     isVisible: boolean = true;
 
     get overallWidth() {
@@ -145,7 +145,7 @@ class Window implements IShape {
         this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString();
     }
 
-    constructor(obj: IWindowConfig) {
+    constructor(obj: IBathConfig) {
         this.config = obj;
         this.config.zIndex = obj.zIndex ?? 0;
     }
@@ -211,7 +211,7 @@ class Window implements IShape {
             tabIndex={-1}
             stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
             fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
-            fillRule="evenodd"
+            fillRule="nonzero"
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
@@ -222,17 +222,33 @@ class Window implements IShape {
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}
             d={`
                 M ${this.config.graphicalProperties[GraphicalPropertyTypes.X].value},${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
                 l ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
-                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
+                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
                 l -${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
-                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
-                m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
-                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
-                l ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
-                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
-            `}
+
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.1},${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.1}
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.8}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.75} 0
+                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.8} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
+                    0 0 0 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.8}
+                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.75} 0
+
+                m -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.42}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.1} 0
+                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.04}
+                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.1} 0
+                m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.14}
+                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.24}
+
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.16} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.12}
+                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.02} ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.02}
+                    0 1,0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04},0
+                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.02} ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.02}
+                    0 1,0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04},0
+        `}
         />
     }
 }
 
-export default Window;
+export default Bath;

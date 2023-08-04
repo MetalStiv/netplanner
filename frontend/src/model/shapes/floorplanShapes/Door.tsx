@@ -132,6 +132,19 @@ class Door implements IShape {
     config: IDoorConfig;
     isVisible: boolean = true;
 
+    get overallWidth() {
+        return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
+    }
+    set overallWidth(value: number) {
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString();
+    }
+    get overallHeight() {
+        return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
+    }
+    set overallHeight(value: number) {
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString();
+    }
+
     constructor(obj: IDoorConfig) {
         this.config = obj;
         this.config.zIndex = obj.zIndex ?? 0;
