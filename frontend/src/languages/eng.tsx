@@ -1,3 +1,6 @@
+import { GroupType } from "../model/shapes/GroupType"
+import { GraphicalPropertyTypes } from "../model/shapes/IShape"
+import { ShapeType } from "../model/shapes/ShapeType"
 import ILanguage from "./ILanguage"
 
 export const eng: ILanguage = {
@@ -126,6 +129,7 @@ export const eng: ILanguage = {
     },
     projectPage: {
         notAllowed: "You are not allowed to project!",
+        sharedButton: "SHARE",
         shapesPanel: {
             title: "Shapes"
         },
@@ -137,30 +141,71 @@ export const eng: ILanguage = {
         },
         propertiesPanel: {
             title: "Object properties",
-            elType: "E type"
+            elType: "Shape type"
         },
         graphPanel: {
             title: "Graphical properties",
             width: "X len",
             height: "Y len",
-        }
+        },
+        baseGroups: {
+            [GroupType.PRIMITIVES]: "Primitives",
+            [GroupType.BLOCK_DIAGRAM]: "Block diagram",
+            [GroupType.FLOORPLAN]: "Floorplan",
+        },
+        baseShapes: {
+            [ShapeType.CIRCLE]: "Circle",
+            [ShapeType.ELLIPS]: "Ellips",
+            [ShapeType.LINE]: "Line",
+            [ShapeType.POLYLINE]: "Polyline",
+            [ShapeType.RECTANGLE]: "Rectangle",
+    
+            [ShapeType.BEGIN_END]: "Begin-end",
+            [ShapeType.DECISION]: "Decision",
+            [ShapeType.INPUT_OUTPUT]: "Input-output",
+            [ShapeType.MODIFICATION]: "Modification",
+            [ShapeType.OPERATION]: "Operation",
+            [ShapeType.PROCESS]: "Process",
+            [ShapeType.REPEAT]: "Repeat",
+    
+            [ShapeType.BATH]: "Bath",
+            [ShapeType.DOOR]: "Door",
+            [ShapeType.ROOM]: "Room",
+            [ShapeType.SHOWER_CABIN]: "Shower cabin",
+            [ShapeType.SINK]: "Sink",
+            [ShapeType.STAIR]: "Stair",
+            [ShapeType.STOVE]: "Stove",
+            [ShapeType.TOILET]: "Toilet",
+            [ShapeType.WALL]: "Wall",
+            [ShapeType.WINDOW]: "Window",
+        },
+        graphicalProperties: {
+            [GraphicalPropertyTypes.X]: "X",
+            [GraphicalPropertyTypes.Y]: "Y",
+            [GraphicalPropertyTypes.X2]: "X2",
+            [GraphicalPropertyTypes.Y2]: "Y2",
+            [GraphicalPropertyTypes.R]: "R",
+            [GraphicalPropertyTypes.RX]: "RX",
+            [GraphicalPropertyTypes.RY]: "RY",
+            [GraphicalPropertyTypes.WIDTH]: "Width",
+            [GraphicalPropertyTypes.HEIGHT]: "Height",
+            [GraphicalPropertyTypes.PIVOT]: "Pivot",
+            [GraphicalPropertyTypes.LEFT_WIDTH]: "Left wall width",
+            [GraphicalPropertyTypes.RIGHT_WIDTH]: "Right wall width",
+            [GraphicalPropertyTypes.TOP_WIDTH]: "Top wall width",
+            [GraphicalPropertyTypes.BOTTOM_WIDTH]: "Bottom wall width",
+        
+            [GraphicalPropertyTypes.STROKE_COLOR]: "Stroke color",
+            [GraphicalPropertyTypes.STROKE_WIDTH]: "Stroke wirth",
+            [GraphicalPropertyTypes.STROKE_DASH]: "Stroke dash",
+        
+            [GraphicalPropertyTypes.FILL_TYPE]: "Fill type",
+            [GraphicalPropertyTypes.FILL_COLOR_ONE]: "Fill color",
+            [GraphicalPropertyTypes.FILL_COLOR_TWO]: "Fill second color",
+            [GraphicalPropertyTypes.FILL_HATCHING_SPACE]: "Fill hatching space",
+            [GraphicalPropertyTypes.FILL_HATCHING_DASH]: "Fill hatching dash",
+        
+            [GraphicalPropertyTypes.STEP_QUANTITY]: "Step quantity",
+        },
     },
-    projectGroups: {
-        polygons: {
-            label: "Polygons",
-            shapes: {
-                circle: "Circle",
-                rect: "Rectangle",
-                ellipse: "Ellipse"
-            }
-        },
-        primitives: {
-            label: "Primitives",
-            shapes: {
-                line: "Line",
-                polyline: "Polyline",
-                point: "Point"
-            }
-        },
-    }
 }

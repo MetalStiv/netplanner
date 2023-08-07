@@ -30,61 +30,51 @@ export const roomInflater: TShapeInflater = async (messageShape: IMessageShape) 
         zIndex: messageShape.zIndex,
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: {
-                label: "X",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.X)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.Y]: {
-                label: "Y",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
-                label: 'Fill Color One',
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
             [GraphicalPropertyTypes.LEFT_WIDTH]: {
-                label: "Left width",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.LEFT_WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.RIGHT_WIDTH]: {
-                label: "Right width",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.RIGHT_WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.TOP_WIDTH]: {
-                label: "Top width",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.TOP_WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.BOTTOM_WIDTH]: {
-                label: "Bottom width",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.BOTTOM_WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.WIDTH]: {
-                label: "Width",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.HEIGHT]: {
-                label: "Height",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.PIVOT]: {
-                label: "Pivot",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
@@ -99,61 +89,51 @@ export class RoomCreator implements IShapeCreator {
         return new Room({
             graphicalProperties: {
                 [GraphicalPropertyTypes.X]: {
-                    label: 'X',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.Y]: {
-                    label: 'Y',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.PIVOT]: {
-                    label: 'Pivot',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.WIDTH]: {
-                    label: 'Width',
                     value: '300',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.HEIGHT]: {
-                    label: 'Height',
                     value: '250',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
-                    label: 'Fill Color One',
                     value: '#000000',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
                 },
                 [GraphicalPropertyTypes.LEFT_WIDTH]: {
-                    label: "Left width",
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.RIGHT_WIDTH]: {
-                    label: "Right width",
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.TOP_WIDTH]: {
-                    label: "Top width",
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.BOTTOM_WIDTH]: {
-                    label: "Bottom width",
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
@@ -189,61 +169,51 @@ class Room implements IShape {
 
     updateGraphicalProperties(m: IMessageGraphicalProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
-            label: 'X',
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.Y] = {
-            label: 'Y',
             value: m.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH] = {
-            label: 'Width',
             value: m.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT] = {
-            label: 'Height',
             value: m.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT] = {
-            label: 'Pivot',
             value: m.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE] = {
-            label: 'Fill Color One',
             value: m.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH] = {
-            label: 'Left width',
             value: m.find(p => p.l === GraphicalPropertyTypes.LEFT_WIDTH)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH] = {
-            label: 'Right width',
             value: m.find(p => p.l === GraphicalPropertyTypes.RIGHT_WIDTH)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH] = {
-            label: 'Top width',
             value: m.find(p => p.l === GraphicalPropertyTypes.TOP_WIDTH)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.BOTTOM_WIDTH] = {
-            label: 'Bottom width',
             value: m.find(p => p.l === GraphicalPropertyTypes.BOTTOM_WIDTH)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR

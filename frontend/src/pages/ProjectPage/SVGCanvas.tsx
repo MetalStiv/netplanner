@@ -19,6 +19,7 @@ import { TUsersStore } from '../../stores/usersStore';
 import { TUserStore } from '../../stores/userStore';
 import UserCursor from '../../model/projectData/UserCursor';
 import { toCartesianCoordSystem } from '../../common/helpers/CartesianCoordSystem';
+import { DeleteShapeAction } from '../../model/actions/DeleteShapeAction';
 
 interface SVGCanvasProps {
   // currentPage: Page,
@@ -40,6 +41,12 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     // { x: -300, y: -300 }
     // { x: 0, y: 0 }
   );
+
+  const [selectedShapes, setSelectedShapes] = useState<string[]>([]/*['64ac40f929a8cb47d17d3a39']*/);
+  const [shiftIsPressed, setShiftIsPressed] = useState<boolean>(false);
+  // const [controlsCoords, setControlsCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+  const [controlsConfig, setControlsConfig] = useState<{ x: number, y: number, w: number, h: number, offset: number, isShow: boolean }>({ x: 0, y: 0, w: 0, h: 0, offset: 4, isShow: false });
+
   const [isDrag, setIsDrag] = useState(false);
   const [cursorCoords, setCursorCoords] = useState({ x: 0, y: 0 });
   const projectStore: TProjectStore = useRootStore().getProjectStore();
@@ -149,6 +156,58 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
       clearInterval(intervalKillOldCursors);
     }
   }, [cursorCoords])
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+        if (e.ctrlKey && e.code === 'KeyC') {
+            const currentLayer: ILayer = projectStore.getProject()
+                ?.getCurrentPage()
+                .getCurrentLayer()!
+            let shapes = selectedShapes.map(ss => currentLayer.getShapes().find(s => s.config.id === ss))
+                .filter((x): x is IShape => x !== undefined);
+            shapes = JSON.parse(JSON.stringify(shapes))
+            shapes.forEach(s => {
+                s.config.id = undefined
+            })
+            userStore.putToCopyBuffer(shapes)
+        }
+        if (e.ctrlKey && e.code === 'KeyX') {
+            const currentLayer: ILayer = projectStore.getProject()
+                ?.getCurrentPage()
+                .getCurrentLayer()!
+            let shapes = selectedShapes.map(ss => currentLayer.getShapes().find(s => s.config.id === ss))
+                .filter((x): x is IShape => x !== undefined);
+            shapes = JSON.parse(JSON.stringify(shapes))
+            shapes.forEach(s => {
+                s.config.id = undefined
+            })
+            userStore.putToCopyBuffer(shapes)
+            
+            let shapesToDelete = selectedShapes.map(ss => currentLayer.getShapes().find(s => s.config.id === ss))
+              .filter((x): x is IShape => x !== undefined);
+            const deleteShapeAction = new DeleteShapeAction(shapesToDelete[0], currentLayer?.getID());
+            actionStore.push(deleteShapeAction);
+        }
+        if (e.ctrlKey && e.code === 'KeyV') {
+            const currentLayer: ILayer = projectStore.getProject()
+                ?.getCurrentPage()
+                .getCurrentLayer()!
+            const shapesToAdd = userStore.getFromCopyBuffer();
+            const coords = transformOuterCoordsToSVGCoords({
+              x: cursorCoords.x,
+              y: cursorCoords.y,
+            })
+            const addShapeAction = new AddShapeAction(shapesToAdd[0], currentLayer, coords);
+            actionStore.push(addShapeAction);
+        }
+      }
+
+      document.addEventListener('keydown', onKeyDown);
+
+      return () => {
+          document.removeEventListener('keydown', onKeyDown);
+      };
+  }, [selectedShapes]);
 
   const cursorAnimations = useSprings(
     (project?.getCursors().filter(c => c.pageId === currentPage?.getID())
@@ -433,12 +492,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     //getCursorCoordsCallback(SVGCursorCoords);
   }
 
-
-  const [selectedShapes, setSelectedShapes] = useState<string[]>([]/*['64ac40f929a8cb47d17d3a39']*/);
-  const [shiftIsPressed, setShiftIsPressed] = useState<boolean>(false);
-  // const [controlsCoords, setControlsCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
-  const [controlsConfig, setControlsConfig] = useState<{ x: number, y: number, w: number, h: number, offset: number, isShow: boolean }>({ x: 0, y: 0, w: 0, h: 0, offset: 4, isShow: false });
-
   function svgSelect(e: React.PointerEvent<SVGGeometryElement> | React.FocusEvent<SVGGeometryElement>): void;
   function svgSelect(e: { id: string, domRect: DOMRect }): void;
   function svgSelect(e: any): void {
@@ -523,7 +576,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     const onKeyDown = (e: KeyboardEvent) => {
       e.shiftKey && setShiftIsPressed(true);
       document.onkeyup = (e: KeyboardEvent) => {
-        console.log(e)
         if ((e.code === 'ShiftLeft' || e.code === 'ShiftRight') && !e.shiftKey) {
           setShiftIsPressed(false);
           document.onkeyup = null;
@@ -1141,7 +1193,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         min={10}
         max={200}
         step={10}
-        numberInputMax={1000}
+        numberInputMax={9999}
         onChangeHandler={(val: string) => toScale(parseFloat((parseInt(val) * 0.01).toFixed(1)))} />
     </>
   )

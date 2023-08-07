@@ -16,13 +16,14 @@ type Props = {
 };
 
 export const LanguageProvider: React.FC<Props> = ({ children }) => {
-    const data = localStorage.getItem("language");
+    const data = localStorage.getItem("lang");
     const lang: Language = languages.filter(l => l === data)[0] || "en";
 
     const [language, setLanguage] = useState<Language>(lang);
     const [langText, setlangText] = useState<ILanguage>(text[lang]);
     
     const switchLanguage: (lang: Language) => void = useCallback(lang => {
+        localStorage.setItem('lang', lang);
         setLanguage(lang);
         setlangText(text[lang])
     }, []);

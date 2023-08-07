@@ -1,3 +1,4 @@
+import { GroupType } from "../GroupType";
 import IShapeGroup from "../IShapeGroup";
 import { CircleCreator } from "./Circle";
 import { EllipseCreator } from "./Ellipse";
@@ -6,7 +7,7 @@ import { PolylineCreator } from "./Polyline";
 import { RectCreator } from "./Rect";
 
 const primitiveGroup: IShapeGroup = {
-    title: 'Primitives',
+    labelName: GroupType.PRIMITIVES,
     shapes: [
         new CircleCreator(),
         new EllipseCreator(),

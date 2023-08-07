@@ -27,43 +27,36 @@ export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShap
         zIndex: messageShape.zIndex,
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: {
-                label: "X",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.X)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.Y]: {
-                label: "Y",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.PIVOT]: {
-                label: 'Pivot',
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.RX]: {
-                label: "rx",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.RX)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.RY]: {
-                label: "ry",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.RY)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.STROKE_COLOR]: {
-                label: "Stroke Color",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
             [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
-                label: "Fill Color One",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
@@ -78,43 +71,36 @@ export class EllipseCreator implements IShapeCreator {
         return new Ellipse({
             graphicalProperties: {
                 [GraphicalPropertyTypes.X]: {
-                    label: 'X',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.Y]: {
-                    label: 'Y',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.PIVOT]: {
-                    label: 'Pivot',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.RX]: {
-                    label: 'Radius X',
                     value: '30',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.RY]: {
-                    label: 'Radius Y',
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.STROKE_COLOR]: {
-                    label: 'Stroke Color',
                     value: '#000000',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
                 },
                 [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
-                    label: 'Fill Color One',
                     value: '#ffffff',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
@@ -130,6 +116,7 @@ class Ellipse implements IShape {
     config: IEllipseConfig;
     isVisible: boolean = true;
     zIndex: number = 0;
+    
     get overallWidth() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.RX].value * 2;
     }
@@ -152,43 +139,36 @@ class Ellipse implements IShape {
 
     updateGraphicalProperties(m: IMessageGraphicalProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
-            label: 'X',
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.Y] = {
-            label: 'Y',
             value: m.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT] = {
-            label: 'Pivot',
             value: m.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.RX] = {
-            label: 'RX',
             value: m.find(p => p.l === GraphicalPropertyTypes.RX)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.RY] = {
-            label: 'RY',
             value: m.find(p => p.l === GraphicalPropertyTypes.RY)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE] = {
-            label: 'Fill Color One',
             value: m.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR] = {
-            label: 'Stroke Color',
             value: m.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR

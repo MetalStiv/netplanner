@@ -19,10 +19,16 @@ export const RootProvider: React.FC<Props> = ({ children }) => {
     const store = useLocalObservable(createRootStore);
     const [currentVal, setCurrentVal] = useState<boolean>(false);
 
-    const updateWebSocket = () => setCurrentVal(!currentVal);
-
     const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(WEB_SOCKET_URL +
         getAccessToken() + '&projectId=' + store.getProjectStore().getProjectToLoadId());
+
+    const updateWebSocket = () => {
+        // const id = store.getProjectStore().getProjectToLoadId();
+        // store.getProjectStore().setProjectToLoadId('_');
+        // setCurrentVal(currentVal => !currentVal);
+        // store.getProjectStore().setProjectToLoadId(id);
+        setCurrentVal(!currentVal);
+    }
 
     store.getActionStore().setMessageSender(sendMessage);
     store.getProjectStore().setWebSocketUpdater(updateWebSocket);
@@ -38,8 +44,6 @@ export const RootProvider: React.FC<Props> = ({ children }) => {
             }
             const handledProject: Project =
                 await actionHandlers.handle(store.getProjectStore().getProject()!, JSON.parse(message!.data), store.getActionStore().getActions());
-            console.log("New project");
-            console.log(handledProject);
             store.getProjectStore().setProject(handledProject);
             store.getProjectStore().rerender();
         }

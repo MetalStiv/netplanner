@@ -1,3 +1,7 @@
+import { GroupType } from "../model/shapes/GroupType"
+import { GraphicalPropertyTypes } from "../model/shapes/IShape"
+import { ShapeType } from "../model/shapes/ShapeType"
+
 interface ILanguage {
     headerMenu: {
         projects: string,
@@ -123,6 +127,7 @@ interface ILanguage {
     },
     projectPage: {
         notAllowed: string,
+        sharedButton: string,
         shapesPanel: {
             title: string
         },
@@ -140,26 +145,67 @@ interface ILanguage {
             title: string,
             width: string,
             height: string
-        }
-    },
-    projectGroups: {
-        polygons: {
-            label: string,
-            shapes: {
-                circle: string,
-                rect: string,
-                ellipse: string
-            }
         },
-        primitives: {
-            label: string,
-            shapes: {
-                line: string,
-                polyline: string,
-                point: string
-            }
-        }
-    }
+        baseGroups: {
+            [GroupType.PRIMITIVES]: string,
+            [GroupType.BLOCK_DIAGRAM]: string,
+            [GroupType.FLOORPLAN]: string,
+        },
+        baseShapes: {
+            [ShapeType.CIRCLE]: string,
+            [ShapeType.ELLIPS]: string,
+            [ShapeType.LINE]: string,
+            [ShapeType.POLYLINE]: string,
+            [ShapeType.RECTANGLE]: string,
+    
+            [ShapeType.BEGIN_END]: string,
+            [ShapeType.DECISION]: string,
+            [ShapeType.INPUT_OUTPUT]: string,
+            [ShapeType.MODIFICATION]: string,
+            [ShapeType.OPERATION]: string,
+            [ShapeType.PROCESS]: string,
+            [ShapeType.REPEAT]: string,
+    
+            [ShapeType.BATH]: string,
+            [ShapeType.DOOR]: string,
+            [ShapeType.ROOM]: string,
+            [ShapeType.SHOWER_CABIN]: string,
+            [ShapeType.SINK]: string,
+            [ShapeType.STAIR]: string,
+            [ShapeType.STOVE]: string,
+            [ShapeType.TOILET]: string,
+            [ShapeType.WALL]: string,
+            [ShapeType.WINDOW]: string,
+        },
+        graphicalProperties: {
+            [GraphicalPropertyTypes.X]: string,
+            [GraphicalPropertyTypes.Y]: string,
+            [GraphicalPropertyTypes.X2]: string,
+            [GraphicalPropertyTypes.Y2]: string,
+            [GraphicalPropertyTypes.R]: string,
+            [GraphicalPropertyTypes.RX]: string,
+            [GraphicalPropertyTypes.RY]: string,
+            [GraphicalPropertyTypes.WIDTH]: string,
+            [GraphicalPropertyTypes.HEIGHT]: string,
+            [GraphicalPropertyTypes.PIVOT]: string,
+            [GraphicalPropertyTypes.LEFT_WIDTH]: string,
+            [GraphicalPropertyTypes.RIGHT_WIDTH]: string,
+            [GraphicalPropertyTypes.TOP_WIDTH]: string,
+            [GraphicalPropertyTypes.BOTTOM_WIDTH]: string,
+        
+            [GraphicalPropertyTypes.STROKE_COLOR]: string,
+            [GraphicalPropertyTypes.STROKE_WIDTH]: string,
+            [GraphicalPropertyTypes.STROKE_DASH]: string,
+        
+            [GraphicalPropertyTypes.FILL_TYPE]: string,
+            [GraphicalPropertyTypes.FILL_COLOR_ONE]: string,
+            [GraphicalPropertyTypes.FILL_COLOR_TWO]: string,
+            [GraphicalPropertyTypes.FILL_HATCHING_SPACE]: string,
+            [GraphicalPropertyTypes.FILL_HATCHING_DASH]: string,
+        
+            [GraphicalPropertyTypes.STEP_QUANTITY]: string,
+        },
+    },
 }
 
 export default ILanguage

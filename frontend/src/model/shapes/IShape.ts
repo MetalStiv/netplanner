@@ -38,7 +38,6 @@ export interface IShapeGraphicalProps {
 }
 
 export interface IGraphicalProperty {
-    label: string,
     value: string,
     isReadable: boolean,
     editorType: EditorType

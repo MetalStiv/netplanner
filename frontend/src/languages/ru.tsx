@@ -1,3 +1,6 @@
+import { GroupType } from "../model/shapes/GroupType";
+import { GraphicalPropertyTypes } from "../model/shapes/IShape";
+import { ShapeType } from "../model/shapes/ShapeType";
 import ILanguage from "./ILanguage";
 
 export const ru: ILanguage = {
@@ -126,6 +129,7 @@ export const ru: ILanguage = {
     },
     projectPage: {
         notAllowed: "У вас нет прав доступа к проекту!",
+        sharedButton: "Поделиться",
         shapesPanel: {
             title: "Элементы"
         },
@@ -137,30 +141,71 @@ export const ru: ILanguage = {
         },
         propertiesPanel: {
             title: "Свойства объекта",
-            elType: "Тип элемента"
+            elType: "Тип фигуры"
         },
         graphPanel: {
             title: "Графические свойства",
             width: "Ширина",
             height: "Высота",
-        }
+        },
+        baseGroups: {
+            [GroupType.PRIMITIVES]: "Примитивы",
+            [GroupType.BLOCK_DIAGRAM]: "Блок-схемы",
+            [GroupType.FLOORPLAN]: "Планы зданий",
+        },
+        baseShapes: {
+            [ShapeType.CIRCLE]: "Круг",
+            [ShapeType.ELLIPS]: "Эллипс",
+            [ShapeType.LINE]: "Линия",
+            [ShapeType.POLYLINE]: "Ломанная",
+            [ShapeType.RECTANGLE]: "Прямоугольник",
+    
+            [ShapeType.BEGIN_END]: "Начало-конец",
+            [ShapeType.DECISION]: "Условие",
+            [ShapeType.INPUT_OUTPUT]: "Ввод-вывод",
+            [ShapeType.MODIFICATION]: "Модификация",
+            [ShapeType.OPERATION]: "Операция",
+            [ShapeType.PROCESS]: "Процесс",
+            [ShapeType.REPEAT]: "Повторение",
+    
+            [ShapeType.BATH]: "Ванна",
+            [ShapeType.DOOR]: "Дверь",
+            [ShapeType.ROOM]: "Комната",
+            [ShapeType.SHOWER_CABIN]: "Душевая кабина",
+            [ShapeType.SINK]: "Раковина",
+            [ShapeType.STAIR]: "Лестница",
+            [ShapeType.STOVE]: "Плита",
+            [ShapeType.TOILET]: "Туалет",
+            [ShapeType.WALL]: "Стена",
+            [ShapeType.WINDOW]: "Окно",
+        },
+        graphicalProperties: {
+            [GraphicalPropertyTypes.X]: "X",
+            [GraphicalPropertyTypes.Y]: "Y",
+            [GraphicalPropertyTypes.X2]: "X2",
+            [GraphicalPropertyTypes.Y2]: "Y2",
+            [GraphicalPropertyTypes.R]: "R",
+            [GraphicalPropertyTypes.RX]: "RX",
+            [GraphicalPropertyTypes.RY]: "RY",
+            [GraphicalPropertyTypes.WIDTH]: "Ширина",
+            [GraphicalPropertyTypes.HEIGHT]: "Высота",
+            [GraphicalPropertyTypes.PIVOT]: "Поворот",
+            [GraphicalPropertyTypes.LEFT_WIDTH]: "Ширина левой стенки",
+            [GraphicalPropertyTypes.RIGHT_WIDTH]: "Ширина правой стенки",
+            [GraphicalPropertyTypes.TOP_WIDTH]: "Ширина верхней стенки",
+            [GraphicalPropertyTypes.BOTTOM_WIDTH]: "Ширина нижней стенки",
+        
+            [GraphicalPropertyTypes.STROKE_COLOR]: "Цвет границы",
+            [GraphicalPropertyTypes.STROKE_WIDTH]: "Толщина границы",
+            [GraphicalPropertyTypes.STROKE_DASH]: "Тип границы",
+        
+            [GraphicalPropertyTypes.FILL_TYPE]: "Тип заливки",
+            [GraphicalPropertyTypes.FILL_COLOR_ONE]: "Цвет заливки",
+            [GraphicalPropertyTypes.FILL_COLOR_TWO]: "Дополнительный цвет заливки",
+            [GraphicalPropertyTypes.FILL_HATCHING_SPACE]: "Размер шриховки",
+            [GraphicalPropertyTypes.FILL_HATCHING_DASH]: "Тип штриховки",
+        
+            [GraphicalPropertyTypes.STEP_QUANTITY]: "Количество ступенек",
+        },
     },
-    projectGroups: {
-        polygons: {
-            label: "Многоугольники",
-            shapes: {
-                circle: "Окружность",
-                rect: "Прямоугольник",
-                ellipse: "Эллипс"
-            }
-        },
-        primitives: {
-            label: "Примитивы",
-            shapes: {
-                line: "Отрезок",
-                polyline: "Кривая",
-                point: "Точка"
-            }
-        },
-    }
 }

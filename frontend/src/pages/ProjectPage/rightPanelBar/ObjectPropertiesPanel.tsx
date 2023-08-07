@@ -23,7 +23,7 @@ const ObjectPropertiesPanel = ({ shapeProps }: IObjectPropertiesPanelProps) => {
             {shapeProps && <div className="">
                 <div className="property">
                     <p className='property-title'>{lang?.langText.projectPage.propertiesPanel.elType}</p>
-                    <p className='property-value'>{shapeProps?.type ?? ''}</p>
+                    <p className='property-value'>{lang?.langText.projectPage.baseShapes[shapeProps?.type] ?? ''}</p>
                 </div>
             </div>}
         </div>

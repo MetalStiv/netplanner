@@ -32,7 +32,7 @@ export class CursorPositionAction implements IAction {
     do(): IMessage {
         return {
             type: ActionType.CURSOR_POSITION,
-            pageId: this.currentPage.getID(),
+            pageId: this.currentPage ? this.currentPage.getID() : '',
             data: {
                 coords: {
                     x: this.cursorCoords.x,

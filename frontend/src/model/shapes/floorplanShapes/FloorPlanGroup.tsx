@@ -1,3 +1,4 @@
+import { GroupType } from "../GroupType";
 import IShapeGroup from "../IShapeGroup";
 import { BathCreator } from "./Bath";
 import { DoorCreator } from "./Door";
@@ -11,7 +12,7 @@ import { WallCreator } from "./Wall";
 import { WindowCreator } from "./Window";
 
 const floorPlanGroup: IShapeGroup = {
-    title: 'Floorplan',
+    labelName: GroupType.FLOORPLAN,
     shapes: [
         new DoorCreator(),
         new WindowCreator(),

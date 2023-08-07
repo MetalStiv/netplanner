@@ -26,37 +26,31 @@ export const wallInflater: TShapeInflater = async (messageShape: IMessageShape) 
         zIndex: messageShape.zIndex,
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: {
-                label: "X",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.X)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.Y]: {
-                label: "Y",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
-                label: 'Fill Color One',
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
             [GraphicalPropertyTypes.WIDTH]: {
-                label: "Width",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.HEIGHT]: {
-                label: "Height",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.PIVOT]: {
-                label: "Pivot",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
@@ -71,37 +65,31 @@ export class WallCreator implements IShapeCreator {
         return new Wall({
             graphicalProperties: {
                 [GraphicalPropertyTypes.X]: {
-                    label: 'X',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.Y]: {
-                    label: 'Y',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.PIVOT]: {
-                    label: 'Pivot',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.WIDTH]: {
-                    label: 'Width',
                     value: '600',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.HEIGHT]: {
-                    label: 'Height',
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
-                    label: 'Fill Color One',
                     value: '#000000',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
@@ -137,37 +125,31 @@ class Wall implements IShape {
 
     updateGraphicalProperties(m: IMessageGraphicalProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
-            label: 'X',
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.Y] = {
-            label: 'Y',
             value: m.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH] = {
-            label: 'Width',
             value: m.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT] = {
-            label: 'Height',
             value: m.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT] = {
-            label: 'Pivot',
             value: m.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE] = {
-            label: 'Fill Color One',
             value: m.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR

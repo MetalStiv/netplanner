@@ -25,26 +25,22 @@ export const polylineInflater: TShapeInflater = async (messageShape: IMessageSha
         zIndex: messageShape.zIndex,
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: {
-                label: "X",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.X)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.Y]: {
-                label: "Y",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.PIVOT]: {
-                label: 'Pivot',
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             points: [[15, -30], [40, 45], [50, -70]],
             [GraphicalPropertyTypes.STROKE_COLOR]: {
-                label: 'Stroke Color',
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
@@ -59,26 +55,22 @@ export class PolylineCreator implements IShapeCreator {
         return new Polyline({
             graphicalProperties: {
                 [GraphicalPropertyTypes.X]: {
-                    label: 'X',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.Y]: {
-                    label: 'Y',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.PIVOT]: {
-                    label: 'Pivot',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 points: [[15, -30], [40, 45], [50, -70]],
                 [GraphicalPropertyTypes.STROKE_COLOR]: {
-                    label: 'Stroke',
                     value: '#000000',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
@@ -102,25 +94,21 @@ class Polyline implements IShape {
 
     updateGraphicalProperties(m: IMessageGraphicalProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
-            label: 'X',
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.Y] = {
-            label: 'Y',
             value: m.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT] = {
-            label: 'Pivot',
             value: m.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR] = {
-            label: 'Stroke Color',
             value: m.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR

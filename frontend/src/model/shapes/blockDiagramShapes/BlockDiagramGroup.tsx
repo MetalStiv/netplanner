@@ -1,3 +1,4 @@
+import { GroupType } from "../GroupType";
 import IShapeGroup from "../IShapeGroup"
 import { BeginEndCreator } from "./BeginEnd";
 import { DecisionCreator } from "./Decision";
@@ -8,7 +9,7 @@ import { ProcessCreator } from "./Process";
 import { RepeatCreator } from "./Repeat";
 
 const blockDiagramGroup: IShapeGroup = {
-    title: 'Block Diagram',
+    labelName: GroupType.BLOCK_DIAGRAM,
     shapes: [
         new BeginEndCreator(),
         new OperationCreator(),

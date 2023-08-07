@@ -31,8 +31,9 @@ const GraphicalPropertiesPanel = ({ shapeProps, onChange, canvasProps }: IGraphi
                         shapeProps && Object.entries(shapeProps.graphProps)
                             .filter(([key, obj]) => obj.isReadable)
                             .map(([key, obj]: [string, IGraphicalProperty]) =>
-                                <div key={key + obj.label} className="property">
-                                    <span className='property-title'>{obj.label}</span>
+                                <div key={key} className="property">
+                                    <span className='property-title'>{lang?.langText.projectPage
+                                        .graphicalProperties[key as GraphicalPropertyTypes]}</span>
                                     <Editor
                                         type={obj.editorType}
                                         defaultValue={obj.value}

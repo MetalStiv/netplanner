@@ -41,8 +41,8 @@ const HeaderNavbar: React.FC<IHeaderNavbarProps> = observer(({update}) => {
     return (
         <div id="header-navbar">
             <div className="options">
-                <button className='btn'>Unload</button>
-                <button className='btn'>Savepoints</button>
+                {/* <button className='btn'>Unload</button>
+                <button className='btn'>Savepoints</button> */}
             </div>
             <div className="users-data">
                 <div className="left-part">
@@ -76,7 +76,7 @@ const HeaderNavbar: React.FC<IHeaderNavbarProps> = observer(({update}) => {
                         }
                     </div>
                     <div className="">
-                        <button className='share-btn' onClick={() => setShowSharingForm(true)}>SHARE</button>
+                        <button className='share-btn' onClick={() => setShowSharingForm(true)}>{lang?.langText.projectPage.sharedButton}</button>
                     </div>
                 </div>
                 <div className="current-user">

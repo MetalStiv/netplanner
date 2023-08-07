@@ -40,11 +40,13 @@ import IInvite from '../../model/projectData/IInvite';
 import { TProjectsMetaStore } from '../../stores/projectsMetaStore';
 import { getUserId } from '../../common/login';
 import { updateInfoTime } from '../../common/constants';
+import { ShapeType } from '../../model/shapes/ShapeType';
+import { AddShapeAction } from '../../model/actions/AddShapeAction';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {
     id: string,
-    type: string,
+    type: ShapeType,
     graphProps: IShapeGraphicalProps,
     //coords: { x: number, y: number },
 }
@@ -57,7 +59,7 @@ const ProjectPage: React.FC = observer(() => {
     const [params] = useSearchParams();
     const navigate = useNavigate();
 
-    const [, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+    const [canvasCursorCoords, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [selectedShapeProps, setSelectedShapeProps] = useState<IShapeProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
     const [orientation,] = useState<ICanvasConfig>(Portrait);
@@ -121,6 +123,41 @@ const ProjectPage: React.FC = observer(() => {
             if (e.ctrlKey && e.code === 'KeyY') {
                 actionStore.forward();
             }
+            // if (e.ctrlKey && e.code === 'KeyC') {
+            //     const currentLayer: ILayer = projectStore.getProject()
+            //         ?.getCurrentPage()
+            //         .getCurrentLayer()!
+            //     let shapes = selectedShapes.map(ss => currentLayer.getShapes().find(s => s.config.id === ss))
+            //         .filter((x): x is IShape => x !== undefined);
+            //     shapes = JSON.parse(JSON.stringify(shapes))
+            //     shapes.forEach(s => {
+            //         s.config.id = undefined
+            //         s.config.zIndex = undefined
+            //     })
+            //     userStore.putToCopyBuffer(shapes)
+            // }
+            // if (e.ctrlKey && e.code === 'KeyX') {
+            //     const currentLayer: ILayer = projectStore.getProject()
+            //         ?.getCurrentPage()
+            //         .getCurrentLayer()!
+            //     userStore.putToCopyBuffer(currentLayer.getShapes()
+            //         .filter(s => s.isSelected === true))
+                
+            //     const deleteShapeAction = new DeleteShapeAction(currentLayer.getShapes()
+            //         .filter((s: IShape) => s.isSelected === true)![0],
+            //         currentLayer?.getID());
+            //     actionStore.push(deleteShapeAction);
+            // }
+            // if (e.ctrlKey && e.code === 'KeyV') {
+            //     console.log(userStore.getFromCopyBuffer())
+            //     const currentLayer: ILayer = projectStore.getProject()
+            //         ?.getCurrentPage()
+            //         .getCurrentLayer()!
+            //     const shapesToAdd = userStore.getFromCopyBuffer();
+            //     const addShapeAction = new AddShapeAction(shapesToAdd[0], currentLayer, canvasCursorCoords);
+            //     console.log(addShapeAction)
+            //     actionStore.push(addShapeAction);
+            // }
         }
 
         document.addEventListener('keydown', onKeyDown);

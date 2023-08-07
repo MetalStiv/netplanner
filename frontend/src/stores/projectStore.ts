@@ -37,6 +37,8 @@ export const createProjectStore = () => {
         },
 
         setProjectToLoadId(id: string) {
+            this[projectToLoadId] = ' ';
+            this[webSocketUpdaterSymbol]!();
             this[projectToLoadId] = id;
             this[webSocketUpdaterSymbol]!();
         },
@@ -55,10 +57,10 @@ export const createProjectStore = () => {
 
         update() {
             if (this[projectSymbol]) {
-                const newProject = new Project(this[projectSymbol].getShapesGroups(),
-                    this[projectSymbol].getTitle(),
-                    this[projectSymbol].getID(),
-                    this[projectSymbol].getPages());
+                const newProject = new Project(this[projectSymbol]!.getShapesGroups(),
+                    this[projectSymbol]!.getTitle(),
+                    this[projectSymbol]!.getID(),
+                    this[projectSymbol]!.getPages());
                 newProject.setIsLoading(false);
                 this.setProject(newProject);
             }

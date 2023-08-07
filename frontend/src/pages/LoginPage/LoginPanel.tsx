@@ -165,7 +165,7 @@ const LoginPanel: React.FC = () => {
                                     <small>{signIn.errors.password}</small>
                                 )}
                             </div>
-                            <a href="" rel="nofollow">{lang!.langText.loginPage.userForm.forgotPassword}</a>
+                            {/* <a href="" rel="nofollow">{lang!.langText.loginPage.userForm.forgotPassword}</a> */}
                         </div>
                         {
                             invalidUserError && <small>{lang!.langText.loginPage.userForm.invalidUserError}</small>

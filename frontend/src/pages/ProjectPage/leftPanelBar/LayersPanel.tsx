@@ -136,64 +136,67 @@ const LayersPanel = observer(() => {
                 </p>
             </div>
             <div className="panel-content">
-                {currentPage.getLayers().slice().sort((first, second) => first.getZIndex() - second.getZIndex()).map((layer, i) => (
-                    <div key={layer.getTitle() + i} className="layer-container">
-                        <div className={`dropzone top${draggableLayerIndex !== -1 && i === 0 && draggableLayerIndex !== 0 ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, -1000)} onDragOver={e => e.preventDefault()} ></div>
+                {
+                    currentPage ? currentPage.getLayers().slice().sort((first, second) => first.getZIndex() - second.getZIndex()).map((layer, i) => (
+                        <div key={layer.getTitle() + i} className="layer-container">
+                            <div className={`dropzone top${draggableLayerIndex !== -1 && i === 0 && draggableLayerIndex !== 0 ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, -1000)} onDragOver={e => e.preventDefault()} ></div>
 
-                        <div className={`layer${layer.isCurrent() ? ' current' : ''}`}
-                            onClick={function () {
-                                setCurrentPage(new Page(currentPage.getID(), currentPage.getTitle(), currentPage.getLayers().map(item => {
-                                    item.isCurrent() && item.setIsCurrent(false);
-                                    item.getID() === layer.getID() && item.setIsCurrent(true);
-                                    return item;
-                                })));
-                            }}
-                            draggable
-                            onDragStart={e => {
-                                setDraggableLayerIndex(i);
-                                e.currentTarget.style.opacity = '0.5';
+                            <div className={`layer${layer.isCurrent() ? ' current' : ''}`}
+                                onClick={function () {
+                                    setCurrentPage(new Page(currentPage.getID(), currentPage.getTitle(), currentPage.getLayers().map(item => {
+                                        item.isCurrent() && item.setIsCurrent(false);
+                                        item.getID() === layer.getID() && item.setIsCurrent(true);
+                                        return item;
+                                    })));
+                                }}
+                                draggable
+                                onDragStart={e => {
+                                    setDraggableLayerIndex(i);
+                                    e.currentTarget.style.opacity = '0.5';
 
-                                e.dataTransfer.effectAllowed = 'move';
-                                e.dataTransfer.setData("draggableElement", 'layer');
-                                e.dataTransfer.setData("id", '' + layer.getID());
-                            }} onDragEnd={e => {
-                                setDraggableLayerIndex(-1);
-                                e.currentTarget.style.opacity = '1';
-                            }} >
-                            <div className='layer-icon'
-                                onClick={function (e) {
-                                    e.stopPropagation();
+                                    e.dataTransfer.effectAllowed = 'move';
+                                    e.dataTransfer.setData("draggableElement", 'layer');
+                                    e.dataTransfer.setData("id", '' + layer.getID());
+                                }} onDragEnd={e => {
+                                    setDraggableLayerIndex(-1);
+                                    e.currentTarget.style.opacity = '1';
+                                }} >
+                                <div className='layer-icon'
+                                    onClick={function (e) {
+                                        e.stopPropagation();
 
-                                    const changeLayerVisibleAction = new ChangeLayerVisibleAction(layer, !layer.isVisible());
-                                    actionStore.push(changeLayerVisibleAction);
-                                }}>
-                                {layer.isVisible() ? visibleIcon : invisibleIcon}
+                                        const changeLayerVisibleAction = new ChangeLayerVisibleAction(layer, !layer.isVisible());
+                                        actionStore.push(changeLayerVisibleAction);
+                                    }}>
+                                    {layer.isVisible() ? visibleIcon : invisibleIcon}
+                                </div>
+                                <span style={{ display: editingLayerIndex === i ? 'none' : 'inline' }}
+                                    className='layer-title'
+                                    onDoubleClick={() => {
+                                        setEditingLayerIndex(i);
+                                        setTitle(layer.getTitle());
+                                    }}>{layer.getTitle()}</span>
+                                {
+                                    (editingLayerIndex === i) && <input
+                                        className='change-name-input'
+                                        autoFocus={true}
+                                        type="text"
+                                        onBlur={e => changeTitleHandler(e.target, layer.getID())}
+                                        value={title}
+                                        onChange={inputTitle}
+                                        onKeyDown={e => {
+                                            if (e.keyCode === 13) {
+                                                changeTitleHandler(e.target, layer.getID());
+                                            }
+                                        }} />
+                                }
                             </div>
-                            <span style={{ display: editingLayerIndex === i ? 'none' : 'inline' }}
-                                className='layer-title'
-                                onDoubleClick={() => {
-                                    setEditingLayerIndex(i);
-                                    setTitle(layer.getTitle());
-                                }}>{layer.getTitle()}</span>
-                            {
-                                (editingLayerIndex === i) && <input
-                                    className='change-name-input'
-                                    autoFocus={true}
-                                    type="text"
-                                    onBlur={e => changeTitleHandler(e.target, layer.getID())}
-                                    value={title}
-                                    onChange={inputTitle}
-                                    onKeyDown={e => {
-                                        if (e.keyCode === 13) {
-                                            changeTitleHandler(e.target, layer.getID());
-                                        }
-                                    }} />
-                            }
-                        </div>
 
-                        <div className={`dropzone${draggableLayerIndex !== -1 && draggableLayerIndex !== i ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, layer.getZIndex())} onDragOver={e => e.preventDefault()} ></div>
-                    </div>
-                ))}
+                            <div className={`dropzone${draggableLayerIndex !== -1 && draggableLayerIndex !== i ? ' active' : ''}`} onDrop={e => layerOnDropHandler(e, layer.getZIndex())} onDragOver={e => e.preventDefault()} ></div>
+                        </div>
+                ))
+                : ''
+            }
             </div>
         </div>
     )

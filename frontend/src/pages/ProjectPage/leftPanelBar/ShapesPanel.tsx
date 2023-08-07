@@ -19,7 +19,7 @@ const ShapesPanel = ({ getCreatorOnDragCallback }: IShapesPanelProps) => {
             <div className='panel-content'>
                 {projectStore.getProject()?.getShapesGroups()!.map(function (group, i) {
                     return (
-                        <Dropdown key={group.title + i} title={group.title}>
+                        <Dropdown key={group.labelName + i} title={lang?.langText.projectPage.baseGroups[group.labelName]!}>
                             <ul className='collapse-group'>
                                 {group.shapes.map(function (creator, i) {
                                     return <li
@@ -31,7 +31,7 @@ const ShapesPanel = ({ getCreatorOnDragCallback }: IShapesPanelProps) => {
                                             getCreatorOnDragCallback(creator);
                                             e.dataTransfer.setData("draggableElement", 'shape');
                                         }}>
-                                        {creator.type}
+                                            {lang?.langText.projectPage.baseShapes[creator.type]}
                                     </li>
                                 })}
                             </ul>

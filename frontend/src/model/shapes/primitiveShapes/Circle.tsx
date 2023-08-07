@@ -26,37 +26,31 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
         zIndex: messageShape.zIndex,
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: {
-                label: "X",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.X)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.Y]: {
-                label: "Y",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.PIVOT]: {
-                label: 'Pivot',
                 value: '0',
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.R]: {
-                label: "Radius",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.R)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.STROKE_COLOR]: {
-                label: "Stroke Color",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
             [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
-                label: "Fill Color One",
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
@@ -72,37 +66,31 @@ export class CircleCreator implements IShapeCreator {
         return new Circle({
             graphicalProperties: {
                 [GraphicalPropertyTypes.X]: {
-                    label: 'X',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.Y]: {
-                    label: 'Y',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.PIVOT]: {
-                    label: 'Pivot',
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.R]: {
-                    label: 'Radius',
                     value: '15',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.STROKE_COLOR]: {
-                    label: 'Stroke Color',
                     value: '#000000',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
                 },
                 [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
-                    label: 'Fill Color One',
                     value: '#ffffff',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
@@ -139,37 +127,31 @@ class Circle implements IShape {
 
     updateGraphicalProperties(m: IMessageGraphicalProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
-            label: 'X',
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.Y] = {
-            label: 'Y',
             value: m.find(p => p.l === GraphicalPropertyTypes.Y)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT] = {
-            label: 'Pivot',
             value: m.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.R] = {
-            label: 'Radius',
             value: m.find(p => p.l === GraphicalPropertyTypes.R)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE] = {
-            label: 'Fill Color One',
             value: m.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR] = {
-            label: 'Stroke Color',
             value: m.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR
