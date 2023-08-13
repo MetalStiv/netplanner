@@ -11,8 +11,8 @@ const primitiveGroup: IShapeGroup = {
     shapes: [
         new CircleCreator(),
         new EllipseCreator(),
-        new LineCreator(),
-        new PolylineCreator(),
+        // new LineCreator(),
+        // new PolylineCreator(),
         new RectCreator(),
     ]
 }

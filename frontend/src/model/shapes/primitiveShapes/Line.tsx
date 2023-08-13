@@ -106,6 +106,19 @@ class Line implements IShape {
     isVisible: boolean = true;
     zIndex: number = 0;
 
+    get overallWidth() {
+        return +this.config.graphicalProperties[GraphicalPropertyTypes.X2].value;
+    }
+    set overallWidth(value: number) {
+        this.config.graphicalProperties[GraphicalPropertyTypes.X2].value = value.toString();
+    }
+    get overallHeight() {
+        return +this.config.graphicalProperties[GraphicalPropertyTypes.Y2].value;
+    }
+    set overallHeight(value: number) {
+        this.config.graphicalProperties[GraphicalPropertyTypes.Y2].value = value.toString();
+    }
+
     constructor(obj: ILineConfig) {
         this.config = obj;
         this.zIndex = obj.zIndex ?? 0;

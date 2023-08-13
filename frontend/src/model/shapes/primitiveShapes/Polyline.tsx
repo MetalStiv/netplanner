@@ -87,6 +87,19 @@ class Polyline implements IShape {
     isVisible: boolean = true;
     zIndex: number = 0;
 
+    get overallWidth() {
+        return 10;
+    }
+    set overallWidth(value: number) {
+        // this.config.graphicalProperties[GraphicalPropertyTypes.X2].value = value.toString();
+    }
+    get overallHeight() {
+        return 10;
+    }
+    set overallHeight(value: number) {
+        // this.config.graphicalProperties[GraphicalPropertyTypes.Y2].value = value.toString();
+    }
+
     constructor(obj: IPolylineProps) {
         this.config = obj;
         this.zIndex = obj.zIndex ?? 0;
