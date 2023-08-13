@@ -1004,8 +1004,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     };
     const initRotationAngles = shapes.map(shape => +shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value);
     const initCoords = shapes.map(shape => ({
-      x: +shape!.config.graphicalProperties[GraphicalPropertyTypes.X].value,
-      y: +shape!.config.graphicalProperties[GraphicalPropertyTypes.Y].value
+      x: +shape!.config.graphicalProperties[GraphicalPropertyTypes.X].value + shape!.overallWidth! / 2,
+      y: +shape!.config.graphicalProperties[GraphicalPropertyTypes.Y].value + shape!.overallHeight! / 2
     }));
     const initCursor = transformOuterCoordsToSVGCoords({ x: e.clientX, y: e.clientY });
     svgCanvas.current!.onpointermove = (e: PointerEvent) => {
@@ -1020,8 +1020,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
           const radius = Math.sqrt(Math.pow(Math.abs(centerCoords.x - initCoords[i].x), 2) + Math.pow(Math.abs(centerCoords.y - initCoords[i].y), 2));
 
           const newCoords = {
-            x: radius * Math.cos(translateAngle) + centerCoords.x,
-            y: radius * Math.sin(translateAngle) + centerCoords.y
+            x: radius * Math.cos(translateAngle) + centerCoords.x - shape!.overallWidth! / 2,
+            y: radius * Math.sin(translateAngle) + centerCoords.y - shape!.overallHeight! / 2
           };
           shape!.config.graphicalProperties[GraphicalPropertyTypes.X].value = (newCoords.x).toString();
           shape!.config.graphicalProperties[GraphicalPropertyTypes.Y].value = (newCoords.y).toString();
