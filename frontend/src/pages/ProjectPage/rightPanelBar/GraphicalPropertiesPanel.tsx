@@ -7,7 +7,7 @@ import { GraphicalPropertyTypes, IGraphicalProperty, IShapeGraphicalProps } from
 import Editor from "../../../components/Editors/Editor";
 import { EditorType } from "../../../model/EditorType";
 import ICanvasConfig from "../../../common/canvasConfig";
-import { fromCartesianCoordSystem } from "../../../common/helpers/CartesianCoordSystem";
+import { fromCartesianCoordSystem, toCartesianCoordSystem } from "../../../common/helpers/CartesianCoordSystem";
 
 interface IGraphicalPropertiesPanelProps {
     shapeProps: IShapeProps | null,
@@ -30,27 +30,40 @@ const GraphicalPropertiesPanel = ({ shapeProps, onChange, canvasProps }: IGraphi
                     {
                         shapeProps && Object.entries(shapeProps.graphProps)
                             .filter(([key, obj]) => obj.isReadable)
-                            .map(([key, obj]: [string, IGraphicalProperty]) =>
-                                <div key={key} className="property">
+                            .map(([key, obj]: [string, IGraphicalProperty]) => {
+                                let incomingValue = obj.value;
+                                if (key === GraphicalPropertyTypes.X || key === GraphicalPropertyTypes.Y) {
+                                    const cartesianCoords = toCartesianCoordSystem({
+                                        x: +shapeProps.graphProps[GraphicalPropertyTypes.X].value,
+                                        y: +shapeProps.graphProps[GraphicalPropertyTypes.Y].value
+                                    }, canvasProps);
+                                    incomingValue = key === GraphicalPropertyTypes.X ? cartesianCoords.x.toString() : cartesianCoords.y.toString();
+                                }
+                                return <div key={key} className="property">
                                     <span className='property-title'>{lang?.langText.projectPage
                                         .graphicalProperties[key as GraphicalPropertyTypes]}</span>
                                     <Editor
                                         type={obj.editorType}
-                                        defaultValue={obj.value}
+                                        defaultValue={incomingValue}
                                         textClassName="property-value"
                                         inputClassName={obj.editorType === EditorType.TEXT_EDITOR ? 'change-property-input' : undefined}
                                         onChange={value => {
                                             const changableShape = currentLayer?.getShapes().find(shape => shape.config.id === shapeProps.id);
-                                            const convertedCoords = fromCartesianCoordSystem({
-                                                x: +shapeProps.graphProps[GraphicalPropertyTypes.X].value,
-                                                y: +shapeProps.graphProps[GraphicalPropertyTypes.Y].value
-                                            }, canvasProps);
+                                            let convertedCoords: { x: number, y: number } | null = null;
+                                            let newVal = value;
+                                            const isCoord = key === GraphicalPropertyTypes.X || key === GraphicalPropertyTypes.Y;
+                                            if (isCoord) {
+                                                convertedCoords = fromCartesianCoordSystem({
+                                                    x: key === GraphicalPropertyTypes.X ? +value : 0,
+                                                    y: key === GraphicalPropertyTypes.Y ? +value : 0
+                                                }, canvasProps);
+                                                newVal = key === GraphicalPropertyTypes.X ? convertedCoords.x.toString() : convertedCoords.y.toString();
+                                            }
+
                                             const newProps = {
                                                 ...shapeProps.graphProps,
-                                                [GraphicalPropertyTypes.X]: { ...shapeProps.graphProps[GraphicalPropertyTypes.X], value: convertedCoords.x.toString() },
-                                                [GraphicalPropertyTypes.Y]: { ...shapeProps.graphProps[GraphicalPropertyTypes.Y], value: convertedCoords.y.toString() },
-                                                [key]: { ...obj, ...{ value } }
-                                            }
+                                                [key]: { ...obj, value: newVal }
+                                            };
                                             const changePropAction = new ChangeShapePropertyAction(
                                                 changableShape!,
                                                 currentLayer!.getID(),
@@ -61,6 +74,7 @@ const GraphicalPropertiesPanel = ({ shapeProps, onChange, canvasProps }: IGraphi
                                         }}
                                     />
                                 </div>
+                            }
                             )
                     }
                 </div>

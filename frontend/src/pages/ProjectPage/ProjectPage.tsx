@@ -42,6 +42,7 @@ import { getUserId } from '../../common/login';
 import { updateInfoTime } from '../../common/constants';
 import { ShapeType } from '../../model/shapes/ShapeType';
 import { AddShapeAction } from '../../model/actions/AddShapeAction';
+import ColorEditor from '../../components/Editors/ColorEditor/ColorEditor';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {
@@ -108,15 +109,15 @@ const ProjectPage: React.FC = observer(() => {
 
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
-            if (e.code === 'Delete') {
-                const currentLayer: ILayer = projectStore.getProject()
-                    ?.getCurrentPage()
-                    .getCurrentLayer()!
-                const deleteShapeAction = new DeleteShapeAction(currentLayer.getShapes()
-                    .find((s: IShape) => s.config.id === selectedShapeProps!.id)!,
-                    currentLayer?.getID());
-                actionStore.push(deleteShapeAction);
-            }
+            // if (e.code === 'Delete') {
+            //     const currentLayer: ILayer = projectStore.getProject()
+            //         ?.getCurrentPage()
+            //         .getCurrentLayer()!
+            //     const deleteShapeAction = new DeleteShapeAction(currentLayer.getShapes()
+            //         .find((s: IShape) => s.config.id === selectedShapeProps!.id)!,
+            //         currentLayer?.getID());
+            //     actionStore.push(deleteShapeAction);
+            // }
             if (e.ctrlKey && e.code === 'KeyZ') {
                 actionStore.back();
             }
@@ -142,7 +143,7 @@ const ProjectPage: React.FC = observer(() => {
             //         .getCurrentLayer()!
             //     userStore.putToCopyBuffer(currentLayer.getShapes()
             //         .filter(s => s.isSelected === true))
-                
+
             //     const deleteShapeAction = new DeleteShapeAction(currentLayer.getShapes()
             //         .filter((s: IShape) => s.isSelected === true)![0],
             //         currentLayer?.getID());
@@ -179,7 +180,7 @@ const ProjectPage: React.FC = observer(() => {
         if (users.status === 200) {
             usersStore?.setData(users.data)
         }
-        if (users.status === 401){
+        if (users.status === 401) {
             navigate("/");
         }
     }, [usersStore])
@@ -189,7 +190,7 @@ const ProjectPage: React.FC = observer(() => {
         if (invites.status === 200) {
             userStore?.setInvites(invites.data)
         }
-        if (invites.status === 401){
+        if (invites.status === 401) {
             navigate("/");
         }
     }, [])
@@ -211,7 +212,7 @@ const ProjectPage: React.FC = observer(() => {
             await getActiveInvites();
             projectsMetaStore?.setData(data);
         }
-        if (projects.status === 401){
+        if (projects.status === 401) {
             navigate("/");
         }
         projectStore.getProject()?.setIsLoading(false)
@@ -223,7 +224,7 @@ const ProjectPage: React.FC = observer(() => {
             res.data.id = getUserId()
             userStore.setData(res.data)
         }
-        if (res.status === 401){
+        if (res.status === 401) {
             navigate("/");
         }
     }, [])

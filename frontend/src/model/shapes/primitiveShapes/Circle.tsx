@@ -105,7 +105,7 @@ class Circle implements IShape {
     type: ShapeType = ShapeType.CIRCLE;
     config: ICircleConfig;
     isVisible: boolean = true;
-    
+
     get overallWidth() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.R].value * 2;
     }
@@ -181,8 +181,8 @@ class Circle implements IShape {
             // onFocus={handlerFocus}
             onBlur={handlerBlur}
             transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value} 
-                ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.R].value / 2)} 
-                ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.R].value / 2)})`}
+                ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.R].value)} 
+                ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.R].value)})`}
             d={`
                 M ${this.config.graphicalProperties[GraphicalPropertyTypes.X].value},${(+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value) + (+this.config.graphicalProperties[GraphicalPropertyTypes.R].value)} 
                 a ${(this.config.graphicalProperties[GraphicalPropertyTypes.R].value)},${(this.config.graphicalProperties[GraphicalPropertyTypes.R].value)} 0 1,

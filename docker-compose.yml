@@ -52,7 +52,7 @@ services:
       - netplanner_network
 
   user-microservice:
-    image: metalstiv/user_microservice:1.0
+    image: licht9estalt/user_microservice:1.0
     restart: always
     ports:
       - 7065:7065
@@ -78,7 +78,7 @@ services:
       - netplanner_network
 
   project-microservice:
-    image: metalstiv/project_microservice:1.0
+    image: licht9estalt/project_microservice:1.0
     restart: always
     ports:
       - 7066:7066
@@ -102,7 +102,7 @@ services:
       - netplanner_network
 
   action-microservice:
-    image: metalstiv/action_microservice:1.0
+    image: licht9estalt/action_microservice:1.0
     restart: always
     ports:
       - 3005:3005
