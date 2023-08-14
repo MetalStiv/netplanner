@@ -19,6 +19,7 @@ export interface IMessage {
         isVisible?: boolean,
         newPage?: IPageTree,
         name?: string,
-        graphicalProperties?: IShapeGraphicalProperties
+        graphicalProperties?: IShapeGraphicalProperties,
+        defaultName?: string,
     }
 }

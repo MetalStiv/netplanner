@@ -21,7 +21,7 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
         });
 
     function uniqLayerTitle(name: string) {
-        return titleUniqueization({title: name.length ? name : 'Layer', collection: collections.layerCollection,
+        return titleUniqueization({title: name.length ? name : message.data.defaultName, collection: collections.layerCollection,
             parentField: 'pageId', parentId: message.pageId});
     }
 

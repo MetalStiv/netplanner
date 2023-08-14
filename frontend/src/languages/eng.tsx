@@ -207,5 +207,8 @@ export const eng: ILanguage = {
         
             [GraphicalPropertyTypes.STEP_QUANTITY]: "Step quantity",
         },
+
+        defaultPageName: 'Page',
+        defaultLayerName: 'Layer',
     },
 }

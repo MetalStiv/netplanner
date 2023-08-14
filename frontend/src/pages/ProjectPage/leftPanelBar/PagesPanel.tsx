@@ -113,7 +113,7 @@ const PagesPanel = observer(() => {
                         })}
                         <p id="addPage-btn" onClick={() => {
                             // currentProject.addPage();
-                            const addPageAction = new AddPageAction(currentProject);
+                            const addPageAction = new AddPageAction(currentProject, undefined, lang?.langText.projectPage.defaultPageName);
                             actionStore.push(addPageAction);
                             setEditingPageIndex(currentProject.getPages().length);
                         }

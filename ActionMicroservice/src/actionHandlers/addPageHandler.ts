@@ -19,7 +19,7 @@ export const addPageHandler: ActionHandler = async (collections, message) => {
         });
 
     function uniqPageTitle(name: string) {
-        return titleUniqueization({title: name.length ? name : 'Page', collection: collections.pageCollection, 
+        return titleUniqueization({title: name.length ? name : message.data.defaultName, collection: collections.pageCollection, 
             parentField: 'projectId', parentId: message.projectId});
     }
 

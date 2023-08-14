@@ -124,7 +124,7 @@ const LayersPanel = observer(() => {
                     <span>{lang?.langText.projectPage.layersPanel.title}</span>
                     <span className="plus" onClick={() => {
                         // currentPage.addLayer();
-                        const addLayerAction = new AddLayerAction(currentPage);
+                        const addLayerAction = new AddLayerAction(currentPage, undefined, lang?.langText.projectPage.defaultLayerName);
                         actionStore.push(addLayerAction);
                         setEditingLayerIndex(currentPage.getLayers().length);
                     }}>

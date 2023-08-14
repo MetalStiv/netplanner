@@ -205,6 +205,9 @@ interface ILanguage {
         
             [GraphicalPropertyTypes.STEP_QUANTITY]: string,
         },
+
+        defaultPageName: string,
+        defaultLayerName: string,
     },
 }
 

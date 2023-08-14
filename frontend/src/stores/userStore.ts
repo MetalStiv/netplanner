@@ -4,18 +4,12 @@ import IShape from "../model/shapes/IShape";
 
 const userSymbol: unique symbol = Symbol()
 const invitesSymbol: unique symbol = Symbol()
-const copyBufferSymbol: unique symbol = Symbol()
 
 interface IUserStore {
     [userSymbol]: IUser | null,
     [invitesSymbol]: IInvite[],
-    [copyBufferSymbol]: IShape[],
     getData: () => IUser | null,
     setData: (userData: IUser) => void,
-
-    putToCopyBuffer: (shapes: IShape[]) => void,
-    getFromCopyBuffer: () => IShape[],
-    clearCopyBuffer: () => void,
 
     setInvites: (invites: IInvite[]) => void,
     getInvites: () => IInvite[],
@@ -27,7 +21,6 @@ export const createUserStore = () => {
     const store: IUserStore = {
         [userSymbol]: null,
         [invitesSymbol]: [],
-        [copyBufferSymbol]: [],
 
         getData() {
             return this[userSymbol];
@@ -35,18 +28,6 @@ export const createUserStore = () => {
 
         setData(userData: IUser){
             this[userSymbol] = userData
-        },
-
-        putToCopyBuffer(shapes: IShape[]){
-            this[copyBufferSymbol] = shapes
-        },
-
-        getFromCopyBuffer(){
-            return this[copyBufferSymbol]
-        },
-
-        clearCopyBuffer(){
-            this[copyBufferSymbol] = []
         },
 
         setInvites(invites: IInvite[]){

@@ -9,11 +9,13 @@ export class AddLayerAction implements IAction {
     
     private currentPage: Page;
     private name: string | null = null;
+    private defaultName: string | null = null;
     private layerId: string | undefined;
 
-    constructor(currentPage: Page, name?: string) {
+    constructor(currentPage: Page, name?: string, defaultName?: string) {
         this.currentPage = currentPage;
         name && (this.name = name);
+        defaultName && (this.defaultName = defaultName)
         this.uid = (+new Date).toString(36).slice(-5);
     }
 
@@ -33,7 +35,8 @@ export class AddLayerAction implements IAction {
                 newLayer: {
                     name: this.name ?? '',
                     shapes: [],
-                }
+                },
+                defaultName: this.defaultName ?? 'Layer'
             }
         }
     }

@@ -186,7 +186,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         shapes.forEach(s => {
           s.config.id = undefined
         })
-        userStore.putToCopyBuffer(shapes)
+        localStorage.setItem('buffer', JSON.stringify(shapes))
       }
       if (e.ctrlKey && e.code === 'KeyX') {
         const currentLayer: ILayer = projectStore.getProject()
@@ -198,7 +198,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         shapes.forEach(s => {
           s.config.id = undefined
         })
-        userStore.putToCopyBuffer(shapes)
+        localStorage.setItem('buffer', JSON.stringify(shapes))
 
         let shapesToDelete = selectedShapes.map(ss => currentLayer.getShapes().find(s => s.config.id === ss))
           .filter((x): x is IShape => x !== undefined);
@@ -216,7 +216,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         const currentLayer: ILayer = projectStore.getProject()
           ?.getCurrentPage()
           .getCurrentLayer()!
-        const shapesToAdd = userStore.getFromCopyBuffer();
+        const shapesToAdd: IShape[] = JSON.parse(localStorage.getItem('buffer') || '') || [];
         const coords = transformOuterCoordsToSVGCoords({
           x: cursorCoords.x,
           y: cursorCoords.y,

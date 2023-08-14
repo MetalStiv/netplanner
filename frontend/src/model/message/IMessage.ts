@@ -19,5 +19,6 @@ export interface IMessage {
         graphicalProperties?: IMessageGraphicalProperty[],
         coords?: {x: number, y: number},
         name?: string,
+        defaultName?: string,
     }
 }

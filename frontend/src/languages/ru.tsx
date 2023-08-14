@@ -207,5 +207,8 @@ export const ru: ILanguage = {
         
             [GraphicalPropertyTypes.STEP_QUANTITY]: "Количество ступенек",
         },
+
+        defaultPageName: "Страница",
+        defaultLayerName: "Слой",
     },
 }

@@ -9,11 +9,13 @@ export class AddPageAction implements IAction {
     
     private currentProject: Project;
     private name: string | null = null;
+    private defaultName: string | null = null;
     private pageId: string | undefined;
 
-    constructor(currentProject: Project, name?: string) {
+    constructor(currentProject: Project, name?: string, defaultName?: string) {
         this.currentProject = currentProject;
         name && (this.name = name);
+        defaultName && (this.defaultName = defaultName);
         this.uid = (+new Date).toString(36).slice(-5);
     } 
 
@@ -32,6 +34,7 @@ export class AddPageAction implements IAction {
                 newPage: {
                     name: this.name ?? '',
                 },
+                defaultName: this.defaultName ?? 'Page'
             }
         }
     }
