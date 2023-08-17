@@ -5,6 +5,7 @@ namespace UserMicroservice.Services.UserRepositoryService;
 public class MongoDBUserRepositoryService : IUserRepositoryService
 {
     private readonly IMongoCollection<User> _usersCollection;
+    private readonly IMongoCollection<Message> _messagesCollection;
 
     public MongoDBUserRepositoryService(UserDBSettings userDBSettings)
     {
@@ -13,6 +14,7 @@ public class MongoDBUserRepositoryService : IUserRepositoryService
         var mongoDatabase = mongoClient.GetDatabase(userDBSettings.DatabaseName);
 
         _usersCollection = mongoDatabase.GetCollection<User>(userDBSettings.UsersCollectionName);
+        _messagesCollection = mongoDatabase.GetCollection<Message>(userDBSettings.MessagesCollectionName);
     }
 
     public async Task AddAsync(User newUser) =>
@@ -26,4 +28,7 @@ public class MongoDBUserRepositoryService : IUserRepositoryService
 
     public async Task<User?> GetByIdAsync(string id) =>
         await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+    public async Task<List<Message>> GetVersionMessages(string version) =>
+        await (await _messagesCollection.FindAsync(m => m.Version == version)).ToListAsync();
 }

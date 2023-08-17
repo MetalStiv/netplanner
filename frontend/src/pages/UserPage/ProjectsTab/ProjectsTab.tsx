@@ -195,7 +195,7 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
                         {
                             (projectsMetaStore?.getSearchFilter() !== undefined && projectsMetaStore?.getSearchFilter() !== '')
                                 ? projectsMetaStore?.getData()
-                                    .filter(p => p.name.includes(projectsMetaStore?.getSearchFilter()!))
+                                    .filter(p => p.name.toLocaleLowerCase().includes(projectsMetaStore?.getSearchFilter()!.toLowerCase()))
                                     .map(p => {
                                         return p.isGroup ?
                                             <ProjectGroupCard

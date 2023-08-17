@@ -6,10 +6,10 @@ export const userRightsChecker = async (userId: string, projectId: string, colle
     let res = 0;
     const project: IProjectMeta = await collections.projectMetaCollection.findOne({_id: new ObjectId(projectId)});
     if (!project){
-        return 0;
+        return 2;
     }
     if (project.ownerId.toString() === userId){
-        res = 2;
+        res = 0;
     }
 
     if ((await collections.inviteCollection.find({
@@ -26,17 +26,11 @@ export const userRightsChecker = async (userId: string, projectId: string, colle
             state: 1,
             permission: 0
         }).toArray()).length > 0){
-            res = 2
+            res = 0
         }
 
     if (project.goupId){
-        const groupRights = await userRightsChecker(userId, project.goupId.toString(), collections);
-        if (groupRights == 1){
-            res = 1
-        }
-        if (groupRights == 2){
-            res = 2
-        }
+        return await userRightsChecker(userId, project.goupId.toString(), collections);
     }
     return res;
 }

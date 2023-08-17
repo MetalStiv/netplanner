@@ -38,10 +38,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = jwtSettings.PublicKey,
     };
 });
-builder.Services.AddCors();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy  =>
+        {
+            policy.WithOrigins("http://d829aea8686a.vps.myjino.ru",
+                                "http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod();;
+        });
+});
 
 await using var app = builder.Build();
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -113,12 +124,9 @@ app.MapGet("/getProjects",
             }
             else
             {
-                var activeInvite = invites.Find(i => i.UserId == userId && i.State == 1);
-                if (!(activeInvite is null))
-                {
-                    result.Add(new ProjectMetaDto(p.Id!, p.Name, p.OwnerId, p.GroupId!, p.CreationTime,
-                        p.LastModifyTime, p.IsGroup, invites, activeInvite.Permission));
-                }
+                var permission = await projectRepositoryService.CheckUserRight(userId, p.Id!);
+                result.Add(new ProjectMetaDto(p.Id!, p.Name, p.OwnerId, p.GroupId!, p.CreationTime,
+                    p.LastModifyTime, p.IsGroup, invites, permission));
             }
         }
         await http.Response.WriteAsJsonAsync(result);
@@ -143,7 +151,7 @@ app.MapDelete("/removeProject",
         var projectIdDto = await http.Request.ReadFromJsonAsync<ProjectIdDto>();
         var project = await projectRepositoryService.GetProjectByIdAsync(projectIdDto!.Id);
 
-        if (!await projectRepositoryService.CheckUserFullRight(userId, projectIdDto!.Id))
+        if (await projectRepositoryService.CheckUserRight(userId, projectIdDto!.Id) != 2)
         {
             http.Response.StatusCode = 401;
             return;
@@ -172,7 +180,7 @@ app.MapPost("/renameProject",
         var renameProjectDto = await http.Request.ReadFromJsonAsync<RenameProjectDto>();
         var project = await projectRepositoryService.GetProjectByIdAsync(renameProjectDto!.Id);
 
-        if (!await projectRepositoryService.CheckUserFullRight(userId, renameProjectDto!.Id))
+        if (await projectRepositoryService.CheckUserRight(userId, renameProjectDto!.Id) != 2)
         {
             http.Response.StatusCode = 401;
             return;
@@ -203,8 +211,8 @@ app.MapPost("/moveProjectToGroup",
 
             var moveProjectDto = await http.Request.ReadFromJsonAsync<MoveProjectDto>();
 
-            if (!await projectRepositoryService.CheckUserFullRight(userId, moveProjectDto!.Id)
-                || !await projectRepositoryService.CheckUserFullRight(userId, moveProjectDto!.GroupId))
+            if (await projectRepositoryService.CheckUserRight(userId, moveProjectDto!.Id) != 2
+                || await projectRepositoryService.CheckUserRight(userId, moveProjectDto!.GroupId) != 2)
             {
                 http.Response.StatusCode = 401;
                 return;
@@ -244,7 +252,7 @@ app.MapPost("/sendInvite",
         var inviteDto = await http.Request.ReadFromJsonAsync<InviteDto>();
         var project = await projectRepositoryService.GetProjectByIdAsync(inviteDto!.ProjectId);
 
-        if (!await projectRepositoryService.CheckUserFullRight(userId, inviteDto!.ProjectId))
+        if (await projectRepositoryService.CheckUserRight(userId, inviteDto!.ProjectId) != 2)
         {
             http.Response.StatusCode = 401;
             return;
@@ -290,7 +298,7 @@ app.MapDelete("/revokeInvite",
         var invite = await projectRepositoryService.GetInviteByIdAsync(inviteId);
         var project = await projectRepositoryService.GetProjectByIdAsync(invite.ProjectId);
 
-        if (!await projectRepositoryService.CheckUserFullRight(userId, invite.ProjectId))
+        if (await projectRepositoryService.CheckUserRight(userId, invite.ProjectId) != 2)
         {
             http.Response.StatusCode = 401;
             return;

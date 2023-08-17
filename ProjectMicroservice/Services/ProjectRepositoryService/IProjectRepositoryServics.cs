@@ -14,5 +14,5 @@ public interface IProjectRepositoryService
     Task<Invite> GetInviteByIdAsync(string inviteId);
     Task<List<Invite>> GetUserInvitesAsync(string userId);
     Task<List<Invite>> GetProjectInvitesAsync(string projectId);
-    Task<bool> CheckUserFullRight(string userId, string projectId);
+    Task<int> CheckUserRight(string userId, string projectId);
 }

@@ -79,7 +79,7 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     });
 
     const userRights: number = await userRightsChecker(userId, projectId, collections);
-    if (userRights === 0){
+    if (userRights === 2){
         ws.send(JSON.stringify({type: ActionType.NO_RIGHTS}));
         ws.close();
         return

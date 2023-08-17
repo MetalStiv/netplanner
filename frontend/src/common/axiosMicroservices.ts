@@ -1,8 +1,11 @@
 import axios from "axios";
 import { IAuthTokens, TokenRefreshRequest, applyAuthTokenInterceptor, getAccessToken } from "axios-jwt";
 
-const USER_BASE_URL = "http://localhost:5108/";
-const PROJECT_BASE_URL = "http://localhost:5109/";
+// const USER_BASE_URL = "http://localhost:5108/";
+// const PROJECT_BASE_URL = "http://localhost:5109/";
+
+const USER_BASE_URL = "http://d829aea8686a.vps.myjino.ru:49275/";
+const PROJECT_BASE_URL = "http://d829aea8686a.vps.myjino.ru:49297/";
 
 export const userCleanMicroservice = axios.create({
     baseURL: USER_BASE_URL,

@@ -8,10 +8,14 @@ public class UserDBSettings
 
     public string UsersCollectionName { get; set; } = null!;
 
-    public UserDBSettings(string connectionString, string databaseName, string usersCollectionName)
+    public string MessagesCollectionName { get; set; } = null!;
+
+    public UserDBSettings(string connectionString, string databaseName, string usersCollectionName,
+        string messagesCollectionName)
     {
         ConnectionString = connectionString;
         DatabaseName = databaseName;
         UsersCollectionName = usersCollectionName;
+        MessagesCollectionName = messagesCollectionName;
     }
 }

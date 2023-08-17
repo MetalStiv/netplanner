@@ -39,6 +39,12 @@ public record User
     [BsonElement("timezoneId")]
     public int TimeZone { get; set; }
 
+    [BsonElement("lastLoginTime")]
+    public DateTime? LastLoginTime { get; set; }
+
+    [BsonElement("lastLoginVersion")]
+    public string? LastLoginVersion { get; set; }
+
     public User(string email, string password)
     {
         this.Email = email;

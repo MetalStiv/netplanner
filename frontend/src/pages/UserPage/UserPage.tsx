@@ -25,6 +25,7 @@ const UserPage: React.FC = observer(() => {
     const projectsMetaStore: TProjectsMetaStore = useRootStore()!.getProjectsMetaStore();
 
     const [showMenu, setShowMenu] = useState<boolean>(false);
+    const [showUpdates, setShowUpdates] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [showNotifications, setShowNotifications] = useState<boolean>(false);
     const projectsTabRef = useRef<HTMLDivElement>(null);
@@ -129,6 +130,33 @@ const UserPage: React.FC = observer(() => {
 
     return (
         <div id="userPage">
+            {
+                (userStore.getUpdates().length > 0 && showUpdates) &&
+                    <div className="modal">
+                        <div className="show-form-container">
+                            <div className="show-form-panel">
+                                <div className="show-form-header">
+                                    <div className="show-form-title">
+                                        {lang?.langText.userPage.updateModalHeader + userStore.getData()!.appVersion!.toString()}
+                                    </div>
+                                    <div className="close-icon" onClick={() => {console.log(userStore.getData());setShowUpdates(false)}}>x
+                                    </div>
+                                </div>
+
+                                <div className="show-form-data">
+                                {
+                                    <ul>
+                                    {
+                                        userStore.getUpdates().map((u, ind) => <li key={'update_'+ind}>{u}</li>)
+                                    }
+                                    </ul>
+                                }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            }
+
             <div className="menu-bar">
                 <div className="search-group">
                     <input className="search-input"

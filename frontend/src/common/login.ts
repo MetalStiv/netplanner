@@ -21,10 +21,17 @@ interface ILoginResponse {
   email: string,
   name: string,
   avatarBase64: string,
-  timeZone: number
+  timeZone: number,
+  appVersion: number,
+  updates?: string[],
 }
 
-export const login = async (params: ISignInForm): Promise<IUser> => {
+interface ILoginResult {
+  user: IUser,
+  updates: string[],
+}
+
+export const login = async (params: ISignInForm): Promise<ILoginResult> => {
   const response = await userCleanMicroservice.post<ILoginResponse>('login', params)
   if (response.status !== 200){
     // window.location.reload();
@@ -43,8 +50,10 @@ export const login = async (params: ISignInForm): Promise<IUser> => {
     name: response.data.name,
     avatarBase64: response.data.avatarBase64,
     timeZoneId: response.data.timeZone,
+    appVersion: response.data.appVersion,
   };
-  return user;
+  let updates: string[] = response.data.updates!;
+  return {user, updates};
 }
 
 export const getUserId = () => {

@@ -123,7 +123,8 @@ interface ILanguage {
                 title: string,
                 subtitle: string,
             }
-        }
+        },
+        updateModalHeader: string,
     },
     projectPage: {
         notAllowed: string,

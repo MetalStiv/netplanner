@@ -125,7 +125,8 @@ export const eng: ILanguage = {
                 title: "METRICS",
                 subtitle: "Statistics",
             }
-        }
+        },
+        updateModalHeader: "Updated to v",
     },
     projectPage: {
         notAllowed: "You are not allowed to project!",

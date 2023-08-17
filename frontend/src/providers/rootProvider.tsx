@@ -13,7 +13,8 @@ type Props = {
     children?: React.ReactNode
 };
 
-const WEB_SOCKET_URL: string = "ws://localhost:3005/ws?token=";
+// const WEB_SOCKET_URL: string = "ws://localhost:3005/ws?token=";
+const WEB_SOCKET_URL: string = "ws://d829aea8686a.vps.myjino.ru:49300/ws?token=";
 
 export const RootProvider: React.FC<Props> = ({ children }) => {
     const store = useLocalObservable(createRootStore);

@@ -29,11 +29,11 @@ public record Invite
     [BsonRepresentation(BsonType.Int32)]
     public int State { get; set; }
 
-    public Invite(string projectId, string userId, string InviterId, int permission)
+    public Invite(string projectId, string userId, string inviterId, int permission)
     {
         this.ProjectId = projectId;
         this.UserId = userId;
-        this.InviterId = InviterId;
+        this.InviterId = inviterId;
         this.Permission = permission;
         this.State = 0;
     }

@@ -125,7 +125,8 @@ export const ru: ILanguage = {
                 title: "МЕТРИКИ",
                 subtitle: "Статистика"
             }
-        }
+        },
+        updateModalHeader: "Обновлено до v",
     },
     projectPage: {
         notAllowed: "У вас нет прав доступа к проекту!",

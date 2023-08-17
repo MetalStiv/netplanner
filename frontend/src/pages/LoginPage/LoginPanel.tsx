@@ -33,8 +33,9 @@ const LoginPanel: React.FC = () => {
         },
         onSubmit: async (values: ISignInForm) => {
             try{
-                const user: IUser = await login(values);
+                const {user, updates} = await login(values);
                 userStore?.setData(user)
+                userStore?.setUpdates(updates)
                 navigate('/home')
             }
             catch(errorCode){

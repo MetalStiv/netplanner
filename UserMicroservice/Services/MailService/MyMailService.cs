@@ -5,6 +5,7 @@ public class MyMailService : UserMicroservice.Services.MailService.IMailService
     private readonly MailSettings _mailSettings;
     private static string _templateDirectory = "./Resources/Templates/";
     private static string _imageDirectory = "./Resources/Images/";
+    private static string _userMicroserviceUrl = "http://d829aea8686a.vps.myjino.ru:49275/verify";
 
     public MyMailService(MailSettings mailSettings)
     {
@@ -24,7 +25,7 @@ public class MyMailService : UserMicroservice.Services.MailService.IMailService
         using (var SourceReader = System.IO.File.OpenText(templatePath))
         {
             bodyBuilder.HtmlBody = string.Format(SourceReader.ReadToEnd(), 
-                "http://localhost:5108/verify", 
+                MyMailService._userMicroserviceUrl, 
                 "?code=" + user.VerificationCode + "&email=" + user.Email,
                 image.ContentId
             );

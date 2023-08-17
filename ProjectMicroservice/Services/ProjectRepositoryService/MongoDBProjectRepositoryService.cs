@@ -112,7 +112,7 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
                 var temp = await GetDirectoryProjectsAsync(g.Id!);
                 if (!(temp is null))
                 {
-                    childs.AddRange(temp);
+                    childs = childs.Union(temp).ToList();
                 }
 
             }
@@ -130,37 +130,28 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
     public async Task<List<ProjectMeta>?> GetProjectsAsync(string userId)
     {
         var ownedProjects = await (await _projectMetaCollection.FindAsync(p => p.OwnerId == userId)).ToListAsync();
+
         var invitedProjectIds = (await (await _inviteCollection.FindAsync(i => i.UserId == userId && i.State == 1)).ToListAsync())
             .Select(i => i.ProjectId).ToList();
         var subscribedProjects = await (await _projectMetaCollection.FindAsync(p => invitedProjectIds.Contains(p.Id!))).ToListAsync();
-        var subscribedChilds = new List<ProjectMeta>();
+        
+        var childs = new List<ProjectMeta>();
+        var baseProjects = ownedProjects.Union(subscribedProjects).ToList();
+        var baseGroups = baseProjects.FindAll(p => p.IsGroup == true);
 
-        var subscribedGroups = subscribedProjects.FindAll(p => p.IsGroup == true);
-        if (!(subscribedGroups is null))
+        if (!(baseGroups is null))
         {
-            foreach (var g in subscribedGroups)
+            foreach (var g in baseGroups)
             {
                 var temp = await GetDirectoryProjectsAsync(g.Id!);
                 if (!(temp is null))
                 {
-                    subscribedChilds.AddRange(temp);
+                    childs = childs.Union(temp).ToList();
                 }
 
             }
         }
-        // subscribedProjects.FindAll(p => p.IsGroup == true)
-        //     .ForEach(async p => {
-        //         var temp = await GetDirectoryProjectsAsync(p.Id!);
-        //         if (!(temp is null))
-        //         {
-        //             subscribedChilds.AddRange(temp);
-        //         }
-        //     });
-        Console.WriteLine(ownedProjects.Count);
-        Console.WriteLine(subscribedProjects.Count);    
-        Console.WriteLine(subscribedChilds.Count);
-        return ownedProjects.Concat(subscribedProjects).ToList()
-            .Concat(subscribedChilds).ToList();
+        return baseProjects.Union(childs).ToList();
     }
     
     public async Task<List<Invite>> GetProjectInvitesAsync(string projectId) =>
@@ -172,27 +163,36 @@ public class MongoDBProjectRepositoryService : IProjectRepositoryService
     public async Task RemoveInviteAsync(string inviteId) =>
         await _inviteCollection.DeleteOneAsync(i => i.Id == inviteId);
 
-    public async Task<bool> CheckUserFullRight(string userId, string projectId)
+    public async Task<int> CheckUserRight(string userId, string projectId)
     {
         var project = await this.GetProjectByIdAsync(projectId);
         if (project.OwnerId == userId)
         {
-            return true;
+            return 0;
         }
 
-        var userInvite = await (await _inviteCollection
+        var userInvite = (await _inviteCollection
             .FindAsync(i => i.UserId == userId && i.ProjectId == projectId))
-                .SingleAsync();
-        if (userInvite == null)
+            .FirstOrDefault();
+        if (userInvite != null)
         {
-            return false;
-        }
-        if (userInvite.State == 1 && userInvite.Permission == 0)
-        {
-            return true;
-        }
+            if (userInvite.State == 1 && userInvite.Permission == 0)
+            {
+                return 0;
+            }
+            if (userInvite.State == 1 && userInvite.Permission == 1)
+            {
+                return 1;
+            }
+        }        
 
-        return false;
+        if (project.GroupId is null){
+            return 2;
+        }
+        else
+        {
+            return await CheckUserRight(userId, project.GroupId);
+        }
     }
 
     public async Task<List<Invite>> GetUserInvitesAsync(string userId) =>

@@ -1,9 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
-var dbSettings = new UserDBSettings(
+var userDbSettings = new UserDBSettings(
     Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? "",
     Environment.GetEnvironmentVariable("DB_NAME") ?? "",
-    Environment.GetEnvironmentVariable("DB_USER_COLLECTION_NAME") ?? ""
+    Environment.GetEnvironmentVariable("DB_USER_COLLECTION_NAME") ?? "",
+    Environment.GetEnvironmentVariable("DB_MESSAGE_COLLECTION_NAME") ?? ""
 );
 
 var mailSettings = new MailSettings(
@@ -20,14 +21,29 @@ var jwtSettings = new JwtSettings(
     Environment.GetEnvironmentVariable("JWT_ISSUER") ?? ""
 );
 
-var frontUrl = "http://localhost:3000/";
+var APP_VERSION = float.Parse(Environment.GetEnvironmentVariable("APP_VERSION") ?? "1.0");
+
+// var frontUrl = "http://localhost:3000/";
+var frontUrl = "http://d829aea8686a.vps.myjino.ru/";
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy  =>
+        {
+            policy.WithOrigins("http://d829aea8686a.vps.myjino.ru",
+                                "http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod();;
+        });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(c => c.EnableAnnotations());
 
 builder.Services.AddSingleton<ITokenService>(new RsaTokenService(jwtSettings));
-builder.Services.AddSingleton<IUserRepositoryService>(new MongoDBUserRepositoryService(dbSettings));
+builder.Services.AddSingleton<IUserRepositoryService>(new MongoDBUserRepositoryService(userDbSettings));
 builder.Services.AddSingleton<UserMicroservice.Services.MailService.IMailService>(new MyMailService(mailSettings));
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
@@ -43,10 +59,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = jwtSettings.PublicKey,
     };
 });
-builder.Services.AddCors();
+// builder.Services.AddCors();
 
 await using var app = builder.Build();
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
+// app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://d829aea8686a.vps.myjino.ru",
+//     "http://localhost:3000"));
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -155,6 +173,20 @@ app.MapPost("/login",
                 http.Response.StatusCode = 521;
                 return;
             }
+
+            var message = new List<string>();
+            if (!(user.LastLoginVersion is null))
+            {
+                if (float.Parse(user.LastLoginVersion) < APP_VERSION)
+                {
+                    message = (await userRepositoryService.GetVersionMessages(APP_VERSION.ToString("0.00")))
+                        .Select(m => m.Text)
+                        .ToList();
+                }
+            }
+            user.LastLoginTime = DateTime.Now;
+            user.LastLoginVersion = APP_VERSION.ToString("0.00");
+            await userRepositoryService.UpdateAsync(user);
         
             var accessToken = tokenService.GenerateAccessToken(user);
             var refreshToken = tokenService.GenerateRefreshToken(user);
@@ -167,7 +199,9 @@ app.MapPost("/login",
                 user.Name,
                 user.Email,
                 user.AvatarBase64!,
-                user.TimeZone
+                user.TimeZone,
+                APP_VERSION,
+                message
             ));
             return;
         }
@@ -193,7 +227,9 @@ app.MapGet("/whoIs",
                 user!.Name,
                 user.Email,
                 user.AvatarBase64!,
-                user.TimeZone
+                user.TimeZone,
+                float.Parse(user.LastLoginVersion!),
+                new List<string>()
             ));
             return;
         }

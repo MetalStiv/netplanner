@@ -65,6 +65,7 @@ services:
       DB_CONNECTION_STRING: mongodb://root:example@mongo-userdb:27017
       DB_NAME: userdb
       DB_USER_COLLECTION_NAME: users
+      DB_MESSAGE_COLLECTION_NAME: messages
       MAIL_NAME: netplaner@yandex.com
       MAIL_DISPLAY_NAME: Netplanner
       MAIL_PASSWORD: appmecniptnrogny
@@ -74,6 +75,7 @@ services:
       JWT_PUBLIC_KEY: /app/RsaKeys/public.pem
       JWT_ISSUER: http://localhost:5108
       DOMAIN: http://localhost:5108
+      APP_VERSION: 1.01
     networks:
       - netplanner_network
 
@@ -122,3 +124,13 @@ services:
       PORT: 3005
     networks:
       - netplanner_network
+
+  # front-microservice:
+  #   image: nginx:1.25
+  #   volumes:
+  #     - ./front/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./frontend/build:/usr/share/nginx/html
+  #   ports:
+  #     - 80:80
+  #   environment:
+  #     - NGINX_PORT=80

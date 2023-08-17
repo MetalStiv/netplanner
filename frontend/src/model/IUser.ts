@@ -4,6 +4,7 @@ interface IUser {
     name: string,
     avatarBase64?: string,
     timeZoneId: number,
+    appVersion?: number,
 }
 
 export default IUser
