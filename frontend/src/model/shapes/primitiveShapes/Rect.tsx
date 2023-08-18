@@ -116,18 +116,20 @@ class Rect implements IShape {
     config: IRectConfig;
     isVisible: boolean = true;
     zIndex: number = 0;
-    
+
     get overallWidth() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString();
+        value > +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString());
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
     }
     set overallHeight(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString();
+        value < +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString());
     }
 
     constructor(obj: IRectConfig) {

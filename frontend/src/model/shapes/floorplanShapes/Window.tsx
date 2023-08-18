@@ -122,13 +122,15 @@ class Window implements IShape {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString();
+        value > +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString());
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
     }
     set overallHeight(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString();
+        value < +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString());
     }
 
     constructor(obj: IWindowConfig) {

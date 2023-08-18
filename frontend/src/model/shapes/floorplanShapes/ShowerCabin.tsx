@@ -190,26 +190,26 @@ class ShowerCabin implements IShape {
                 l -${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
                 l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value}
 
-                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.1},${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.1} 
-                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.8} 0
-                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.8}
-                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.8} 0
-                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.8}
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1},${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1} 
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.8} 0
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.8}
+                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.8} 0
+                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.8}
 
-                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.3},${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.3}
-                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.3},${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.3} 
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.3},${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.3}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.3},${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.3} 
 
-                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.05}, -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.05}
-                l 0, -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.35} 
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.05}, -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.05}
+                l 0, -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.35} 
                 
-                m -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.1}, ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.45}
-                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.35} 0
+                m -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1}, ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.45}
+                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.35} 0
 
-                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.49} 0
-                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04} ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04}
-                    0 1,0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.08},0
-                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04} ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04}
-                    0 1,0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.08},0
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.49} 0
+                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04} ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04}
+                    0 1,0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.08},0
+                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04} ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04}
+                    0 1,0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.08},0
             `}
         />
     }

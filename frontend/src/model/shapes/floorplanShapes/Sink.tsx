@@ -122,13 +122,15 @@ class Sink implements IShape {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString();
+        value > +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString());
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
     }
     set overallHeight(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString();
+        value < +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString());
     }
 
     constructor(obj: ISinkConfig) {
@@ -206,17 +208,17 @@ class Sink implements IShape {
                 l -${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
                 l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
 
-                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.95} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.1}
-                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.46} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
-                    0 0 1 -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.9} 0
-                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.9} 0
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.95} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.1}
+                a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.46} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
+                    0 0 1 -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.9} 0
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.9} 0
                 
-                m -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.44} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.05}
-                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.30}
-                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04} 0
-                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.30}
-                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.1} 0
-                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.18} 0
+                m -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.44} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.05}
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.30}
+                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04} 0
+                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.30}
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1} 0
+                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.18} 0
             `}
         />
     }
