@@ -240,7 +240,7 @@ const ProjectPage: React.FC = observer(() => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            getUsers(projectsMetaStore.getData().filter(p => p.id === projectStore.getProject()?.getID()))
+            getUsers(projectsMetaStore.getData())
         }, updateInfoTime)
         return () => clearInterval(interval)
     }, [update])

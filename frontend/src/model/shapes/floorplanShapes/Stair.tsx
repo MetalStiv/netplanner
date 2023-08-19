@@ -210,7 +210,7 @@ class Stair implements IShape {
             tabIndex={-1}
             stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
             fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
-            fillRule="evenodd"
+            fillRule="nonzero"
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}

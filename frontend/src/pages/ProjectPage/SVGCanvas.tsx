@@ -158,10 +158,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
   }, [cursorCoords])
 
   useEffect(() => {
-    console.log(actionStore)
-  }, [actionStore]);
-
-  useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Delete') {
         // const currentLayer: ILayer = projectStore.getProject()
