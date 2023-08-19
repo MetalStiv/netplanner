@@ -122,15 +122,17 @@ class BeginEnd implements IShape {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString();
+        value > +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString());
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
     }
     set overallHeight(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString();
+        value < +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString());
     }
-    
+
     constructor(obj: IBeginEndConfig) {
         this.config = obj;
         this.config.zIndex = obj.zIndex ?? 0;
@@ -200,7 +202,7 @@ class BeginEnd implements IShape {
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}
             d={`
-                M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.5}
+                M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.5}
                     ${(+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value)}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value} 0
                 

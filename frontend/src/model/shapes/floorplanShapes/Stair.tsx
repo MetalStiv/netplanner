@@ -134,13 +134,15 @@ class Stair implements IShape {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString();
+        value > +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString());
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
     }
     set overallHeight(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString();
+        value < +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString());
     }
 
     constructor(obj: IStairConfig) {
@@ -220,22 +222,22 @@ class Stair implements IShape {
             d={`
                 M ${this.config.graphicalProperties[GraphicalPropertyTypes.X].value},${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
                 l ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
-                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.2}
                 l -${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
-                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
+                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.2}
 
-                m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
-                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.5} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
-                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.5} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
-                m -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.5} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.2}
+                m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.2}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.5} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.2}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.5} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.2}
+                m -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.5} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.2}
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
-                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.5} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.8}
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.5} -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.8}
             ` +
-            Array.from({ length: +this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value-1 }, (_, i) => i)
-                .map(s => `m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.8/(+this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value-1)}
-                    l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.8/(+this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value-1)}
+                Array.from({ length: +this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value - 1 }, (_, i) => i)
+                    .map(s => `m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.8 / (+this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value - 1)}
+                    l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.8 / (+this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value - 1)}
                     l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value*0.8/(+this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value-1)}
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.8 / (+this.config.graphicalProperties[GraphicalPropertyTypes.STEP_QUANTITY].value - 1)}
                     l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
                 `).join(' ')
             }

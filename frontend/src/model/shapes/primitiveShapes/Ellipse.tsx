@@ -116,20 +116,22 @@ class Ellipse implements IShape {
     config: IEllipseConfig;
     isVisible: boolean = true;
     zIndex: number = 0;
-    
+
     get overallWidth() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.RX].value * 2;
     }
     set overallWidth(value: number) {
         const newRadius = value / 2;
-        this.config.graphicalProperties[GraphicalPropertyTypes.RX].value = newRadius.toString();
+        newRadius > +this.config.graphicalProperties[GraphicalPropertyTypes.RY].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.RX].value = newRadius.toString());
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.RY].value * 2;
     }
     set overallHeight(value: number) {
         const newRadius = value / 2;
-        this.config.graphicalProperties[GraphicalPropertyTypes.RY].value = newRadius.toString();
+        newRadius < +this.config.graphicalProperties[GraphicalPropertyTypes.RX].value &&
+            (this.config.graphicalProperties[GraphicalPropertyTypes.RY].value = newRadius.toString());
     }
 
     constructor(obj: IEllipseConfig) {

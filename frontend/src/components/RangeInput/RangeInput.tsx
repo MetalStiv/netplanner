@@ -8,11 +8,11 @@ interface IRangeInputProps {
     numberInputMin?: number,
     numberInputMax: number,
     step: number,
-    onChangeHandler: (value: string) => void
+    onChange: (value: string) => void
 }
 
 const RangeInput: React.FC<IRangeInputProps> = ({ value, min, max, numberInputMin = 0,
-    numberInputMax, step, onChangeHandler }) => {
+    numberInputMax, step, onChange }) => {
     const [sliderTextInput, setSliderTextInput] = useState((value * 100).toString());
 
     return (
@@ -28,7 +28,7 @@ const RangeInput: React.FC<IRangeInputProps> = ({ value, min, max, numberInputMi
                     value={Math.ceil(value * 100)}
                     onChange={e => {
                         setSliderTextInput(e.target.value);
-                        onChangeHandler(e.target.value);
+                        onChange(e.target.value);
                     }}
                 />
             </div>
@@ -44,7 +44,7 @@ const RangeInput: React.FC<IRangeInputProps> = ({ value, min, max, numberInputMi
                     }}
                     onKeyDown={e => {
                         if (e.keyCode === 13) {
-                            onChangeHandler(sliderTextInput)
+                            onChange(sliderTextInput)
                         }
                     }}
                 />

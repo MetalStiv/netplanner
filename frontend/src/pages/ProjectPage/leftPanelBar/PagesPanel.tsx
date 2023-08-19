@@ -4,7 +4,6 @@ import { Collapse } from 'react-collapse';
 import { useClickAndDoubleClickHandler } from '../../../common/customHooks/useClickAndDoubleClickHandler';
 //import Page from '../../../model/Page';
 import { LanguageData, useLanguageContext } from '../../../providers/languageProvider';
-import titleUniqueization from '../../../common/helpers/titleUniquezation';
 import Project, { IProject } from '../../../model/projectData/Project';
 import { AddPageAction } from '../../../model/actions/AddPageAction';
 import { useRootStore } from '../../../providers/rootProvider';

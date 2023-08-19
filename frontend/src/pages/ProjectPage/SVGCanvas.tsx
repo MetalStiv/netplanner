@@ -694,15 +694,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     }
   }
 
-  function toScale(nextScale: number, originPoint: { x: number, y: number } = { x: canvasConfig.canvasWidth / 2, y: canvasConfig.canvasHeight / 2 }) {
-    // const g = svgCanvas.current!.querySelector('#elementsGroup') as SVGSVGElement;
-    // const g = svgCanvas.current as SVGElement;
-    // originPoint ??= { x: canvasConfig.a4Width / 2, y: canvasConfig.a4Height / 2 };
-    // originPoint = transformOuterCoordsToSVGCoords(originPoint);
-    // console.log(originPoint)
-
-
-    // setTimeout(() => {
+  function toScale(nextScale: number, originPoint: { x: number, y: number } = { x: window.innerWidth / 2, y: window.innerHeight / 2 }) {
     const divis = nextScale / scale;
 
     const translatePoint: { x: number, y: number } = {
@@ -1113,41 +1105,10 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
           <g style={{ transform: `matrix(${scale}, 0, 0, ${scale}, ${translate.x}, ${translate.y}) ` }}>
             <use href="#gridRect" />
             <svg
-              // fill="url(#gridRect)"
-              // x={(canvasConfig.canvasWidth - canvasConfig.a4Width) / 2}
-              // y={(canvasConfig.canvasHeight - canvasConfig.a4Height) / 2}
-              // width={canvasConfig.a4Width}
-              // height={canvasConfig.a4Height}
-              // width="100%"
-              // height="100%"
               width={canvasConfig.canvasWidth - canvasConfig.offsetX * 2}
               height={canvasConfig.canvasHeight - canvasConfig.offsetY * 2}
-            // x={canvasConfig.offsetX}
-            // y={canvasConfig.offsetY}
-
             // viewBox={`${(canvasConfig.canvasWidth - canvasConfig.offsetX * 2) / 2} ${(canvasConfig.canvasHeight - canvasConfig.offsetY * 2) / 2} ${canvasConfig.canvasWidth - canvasConfig.offsetX * 2} ${canvasConfig.canvasHeight - canvasConfig.offsetY * 2}`}
-
-
-
-            // x={canvasConfig.offsetX}
-            // y={canvasConfig.offsetY}
-            // stroke='black'
-            // strokeWidth={2}
-            // viewBox={`${(canvasConfig.canvasWidth - canvasConfig.offsetX * 2) / 2} ${(canvasConfig.canvasHeight - canvasConfig.offsetY * 2) / 2} ${canvasConfig.canvasWidth - canvasConfig.offsetX * 2} ${canvasConfig.canvasHeight - canvasConfig.offsetY * 2}`}
-            // viewBox={`${-translate.x} ${-translate.y} ${canvasConfig.canvasWidth - canvasConfig.offsetX * 2} ${canvasConfig.canvasHeight - canvasConfig.offsetY * 2}`}
-            // xmlns="http://www.w3.org/2000/svg"
-            // onClick={svgClickHandler}
-            // onWheel={onWheelHandler}
-            // onPointerDown={onPointerDownHandler}
-            // onMouseMoveCapture={onMousemoveCaptureHandler}
-            // style={{ background: 'red', overflow: 'visible', fill: 'red' }}
             >
-              {/* <filter id="outline">
-                <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="1" />
-                <feFlood flood-color='#1561d3' />
-                <feComposite in2="expanded" operator="in" />
-                <feComposite in="SourceGraphic" />
-              </filter> */}
               <filter id="outlineFilter">
                 <feMorphology
                   in="SourceGraphic"
@@ -1161,8 +1122,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                   result="xor-result"
                   operator="xor"
                 />
-                {/* <feDropShadow dx="0" dy="0" stdDeviation="3"
-                  flood-color="#1561d3" /> */}
               </filter>
               <g id="elementsGroup" style={{
                 // outline: '2px solid #000000',
@@ -1237,12 +1196,10 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                         d="M15.7733 13.3292C15.4851 14.1471 14.9388 14.8493 14.2169 15.3298C13.4949 15.8103 12.6363 16.0432 11.7704 15.9934C10.9046 15.9436 10.0784 15.6137 9.41631 15.0535C8.75424 14.4933 8.29217 13.7332 8.09972 12.8876C7.90728 12.042 7.99489 11.1567 8.34934 10.3652C8.7038 9.57374 9.3059 8.91887 10.0649 8.4993C10.824 8.07974 11.6988 7.91819 12.5576 8.03902C13.9223 8.23101 14.9173 9.23345 16 10M16 10V7M16 10H13" />
                       <line x1={12} x2={12} y1={16} y2={24} strokeWidth={1} />
                     </g>
-                    {/* <path transform={`translate(${controlsConfig.w},${controlsConfig.h})`} d="0,0c0,46.312-33.237,85.002-77.109,93.484v25.663l-69.76-40l69.76-40v23.494  c27.176-7.87,47.109-32.964,47.109-62.642c0-35.962-29.258-65.22-65.22-65.22s-65.22,29.258-65.22,65.22  c0,9.686,2.068,19.001,6.148,27.688l-27.154,12.754c-5.968-12.707-8.994-26.313-8.994-40.441C11.964,42.716,54.68,0,107.184,0  S202.403,42.716,202.403,95.22z" /> */}
                   </>}
                 </g>}
               </g>
             </svg>
-            {/* </g> */}
           </g>
         </svg>
       </div>
@@ -1252,7 +1209,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         max={200}
         step={10}
         numberInputMax={9999}
-        onChangeHandler={(val: string) => toScale(parseFloat((parseInt(val) * 0.01).toFixed(1)))} />
+        onChange={(val: string) => toScale(parseFloat((parseInt(val) * 0.01).toFixed(1)))} />
     </>
   )
 })
