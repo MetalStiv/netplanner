@@ -151,7 +151,7 @@ app.MapDelete("/removeProject",
         var projectIdDto = await http.Request.ReadFromJsonAsync<ProjectIdDto>();
         var project = await projectRepositoryService.GetProjectByIdAsync(projectIdDto!.Id);
 
-        if (await projectRepositoryService.CheckUserRight(userId, projectIdDto!.Id) != 2)
+        if (await projectRepositoryService.CheckUserRight(userId, projectIdDto!.Id) != 0)
         {
             http.Response.StatusCode = 401;
             return;
@@ -180,7 +180,7 @@ app.MapPost("/renameProject",
         var renameProjectDto = await http.Request.ReadFromJsonAsync<RenameProjectDto>();
         var project = await projectRepositoryService.GetProjectByIdAsync(renameProjectDto!.Id);
 
-        if (await projectRepositoryService.CheckUserRight(userId, renameProjectDto!.Id) != 2)
+        if (await projectRepositoryService.CheckUserRight(userId, renameProjectDto!.Id) != 0)
         {
             http.Response.StatusCode = 401;
             return;
@@ -211,8 +211,8 @@ app.MapPost("/moveProjectToGroup",
 
             var moveProjectDto = await http.Request.ReadFromJsonAsync<MoveProjectDto>();
 
-            if (await projectRepositoryService.CheckUserRight(userId, moveProjectDto!.Id) != 2
-                || await projectRepositoryService.CheckUserRight(userId, moveProjectDto!.GroupId) != 2)
+            if (await projectRepositoryService.CheckUserRight(userId, moveProjectDto!.Id) != 0
+                || await projectRepositoryService.CheckUserRight(userId, moveProjectDto!.GroupId) != 0)
             {
                 http.Response.StatusCode = 401;
                 return;
@@ -252,7 +252,7 @@ app.MapPost("/sendInvite",
         var inviteDto = await http.Request.ReadFromJsonAsync<InviteDto>();
         var project = await projectRepositoryService.GetProjectByIdAsync(inviteDto!.ProjectId);
 
-        if (await projectRepositoryService.CheckUserRight(userId, inviteDto!.ProjectId) != 2)
+        if (await projectRepositoryService.CheckUserRight(userId, inviteDto!.ProjectId) != 0)
         {
             http.Response.StatusCode = 401;
             return;
@@ -298,7 +298,7 @@ app.MapDelete("/revokeInvite",
         var invite = await projectRepositoryService.GetInviteByIdAsync(inviteId);
         var project = await projectRepositoryService.GetProjectByIdAsync(invite.ProjectId);
 
-        if (await projectRepositoryService.CheckUserRight(userId, invite.ProjectId) != 2)
+        if (await projectRepositoryService.CheckUserRight(userId, invite.ProjectId) != 0)
         {
             http.Response.StatusCode = 401;
             return;

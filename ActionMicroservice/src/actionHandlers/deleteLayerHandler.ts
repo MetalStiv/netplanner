@@ -7,7 +7,7 @@ export const deleteLayerHandler: ActionHandler = async (collections, message) =>
     if (message.type !== ActionType.DELETE_LAYER) {
         return Promise.reject('Wrong handler');
     };
-    if (message.senderRights !== 2){
+    if (message.senderRights !== 0){
         return Promise.reject('Not enough rigths');
     }
 
