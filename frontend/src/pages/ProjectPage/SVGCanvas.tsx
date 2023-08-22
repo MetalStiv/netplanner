@@ -776,7 +776,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     isIncrease: (shift: { x: number, y: number }) => boolean,
     isDecrease: (shift: { x: number, y: number }) => boolean,
     getCoords: (inititalCoords: { x: number, y: number }, summand: number) => { x: number | null, y: number | null },
-    setSize: (shape: IShape, initVals: { w: number, h: number }, summand: number, minSize?: number) => boolean
+    setSize: (shape: IShape, initVals: { w: number, h: number }, summand: number) => boolean
   }
 
   interface IScaleControlHandlerConfig {
@@ -800,8 +800,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         x: initialCoords.x - summand,
         y: initialCoords.y - summand
       }),
-      setSize: (shape, initVals, summand, minSize = 10) => {
-        if (initVals.w + summand <= minSize || initVals.h + summand <= minSize) { return false }
+      setSize: (shape, initVals, summand) => {
         shape.overallWidth = initVals.w + summand;
         shape.overallHeight = initVals.h + summand;
         return true;
@@ -816,8 +815,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         x: null,
         y: initialCoords.y - summand
       }),
-      setSize: (shape, initVals, summand, minSize = 10) => {
-        if (initVals.w + summand <= minSize || initVals.h + summand <= minSize) { return false }
+      setSize: (shape, initVals, summand) => {
         shape.overallWidth = initVals.w + summand;
         shape.overallHeight = initVals.h + summand;
         return true;
@@ -832,8 +830,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         x: null,
         y: null
       }),
-      setSize: (shape, initVals, summand, minSize = 10) => {
-        if (initVals.w + summand <= minSize || initVals.h + summand <= minSize) { return false }
+      setSize: (shape, initVals, summand) => {
         shape.overallWidth = initVals.w + summand;
         shape.overallHeight = initVals.h + summand;
         return true;
@@ -848,8 +845,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         x: initialCoords.x - summand,
         y: null
       }),
-      setSize: (shape, initVals, summand, minSize = 10) => {
-        if (initVals.w + summand <= minSize || initVals.h + summand <= minSize) { return false }
+      setSize: (shape, initVals, summand) => {
         shape.overallWidth = initVals.w + summand;
         shape.overallHeight = initVals.h + summand;
         return true;
@@ -864,9 +860,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         x: null,
         y: initialCoords.y - summand
       }),
-      setSize: (shape, initVals, summand, minSize = 10) => {
-        if (initVals.h + summand <= minSize) return false;
-        shape.overallHeight = initVals.h + summand
+      setSize: (shape, initVals, summand) => {
+        shape.overallHeight = initVals.h + summand;
         return true;
       }
     },
@@ -879,9 +874,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         x: null,
         y: null
       }),
-      setSize: (shape, initVals, summand, minSize = 10) => {
-        if (initVals.w + summand <= minSize) return false;
-        shape.overallWidth = initVals.w + summand
+      setSize: (shape, initVals, summand) => {
+        shape.overallWidth = initVals.w + summand;
         return true;
       }
     },
@@ -894,8 +888,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         x: null,
         y: null
       }),
-      setSize: (shape, initVals, summand, minSize = 10) => {
-        if (initVals.h + summand <= minSize) return false;
+      setSize: (shape, initVals, summand) => {
         shape.overallHeight = initVals.h + summand
         return true;
       }
@@ -909,8 +902,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         x: initialCoords.x - summand,
         y: null
       }),
-      setSize: (shape, initVals, summand, minSize = 10) => {
-        if (initVals.w + summand <= minSize) return false;
+      setSize: (shape, initVals, summand) => {
         shape.overallWidth = initVals.w + summand
         return true;
       }

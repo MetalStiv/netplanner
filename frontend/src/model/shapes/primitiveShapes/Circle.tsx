@@ -111,13 +111,31 @@ class Circle implements IShape {
     }
     set overallWidth(value: number) {
         const newRadius = value / 2;
-        this.config.graphicalProperties[GraphicalPropertyTypes.R].value = newRadius.toString();
+        this.config.graphicalProperties[GraphicalPropertyTypes.R].value =
+            this.validateProperty(newRadius.toString(), GraphicalPropertyTypes.R);
     }
     get overallHeight() {
         return this.overallWidth;
     }
     set overallHeight(value: number) {
-        this.overallWidth = value;
+        const newRadius = value / 2;
+        this.config.graphicalProperties[GraphicalPropertyTypes.R].value =
+            this.validateProperty(newRadius.toString(), GraphicalPropertyTypes.R);
+    }
+
+    validateProperty(value: string, propertyType: GraphicalPropertyTypes) {
+        let validValue = value;
+        switch (propertyType) {
+            case GraphicalPropertyTypes.R:
+                if (+validValue < 5) {
+                    validValue = '5';
+                }
+                break;
+
+            default:
+                break;
+        }
+        return validValue;
     }
 
     constructor(obj: ICircleConfig) {

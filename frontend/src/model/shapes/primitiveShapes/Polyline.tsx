@@ -99,6 +99,7 @@ class Polyline implements IShape {
     set overallHeight(value: number) {
         // this.config.graphicalProperties[GraphicalPropertyTypes.Y2].value = value.toString();
     }
+    validateProperty(value: string, propertyType: GraphicalPropertyTypes) { return value; };
 
     constructor(obj: IPolylineProps) {
         this.config = obj;
