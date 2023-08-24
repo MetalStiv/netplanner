@@ -59,10 +59,10 @@ const GraphicalPropertiesPanel = ({ shapeProps, onChange, canvasProps }: IGraphi
                                                 }, canvasProps);
                                                 newVal = key === GraphicalPropertyTypes.X ? convertedCoords.x.toString() : convertedCoords.y.toString();
                                             }
-
+                                            // const graphProp = GraphicalPropertyTypes
                                             const newProps = {
                                                 ...shapeProps.graphProps,
-                                                [key]: { ...obj, value: newVal }
+                                                [key]: { ...obj, value: changableShape!.validateProperty(newVal, key as GraphicalPropertyTypes) }
                                             };
                                             const changePropAction = new ChangeShapePropertyAction(
                                                 changableShape!,

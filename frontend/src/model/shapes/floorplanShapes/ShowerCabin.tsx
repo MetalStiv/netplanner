@@ -131,13 +131,30 @@ class ShowerCabin implements IShape {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString();
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value =
+            this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallHeight(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString();
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value =
+            this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
+    }
+
+    validateProperty(value: string, propertyType: GraphicalPropertyTypes) {
+        let validValue = value;
+        switch (propertyType) {
+            case GraphicalPropertyTypes.WIDTH:
+                if (+validValue < 10) {
+                    validValue = '10';
+                }
+                break;
+
+            default:
+                break;
+        }
+        return validValue;
     }
 
     constructor(obj: IShowerCabinConfig) {

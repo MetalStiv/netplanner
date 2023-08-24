@@ -129,15 +129,31 @@ class Wall implements IShape {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        value > +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value &&
-            (this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = value.toString());
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value =
+            this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
     }
     set overallHeight(value: number) {
-        value < +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value &&
-            (this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = value.toString());
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value =
+            this.validateProperty(value.toString(), GraphicalPropertyTypes.HEIGHT);
+    }
+
+    validateProperty(value: string, propertyType: GraphicalPropertyTypes) {
+        let validValue = value;
+        switch (propertyType) {
+            case GraphicalPropertyTypes.WIDTH:
+            case GraphicalPropertyTypes.HEIGHT:
+                if (+validValue < 10) {
+                    validValue = '10';
+                }
+                break;
+
+            default:
+                break;
+        }
+        return validValue;
     }
 
     constructor(obj: IWallConfig) {
