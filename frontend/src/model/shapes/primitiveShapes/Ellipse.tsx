@@ -61,6 +61,16 @@ export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShap
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
+            [GraphicalPropertyTypes.MIRROR_X]: {
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.MIRROR_X)!.v,
+                isReadable: false,
+                editorType: EditorType.TEXT_EDITOR,
+            },
+            [GraphicalPropertyTypes.MIRROR_Y]: {
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.MIRROR_Y)!.v,
+                isReadable: false,
+                editorType: EditorType.TEXT_EDITOR,
+            },
         }
     })
 }
@@ -104,6 +114,16 @@ export class EllipseCreator implements IShapeCreator {
                     value: '#ffffff',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
+                },
+                [GraphicalPropertyTypes.MIRROR_X]: {
+                    value: '1',
+                    isReadable: false,
+                    editorType: EditorType.TEXT_EDITOR,
+                },
+                [GraphicalPropertyTypes.MIRROR_Y]: {
+                    value: '1',
+                    isReadable: false,
+                    editorType: EditorType.TEXT_EDITOR,
                 },
             },
             zIndex: 0,
@@ -175,6 +195,17 @@ class Ellipse implements IShape {
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR
         };
+
+        this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X] = {
+            value: m.find(p => p.l === GraphicalPropertyTypes.MIRROR_X)!.v,
+            isReadable: false,
+            editorType: EditorType.TEXT_EDITOR,
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y] = {
+            value: m.find(p => p.l === GraphicalPropertyTypes.MIRROR_Y)!.v,
+            isReadable: false,
+            editorType: EditorType.TEXT_EDITOR,
+        };
     }
 
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
@@ -197,7 +228,10 @@ class Ellipse implements IShape {
             onMouseDown={handlerMouseDown}
             // onFocus={handlerFocus}
             onBlur={handlerBlur}
-            transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value} 
+            transform={`rotate(${
+                this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
+                    : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.RX].value)} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.RY].value)})
                 `}

@@ -205,6 +205,8 @@ interface ILanguage {
             [GraphicalPropertyTypes.FILL_HATCHING_DASH]: string,
         
             [GraphicalPropertyTypes.STEP_QUANTITY]: string,
+            [GraphicalPropertyTypes.MIRROR_X]: string,
+            [GraphicalPropertyTypes.MIRROR_Y]: string,
         },
 
         defaultPageName: string,

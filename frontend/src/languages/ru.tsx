@@ -207,6 +207,8 @@ export const ru: ILanguage = {
             [GraphicalPropertyTypes.FILL_HATCHING_DASH]: "Тип штриховки",
         
             [GraphicalPropertyTypes.STEP_QUANTITY]: "Количество ступенек",
+            [GraphicalPropertyTypes.MIRROR_X]: "Отражение X",
+            [GraphicalPropertyTypes.MIRROR_Y]: "Отражение Y",
         },
 
         defaultPageName: "Страница",

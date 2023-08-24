@@ -207,6 +207,8 @@ export const eng: ILanguage = {
             [GraphicalPropertyTypes.FILL_HATCHING_DASH]: "Fill hatching dash",
         
             [GraphicalPropertyTypes.STEP_QUANTITY]: "Step quantity",
+            [GraphicalPropertyTypes.MIRROR_X]: "Mirror X",
+            [GraphicalPropertyTypes.MIRROR_Y]: "Mirror Y",
         },
 
         defaultPageName: 'Page',

@@ -12,7 +12,7 @@ export enum ShapeType {
     DECISION = "bd",
     MODIFICATION = "be",
     REPEAT = "bf",
-    INPUT_OUTPUT = "bd",
+    INPUT_OUTPUT = "bg",
     // COMMENTARY = "COMMENTARY",
     // POINTER = "POINTER",
     // PAGE_POINTER = "POINTER",

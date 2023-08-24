@@ -29,12 +29,17 @@ export enum GraphicalPropertyTypes {
     FILL_HATCHING_DASH = 'fd',
 
     STEP_QUANTITY = 'sq',
+
+    MIRROR_X = 'mx',
+    MIRROR_Y = 'my',
 }
 
 export interface IShapeGraphicalProps {
     [GraphicalPropertyTypes.X]: IGraphicalProperty,
     [GraphicalPropertyTypes.Y]: IGraphicalProperty,
-    [GraphicalPropertyTypes.PIVOT]: IGraphicalProperty
+    [GraphicalPropertyTypes.PIVOT]: IGraphicalProperty,
+    [GraphicalPropertyTypes.MIRROR_X]: IGraphicalProperty,
+    [GraphicalPropertyTypes.MIRROR_Y]: IGraphicalProperty,
 }
 
 export interface IGraphicalProperty {

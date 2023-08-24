@@ -78,7 +78,17 @@ export const roomInflater: TShapeInflater = async (messageShape: IMessageShape) 
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
-            }
+            },
+            [GraphicalPropertyTypes.MIRROR_X]: {
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.MIRROR_X)!.v,
+                isReadable: false,
+                editorType: EditorType.TEXT_EDITOR,
+            },
+            [GraphicalPropertyTypes.MIRROR_Y]: {
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.MIRROR_Y)!.v,
+                isReadable: false,
+                editorType: EditorType.TEXT_EDITOR,
+            },
         }
     })
 }
@@ -137,6 +147,16 @@ export class RoomCreator implements IShapeCreator {
                     value: '20',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
+                },
+                [GraphicalPropertyTypes.MIRROR_X]: {
+                    value: '1',
+                    isReadable: false,
+                    editorType: EditorType.TEXT_EDITOR,
+                },
+                [GraphicalPropertyTypes.MIRROR_Y]: {
+                    value: '1',
+                    isReadable: false,
+                    editorType: EditorType.TEXT_EDITOR,
                 },
             },
             zIndex: 0,
@@ -220,6 +240,17 @@ class Room implements IShape {
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
+
+        this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X] = {
+            value: m.find(p => p.l === GraphicalPropertyTypes.MIRROR_X)!.v,
+            isReadable: false,
+            editorType: EditorType.TEXT_EDITOR,
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y] = {
+            value: m.find(p => p.l === GraphicalPropertyTypes.MIRROR_Y)!.v,
+            isReadable: false,
+            editorType: EditorType.TEXT_EDITOR,
+        };
     }
 
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
@@ -243,35 +274,67 @@ class Room implements IShape {
             onMouseDown={handlerMouseDown}
             // onFocus={handlerFocus}
             onBlur={handlerBlur}
-            transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value} 
+            transform={`rotate(${
+                this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
+                    : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
+                    
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}
             d={`
-                M ${this.config.graphicalProperties[GraphicalPropertyTypes.X].value},${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
-                l 0 ${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
-                l ${this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
-                l 0 -${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
-                l -${this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
+                M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1' ?
+                    +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
+                    : 0)},
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1' 
+                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value
+                    : 0)} 
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * -1
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
 
-                m ${this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
-                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
-                l 0 ${this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value}
-                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
-                l 0 -${this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value}
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                l ${(+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value)
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                l ${(+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value)
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
 
-                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value}
-                    ${this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value} 
-                l -${this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value} 0
-                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value - +this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value}
-                l ${this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value} 0
-                l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value - +this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value}
+                m ${(+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value)
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)} 
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                l 0 ${(+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value - +this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value)
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                l 0 ${(+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value - +this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value)
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
 
-                m -${this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value}
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value - +this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value} 
-                l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
-                l 0 -${this.config.graphicalProperties[GraphicalPropertyTypes.BOTTOM_WIDTH].value}
-                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value} 0
-                l 0 ${this.config.graphicalProperties[GraphicalPropertyTypes.BOTTOM_WIDTH].value}
+                m ${+this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                    ${(+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value - +this.config.graphicalProperties[GraphicalPropertyTypes.TOP_WIDTH].value)
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)} 
+                l ${(+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value - 
+                    +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value)
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.BOTTOM_WIDTH].value
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                l ${(+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.RIGHT_WIDTH].value - 
+                    +this.config.graphicalProperties[GraphicalPropertyTypes.LEFT_WIDTH].value)
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.BOTTOM_WIDTH].value
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
                 `}
         />
     }

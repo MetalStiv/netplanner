@@ -55,6 +55,16 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
+            [GraphicalPropertyTypes.MIRROR_X]: {
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.MIRROR_X)!.v,
+                isReadable: false,
+                editorType: EditorType.TEXT_EDITOR,
+            },
+            [GraphicalPropertyTypes.MIRROR_Y]: {
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.MIRROR_X)!.v,
+                isReadable: false,
+                editorType: EditorType.TEXT_EDITOR,
+            },
         },
 
     })
@@ -94,6 +104,16 @@ export class CircleCreator implements IShapeCreator {
                     value: '#ffffff',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
+                },
+                [GraphicalPropertyTypes.MIRROR_X]: {
+                    value: '1',
+                    isReadable: false,
+                    editorType: EditorType.TEXT_EDITOR,
+                },
+                [GraphicalPropertyTypes.MIRROR_Y]: {
+                    value: '1',
+                    isReadable: false,
+                    editorType: EditorType.TEXT_EDITOR,
                 },
             },
             zIndex: 0
@@ -155,6 +175,17 @@ class Circle implements IShape {
             value: m.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR
+        };
+
+        this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X] = {
+            value: m.find(p => p.l === GraphicalPropertyTypes.MIRROR_X)!.v,
+            isReadable: false,
+            editorType: EditorType.TEXT_EDITOR,
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y] = {
+            value: m.find(p => p.l === GraphicalPropertyTypes.MIRROR_Y)!.v,
+            isReadable: false,
+            editorType: EditorType.TEXT_EDITOR,
         };
     }
 

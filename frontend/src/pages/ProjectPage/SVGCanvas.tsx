@@ -220,6 +220,33 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         const addShapeAction = new AddShapeAction(shapesToAdd[0], currentLayer, coords);
         actionStore.push(addShapeAction);
       }
+      if (e.ctrlKey && e.shiftKey && e.code === 'KeyM') {
+        e.preventDefault();
+        const currentLayer: ILayer = projectStore.getProject()
+          ?.getCurrentPage()
+          .getCurrentLayer()!
+        let shapes = selectedShapes.map(ss => currentLayer.getShapes().find(s => s.config.id === ss))
+          .filter((x): x is IShape => x !== undefined);
+        shapes = JSON.parse(JSON.stringify(shapes))
+        shapes.forEach(s => {
+          s.config.graphicalProperties.my.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.my.value)*-1: -1).toString();
+          var changeShapePropertyAction = new ChangeShapePropertyAction(s, currentLayer.getID(), s.config.graphicalProperties);
+          actionStore.push(changeShapePropertyAction);
+        })
+      }
+      if (e.ctrlKey && !e.shiftKey && e.code === 'KeyM') {
+        const currentLayer: ILayer = projectStore.getProject()
+          ?.getCurrentPage()
+          .getCurrentLayer()!
+        let shapes = selectedShapes.map(ss => currentLayer.getShapes().find(s => s.config.id === ss))
+          .filter((x): x is IShape => x !== undefined);
+        shapes = JSON.parse(JSON.stringify(shapes))
+        shapes.forEach(s => {
+          s.config.graphicalProperties.mx.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.mx.value)*-1: -1).toString();
+          var changeShapePropertyAction = new ChangeShapePropertyAction(s, currentLayer.getID(), s.config.graphicalProperties);
+          actionStore.push(changeShapePropertyAction);
+        })
+      }
     }
 
     document.addEventListener('keydown', onKeyDown);
@@ -998,9 +1025,15 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     const initCursor = transformOuterCoordsToSVGCoords({ x: e.clientX, y: e.clientY });
     svgCanvas.current!.onpointermove = (e: PointerEvent) => {
       const cursor = transformOuterCoordsToSVGCoords({ x: e.clientX, y: e.clientY });
-      const angles = initRotationAngles.map(initAngle => Math.atan2(cursor.x - centerCoords.x, -(cursor.y - centerCoords.y)) * (180 / Math.PI) + initAngle);
+      ////
+      const rotationAngle = Math.atan2(cursor.x - centerCoords.x, -(cursor.y - centerCoords.y)) * (180 / Math.PI);
+      // const angles = initRotationAngles.map(initAngle => Math.atan2(cursor.x - centerCoords.x, -(cursor.y - centerCoords.y)) * (180 / Math.PI) + initAngle);
       shapes.forEach((shape, i) => {
-        shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value = angles[i].toString();
+        // shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value = angles[i].toString();
+        shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value = (initRotationAngles[i]+rotationAngle
+          *parseInt(shape!.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X].value)
+          *parseInt(shape!.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value)).toString();
+
         if (shapes.length > 1) {
           const initTranslateAngle = Math.atan2(centerCoords.y - initCoords[i].y, centerCoords.x - initCoords[i].x)
             + Math.atan2(centerCoords.y - initCursor.y, centerCoords.x - initCursor.x);
