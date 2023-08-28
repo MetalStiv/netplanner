@@ -77,6 +77,9 @@ export const bathInflater: TShapeInflater = async (messageShape: IMessageShape) 
 
 export class BathCreator implements IShapeCreator {
     type: ShapeType = ShapeType.BATH;
+    icon: string = '<path d="M 1 1 l 30 0 l 0 20 l -30 0 l 0 -20 m 4 3 l 0 14 l 18 0'
+        + ' a 4 5 0 0 0 0 -14 l -18 0 m -2 5 l 0 4 m 0 -2 l 9 0"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Bath({
             graphicalProperties: {

@@ -3,6 +3,7 @@ import IShape from "./IShape";
 
 export interface IShapeCreator {
     type: ShapeType,
-    create(): IShape;
+    create(): IShape,
+    icon: string,    
 }
 export default IShapeCreator;

@@ -77,6 +77,8 @@ export const processInflater: TShapeInflater = async (messageShape: IMessageShap
 
 export class ProcessCreator implements IShapeCreator {
     type: ShapeType = ShapeType.PROCESS;
+    icon: string = '<path d="M 1 4 l 0 16 l 24 0 l 0 -16 l -24 0 m 3 0 l 0 16 m 18 0 l 0 -16"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Process({
             graphicalProperties: {

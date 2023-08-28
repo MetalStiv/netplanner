@@ -95,6 +95,7 @@ export const roomInflater: TShapeInflater = async (messageShape: IMessageShape) 
 
 export class RoomCreator implements IShapeCreator {
     type: ShapeType = ShapeType.ROOM;
+    icon: string = '<rect x="6" y="4" width="22" height="15" fill="white" stroke="black" stroke-width="5"/>';
     create() {
         return new Room({
             graphicalProperties: {

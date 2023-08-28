@@ -77,6 +77,7 @@ export const operationInflater: TShapeInflater = async (messageShape: IMessageSh
 
 export class OperationCreator implements IShapeCreator {
     type: ShapeType = ShapeType.OPERATION;
+    icon: string = '<rect x="1" y="2" width="24" height="16" fill="white" stroke="black" stroke-width="2"/>';;
     create() {
         return new Operation({
             graphicalProperties: {

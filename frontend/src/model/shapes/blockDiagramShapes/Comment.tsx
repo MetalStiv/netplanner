@@ -1,28 +1,27 @@
 import IShapeCreator from "../IShapeCreator";
+import { TShapeInflater } from "../shapeInflaters";
 import { ShapeType } from "../ShapeType";
 import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
-import { TShapeInflater } from "../shapeInflaters";
 import { IMessageGraphicalProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
-interface IEllipseGraphicalProps extends IShapeGraphicalProps {
+interface ICommentProps extends IShapeGraphicalProps {
+    [GraphicalPropertyTypes.WIDTH]: IGraphicalProperty,
+    [GraphicalPropertyTypes.HEIGHT]: IGraphicalProperty,
     [GraphicalPropertyTypes.STROKE_COLOR]: IGraphicalProperty,
-    [GraphicalPropertyTypes.FILL_COLOR_ONE]: IGraphicalProperty,
-    [GraphicalPropertyTypes.RX]: IGraphicalProperty,
-    [GraphicalPropertyTypes.RY]: IGraphicalProperty,
 }
 
-interface IEllipseConfig extends IShapeConfig {
+export interface ICommentConfig extends IShapeConfig {
     id?: string,
-    graphicalProperties: IEllipseGraphicalProps,
+    graphicalProperties: ICommentProps,
     zIndex: number,
 }
 
-export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShape) => {
-    if (messageShape.type !== ShapeType.ELLIPS) {
+export const commentInflater: TShapeInflater = async (messageShape: IMessageShape) => {
+    if (messageShape.type !== ShapeType.COMMENT) {
         return null
     }
-    return new Ellipse({
+    return new Comment({
         id: messageShape.id,
         zIndex: messageShape.zIndex,
         graphicalProperties: {
@@ -41,23 +40,18 @@ export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShap
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            [GraphicalPropertyTypes.RX]: {
-                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.RX)!.v,
+            [GraphicalPropertyTypes.WIDTH]: {
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
-            [GraphicalPropertyTypes.RY]: {
-                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.RY)!.v,
+            [GraphicalPropertyTypes.HEIGHT]: {
+                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
                 isReadable: true,
                 editorType: EditorType.TEXT_EDITOR
             },
             [GraphicalPropertyTypes.STROKE_COLOR]: {
                 value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
-                isReadable: true,
-                editorType: EditorType.COLOR_EDITOR
-            },
-            [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
-                value: messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
                 isReadable: true,
                 editorType: EditorType.COLOR_EDITOR
             },
@@ -75,11 +69,12 @@ export const ellipseInflater: TShapeInflater = async (messageShape: IMessageShap
     })
 }
 
-export class EllipseCreator implements IShapeCreator {
-    type: ShapeType = ShapeType.ELLIPS;
-    icon: string = '<ellipse cx="14" cy="10" rx="12" ry="8" fill="white" stroke="black" stroke-width="2"/>';
+export class CommentCreator implements IShapeCreator {
+    type: ShapeType = ShapeType.COMMENT;
+    icon: string = '<path d="M 1 11 l 4 0 m 3 0 l 4 0 m 8 -10 l -5 0 l 0 19 l 5 0"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
-        return new Ellipse({
+        return new Comment({
             graphicalProperties: {
                 [GraphicalPropertyTypes.X]: {
                     value: '0',
@@ -91,28 +86,24 @@ export class EllipseCreator implements IShapeCreator {
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
+                [GraphicalPropertyTypes.WIDTH]: {
+                    value: '20',
+                    isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
+                },
+                [GraphicalPropertyTypes.HEIGHT]: {
+                    value: '80',
+                    isReadable: true,
+                    editorType: EditorType.TEXT_EDITOR
+                },
                 [GraphicalPropertyTypes.PIVOT]: {
                     value: '0',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
-                [GraphicalPropertyTypes.RX]: {
-                    value: '30',
-                    isReadable: true,
-                    editorType: EditorType.TEXT_EDITOR
-                },
-                [GraphicalPropertyTypes.RY]: {
-                    value: '20',
-                    isReadable: true,
-                    editorType: EditorType.TEXT_EDITOR
-                },
+
                 [GraphicalPropertyTypes.STROKE_COLOR]: {
                     value: '#000000',
-                    isReadable: true,
-                    editorType: EditorType.COLOR_EDITOR
-                },
-                [GraphicalPropertyTypes.FILL_COLOR_ONE]: {
-                    value: '#ffffff',
                     isReadable: true,
                     editorType: EditorType.COLOR_EDITOR
                 },
@@ -132,36 +123,43 @@ export class EllipseCreator implements IShapeCreator {
     }
 }
 
-class Ellipse implements IShape {
-    type: ShapeType = ShapeType.ELLIPS;
-    config: IEllipseConfig;
+class Comment implements IShape {
+    type: ShapeType = ShapeType.COMMENT;
+    config: ICommentConfig;
     isVisible: boolean = true;
-    zIndex: number = 0;
 
     get overallWidth() {
-        return +this.config.graphicalProperties[GraphicalPropertyTypes.RX].value * 2;
+        return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        const newRadius = value / 2;
-        this.config.graphicalProperties[GraphicalPropertyTypes.RX].value =
-            this.validateProperty(newRadius.toString(), GraphicalPropertyTypes.RX);
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value =
+            this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
     }
     get overallHeight() {
-        return +this.config.graphicalProperties[GraphicalPropertyTypes.RY].value * 2;
+        return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
     }
     set overallHeight(value: number) {
-        const newRadius = value / 2;
-        this.config.graphicalProperties[GraphicalPropertyTypes.RY].value =
-            this.validateProperty(newRadius.toString(), GraphicalPropertyTypes.RY);
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value =
+            this.validateProperty(value.toString(), GraphicalPropertyTypes.HEIGHT);
     }
 
     validateProperty(value: string, propertyType: GraphicalPropertyTypes) {
         let validValue = value;
         switch (propertyType) {
-            case GraphicalPropertyTypes.RX:
-            case GraphicalPropertyTypes.RY:
-                if (+validValue < 5) {
-                    validValue = '5';
+            case GraphicalPropertyTypes.WIDTH:
+                if (+validValue < 10) {
+                    validValue = '10';
+                }
+                if (+validValue <= +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value) {
+                    validValue = (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value + 1).toString();
+                }
+                break;
+            case GraphicalPropertyTypes.HEIGHT:
+                if (+validValue > +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value) {
+                    validValue = (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - 1).toString();
+                }
+                if (+validValue < 10) {
+                    validValue = '10';
                 }
                 break;
 
@@ -171,9 +169,9 @@ class Ellipse implements IShape {
         return validValue;
     }
 
-    constructor(obj: IEllipseConfig) {
+    constructor(obj: ICommentConfig) {
         this.config = obj;
-        this.zIndex = obj.zIndex ?? 0;
+        this.config.zIndex = obj.zIndex ?? 0;
     }
 
     updateGraphicalProperties(m: IMessageGraphicalProperty[]) {
@@ -187,25 +185,20 @@ class Ellipse implements IShape {
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
         };
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH] = {
+            value: m.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT] = {
+            value: m.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v,
+            isReadable: true,
+            editorType: EditorType.TEXT_EDITOR
+        };
         this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.PIVOT)!.v,
             isReadable: true,
             editorType: EditorType.TEXT_EDITOR
-        };
-        this.config.graphicalProperties[GraphicalPropertyTypes.RX] = {
-            value: m.find(p => p.l === GraphicalPropertyTypes.RX)!.v,
-            isReadable: true,
-            editorType: EditorType.TEXT_EDITOR
-        };
-        this.config.graphicalProperties[GraphicalPropertyTypes.RY] = {
-            value: m.find(p => p.l === GraphicalPropertyTypes.RY)!.v,
-            isReadable: true,
-            editorType: EditorType.TEXT_EDITOR
-        };
-        this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE] = {
-            value: m.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
-            isReadable: true,
-            editorType: EditorType.COLOR_EDITOR
         };
         this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.STROKE_COLOR)!.v,
@@ -229,7 +222,7 @@ class Ellipse implements IShape {
         // handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
         layerZIndex: number,
-        isSelected: boolean,
+        isSelected: boolean
     ) {
         return <path
             className={isSelected ? 'selected' : ''}
@@ -238,8 +231,8 @@ class Ellipse implements IShape {
             data-type={this.type}
             role="shape"
             tabIndex={-1}
-            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value ?? 'black'}
-            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value ?? 'black'}
+            fill="none"
+            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
@@ -249,21 +242,23 @@ class Ellipse implements IShape {
                 this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
                     ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
                     : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
-                ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.RX].value)} 
-                ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.RY].value)})
-                `}
+                ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
+                ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}
             d={`
-                M ${(+this.config.graphicalProperties[GraphicalPropertyTypes.X].value) +
-                (+this.config.graphicalProperties[GraphicalPropertyTypes.RX].value)},${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value}
-                a ${this.config.graphicalProperties[GraphicalPropertyTypes.RX].value},${this.config.graphicalProperties[GraphicalPropertyTypes.RY].value}
-                0
-                1,0
-                1,0
-                z
-            `}
+                M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
+                    - (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value === "-1" 
+                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
+                    : 0)}
+                    ${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-1
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value)} 0
+                l 0 ${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
+                l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value)} 0
+                `}
         />
     }
 }
 
 
-export default Ellipse;
+export default Comment;

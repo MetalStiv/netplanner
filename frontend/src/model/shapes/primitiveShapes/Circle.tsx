@@ -72,6 +72,7 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
 
 export class CircleCreator implements IShapeCreator {
     type: ShapeType = ShapeType.CIRCLE;
+    icon: string = '<circle cx="14" cy="12"r="8" fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Circle({
             graphicalProperties: {

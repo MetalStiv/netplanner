@@ -77,6 +77,8 @@ export const doorInflater: TShapeInflater = async (messageShape: IMessageShape) 
 
 export class DoorCreator implements IShapeCreator {
     type: ShapeType = ShapeType.DOOR;
+    icon: string = '<path d="M 8 4 l 16 0 l 0 3 l -16 0 l 0 -3 l 0 15 m 16 -12 a 16 14 0 0 1 -16 12"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Door({
             graphicalProperties: {

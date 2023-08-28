@@ -71,6 +71,7 @@ export const lineInflater: TShapeInflater = async (messageShape: IMessageShape) 
 
 export class LineCreator implements IShapeCreator {
     type: ShapeType = ShapeType.LINE;
+    icon: string = '<rect x="1" y="1" width="98" height="74" fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Line({
             graphicalProperties: {

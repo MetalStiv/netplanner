@@ -77,6 +77,9 @@ export const stoveInflater: TShapeInflater = async (messageShape: IMessageShape)
 
 export class StoveCreator implements IShapeCreator {
     type: ShapeType = ShapeType.STOVE;
+    icon: string = '<path d="M 6 1 l 20 0 l 0 20 l -20 0 l 0 -20 m 3 14 a 2 2 0 0 1 6 0 a 2 2 0 0 1 -6 0'
+        + ' m 0 -8 a 2 2 0 0 1 6 0 a 2 2 0 0 1 -6 0 m 8 0 a 2 2 0 0 1 6 0 a 2 2 0 0 1 -6 0 m 0 8 a 2 2 0 0 1 6 0 a 2 2 0 0 1 -6 0"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Stove({
             graphicalProperties: {

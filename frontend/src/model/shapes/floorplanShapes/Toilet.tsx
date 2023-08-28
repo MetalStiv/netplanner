@@ -77,6 +77,9 @@ export const toiletInflater: TShapeInflater = async (messageShape: IMessageShape
 
 export class ToiletCreator implements IShapeCreator {
     type: ShapeType = ShapeType.TOILET;
+    icon: string = '<path d="M 10 1 l 12 0 a 4 4 0 1 1 0 8 l -12 0 a 4 4 0 1 1 0 -8 m 1 8 l 0 8 a 3 2 0 1 0 10 0 l 0 -8'
+        + ' m -3 3 l -4 0 l 0 4 a 2 2 0 1 0 4 0 l 0 -4 m -2 -8 l 1 1"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Toilet({
             graphicalProperties: {

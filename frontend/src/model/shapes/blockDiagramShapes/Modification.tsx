@@ -77,6 +77,8 @@ export const modificationInflater: TShapeInflater = async (messageShape: IMessag
 
 export class ModificationCreator implements IShapeCreator {
     type: ShapeType = ShapeType.MODIFICATION;
+    icon: string = '<path d="M 5 4 l -4 8 l 4 8 l 16 0 l 4 -8 l -4 -8 l -16 0"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Modification({
             graphicalProperties: {

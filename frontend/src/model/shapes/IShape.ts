@@ -29,6 +29,7 @@ export enum GraphicalPropertyTypes {
     FILL_HATCHING_DASH = 'fd',
 
     STEP_QUANTITY = 'sq',
+    DIRECTION = 'd',
 
     MIRROR_X = 'mx',
     MIRROR_Y = 'my',

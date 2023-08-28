@@ -77,6 +77,8 @@ export const repeatInflater: TShapeInflater = async (messageShape: IMessageShape
 
 export class RepeatCreator implements IShapeCreator {
     type: ShapeType = ShapeType.REPEAT;
+    icon: string = '<path d="M 5 4 l -4 4 l 0 12 l 24 0 l 0 -12 l -4 -4 l -16 0"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Repeat({
             graphicalProperties: {

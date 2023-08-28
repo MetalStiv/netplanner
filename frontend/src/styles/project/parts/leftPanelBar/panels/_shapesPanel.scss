@@ -17,6 +17,13 @@
         height: calc(100% - $headerHeight);
         overflow: auto;
         padding: 10px 14px;
+
+        .shape-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-left: -1vh;
+        }
     }
 
     .collapse-panel {

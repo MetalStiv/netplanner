@@ -166,6 +166,7 @@ interface ILanguage {
             [ShapeType.OPERATION]: string,
             [ShapeType.PROCESS]: string,
             [ShapeType.REPEAT]: string,
+            [ShapeType.COMMENT]: string,
     
             [ShapeType.BATH]: string,
             [ShapeType.DOOR]: string,
@@ -177,6 +178,7 @@ interface ILanguage {
             [ShapeType.TOILET]: string,
             [ShapeType.WALL]: string,
             [ShapeType.WINDOW]: string,
+            [ShapeType.URINAL]: string,
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: string,
@@ -205,6 +207,7 @@ interface ILanguage {
             [GraphicalPropertyTypes.FILL_HATCHING_DASH]: string,
         
             [GraphicalPropertyTypes.STEP_QUANTITY]: string,
+            [GraphicalPropertyTypes.DIRECTION]: string,
             [GraphicalPropertyTypes.MIRROR_X]: string,
             [GraphicalPropertyTypes.MIRROR_Y]: string,
         },

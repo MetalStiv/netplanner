@@ -57,6 +57,30 @@ interface IMetadata {
 const clients = new Map<WebSocket, IMetadata>();
 const publicKey = fs.readFileSync("/app/RsaKeys/public.pem", "utf8");
 
+// ////////////
+// const update = async () => {
+//     var shapesAll = await collections.shapeCollection.find({}).toArray();
+//     shapesAll.forEach(async s => {
+//         var new_gp = s.graphicalProperties;
+//         new_gp.push({
+//             l: 'mx',
+//             v: '1'
+//         });
+//         new_gp.push({
+//             l: 'my',
+//             v: '1'
+//         });
+//         await collections.shapeCollection.findOneAndUpdate({
+//             _id: new mongoDB.ObjectId(s._id)
+//         },
+//         {
+//             $set: { graphicalProperties: new_gp }
+//         })
+//     })
+// }
+
+// update();
+
 wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     let queryData = require('url').parse(req.url, true).query;
     

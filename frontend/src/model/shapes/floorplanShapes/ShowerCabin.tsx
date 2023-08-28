@@ -71,6 +71,9 @@ export const showerCabinInflater: TShapeInflater = async (messageShape: IMessage
 
 export class ShowerCabinCreator implements IShapeCreator {
     type: ShapeType = ShapeType.SHOWER_CABIN;
+    icon: string = '<path d="M 6 1 l 20 0 l 0 20 l -20 0 l 0 -20 m 16 12 l 0 -5 m -4 9 l -5 0'
+        + ' m 8 0 a 1 1 0 1 0 2 0 a 1 1 0 1 0 -2 0"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new ShowerCabin({
             graphicalProperties: {

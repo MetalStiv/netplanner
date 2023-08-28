@@ -168,6 +168,7 @@ export const ru: ILanguage = {
             [ShapeType.OPERATION]: "Операция",
             [ShapeType.PROCESS]: "Процесс",
             [ShapeType.REPEAT]: "Повторение",
+            [ShapeType.COMMENT]: "Коментарий",
     
             [ShapeType.BATH]: "Ванна",
             [ShapeType.DOOR]: "Дверь",
@@ -179,6 +180,7 @@ export const ru: ILanguage = {
             [ShapeType.TOILET]: "Туалет",
             [ShapeType.WALL]: "Стена",
             [ShapeType.WINDOW]: "Окно",
+            [ShapeType.URINAL]: "Писсуар",
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: "X",
@@ -207,6 +209,7 @@ export const ru: ILanguage = {
             [GraphicalPropertyTypes.FILL_HATCHING_DASH]: "Тип штриховки",
         
             [GraphicalPropertyTypes.STEP_QUANTITY]: "Количество ступенек",
+            [GraphicalPropertyTypes.DIRECTION]: "Направление",
             [GraphicalPropertyTypes.MIRROR_X]: "Отражение X",
             [GraphicalPropertyTypes.MIRROR_Y]: "Отражение Y",
         },

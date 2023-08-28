@@ -61,6 +61,7 @@ export const polylineInflater: TShapeInflater = async (messageShape: IMessageSha
 
 export class PolylineCreator implements IShapeCreator {
     type: ShapeType = ShapeType.POLYLINE;
+    icon: string = '<rect x="1" y="1" width="98" height="74" fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Polyline({
             graphicalProperties: {

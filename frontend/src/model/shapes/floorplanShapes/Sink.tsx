@@ -77,6 +77,9 @@ export const sinkInflater: TShapeInflater = async (messageShape: IMessageShape) 
 
 export class SinkCreator implements IShapeCreator {
     type: ShapeType = ShapeType.SINK;
+    icon: string = '<path d="M 3 1 l 28 0 l 0 20 l -28 0 l 0 -20 m 24 4'
+        + ' a 10 13 0 0 1 -20 0 l 20 0 m -13 -2 l 6 0 m -3 0 l 0 7"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Sink({
             graphicalProperties: {

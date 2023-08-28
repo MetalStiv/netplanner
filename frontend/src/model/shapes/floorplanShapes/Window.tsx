@@ -77,6 +77,8 @@ export const windowInflater: TShapeInflater = async (messageShape: IMessageShape
 
 export class WindowCreator implements IShapeCreator {
     type: ShapeType = ShapeType.WINDOW;
+    icon: string = '<path d="M 5 8 l 22 0 l 0 4 l -22 0 l 0 -4 m 0 4 l 0 4 l 22 0 l 0 -4"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Window({
             graphicalProperties: {

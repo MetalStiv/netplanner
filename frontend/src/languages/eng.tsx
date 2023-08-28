@@ -168,6 +168,7 @@ export const eng: ILanguage = {
             [ShapeType.OPERATION]: "Operation",
             [ShapeType.PROCESS]: "Process",
             [ShapeType.REPEAT]: "Repeat",
+            [ShapeType.COMMENT]: "Comment",
     
             [ShapeType.BATH]: "Bath",
             [ShapeType.DOOR]: "Door",
@@ -179,6 +180,7 @@ export const eng: ILanguage = {
             [ShapeType.TOILET]: "Toilet",
             [ShapeType.WALL]: "Wall",
             [ShapeType.WINDOW]: "Window",
+            [ShapeType.URINAL]: "Urinal",
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: "X",
@@ -207,6 +209,7 @@ export const eng: ILanguage = {
             [GraphicalPropertyTypes.FILL_HATCHING_DASH]: "Fill hatching dash",
         
             [GraphicalPropertyTypes.STEP_QUANTITY]: "Step quantity",
+            [GraphicalPropertyTypes.DIRECTION]: "Direction",
             [GraphicalPropertyTypes.MIRROR_X]: "Mirror X",
             [GraphicalPropertyTypes.MIRROR_Y]: "Mirror Y",
         },

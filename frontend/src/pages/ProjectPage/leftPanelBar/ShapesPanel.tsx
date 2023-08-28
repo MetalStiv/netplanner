@@ -31,7 +31,10 @@ const ShapesPanel = ({ getCreatorOnDragCallback }: IShapesPanelProps) => {
                                             getCreatorOnDragCallback(creator);
                                             e.dataTransfer.setData("draggableElement", 'shape');
                                         }}>
-                                            {lang?.langText.projectPage.baseShapes[creator.type]}
+                                            <div className='shape-item'>
+                                                <svg width={35} height={22} dangerouslySetInnerHTML={{__html: creator.icon}}></svg>
+                                                <span>{lang?.langText.projectPage.baseShapes[creator.type]}</span>
+                                            </div>
                                     </li>
                                 })}
                             </ul>

@@ -77,6 +77,8 @@ export const beginEndInflater: TShapeInflater = async (messageShape: IMessageSha
 
 export class BeginEndCreator implements IShapeCreator {
     type: ShapeType = ShapeType.BEGIN_END;
+    icon: string = '<path d="M 6 7 l 16 0 a 4 4 0 1 1 0 8 l -16 0 a 4 4 0 1 1 0 -8"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new BeginEnd({
             graphicalProperties: {

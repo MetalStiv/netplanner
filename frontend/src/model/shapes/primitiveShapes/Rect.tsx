@@ -77,6 +77,7 @@ export const rectInflater: TShapeInflater = async (messageShape: IMessageShape) 
 
 export class RectCreator implements IShapeCreator {
     type: ShapeType = ShapeType.RECTANGLE;
+    icon: string = '<rect x="1" y="1" width="25" height="20" fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Rect({
             graphicalProperties: {

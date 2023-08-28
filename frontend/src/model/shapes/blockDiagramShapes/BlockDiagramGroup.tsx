@@ -1,6 +1,7 @@
 import { GroupType } from "../GroupType";
 import IShapeGroup from "../IShapeGroup"
 import { BeginEndCreator } from "./BeginEnd";
+import { CommentCreator } from "./Comment";
 import { DecisionCreator } from "./Decision";
 import { InputOutputCreator } from "./InputOutput";
 import { ModificationCreator } from "./Modification";
@@ -18,6 +19,7 @@ const blockDiagramGroup: IShapeGroup = {
         new ModificationCreator(),
         new InputOutputCreator(),
         new RepeatCreator(),
+        new CommentCreator(),
     ]
 }
 

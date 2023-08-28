@@ -77,6 +77,8 @@ export const decisionInflater: TShapeInflater = async (messageShape: IMessageSha
 
 export class DecisionCreator implements IShapeCreator {
     type: ShapeType = ShapeType.DECISION;
+    icon: string = '<path d="M 13 4 l -12 8 l 12 8 l 12 -8 l -12 -8"'
+        + ' fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Decision({
             graphicalProperties: {

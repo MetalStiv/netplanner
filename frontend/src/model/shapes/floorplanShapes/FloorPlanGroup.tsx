@@ -8,6 +8,7 @@ import { SinkCreator } from "./Sink";
 import { StairCreator } from "./Stair";
 import { StoveCreator } from "./Stove";
 import { ToiletCreator } from "./Toilet";
+import { UrinalCreator } from "./Urinal";
 import { WallCreator } from "./Wall";
 import { WindowCreator } from "./Window";
 
@@ -19,11 +20,12 @@ const floorPlanGroup: IShapeGroup = {
         new WallCreator(),
         new RoomCreator(),
         new StairCreator(),
+        new StoveCreator(),
         new SinkCreator(),
         new ShowerCabinCreator(),
         new BathCreator(),
         new ToiletCreator(),
-        new StoveCreator(),
+        new UrinalCreator(),
     ]
 }
 

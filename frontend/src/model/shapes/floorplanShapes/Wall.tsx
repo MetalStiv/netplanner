@@ -71,6 +71,8 @@ export const wallInflater: TShapeInflater = async (messageShape: IMessageShape) 
 
 export class WallCreator implements IShapeCreator {
     type: ShapeType = ShapeType.WALL;
+    icon: string = '<path d="M 5 8 l 22 0 l 0 6 l -22 0 l 0 -6"'
+        + ' fill="black" stroke="black" stroke-width="2"/>';
     create() {
         return new Wall({
             graphicalProperties: {

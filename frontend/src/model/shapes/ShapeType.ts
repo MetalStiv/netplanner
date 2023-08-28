@@ -13,11 +13,9 @@ export enum ShapeType {
     MODIFICATION = "be",
     REPEAT = "bf",
     INPUT_OUTPUT = "bg",
-    // COMMENTARY = "COMMENTARY",
-    // POINTER = "POINTER",
-    // PAGE_POINTER = "POINTER",
-
-    // COMPOSITE = "COMPOSITE",
+    COMMENT = "bh",
+    // POINTER = "bi",
+    // PAGE_POINTER = "bj",
 
     DOOR = "ca",
     WINDOW = "cb",
@@ -29,4 +27,7 @@ export enum ShapeType {
     SINK = "ch",
     SHOWER_CABIN = "ci",
     BATH = "cj",
+    URINAL = "ck"
+
+    // COMPOSITE = "d",
 }
