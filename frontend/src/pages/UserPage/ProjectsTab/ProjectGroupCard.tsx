@@ -31,7 +31,7 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
         if (res.status !== 200) {
             alert(res.statusText)
         }
-        if (res.status === 401){
+        if (res.status === 401) {
             navigate("/");
         }
         projectsMetaStore.hideById(projectId);
@@ -52,50 +52,124 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
             projectsMetaStore.updateOrInsert(newProjectMeta);
             setIsEdittingName(false);
         }
-        if (res.status === 401){
+        if (res.status === 401) {
             navigate("/");
         }
     }
 
     return (
-        <div className={`project-group-card ${projectsMetaStore.getById(projectId)!.hide ?
-            "project-group-card-hidden"
-            : "project-group-card-visible"}`}
-            onDoubleClick={() => {
-                projectsMetaStore.inGroup(projectId)
-            }}
-        >
-            <div className="base-info">
-                <div className="first-row">
-                    {
-                        isEdittingName ? <div className="name-container">
-                            <input
-                                className='change-name-input'
-                                autoFocus={true}
-                                type="text"
-                                onBlur={saveNameHandler}
-                                value={tempName}
-                                onChange={e => changeName(e.target)}
-                                onKeyDown={e => {
-                                    if (e.keyCode === 13) {
-                                        saveNameHandler();
-                                    }
-                                    if (e.keyCode === 27) {
-                                        setIsEdittingName(false);
-                                        setTempName(projectsMetaStore.getById(projectId)!.name);
-                                    }
-                                }}
-                            />
+        <div className="project-card-container">
+            <div className={`project-card ${projectsMetaStore.getById(projectId)!.hide ?
+                "project-card-hidden"
+                : "project-card-visible"}`}
+                onDoubleClick={() => {
+                    projectsMetaStore.inGroup(projectId)
+                }}
+            >
+                <div className="base-info">
+                    <div className="controls-bar">
+                        <div className="modified-info"></div>
+                        <div className="menu-icon-group">
+                            {
+                                projectsMetaStore.getById(projectId)!.userRights === 0 ?
+                                    <div className="full-rights-icon">{lang?.langText.userPage.projectTab.sharingForm.fullAccess}</div>
+                                    : projectsMetaStore.getById(projectId)!.userRights === 1 ?
+                                        <div className="readonly-rights-icon">{lang?.langText.userPage.projectTab.sharingForm.readonly}</div>
+                                        : ''
+                            }
+
+                            <div className="menu-icon" onClick={() => projectsMetaStore.switchShareFormById(projectId)}>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d={"M7 11.5L13 14.5M13 5.5L7 8.5M16 19C14.3431 19 13 17.6569 13 16C13 14.3431 14.3431 " +
+                                        " 13 16 13C17.6569 13 19 14.3431 19 16C19 17.6569 17.6569 19 16 19ZM4 13C2.34315 13 1 " +
+                                        " 11.6569 1 10C1 8.34315 2.34315 7 4 7C5.65685 7 7 8.34315 7 10C7 11.6569 5.65685 13 " +
+                                        " 4 13ZM16 7C14.3431 7 13 5.65685 13 4C13 2.34315 14.3431 1 16 1C17.6569 1 19 2.34315 " +
+                                        " 19 4C19 5.65685 17.6569 7 16 7Z"} stroke="#292C33" strokeWidth="2"
+                                        strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+
+                            <div className="menu-icon" onClick={() => projectsMetaStore.switchMenuById(projectId)}>
+                                <svg width="4" height="17" viewBox="0 0 4 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 " +
+                                        " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} fill="#292C33" />
+                                    <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 " +
+                                        " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} fill="#292C33" />
+                                    <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 2.07143C3 " +
+                                        " 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} fill="#292C33" />
+                                    <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 " +
+                                        " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} stroke="#292C33"
+                                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 " +
+                                        " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} stroke="#292C33"
+                                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 " +
+                                        " 2.07143C3 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} stroke="#292C33"
+                                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+
+                            {
+                                projectsMetaStore.getById(projectId)!.showMenu &&
+                                <div className="panel-menu-container">
+                                    <div className="panel-menu">
+                                        <div className="menu-text">
+                                            {lang!.langText.userPage.projectTab.moveToGroup}
+                                        </div>
+                                        <hr className="separator" />
+                                        <div className="menu-text">
+                                            <ConfirmationDialog showText={lang!.langText.userPage.projectTab.delete}
+                                                btnAcceptText={lang!.langText.userPage.projectTab.delete}
+                                                btnDeclineText={lang!.langText.userPage.projectTab.cancel}
+                                                questionTextPartOne={lang!.langText.userPage.projectTab.deleteGroupQuestion}
+                                                questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
+                                                questionTextPartThree={lang!.langText.userPage.projectTab.deleteGroupDefinition}
+                                                action={removeProject} />
+                                        </div>
+                                    </div>
+
+                                    <div className="tail"></div>
+                                </div>
+                            }
+
+                            {
+                                projectsMetaStore.getById(projectId)!.showSharingForm &&
+                                <ShareModalForm projectMeta={projectsMetaStore.getById(projectId)!}
+                                    close={() => projectsMetaStore.switchShareFormById(projectId)}
+                                    updateProjects={updateProjects} />
+                            }
                         </div>
-                            : <div className="name-container">
-                                <p className="name-info">
-                                    {projectsMetaStore.getById(projectId)!.name}
-                                </p>
-                                <span className="pencil-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        onClick={() => setIsEdittingName(true)}>
-                                        <path d="M4 20.0001H3C3 20.2653 3.10536 20.5197 3.2929 20.7072C3.48043 
+                    </div>
+                    <div className="first-row">
+                        {
+                            isEdittingName ? <div className="name-container">
+                                <input
+                                    className='change-name-input'
+                                    autoFocus={true}
+                                    type="text"
+                                    onBlur={saveNameHandler}
+                                    value={tempName}
+                                    onChange={e => changeName(e.target)}
+                                    onKeyDown={e => {
+                                        if (e.keyCode === 13) {
+                                            saveNameHandler();
+                                        }
+                                        if (e.keyCode === 27) {
+                                            setIsEdittingName(false);
+                                            setTempName(projectsMetaStore.getById(projectId)!.name);
+                                        }
+                                    }}
+                                />
+                            </div>
+                                : <div className="name-container">
+                                    <p className="name-info">
+                                        {projectsMetaStore.getById(projectId)!.name}
+                                    </p>
+                                    <span className="pencil-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            onClick={() => setIsEdittingName(true)}>
+                                            <path d="M4 20.0001H3C3 20.2653 3.10536 20.5197 3.2929 20.7072C3.48043 
                                             20.8948 3.73479 21.0001 4.00001 21.0001L4 20.0001ZM4 16.0001L3.29289 
                                             15.293C3.10536 15.4805 3 15.7349 3 16.0001H4ZM14.8686 5.13146L14.1615 
                                             4.42435L14.1615 4.42436L14.8686 5.13146ZM17.1313 5.13146L16.4242 
@@ -130,131 +204,60 @@ const ProjectGroupCard: React.FC<IProjectGroupCardProps> = observer(({ projectId
                                             5.41431H16.0001L16.6181 3.51219C16.2164 3.38168 15.7837 3.38168 15.382 3.51219L16 
                                             5.41431ZM11.2929 8.70722L15.2929 12.7072L16.7071 11.293L12.7071 7.29301L11.2929 
                                             8.70722Z" fill="#176DEA" />
-                                    </svg>
-                                </span>
-                            </div>
-                    }
-                    <div className="modified-info"></div>
-                </div>
+                                        </svg>
+                                    </span>
+                                </div>
+                        }
 
-                <div className="second-row">
-                    <div className="owner-info">{lang!.langText.userPage.projectTab.owner + ': '}
-                        <img src={
-                            usersStore.getData()
-                                .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.avatarBase64
-                        } />
-                        <div className="owner-name">
-                            {
+                    </div>
+
+                    <div className="second-row">
+                        <div className="owner-info">{lang!.langText.userPage.projectTab.owner + ': '}
+                            <img src={
                                 usersStore.getData()
-                                    .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.name
+                                    .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.avatarBase64
+                            } />
+                            <div className="owner-name">
+                                {
+                                    usersStore.getData()
+                                        .find(u => u.id === projectsMetaStore.getById(projectId)!.ownerId)?.name
+                                }
+                            </div>
+                        </div>
+
+                        <div className="subscribers-info">{lang!.langText.userPage.projectTab.subscribers + ': '}
+                            {
+                                projectsMetaStore.getById(projectId)!.invites !== undefined ?
+                                    projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).length > 0 ?
+                                        projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1)
+                                            .map((i, index) =>
+                                                index < maxSubscriberQuantity ? <img key={'im_' + i.id} src={
+                                                    usersStore.getData()
+                                                        .find(u => u.id === i.userId)?.avatarBase64
+                                                } title={usersStore.getData().find(u => u.id === i.userId)?.name} />
+                                                    : index === maxSubscriberQuantity ? <div className="addition-subscribers" onClick={() => projectsMetaStore.switchShareFormById(projectId)}
+                                                        title={projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).map((i, index) =>
+                                                            index < maxSubscriberQuantity ? ''
+                                                                : usersStore.getData().find(u => u.id === i.userId)?.name
+                                                        ).filter(item => item !== '').join(', ')}>
+                                                        {'+' + (projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).length -
+                                                            maxSubscriberQuantity)}
+                                                    </div>
+                                                        : ''
+                                            )
+                                        : lang!.langText.userPage.projectTab.none
+                                    : lang!.langText.userPage.projectTab.none
                             }
                         </div>
-                    </div>
-                    
-                    <div className="subscribers-info">{lang!.langText.userPage.projectTab.subscribers + ': '}
-                    {
-                        projectsMetaStore.getById(projectId)!.invites !== undefined ?
-                            projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).length > 0 ?
-                                projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1)
-                                    .map((i, index) => 
-                                        index < maxSubscriberQuantity ? <img key={'im_'+i.id} src={
-                                                usersStore.getData()
-                                                    .find(u => u.id === i.userId)?.avatarBase64
-                                            } title={usersStore.getData().find(u => u.id === i.userId)?.name} />
-                                            :index === maxSubscriberQuantity? <div className="addition-subscribers" onClick={() => projectsMetaStore.switchShareFormById(projectId)}
-                                                title={projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).map((i, index) => 
-                                                    index < maxSubscriberQuantity ? ''
-                                                    : usersStore.getData().find(u => u.id === i.userId)?.name
-                                                ).filter(item => item !== '').join(', ')}>
-                                                {'+'+(projectsMetaStore.getById(projectId)!.invites.filter(i => i.state === 1).length - 
-                                                    maxSubscriberQuantity)}
-                                            </div>
-                                            :''
-                                    )
-                                : lang!.langText.userPage.projectTab.none
-                            : lang!.langText.userPage.projectTab.none
-                    }
+
                     </div>
 
-                </div>
-
-                <div className="third-row">
-                    <div className="projects-label">{lang!.langText.userPage.projectTab.projects}:</div>
-                    <div className="projects-none">{lang!.langText.userPage.projectTab.none}</div>
-                </div>
-            </div>
-
-            <div className="menu-icon-group">
-                {
-                    projectsMetaStore.getById(projectId)!.userRights === 0 ? 
-                        <div className="full-rights-icon">{lang?.langText.userPage.projectTab.sharingForm.fullAccess}</div>
-                        : projectsMetaStore.getById(projectId)!.userRights === 1 ?
-                            <div className="readonly-rights-icon">{lang?.langText.userPage.projectTab.sharingForm.readonly}</div>
-                             : ''
-                }
-
-                <div className="menu-icon" onClick={() => projectsMetaStore.switchShareFormById(projectId)}>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d={"M7 11.5L13 14.5M13 5.5L7 8.5M16 19C14.3431 19 13 17.6569 13 16C13 14.3431 14.3431 " +
-                            " 13 16 13C17.6569 13 19 14.3431 19 16C19 17.6569 17.6569 19 16 19ZM4 13C2.34315 13 1 " +
-                            " 11.6569 1 10C1 8.34315 2.34315 7 4 7C5.65685 7 7 8.34315 7 10C7 11.6569 5.65685 13 " +
-                            " 4 13ZM16 7C14.3431 7 13 5.65685 13 4C13 2.34315 14.3431 1 16 1C17.6569 1 19 2.34315 " +
-                            " 19 4C19 5.65685 17.6569 7 16 7Z"} stroke="#292C33" strokeWidth="2"
-                            strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </div>
-
-                <div className="menu-icon" onClick={() => projectsMetaStore.switchMenuById(projectId)}>
-                    <svg width="4" height="17" viewBox="0 0 4 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 " +
-                            " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} fill="#292C33" />
-                        <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 " +
-                            " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} fill="#292C33" />
-                        <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 2.07143C3 " +
-                            " 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} fill="#292C33" />
-                        <path d={"M1 14.9286C1 15.5203 1.44772 16 2 16C2.55228 16 3 15.5203 3 14.9286C3 14.3368 2.55228 " +
-                            " 13.8571 2 13.8571C1.44772 13.8571 1 14.3368 1 14.9286Z"} stroke="#292C33"
-                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d={"M1 8.5C1 9.09173 1.44772 9.57143 2 9.57143C2.55228 9.57143 3 9.09173 3 8.5C3 7.90827 " +
-                            " 2.55228 7.42857 2 7.42857C1.44772 7.42857 1 7.90827 1 8.5Z"} stroke="#292C33"
-                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d={"M1 2.07143C1 2.66316 1.44772 3.14286 2 3.14286C2.55228 3.14286 3 2.66316 3 " +
-                            " 2.07143C3 1.47969 2.55228 1 2 1C1.44772 1 1 1.47969 1 2.07143Z"} stroke="#292C33"
-                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </div>
-
-                {
-                    projectsMetaStore.getById(projectId)!.showMenu &&
-                    <div className="panel-menu-container">
-                        <div className="panel-menu">
-                            <div className="menu-text">
-                                {lang!.langText.userPage.projectTab.moveToGroup}
-                            </div>
-                            <hr className="separator" />
-                            <div className="menu-text">
-                                <ConfirmationDialog showText={lang!.langText.userPage.projectTab.delete}
-                                    btnAcceptText={lang!.langText.userPage.projectTab.delete}
-                                    btnDeclineText={lang!.langText.userPage.projectTab.cancel}
-                                    questionTextPartOne={lang!.langText.userPage.projectTab.deleteGroupQuestion}
-                                    questionTextPartTwo={projectsMetaStore.getById(projectId)!.name}
-                                    questionTextPartThree={lang!.langText.userPage.projectTab.deleteGroupDefinition}
-                                    action={removeProject} />
-                            </div>
-                        </div>
-
-                        <div className="tail">
-
-                        </div>
+                    <div className="third-row">
+                        <div className="projects-label">{lang!.langText.userPage.projectTab.projects}:</div>
+                        <div className="projects-none">{lang!.langText.userPage.projectTab.none}</div>
                     </div>
-                }
+                </div>
 
-                {
-                    projectsMetaStore.getById(projectId)!.showSharingForm &&
-                        <ShareModalForm projectMeta={projectsMetaStore.getById(projectId)!} 
-                            close={() => projectsMetaStore.switchShareFormById(projectId)} 
-                            updateProjects={updateProjects} />
-                }
             </div>
         </div>
     )

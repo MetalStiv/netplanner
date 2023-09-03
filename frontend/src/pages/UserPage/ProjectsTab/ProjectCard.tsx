@@ -127,7 +127,7 @@ const ProjectCard: React.FC<IProjectCardProps> = observer(({ projectId, updatePr
                             onClick={() => navigate(`/project?id=${projectsMetaStore.getById(projectId)!.id}`)} />
                     </div>
                     <div className="base-info">
-                        <div className="" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div className="controls-bar">
                             <div className="modified-info">{
                                 getLastModifiedString(new Date(projectsMetaStore.getById(projectId)!.lastModifyTime))
                             }</div>
