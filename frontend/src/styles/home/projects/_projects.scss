@@ -3,11 +3,11 @@
     background-color: $background;
     flex-direction: column;
     height: calc(100vh - 122px);
-    width: calc(100vw - 184px);
+    width: 100%;
     gap: 24px;
+    position: relative;
 
-    .disabled
-    {
+    .disabled {
         pointer-events: none;
         opacity: 0.7;
     }
@@ -59,7 +59,7 @@
                 padding-top: 1vh;
                 font-size: 20px;
                 font-weight: 500;
-    
+
                 &:hover {
                     text-decoration: underline;
                 }
@@ -68,21 +68,26 @@
     }
 
     .start-menu {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transition-duration: 1.2s;
+
         .text {
             position: fixed;
             width: fit-content;
             left: 41vw;
             top: 36vh;
-    
+
             font-family: 'Inter';
             font-style: normal;
             font-weight: 700;
             font-size: 40px;
             line-height: 48px;
-    
+
             color: $black;
         }
-    
+
         .text-transformed {
             animation: fadeOut .3s linear forwards;
 
@@ -90,15 +95,15 @@
                 0% {
                     opacity: 1;
                 }
-        
+
                 100% {
                     opacity: 0;
                 }
             }
         }
-    
+
         .add-btn-group {
-            position: fixed;
+            // position: absolute;
             display: flex;
             gap: 16px;
             width: fit-content;
@@ -146,20 +151,20 @@
                 }
             }
         }
-    
-        .add-btn-group-transformed {
-            transform: translate(38vw, -35vh);
-            transition-duration: 1.2s;
-        }
+
+        // .add-btn-group-transformed {
+        // transform: translate(38vw, -35vh);
+        // top: 0;
+        // right: 0;
+        // transition-duration: 1.2s;
+        // }
     }
 
-    #project-card-container {
+    #projects-cards-container {
         display: flex;
-        flex-direction: row;
-        overflow: auto;
         flex-wrap: wrap;
-        gap: 24px;
-        width: calc(100vw - 154px);
+        // gap: 24px;
+        width: 100%;
         background-color: $background;
     }
 }

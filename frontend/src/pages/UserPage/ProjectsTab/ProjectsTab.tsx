@@ -69,7 +69,7 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
         if (addProject.status !== 200) {
             alert(addProject.statusText)
         }
-        if (addProject.status === 401){
+        if (addProject.status === 401) {
             navigate("/");
         }
         getProjects();
@@ -84,7 +84,7 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
         if (addProject.status !== 200) {
             alert(addProject.statusText)
         }
-        if (addProject.status === 401){
+        if (addProject.status === 401) {
             navigate("/");
         }
         projectsMetaStore.updateOrInsert(addProject.data)
@@ -102,20 +102,20 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
             <div id="navigation">
                 {
                     (projectsMetaStore.getSearchFilter() === '' || projectsMetaStore.getSearchFilter() === undefined) &&
-                        <div className="group-navigation-button-group">
-                            <button className="navigation-button" onClick={() => projectsMetaStore.outGroup()}>
-                                <svg width="12" height="19" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 16.8544V2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M10 7.85437L6 2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M6 1.99988L2 7.85425" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </button>
-                            <button className="navigation-button" onClick={() => projectsMetaStore.toGroup(null)}>
-                                <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M2.37238 16.3739L7.62769 2.48022" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </button>
-                        </div>
+                    <div className="group-navigation-button-group">
+                        <button className="navigation-button" onClick={() => projectsMetaStore.outGroup()}>
+                            <svg width="12" height="19" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 16.8544V2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M10 7.85437L6 2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M6 1.99988L2 7.85425" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                        <button className="navigation-button" onClick={() => projectsMetaStore.toGroup(null)}>
+                            <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.37238 16.3739L7.62769 2.48022" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
                 }
                 <div className="groups-container">
                     {
@@ -191,7 +191,7 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
                                 </div>
                             </div>
                     }
-                    <div id="project-card-container">
+                    <div id="projects-cards-container">
                         {
                             (projectsMetaStore?.getSearchFilter() !== undefined && projectsMetaStore?.getSearchFilter() !== '')
                                 ? projectsMetaStore?.getData()
