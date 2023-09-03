@@ -68,16 +68,19 @@
     }
 
     .start-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         position: absolute;
-        top: 0;
-        right: 0;
-        transition-duration: 1.2s;
+        right: 50%;
+        top: 50%;
+        transform: translate(50%, -50%);
 
         .text {
-            position: fixed;
+            // position: fixed;
             width: fit-content;
-            left: 41vw;
-            top: 36vh;
+            // left: 41vw;
+            // top: 36vh;
 
             font-family: 'Inter';
             font-style: normal;
@@ -86,30 +89,34 @@
             line-height: 48px;
 
             color: $black;
+            margin-bottom: 16px;
         }
 
-        .text-transformed {
-            animation: fadeOut .3s linear forwards;
+        // .text-transformed {
+        //     animation: fadeOut .3s linear forwards;
 
-            @keyframes fadeIn {
-                0% {
-                    opacity: 1;
-                }
+        //     @keyframes fadeIn {
+        //         0% {
+        //             opacity: 1;
+        //         }
 
-                100% {
-                    opacity: 0;
-                }
-            }
-        }
+        //         100% {
+        //             opacity: 0;
+        //         }
+        //     }
+        // }
 
         .add-btn-group {
             // position: absolute;
             display: flex;
             gap: 16px;
-            width: fit-content;
-            height: 5vh;
-            top: 45vh;
-            left: 45vw;
+            // right: 50%;
+            // top: 50%;
+            // transform: translate(-50%, -50%);
+            // width: fit-content;
+            // height: 5vh;
+            // top: 45vh;
+            // left: 45vw;
 
             #add-btn-project {
                 font-size: 40px;
@@ -152,8 +159,29 @@
             }
         }
 
+        &.transformed {
+            transform: translate(0);
+            top: 0;
+            right: 0;
+            transition-duration: 1.2s;
+
+            .text {
+                animation: fadeOut .3s linear forwards;
+
+                @keyframes fadeIn {
+                    0% {
+                        opacity: 1;
+                    }
+
+                    100% {
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+
         // .add-btn-group-transformed {
-        // transform: translate(38vw, -35vh);
+        // transform: translate(0);
         // top: 0;
         // right: 0;
         // transition-duration: 1.2s;
@@ -163,6 +191,7 @@
     #projects-cards-container {
         display: flex;
         flex-wrap: wrap;
+        align-items: stretch;
         // gap: 24px;
         width: 100%;
         background-color: $background;

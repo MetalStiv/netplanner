@@ -133,10 +133,11 @@ const ProjectsTab: React.FC<IProjectTabProps> = observer(({ getProjects, isLoadi
                     {
                         (projectsMetaStore?.getSearchFilter() !== undefined && projectsMetaStore?.getSearchFilter() !== '')
                             ? ''
-                            : <div className="start-menu">
-                                <div className={projectsMetaStore?.getData()
-                                    .filter(p => p.groupId === projectsMetaStore.getCurrentGroupId()).length === 0 ? "text"
-                                    : "text text-transformed"}>{lang!.langText.userPage.projectTab.startNewProject}</div>
+                            : <div className={`start-menu ${projectsMetaStore?.getData()
+                                .filter(p => p.groupId === projectsMetaStore.getCurrentGroupId()).length === 0 ? '' : 'transformed'}`}>
+                                {projectsMetaStore?.getData()
+                                    .filter(p => p.groupId === projectsMetaStore.getCurrentGroupId()).length === 0
+                                    && <p className="text">{lang!.langText.userPage.projectTab.startNewProject}</p>}
                                 <div className={projectsMetaStore?.getData()
                                     .filter(p => p.groupId === projectsMetaStore.getCurrentGroupId()).length === 0 ? "add-btn-group"
                                     : "add-btn-group add-btn-group-transformed"}>
