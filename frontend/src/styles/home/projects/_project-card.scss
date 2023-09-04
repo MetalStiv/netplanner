@@ -36,7 +36,8 @@
             .controls-bar {
                 display: flex;
                 justify-content: space-between;
-
+                align-items: center;
+                // margin-bottom: 12px;
 
                 .modified-info {
                     background-color: $easyblue;
@@ -44,7 +45,6 @@
                     padding-left: 16px;
                     padding-right: 16px;
                     border-radius: 8px;
-                    margin-bottom: 12px;
                 }
 
                 .menu-icon-group {
@@ -78,6 +78,7 @@
 
                     .menu-icon {
                         @include button-default;
+                        padding: 0.3125rem 1rem;
                         cursor: pointer;
                     }
 
