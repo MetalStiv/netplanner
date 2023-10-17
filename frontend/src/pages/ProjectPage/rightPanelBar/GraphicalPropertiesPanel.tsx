@@ -1,6 +1,5 @@
 import { LanguageData, useLanguageContext } from "../../../providers/languageProvider";
 import { IShapeProps } from "../ProjectPage";
-import { ChangeShapePropertyAction } from "../../../model/actions/ChangeShapePropertyAction";
 import { TActionStore } from "../../../stores/actionStore";
 import { useRootStore } from "../../../providers/rootProvider";
 import { GraphicalPropertyTypes, IGraphicalProperty, IShapeGraphicalProps } from "../../../model/shapes/IShape";
@@ -8,6 +7,7 @@ import Editor from "../../../components/Editors/Editor";
 import { EditorType } from "../../../model/EditorType";
 import ICanvasConfig from "../../../common/canvasConfig";
 import { fromCartesianCoordSystem, toCartesianCoordSystem } from "../../../common/helpers/CartesianCoordSystem";
+import { ChangeGraphicalPropertyAction } from "../../../model/actions/ChangeGraphicalPropertyAction";
 
 interface IGraphicalPropertiesPanelProps {
     shapeProps: IShapeProps | null,
@@ -45,6 +45,7 @@ const GraphicalPropertiesPanel = ({ shapeProps, onChange, canvasProps }: IGraphi
                                     <Editor
                                         type={obj.editorType}
                                         defaultValue={incomingValue}
+                                        valueRound={true}
                                         textClassName="property-value"
                                         inputClassName={obj.editorType === EditorType.TEXT_EDITOR ? 'change-property-input' : undefined}
                                         onChange={value => {
@@ -64,18 +65,19 @@ const GraphicalPropertiesPanel = ({ shapeProps, onChange, canvasProps }: IGraphi
                                                 ...shapeProps.graphProps,
                                                 [key]: { ...obj, value: changableShape!.validateProperty(newVal, key as GraphicalPropertyTypes) }
                                             };
-                                            const changePropAction = new ChangeShapePropertyAction(
+                                            const changePropAction = new ChangeGraphicalPropertyAction(
                                                 changableShape!,
                                                 currentLayer!.getID(),
                                                 newProps
                                             );
+                                            console.log(changePropAction)
                                             actionStore.push(changePropAction);
                                             onChange(newProps);
                                         }}
                                     />
                                 </div>
                             }
-                            )
+                        )
                     }
                 </div>
             </div>}

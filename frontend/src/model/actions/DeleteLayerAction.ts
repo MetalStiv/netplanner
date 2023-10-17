@@ -26,18 +26,26 @@ export class DeleteLayerAction implements IAction {
                     zIndex: this.layer.getZIndex(),
                     isVisible: this.layer.isVisible(),
                     shapes: this.layer.getShapes().map(s => {
-                        const messageProperties: {l: string, v: string}[] = []
+                        const messageGraphicalProperties: {l: string, v: string}[] = []
                         let graphicalProperty: keyof typeof s.config.graphicalProperties; 
                         for (graphicalProperty in s.config.graphicalProperties){
-                            messageProperties.push({l: graphicalProperty, 
+                            messageGraphicalProperties.push({l: graphicalProperty, 
                                 v: s.config.graphicalProperties[graphicalProperty].value})
+                        }
+
+                        const messageObjectProperties: {l: string, v: string}[] = []
+                        let objectProperty: keyof typeof s.config.objectProperties; 
+                        for (objectProperty in s.config.objectProperties){
+                            messageGraphicalProperties.push({l: objectProperty, 
+                                v: s.config.objectProperties[objectProperty].value})
                         }
 
                         return {
                             id: s.config.id,
                             type: s.type,
                             zIndex: s.config.zIndex!,
-                            graphicalProperties: messageProperties,
+                            graphicalProperties: messageGraphicalProperties,
+                            objectProperties: messageObjectProperties,
                         }
                     }),
                 }

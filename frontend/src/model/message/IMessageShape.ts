@@ -1,6 +1,6 @@
 import { IGraphicalProperty } from "../shapes/IShape";
 
-export interface IMessageGraphicalProperty {
+export interface IMessageProperty {
     l: string,
     v: string,
 }
@@ -9,5 +9,6 @@ export interface IMessageShape {
     id?: string,
     type: string,
     zIndex: number,
-    graphicalProperties: IMessageGraphicalProperty[]
+    graphicalProperties: IMessageProperty[],
+    objectProperties: IMessageProperty[],
 }

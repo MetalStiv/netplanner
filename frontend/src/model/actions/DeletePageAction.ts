@@ -30,18 +30,26 @@ export class DeletePageAction implements IAction {
                         zIndex: l.getZIndex(),
                         isVisible: l.isVisible(),
                         shapes: l.getShapes().map(s => {
-                            const messageProperties: {l: string, v: string}[] = []
+                            const messageGraphicalProperties: {l: string, v: string}[] = []
                             let graphicalProperty: keyof typeof s.config.graphicalProperties; 
                             for (graphicalProperty in s.config.graphicalProperties){
-                                messageProperties.push({l: graphicalProperty, 
+                                messageGraphicalProperties.push({l: graphicalProperty, 
                                     v: s.config.graphicalProperties[graphicalProperty].value})
+                            }
+
+                            const messageObjectProperties: {l: string, v: string}[] = []
+                            let objectProperty: keyof typeof s.config.objectProperties; 
+                            for (objectProperty in s.config.objectProperties){
+                                messageObjectProperties.push({l: objectProperty, 
+                                    v: s.config.objectProperties[objectProperty].value})
                             }
     
                             return {
                                 id: s.config.id,
                                 type: s.type,
                                 zIndex: s.config.zIndex!,
-                                graphicalProperties: messageProperties,
+                                graphicalProperties: messageGraphicalProperties,
+                                objectProperties: messageObjectProperties,
                             }
                         }),
                     }})

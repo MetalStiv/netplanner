@@ -10,5 +10,8 @@ export interface IShape {
         x: string,
         y: string,
         pivot: string,
+    },
+    objectProperties: {
+        id: string,
     }
 }

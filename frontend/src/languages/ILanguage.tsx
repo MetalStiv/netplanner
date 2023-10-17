@@ -1,5 +1,5 @@
 import { GroupType } from "../model/shapes/GroupType"
-import { GraphicalPropertyTypes } from "../model/shapes/IShape"
+import { GraphicalPropertyTypes, ObjectPropertyTypes } from "../model/shapes/IShape"
 import { ShapeType } from "../model/shapes/ShapeType"
 
 interface ILanguage {
@@ -151,6 +151,7 @@ interface ILanguage {
             [GroupType.PRIMITIVES]: string,
             [GroupType.BLOCK_DIAGRAM]: string,
             [GroupType.FLOORPLAN]: string,
+            [GroupType.NETWORK]: string,
         },
         baseShapes: {
             [ShapeType.CIRCLE]: string,
@@ -179,6 +180,9 @@ interface ILanguage {
             [ShapeType.WALL]: string,
             [ShapeType.WINDOW]: string,
             [ShapeType.URINAL]: string,
+
+            [ShapeType.ACCESS_POINT]: string,
+            [ShapeType.DESKTOP]: string,
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: string,
@@ -210,6 +214,19 @@ interface ILanguage {
             [GraphicalPropertyTypes.DIRECTION]: string,
             [GraphicalPropertyTypes.MIRROR_X]: string,
             [GraphicalPropertyTypes.MIRROR_Y]: string,
+        },
+
+        objectProperties: {
+            [ObjectPropertyTypes.ID]: string,
+            [ObjectPropertyTypes.CPU]: string,
+            [ObjectPropertyTypes.MAC]: string,
+            [ObjectPropertyTypes.IP]: string,
+            [ObjectPropertyTypes.OS]: string,
+            [ObjectPropertyTypes.RAM]: string,
+            [ObjectPropertyTypes.HOST_NAME]: string,
+            [ObjectPropertyTypes.MANUFACTURER]: string,
+            [ObjectPropertyTypes.MODEL]: string,
+            [ObjectPropertyTypes.SSID]: string,
         },
 
         defaultPageName: string,

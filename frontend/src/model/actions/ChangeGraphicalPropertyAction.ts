@@ -3,7 +3,7 @@ import IShape, { IShapeGraphicalProps } from "../shapes/IShape";
 import { ActionType } from "./ActionType";
 import { IAction } from "./IAction";
 
-export class ChangeShapePropertyAction implements IAction {
+export class ChangeGraphicalPropertyAction implements IAction {
     uid: string;
     storeHistory: boolean = true;
     

@@ -51,7 +51,8 @@ export const addPageHandler: ActionHandler = async (collections, message) => {
                         type: shape.type,
                         layerId: layerObjId,
                         zIndex: shape.zIndex,
-                        graphicalProperties: shape.graphicalProperties
+                        graphicalProperties: shape.graphicalProperties,
+                        objectProperties: shape.objectProperties,
                     }
                 })
             )

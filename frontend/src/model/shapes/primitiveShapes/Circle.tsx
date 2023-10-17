@@ -1,8 +1,8 @@
 import IShapeCreator from "../IShapeCreator";
 import { ShapeType } from "../ShapeType";
 import { TShapeInflater } from "../shapeInflaters";
-import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShapeGraphicalProps } from "../IShape";
-import { IMessageGraphicalProperty, IMessageShape } from "../../message/IMessageShape";
+import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShapeGraphicalProps, ObjectPropertyTypes } from "../IShape";
+import { IMessageProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 
 interface ICircleGraphicalProps extends IShapeGraphicalProps {
@@ -66,7 +66,15 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
                 editorType: EditorType.TEXT_EDITOR,
             },
         },
-
+        objectProperties: {
+            [ObjectPropertyTypes.ID]: {
+                value: messageShape.objectProperties ?
+                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID) ?
+                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
+                    : '',
+                editorType: EditorType.TEXT_EDITOR
+            },
+        },
     })
 }
 
@@ -117,6 +125,12 @@ export class CircleCreator implements IShapeCreator {
                     editorType: EditorType.TEXT_EDITOR,
                 },
             },
+            objectProperties: {
+                [ObjectPropertyTypes.ID]: {
+                    value: '',
+                    editorType: EditorType.TEXT_EDITOR
+                },
+            },
             zIndex: 0
         });
     }
@@ -164,7 +178,14 @@ class Circle implements IShape {
         this.config.zIndex = obj.zIndex ?? 0;
     }
 
-    updateGraphicalProperties(m: IMessageGraphicalProperty[]) {
+    updateObjectProperties(m: IMessageProperty[]) {
+        this.config.objectProperties[ObjectPropertyTypes.ID] = {
+            value: m.find(p => p.l === ObjectPropertyTypes.ID)!.v,
+            editorType: EditorType.TEXT_EDITOR
+        };
+    }
+    
+    updateGraphicalProperties(m: IMessageProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
             isReadable: true,

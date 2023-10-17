@@ -1,5 +1,5 @@
 import { GroupType } from "../model/shapes/GroupType";
-import { GraphicalPropertyTypes } from "../model/shapes/IShape";
+import { GraphicalPropertyTypes, ObjectPropertyTypes } from "../model/shapes/IShape";
 import { ShapeType } from "../model/shapes/ShapeType";
 import ILanguage from "./ILanguage";
 
@@ -153,6 +153,7 @@ export const ru: ILanguage = {
             [GroupType.PRIMITIVES]: "Примитивы",
             [GroupType.BLOCK_DIAGRAM]: "Блок-схемы",
             [GroupType.FLOORPLAN]: "Планы зданий",
+            [GroupType.NETWORK]: "Сетевые устройства",
         },
         baseShapes: {
             [ShapeType.CIRCLE]: "Круг",
@@ -181,6 +182,9 @@ export const ru: ILanguage = {
             [ShapeType.WALL]: "Стена",
             [ShapeType.WINDOW]: "Окно",
             [ShapeType.URINAL]: "Писсуар",
+
+            [ShapeType.ACCESS_POINT]: "Точка доступа",
+            [ShapeType.DESKTOP]: "Персональный компьютер",
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: "X",
@@ -212,6 +216,19 @@ export const ru: ILanguage = {
             [GraphicalPropertyTypes.DIRECTION]: "Направление",
             [GraphicalPropertyTypes.MIRROR_X]: "Отражение X",
             [GraphicalPropertyTypes.MIRROR_Y]: "Отражение Y",
+        },
+
+        objectProperties: {
+            [ObjectPropertyTypes.ID]: "ID",
+            [ObjectPropertyTypes.CPU]: "ЦПУ",
+            [ObjectPropertyTypes.IP]: "IP",
+            [ObjectPropertyTypes.MAC]: "MAC",
+            [ObjectPropertyTypes.OS]: "ОС",
+            [ObjectPropertyTypes.RAM]: "ОЗУ",
+            [ObjectPropertyTypes.HOST_NAME]: "Имя хоста",
+            [ObjectPropertyTypes.MANUFACTURER]: "Производитель",
+            [ObjectPropertyTypes.MODEL]: "Модель",
+            [ObjectPropertyTypes.SSID]: "SSID",
         },
 
         defaultPageName: "Страница",

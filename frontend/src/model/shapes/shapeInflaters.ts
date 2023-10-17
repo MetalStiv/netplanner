@@ -24,6 +24,8 @@ import { toiletInflater } from "./floorplanShapes/Toilet";
 import { stoveInflater } from "./floorplanShapes/Stove";
 import { commentInflater } from "./blockDiagramShapes/Comment";
 import { urinalInflater } from "./floorplanShapes/Urinal";
+import { accessPointInflater } from "./networkShapes/AccessPoint";
+import { desktopInflater } from "./networkShapes/Desktop";
 
 export type TShapeInflater = (message: IMessageShape) => Promise<IShape | null>;
 
@@ -60,6 +62,9 @@ export const shapeInflaters: IShapeInflaters = {
         toiletInflater,
         stoveInflater,
         urinalInflater,
+
+        accessPointInflater,
+        desktopInflater,
     ],
     
     async inflate(message: IMessageShape) {

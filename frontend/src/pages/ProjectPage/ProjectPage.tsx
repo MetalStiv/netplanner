@@ -18,7 +18,7 @@ import { TActionStore } from '../../stores/actionStore';
 import { observer } from 'mobx-react-lite';
 import blockDiagramGroup from '../../model/shapes/blockDiagramShapes/BlockDiagramGroup';
 import primitiveGroup from '../../model/shapes/primitiveShapes/PrimitivesGroup';
-import IShape, { IShapeGraphicalProps } from '../../model/shapes/IShape';
+import IShape, { IShapeGraphicalProps, IShapeObjectProps } from '../../model/shapes/IShape';
 import Project, { IProject } from '../../model/projectData/Project';
 import IShapeGroup from '../../model/shapes/IShapeGroup';
 import { IAction } from '../../model/actions/IAction';
@@ -43,12 +43,14 @@ import { updateInfoTime } from '../../common/constants';
 import { ShapeType } from '../../model/shapes/ShapeType';
 import { AddShapeAction } from '../../model/actions/AddShapeAction';
 import ColorEditor from '../../components/Editors/ColorEditor/ColorEditor';
+import networkGroup from '../../model/shapes/networkShapes/NetworkGroup';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {
     id: string,
     type: ShapeType,
     graphProps: IShapeGraphicalProps,
+    objectProps: IShapeObjectProps,
     //coords: { x: number, y: number },
 }
 
@@ -80,6 +82,7 @@ const ProjectPage: React.FC = observer(() => {
             primitiveGroup,
             blockDiagramGroup,
             floorPlanGroup,
+            networkGroup,
         ] as IShapeGroup[], 'project', projectId)
         projectStore.setProject(newProject);
         projectStore.setProjectToLoadId(projectId);
@@ -296,7 +299,8 @@ const ProjectPage: React.FC = observer(() => {
                         {/* <div className="content"> */}
                         <VerticalPageSplit resize={Limit}>
                             <div style={{ minHeight: 150 }}>
-                                <ObjectPropertiesPanel shapeProps={selectedShapeProps} />
+                                <ObjectPropertiesPanel shapeProps={selectedShapeProps} 
+                                    onChange={(props) => setSelectedShapeProps({ ...selectedShapeProps!, objectProps: props })} />
                             </div>
                             <div style={{ minHeight: 150 }}>
                                 <GraphicalPropertiesPanel

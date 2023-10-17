@@ -51,7 +51,8 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
                 type: s.type,
                 layerId: new ObjectId(message.data.newLayer.id),
                 zIndex: s.zIndex,
-                graphicalProperties: s.graphicalProperties
+                graphicalProperties: s.graphicalProperties,
+                objectProperties: s.objectProperties,
             };
         
             await collections.shapeCollection.insertOne(newShape)

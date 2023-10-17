@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef, ReactHTMLElement } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { IShapeProps } from '../../pages/ProjectPage/ProjectPage'
 import IShapeCreator from '../../model/shapes/IShapeCreator';
 import ICanvasConfig from '../../common/canvasConfig';
-import { ChangeShapePropertyAction } from '../../model/actions/ChangeShapePropertyAction';
 import { useRootStore } from '../../providers/rootProvider';
 import { TActionStore } from '../../stores/actionStore';
 import { observer } from 'mobx-react-lite';
@@ -17,9 +16,8 @@ import { CursorPositionAction } from '../../model/actions/CursorPositionAction';
 import { cursorUpdateTime } from '../../common/constants';
 import { TUsersStore } from '../../stores/usersStore';
 import { TUserStore } from '../../stores/userStore';
-import UserCursor from '../../model/projectData/UserCursor';
-import { toCartesianCoordSystem } from '../../common/helpers/CartesianCoordSystem';
 import { DeleteShapeAction } from '../../model/actions/DeleteShapeAction';
+import { ChangeGraphicalPropertyAction } from '../../model/actions/ChangeGraphicalPropertyAction';
 
 interface SVGCanvasProps {
   // currentPage: Page,
@@ -230,7 +228,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         shapes = JSON.parse(JSON.stringify(shapes))
         shapes.forEach(s => {
           s.config.graphicalProperties.my.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.my.value)*-1: -1).toString();
-          var changeShapePropertyAction = new ChangeShapePropertyAction(s, currentLayer.getID(), s.config.graphicalProperties);
+          var changeShapePropertyAction = new ChangeGraphicalPropertyAction(s, currentLayer.getID(), s.config.graphicalProperties);
           actionStore.push(changeShapePropertyAction);
         })
       }
@@ -243,7 +241,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         shapes = JSON.parse(JSON.stringify(shapes))
         shapes.forEach(s => {
           s.config.graphicalProperties.mx.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.mx.value)*-1: -1).toString();
-          var changeShapePropertyAction = new ChangeShapePropertyAction(s, currentLayer.getID(), s.config.graphicalProperties);
+          var changeShapePropertyAction = new ChangeGraphicalPropertyAction(s, currentLayer.getID(), s.config.graphicalProperties);
           actionStore.push(changeShapePropertyAction);
         })
       }
@@ -458,7 +456,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     svgCanvas.current!.onmouseup = () => {
       if (isMoved) {
         oldShapes.forEach((oldShape, i) => {
-          const moveShapeAction = new ChangeShapePropertyAction(oldShape, layerIDs[i], movableShapes[i].config.graphicalProperties);
+          const moveShapeAction = new ChangeGraphicalPropertyAction(oldShape, layerIDs[i], movableShapes[i].config.graphicalProperties);
           actionStore.push(moveShapeAction);
         })
 
@@ -600,6 +598,9 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         // y: { ...curObj!.config.graphicalProperties.y, value: curObj!.config.graphicalProperties.y.value }
         // x: { ...curObj!.config.graphicalProperties.x, value: userCoords.x.toString() },
         // y: { ...curObj!.config.graphicalProperties.y, value: userCoords.y.toString() }
+      },
+      objectProps: {
+        ...curObj!.config.objectProperties,
       }
     }
     getClickedShapeConfigCallback(config);
@@ -977,6 +978,9 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         type: shapes.at(-1)!.type,
         graphProps: {
           ...shapes.at(-1)!.config.graphicalProperties
+        },
+        objectProps: {
+          ...shapes.at(-1)!.config.objectProperties,
         }
       }
       getClickedShapeConfigCallback(config);
@@ -988,7 +992,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         const newProps = shape!.config.graphicalProperties;
         const currentLayer = currentPage?.getLayers().find(layer => layer.getShapes().some(curShape => curShape === shape!));
         if (currentLayer && shape) {
-          const changePropAction = new ChangeShapePropertyAction(
+          const changePropAction = new ChangeGraphicalPropertyAction(
             shape!,
             currentLayer.getID(),
             newProps,
@@ -1045,6 +1049,9 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         type: shapes.at(-1)!.type,
         graphProps: {
           ...shapes.at(-1)!.config.graphicalProperties,
+        },
+        objectProps: {
+          ...shapes.at(-1)!.config.objectProperties,
         }
       };
       // wrapSelectedShapesInContour();
@@ -1058,7 +1065,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
         const newProps = shape!.config.graphicalProperties;
         const currentLayer = currentPage?.getLayers().find(layer => layer.getShapes().some(curShape => curShape === shape!));
         if (currentLayer && shape) {
-          const changePropAction = new ChangeShapePropertyAction(
+          const changePropAction = new ChangeGraphicalPropertyAction(
             shape!,
             currentLayer.getID(),
             newProps,

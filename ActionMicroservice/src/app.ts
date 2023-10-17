@@ -124,7 +124,8 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
                 id: s._id.toString(),
                 type: s.type,
                 zIndex: s.zIndex,
-                graphicalProperties: s.graphicalProperties
+                graphicalProperties: s.graphicalProperties,
+                objectProperties: s.objectProperties,
             }))
             return {
                 id: l._id.toString(),

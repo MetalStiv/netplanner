@@ -1,6 +1,6 @@
 import { ShapeType } from "./ShapeType";
 import { EditorType } from "../EditorType";
-import { IMessageGraphicalProperty } from "../message/IMessageShape";
+import { IMessageProperty } from "../message/IMessageShape";
 
 export enum GraphicalPropertyTypes {
     X = 'x',
@@ -35,6 +35,19 @@ export enum GraphicalPropertyTypes {
     MIRROR_Y = 'my',
 }
 
+export enum ObjectPropertyTypes {
+    ID = 'l1',
+    OS = 's1',
+    CPU = 'h1',
+    RAM = 'h2',
+    IP = 'n1',
+    MAC = 'n2',
+    HOST_NAME = 'l2',
+    MANUFACTURER = 'l3',
+    MODEL = 'l4',
+    SSID = 'l5',
+}
+
 export interface IShapeGraphicalProps {
     [GraphicalPropertyTypes.X]: IGraphicalProperty,
     [GraphicalPropertyTypes.Y]: IGraphicalProperty,
@@ -43,15 +56,31 @@ export interface IShapeGraphicalProps {
     [GraphicalPropertyTypes.MIRROR_Y]: IGraphicalProperty,
 }
 
+export interface IShapeObjectProps {
+    [ObjectPropertyTypes.ID]: IObjectProperty,
+}
+
 export interface IGraphicalProperty {
     value: string,
     isReadable: boolean,
     editorType: EditorType
 }
 
+export interface IGraphicalProperty {
+    value: string,
+    isReadable: boolean,
+    editorType: EditorType
+}
+
+export interface IObjectProperty {
+    value: string,
+    editorType: EditorType
+}
+
 export interface IShapeConfig {
     id?: string,
     graphicalProperties: IShapeGraphicalProps,
+    objectProperties: IShapeObjectProps,
     zIndex?: number
 }
 
@@ -63,7 +92,8 @@ export interface IShape {
     overallHeight: number,
     isSelected?: boolean,
     validateProperty: (value: string, propertyType: GraphicalPropertyTypes) => string,
-    updateGraphicalProperties: (m: IMessageGraphicalProperty[]) => void,
+    updateObjectProperties: (m: IMessageProperty[]) => void,
+    updateGraphicalProperties: (m: IMessageProperty[]) => void,
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
         // handlerFocus: (e: React.FocusEvent<SVGGeometryElement> | React.PointerEvent<SVGGeometryElement> | undefined) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,

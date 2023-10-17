@@ -13,6 +13,7 @@ import { renameLayerHandler } from "./renameLayerHandler";
 import { renamePageHandler } from "./renamePageHandler";
 import { deleteLayerHandler } from "./deleteLayerHandler";
 import { deletePageHandler } from "./deletePageHandler";
+import { changeObjectPropertyHandler } from "./changeObjectPropertyHandler";
 
 export type ActionHandler = (project: Project, message: IMessage, actionStory: IAction[]) => Promise<Project>
 
@@ -34,6 +35,7 @@ export const actionHandlers: IActionHandlers = {
         renamePageHandler,
         deletePageHandler,
         changeGraphicalPropertyHandler,
+        changeObjectPropertyHandler,
         changeLayerVisibleHandler
     ],
 

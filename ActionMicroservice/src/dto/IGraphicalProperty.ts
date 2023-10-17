@@ -8,3 +8,7 @@ export interface IShapeGraphicalProperties {
     y: string,
     pivot: string
 }
+
+export interface IShapeObjectProperties {
+    id: string,
+}

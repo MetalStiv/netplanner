@@ -6,5 +6,8 @@ export interface IShapeTree {
         x: string,
         y: string,
         pivot: string
+    },
+    objectProperties: {
+        id: string,
     }
 }

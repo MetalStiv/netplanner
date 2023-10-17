@@ -23,7 +23,8 @@ export const addShapeHandler: ActionHandler = async (collections, message) => {
         type: message.data.newShape.type,
         layerId: new ObjectId(message.layerId),
         zIndex: message.data.newShape.zIndex,
-        graphicalProperties: message.data.newShape.graphicalProperties
+        graphicalProperties: message.data.newShape.graphicalProperties,
+        objectProperties: message.data.newShape.objectProperties,
     };
 
     await collections.shapeCollection.insertOne(newShape)

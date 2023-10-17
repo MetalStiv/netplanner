@@ -1,5 +1,5 @@
 import { GroupType } from "../model/shapes/GroupType"
-import { GraphicalPropertyTypes } from "../model/shapes/IShape"
+import { GraphicalPropertyTypes, ObjectPropertyTypes } from "../model/shapes/IShape"
 import { ShapeType } from "../model/shapes/ShapeType"
 import ILanguage from "./ILanguage"
 
@@ -153,6 +153,7 @@ export const eng: ILanguage = {
             [GroupType.PRIMITIVES]: "Primitives",
             [GroupType.BLOCK_DIAGRAM]: "Block diagram",
             [GroupType.FLOORPLAN]: "Floorplan",
+            [GroupType.NETWORK]: "Network",
         },
         baseShapes: {
             [ShapeType.CIRCLE]: "Circle",
@@ -181,6 +182,9 @@ export const eng: ILanguage = {
             [ShapeType.WALL]: "Wall",
             [ShapeType.WINDOW]: "Window",
             [ShapeType.URINAL]: "Urinal",
+
+            [ShapeType.ACCESS_POINT]: "Access point",
+            [ShapeType.DESKTOP]: "Desktop",
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: "X",
@@ -212,6 +216,19 @@ export const eng: ILanguage = {
             [GraphicalPropertyTypes.DIRECTION]: "Direction",
             [GraphicalPropertyTypes.MIRROR_X]: "Mirror X",
             [GraphicalPropertyTypes.MIRROR_Y]: "Mirror Y",
+        },
+
+        objectProperties: {
+            [ObjectPropertyTypes.ID]: "ID",
+            [ObjectPropertyTypes.CPU]: "CPU",
+            [ObjectPropertyTypes.IP]: "IP",
+            [ObjectPropertyTypes.MAC]: "MAC",
+            [ObjectPropertyTypes.OS]: "OS",
+            [ObjectPropertyTypes.RAM]: "RAM",
+            [ObjectPropertyTypes.HOST_NAME]: "Host name",
+            [ObjectPropertyTypes.MANUFACTURER]: "Manufacturer",
+            [ObjectPropertyTypes.MODEL]: "Model",
+            [ObjectPropertyTypes.SSID]: "SSID",
         },
 
         defaultPageName: 'Page',

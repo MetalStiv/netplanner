@@ -18,6 +18,7 @@ const PropertyPanel = ({ property, onChangeProperty }: IPropertyPanelProps) => {
             <Editor
                 type={property.editor}
                 defaultValue={property.value}
+                valueRound={true}
                 onChange={onChangeProperty}
             />
         </div>

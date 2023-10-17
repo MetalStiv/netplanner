@@ -27,7 +27,9 @@ export enum ShapeType {
     SINK = "ch",
     SHOWER_CABIN = "ci",
     BATH = "cj",
-    URINAL = "ck"
+    URINAL = "ck",
 
+    ACCESS_POINT = "da",
+    DESKTOP = 'db',
     // COMPOSITE = "d",
 }

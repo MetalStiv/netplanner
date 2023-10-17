@@ -5,6 +5,7 @@ import ColorEditor from "./ColorEditor/ColorEditor";
 
 export interface IEditorProps {
     defaultValue: string,
+    valueRound: boolean
     onChange: (editText: string) => void,
     textClassName?: string,
     inputClassName?: string,
@@ -19,7 +20,7 @@ interface IEditorSwitcherProps extends IEditorProps {
 //     ColorEditor
 // ]
 
-const Editor = ({ defaultValue, onChange, textClassName, inputClassName, type }: IEditorSwitcherProps) => {
+const Editor = ({ defaultValue, valueRound, onChange, textClassName, inputClassName, type }: IEditorSwitcherProps) => {
     let editor: React.FC<IEditorProps> | null = null;
 
     switch (type) {
@@ -35,7 +36,9 @@ const Editor = ({ defaultValue, onChange, textClassName, inputClassName, type }:
             break;
     }
 
-    return editor ? editor({ defaultValue: !isNaN(+defaultValue) ? Math.round(+defaultValue).toString() : defaultValue, onChange, textClassName, inputClassName }) : <></>;
+    return valueRound ? 
+        editor ? editor({ defaultValue: !isNaN(+defaultValue) ? Math.round(+defaultValue).toString() : defaultValue, valueRound, onChange, textClassName, inputClassName }) : <></>
+        : editor ? editor({ defaultValue: defaultValue, valueRound, onChange, textClassName, inputClassName }) : <></>;
 }
 
 export default Editor;
