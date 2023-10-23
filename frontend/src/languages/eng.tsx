@@ -131,6 +131,8 @@ export const eng: ILanguage = {
     projectPage: {
         notAllowed: "You are not allowed to project!",
         sharedButton: "SHARE",
+        showButton: "Show",
+        addButton: "Add",
         shapesPanel: {
             title: "Shapes"
         },
@@ -229,6 +231,8 @@ export const eng: ILanguage = {
             [ObjectPropertyTypes.MANUFACTURER]: "Manufacturer",
             [ObjectPropertyTypes.MODEL]: "Model",
             [ObjectPropertyTypes.SSID]: "SSID",
+            [ObjectPropertyTypes.CONTACT_PERSON]: "Contact person",
+            [ObjectPropertyTypes.SOFTWARE]: "Software",
         },
 
         defaultPageName: 'Page',

@@ -261,8 +261,8 @@ class Window implements IShape {
             data-type={this.type}
             role="shape"
             tabIndex={-1}
-            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
-            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
+            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value.toString()}
+            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
             fillRule="evenodd"
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}

@@ -271,8 +271,8 @@ class Repeat implements IShape {
             data-type={this.type}
             role="shape"
             tabIndex={-1}
-            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
-            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
+            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value.toString()}
+            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
@@ -290,14 +290,14 @@ class Repeat implements IShape {
                     ? +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value : 0)}
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 4} 0 
                 l -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 4} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 4
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.75
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.75
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 4} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 4
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value - +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2} 0
             `}
         />

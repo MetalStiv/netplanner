@@ -8,7 +8,7 @@ interface IPropertyPanelProps {
         value: string,
         editor: EditorType
     }
-    onChangeProperty: (value: string) => void,
+    onChangeProperty: (value: string | string[]) => void,
 }
 
 const PropertyPanel = ({ property, onChangeProperty }: IPropertyPanelProps) => {
@@ -17,6 +17,7 @@ const PropertyPanel = ({ property, onChangeProperty }: IPropertyPanelProps) => {
             <span className='property-title'>{property.label}</span>
             <Editor
                 type={property.editor}
+                field={property.label}
                 defaultValue={property.value}
                 valueRound={true}
                 onChange={onChangeProperty}

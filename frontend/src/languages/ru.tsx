@@ -131,6 +131,8 @@ export const ru: ILanguage = {
     projectPage: {
         notAllowed: "У вас нет прав доступа к проекту!",
         sharedButton: "Поделиться",
+        showButton: "Показать",
+        addButton: "Добавить",
         shapesPanel: {
             title: "Элементы"
         },
@@ -229,6 +231,8 @@ export const ru: ILanguage = {
             [ObjectPropertyTypes.MANUFACTURER]: "Производитель",
             [ObjectPropertyTypes.MODEL]: "Модель",
             [ObjectPropertyTypes.SSID]: "SSID",
+            [ObjectPropertyTypes.CONTACT_PERSON]: "Контактное лицо",
+            [ObjectPropertyTypes.SOFTWARE]: "ПО",
         },
 
         defaultPageName: "Страница",

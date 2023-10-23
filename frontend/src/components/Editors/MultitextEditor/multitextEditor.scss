@@ -1,0 +1,112 @@
+@import '../../../styles/common/variables';
+
+.show-btn {
+    width: 50%;
+    padding: 5px;
+    border: 1px solid $blue !important;
+    border-radius: 2vh;
+    border-color: $blue;
+    color: $blue;
+    text-align: center;
+    cursor: pointer;
+}
+
+.panel {
+    width: 40vw;
+    height: 45vh;
+    overflow: auto;
+
+    .show-form-header {
+        display: flex;
+        justify-content: space-between;
+        padding-right: 1vh;
+        margin-top: -2vh;
+
+        font-weight: bold;
+        font-size: 24px;
+
+        .show-form-title {
+            width: 39vw;
+        }
+
+        .close-icon {
+            text-align: right;
+            color: $lightgray;
+            width: 1vw;
+            cursor: pointer;
+
+            &:hover {
+                color: $black;
+            }
+        }
+    }
+
+    input {
+        width: 60%;
+        margin-right: 28%;
+        border: none;
+        border-bottom: 1px solid black !important;
+        outline: none;
+        background-color: transparent;
+        font-size: 16px;
+    }
+
+    .option-position-row {
+        display: flex;
+        margin-top: 1vh;
+
+        .option-position {
+            font-size: 16px;
+            margin: 10px;
+            width: 34vw;
+        }
+
+        .delete-option-position-button{
+            width: 6vw;
+            height: 45px;
+            margin-left: -16px;
+    
+            color: red;
+            text-align: center;    
+            font-size: 16px;
+            cursor: pointer;
+            background: $background;
+            border: 2px solid red;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            stroke: red;
+    
+            &:hover {
+                background: linear-gradient(0deg, red, red);
+                color: $white;
+                transition: background .2s
+            }
+        }
+
+        .add-option-position-button{
+            width: 6vw;
+            height: 45px;
+            margin-left: -16px;
+    
+            color: $blue;
+            text-align: center;    
+            font-size: 16px;
+            cursor: pointer;
+            background: $background;
+            border: 2px solid $blue;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            stroke: $blue;
+    
+            &:hover {
+                background: linear-gradient(0deg, $blue, $blue);
+                color: $white;
+                transition: background .2s
+            }
+        }
+    }
+}

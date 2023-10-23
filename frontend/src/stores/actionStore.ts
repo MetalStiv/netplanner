@@ -34,6 +34,7 @@ export const createActionStore = () => {
         push(action: IAction) {
             if (action.storeHistory){
                 this[actionsSymbol].length === this[maxSizeSymbol] && this[actionsSymbol].shift();
+                console.log(action)
                 this[actionsSymbol].push(action);
                 this[forwardActionsSymbol] = []
             }

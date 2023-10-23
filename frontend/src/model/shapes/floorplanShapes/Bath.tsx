@@ -262,8 +262,8 @@ class Bath implements IShape {
             data-type={this.type}
             role="shape"
             tabIndex={-1}
-            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
-            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
+            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value.toString()}
+            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
             fillRule="nonzero"
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
@@ -285,44 +285,44 @@ class Bath implements IShape {
                     ${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)},
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())},
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.1}
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.8}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.75
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.8} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
                     0 0 ${(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1') ? '1' : '0'} 
                     0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.8}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.75
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.42}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.04}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.14}
                 l 0 -${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.24}
 
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.16
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.12}
                 a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.02} ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.02}
                     0 1,0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)},0
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())},0
                 a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.02} ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.02}
                     0 1,0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)},0
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())},0
         `}
         />
     }

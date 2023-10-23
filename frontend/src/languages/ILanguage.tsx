@@ -129,6 +129,8 @@ interface ILanguage {
     projectPage: {
         notAllowed: string,
         sharedButton: string,
+        showButton: string,
+        addButton: string,
         shapesPanel: {
             title: string
         },
@@ -227,6 +229,8 @@ interface ILanguage {
             [ObjectPropertyTypes.MANUFACTURER]: string,
             [ObjectPropertyTypes.MODEL]: string,
             [ObjectPropertyTypes.SSID]: string,
+            [ObjectPropertyTypes.CONTACT_PERSON]: string,
+            [ObjectPropertyTypes.SOFTWARE]: string,
         },
 
         defaultPageName: string,

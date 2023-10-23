@@ -254,7 +254,7 @@ class Comment implements IShape {
             role="shape"
             tabIndex={-1}
             fill="none"
-            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
+            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value.toString()}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
@@ -273,10 +273,10 @@ class Comment implements IShape {
                     : 0)}
                     ${this.config.graphicalProperties[GraphicalPropertyTypes.Y].value} 
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-1
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value)} 0
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value.toString())} 0
                 l 0 ${this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value)} 0
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value.toString())} 0
                 `}
         />
     }

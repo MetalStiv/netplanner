@@ -2,7 +2,7 @@ import { IGraphicalProperty } from "../shapes/IShape";
 
 export interface IMessageProperty {
     l: string,
-    v: string,
+    v: string | string [],
 }
 
 export interface IMessageShape {

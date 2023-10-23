@@ -21,7 +21,7 @@ export class ChangeObjectPropertyAction implements IAction {
     }
 
     undo(): IMessage {
-        const messageProperties: {l: string, v: string}[] = []
+        const messageProperties: {l: string, v: string | string[]}[] = []
         let objectProperty: keyof typeof this.oldProperties; 
         for (objectProperty in this.oldProperties){
             messageProperties.push({l: objectProperty, 
@@ -39,7 +39,7 @@ export class ChangeObjectPropertyAction implements IAction {
     }
 
     do(): IMessage {
-        const messageProperties: {l: string, v: string}[] = []
+        const messageProperties: {l: string, v: string | string[]}[] = []
         let objectProperty: keyof typeof this.newProperties; 
         for (objectProperty in this.newProperties){
             messageProperties.push({l: objectProperty, 

@@ -227,7 +227,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
           .filter((x): x is IShape => x !== undefined);
         shapes = JSON.parse(JSON.stringify(shapes))
         shapes.forEach(s => {
-          s.config.graphicalProperties.my.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.my.value)*-1: -1).toString();
+          s.config.graphicalProperties.my.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.my.value.toString())*-1: -1).toString();
           var changeShapePropertyAction = new ChangeGraphicalPropertyAction(s, currentLayer.getID(), s.config.graphicalProperties);
           actionStore.push(changeShapePropertyAction);
         })
@@ -240,7 +240,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
           .filter((x): x is IShape => x !== undefined);
         shapes = JSON.parse(JSON.stringify(shapes))
         shapes.forEach(s => {
-          s.config.graphicalProperties.mx.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.mx.value)*-1: -1).toString();
+          s.config.graphicalProperties.mx.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.mx.value.toString())*-1: -1).toString();
           var changeShapePropertyAction = new ChangeGraphicalPropertyAction(s, currentLayer.getID(), s.config.graphicalProperties);
           actionStore.push(changeShapePropertyAction);
         })
@@ -1027,8 +1027,8 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
       shapes.forEach((shape, i) => {
         // shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value = angles[i].toString();
         shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value = (initRotationAngles[i]+rotationAngle
-          *parseInt(shape!.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X].value)
-          *parseInt(shape!.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value)).toString();
+          *parseInt(shape!.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X].value.toString())
+          *parseInt(shape!.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value.toString())).toString();
 
         if (shapes.length > 1) {
           const initTranslateAngle = Math.atan2(centerCoords.y - initCoords[i].y, centerCoords.x - initCoords[i].x)

@@ -21,7 +21,7 @@ export class ChangeGraphicalPropertyAction implements IAction {
     }
 
     undo(): IMessage {
-        const messageProperties: {l: string, v: string}[] = []
+        const messageProperties: {l: string, v: string | string[]}[] = []
         let graphicalProperty: keyof typeof this.oldProperties; 
         for (graphicalProperty in this.oldProperties){
             messageProperties.push({l: graphicalProperty, 
@@ -39,7 +39,7 @@ export class ChangeGraphicalPropertyAction implements IAction {
     }
 
     do(): IMessage {
-        const messageProperties: {l: string, v: string}[] = []
+        const messageProperties: {l: string, v: string | string[]}[] = []
         let graphicalProperty: keyof typeof this.newProperties; 
         for (graphicalProperty in this.newProperties){
             messageProperties.push({l: graphicalProperty, 

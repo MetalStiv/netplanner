@@ -17,14 +17,14 @@ export class DeleteShapeAction implements IAction {
     }
 
     undo(): IMessage {
-        const messageGraphicalProperties: {l: string, v: string}[] = []
+        const messageGraphicalProperties: {l: string, v: string | string[]}[] = []
         let graphicalProperty: keyof typeof this.shape.config.graphicalProperties; 
         for (graphicalProperty in this.shape.config.graphicalProperties){
             messageGraphicalProperties.push({l: graphicalProperty, 
                 v: this.shape.config.graphicalProperties[graphicalProperty].value})
         }
 
-        const messageObjectProperties: {l: string, v: string}[] = []
+        const messageObjectProperties: {l: string, v: string | string[]}[] = []
         let objectProperty: keyof typeof this.shape.config.objectProperties; 
         for (objectProperty in this.shape.config.objectProperties){
             messageObjectProperties.push({l: objectProperty, 

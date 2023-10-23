@@ -245,8 +245,8 @@ class ShowerCabin implements IShape {
             data-type={this.type}
             role="shape"
             tabIndex={-1}
-            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
-            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
+            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value.toString()}
+            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
             fillRule="nonzero"
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
@@ -268,60 +268,60 @@ class ShowerCabin implements IShape {
                     ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                     : 0)} 
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)},
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())},
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)} 
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())} 
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.8
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.8
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.8
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.8
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.3
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)},
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())},
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.3
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.3
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)},
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())},
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.3
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)} 
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())} 
 
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.05
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}, 
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}, 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.05
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l 0, ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.35
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)} 
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())} 
                 
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}, 
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}, 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.45
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.35
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.49
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04}
                     0 1,0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.08
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)},0
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())},0
                 a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04}
                     0 1,0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.08
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)},0
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())},0
             `}
         />
     }

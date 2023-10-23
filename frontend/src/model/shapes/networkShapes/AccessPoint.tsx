@@ -333,17 +333,18 @@ class AccessPoint implements IShape {
         isSelected: boolean,
     ) {
         return <g
+            key={this.config.id}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             >
             <path
+                key={this.config.id+'_1'}
                 className={isSelected ? 'selected' : ''}
                 data-id={this.config.id}
-                key={this.config.id}
                 data-type={this.type}
                 role="shape"
                 tabIndex={-1}
-                stroke={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
-                fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
+                stroke={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
+                fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
                 fillRule="nonzero"
                 onDragStart={(e) => e.preventDefault}
                 onMouseDown={handlerMouseDown}
@@ -366,10 +367,11 @@ class AccessPoint implements IShape {
             />
 
             <path
+                key={this.config.id+'_2'}
                 stroke={"#ffffff"}
                 strokeWidth={+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.06}
                 strokeLinecap="round"
-                fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
+                fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
                 fillRule="nonzero"
                 onBlur={handlerBlur}
                 transform={`rotate(${
@@ -388,31 +390,32 @@ class AccessPoint implements IShape {
                         : 0)}
 
                     m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.85
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
                         ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.48
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())
                     }
 
                     c ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.1
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.17
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.58
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.17
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.7
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 `}
             />
 
             <path
+                key={this.config.id+'_3'}
                 stroke={"#ffffff"}
                 strokeWidth={+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.06}
                 strokeLinecap="round"
-                fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
+                fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
                 fillRule="nonzero"
                 onBlur={handlerBlur}
                 transform={`rotate(${
@@ -431,31 +434,32 @@ class AccessPoint implements IShape {
                         : 0)}
 
                     m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.75
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
                         ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.58
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())
                     }
 
                     c ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.1
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.12
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.4
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.12
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.5
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 `}
             />
 
             <path
+                key={this.config.id+'_4'}
                 stroke={"#ffffff"}
                 strokeWidth={+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.06}
                 strokeLinecap="round"
-                fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
+                fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
                 fillRule="nonzero"
                 onBlur={handlerBlur}
                 transform={`rotate(${
@@ -474,27 +478,28 @@ class AccessPoint implements IShape {
                         : 0)}
 
                     m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.65
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
                         ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.68
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())
                     }
 
                     c ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.1
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.067
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.2
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.067
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                         ${-1*+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.3
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)} 0
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 `}
             />
 
             <path
+                key={this.config.id+'_5'}
                 stroke={"#ffffff"}
                 fill={"#ffffff"}
                 fillRule="nonzero"
@@ -515,20 +520,20 @@ class AccessPoint implements IShape {
                         : 0)}
 
                     m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.54
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
                         ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.76
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())
                     }
 
                     a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04} 
                         ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04}
                         0 1,0 ${-1* +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.08
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}, 0
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}, 0
                         
                     a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04} 
                         ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04}
                         0 1,0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.08
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value)}, 0
+                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}, 0
                 `}
             />
         </g>

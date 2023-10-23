@@ -3,9 +3,9 @@ import { HexColorPicker } from "react-colorful";
 import { IEditorProps } from "../Editor";
 import "./colorEditor.scss";
 
-const ColorEditor = ({ defaultValue, onChange, textClassName = 'textEditor-text', inputClassName = 'color-picker-modal' }: IEditorProps) => {
+const ColorEditor = ({ defaultValue, field, onChange, textClassName = 'textEditor-text', inputClassName = 'color-picker-modal' }: IEditorProps) => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [inputVal, setInputVal] = useState<string>(defaultValue.toUpperCase());
+    const [inputVal, setInputVal] = useState<string>(defaultValue.toString().toUpperCase());
     const [isValid, setIsValid] = useState<boolean>(true);
     const root: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
 
@@ -34,7 +34,7 @@ const ColorEditor = ({ defaultValue, onChange, textClassName = 'textEditor-text'
                 onClick={() => {
                     setIsEditing(true);
                 }}>
-                {defaultValue.toUpperCase()}
+                {defaultValue.toString().toUpperCase()}
             </span>
             {(
                 isEditing && <div className={inputClassName}>

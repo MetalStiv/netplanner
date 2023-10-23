@@ -262,8 +262,8 @@ class Sink implements IShape {
             data-type={this.type}
             role="shape"
             tabIndex={-1}
-            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value}
-            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value}
+            stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value.toString()}
+            fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
             fillRule="nonzero"
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
@@ -284,14 +284,14 @@ class Sink implements IShape {
                     : 0)}
                 l ${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l -${this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value} 0
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.95} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.1
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.46} ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value}
                     0 0 ${(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1' ? '0' : '1')}
                     -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.9} 0
@@ -299,12 +299,12 @@ class Sink implements IShape {
                 
                 m -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.435} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.05
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.30
-                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04} 0
                 l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value * 0.30
-                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value)}
+                    *-1*parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.1} 0
                 l -${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.18} 0
             `}

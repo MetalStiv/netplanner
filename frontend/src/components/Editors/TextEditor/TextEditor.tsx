@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { IEditorProps } from "../Editor";
 import "./textEditor.scss";
 
-const TextEditor = ({ defaultValue, onChange, textClassName = 'textEditor-text', inputClassName = 'textEditor-input' }: IEditorProps) => {
+const TextEditor = ({ defaultValue, field, onChange, textClassName = 'textEditor-text', inputClassName = 'textEditor-input' }: IEditorProps) => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [inputVal, setInputVal] = useState<string>(defaultValue);
+    const [inputVal, setInputVal] = useState<string>(defaultValue.toString());
 
     const changeProperty = () => {
         inputVal.length && onChange(inputVal);
@@ -16,7 +16,7 @@ const TextEditor = ({ defaultValue, onChange, textClassName = 'textEditor-text',
             className={textClassName}
             style={{ display: isEditing ? 'none' : 'inline' }}
             onClick={() => {
-                setInputVal(defaultValue)
+                setInputVal(defaultValue.toString())
                 setIsEditing(true);
             }}>
             {defaultValue}

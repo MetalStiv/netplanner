@@ -46,6 +46,8 @@ export enum ObjectPropertyTypes {
     MANUFACTURER = 'l3',
     MODEL = 'l4',
     SSID = 'l5',
+    CONTACT_PERSON = 'l6',
+    SOFTWARE = 'l7',
 }
 
 export interface IShapeGraphicalProps {
@@ -61,19 +63,13 @@ export interface IShapeObjectProps {
 }
 
 export interface IGraphicalProperty {
-    value: string,
-    isReadable: boolean,
-    editorType: EditorType
-}
-
-export interface IGraphicalProperty {
-    value: string,
+    value: string | string[],
     isReadable: boolean,
     editorType: EditorType
 }
 
 export interface IObjectProperty {
-    value: string,
+    value: string | string[],
     editorType: EditorType
 }
 

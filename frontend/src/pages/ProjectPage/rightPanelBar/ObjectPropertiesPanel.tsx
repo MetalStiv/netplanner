@@ -29,46 +29,50 @@ const ObjectPropertiesPanel = ({ shapeProps, onChange }: IObjectPropertiesPanelP
                     </svg>
                 </span>
             </p>
-            {shapeProps && <div className="">
-                <div className="property">
-                    <p className='property-title'>{lang?.langText.projectPage.propertiesPanel.elType}</p>
-                    <p className='property-value'>{lang?.langText.projectPage.baseShapes[shapeProps?.type] ?? ''}</p>
-                </div>
-            </div>}
-            {
-                shapeProps && Object.entries(shapeProps!.objectProps).map(([key, obj]: [string, IObjectProperty]) =>
-                    <div className="property" key={key}>
-                        <p className='property-title'>{lang?.langText.projectPage
-                            .objectProperties[key as ObjectPropertyTypes]}</p>
-                        {
-                            <Editor
-                                type={obj.editorType}
-                                defaultValue={obj.value === "" ? "-" : obj.value}
-                                valueRound={false}
-                                textClassName="property-value"
-                                inputClassName={obj.editorType === EditorType.TEXT_EDITOR ? 'change-property-input' : undefined}
-                                onChange={value => {
-                                    const changableShape = currentLayer?.getShapes().find(shape => shape.config.id === shapeProps.id);
-                                    let newVal = value;
-                                    const newProps = {
-                                        ...shapeProps.objectProps,
-                                        [key]: {...obj, value: newVal},
-                                    };
-                                    const changePropAction = new ChangeObjectPropertyAction(
-                                        changableShape!,
-                                        currentLayer!.getID(),
-                                        newProps
-                                    );
-                                    console.log(changePropAction)
-                                    actionStore.push(changePropAction);
-                                    onChange(newProps);
-                                }}
-                            />
-                            // <p className='property-value'>{obj.value}</p>
-                        }
+            <div className="panel-content">
+                {shapeProps && <div className="">
+                    <div className="property">
+                        <p className='property-title'>{lang?.langText.projectPage.propertiesPanel.elType}</p>
+                        <p className='property-value'>{lang?.langText.projectPage.baseShapes[shapeProps?.type] ?? ''}</p>
                     </div>
-                )
-            }
+                </div>}
+                {
+                    shapeProps && Object.entries(shapeProps!.objectProps).map(([key, obj]: [string, IObjectProperty]) =>
+                        <div className="property" key={key}>
+                            <p className='property-title'>{lang?.langText.projectPage
+                                .objectProperties[key as ObjectPropertyTypes]}</p>
+                            {
+                                <Editor
+                                    type={obj.editorType}
+                                    field={lang?.langText.projectPage.objectProperties[key as ObjectPropertyTypes]!}
+                                    defaultValue={obj.value === "" ? "-" : obj.value}
+                                    valueRound={false}
+                                    textClassName="property-value"
+                                    inputClassName={obj.editorType === EditorType.TEXT_EDITOR ? 'change-property-input' : undefined}
+                                    onChange={value => {
+                                        const changableShape = currentLayer?.getShapes().find(shape => shape.config.id === shapeProps.id);
+                                        console.log(value)
+                                        let newVal = value;
+                                        const newProps = {
+                                            ...shapeProps.objectProps,
+                                            [key]: {...obj, value: newVal},
+                                        };
+                                        const changePropAction = new ChangeObjectPropertyAction(
+                                            changableShape!,
+                                            currentLayer!.getID(),
+                                            newProps
+                                        );
+                                        console.log(changePropAction)
+                                        actionStore.push(changePropAction);
+                                        onChange(newProps);
+                                    }}
+                                />
+                                // <p className='property-value'>{obj.value}</p>
+                            }
+                        </div>
+                    )
+                }
+            </div>
         </div>
     )
 }

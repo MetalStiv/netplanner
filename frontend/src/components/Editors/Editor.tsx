@@ -2,11 +2,13 @@
 import { EditorType } from "../../model/EditorType";
 import TextEditor from "./TextEditor/TextEditor";
 import ColorEditor from "./ColorEditor/ColorEditor";
+import MultitextEditor from "./MultitextEditor/MultitextEditor";
 
 export interface IEditorProps {
-    defaultValue: string,
+    defaultValue: string | string[],
+    field: string,
     valueRound: boolean
-    onChange: (editText: string) => void,
+    onChange: (editText: string | string[]) => void,
     textClassName?: string,
     inputClassName?: string,
 }
@@ -15,12 +17,7 @@ interface IEditorSwitcherProps extends IEditorProps {
     type: EditorType
 }
 
-// const editors = [
-//     TextEditor,
-//     ColorEditor
-// ]
-
-const Editor = ({ defaultValue, valueRound, onChange, textClassName, inputClassName, type }: IEditorSwitcherProps) => {
+const Editor = ({ defaultValue, field, valueRound, onChange, textClassName, inputClassName, type }: IEditorSwitcherProps) => {
     let editor: React.FC<IEditorProps> | null = null;
 
     switch (type) {
@@ -30,6 +27,9 @@ const Editor = ({ defaultValue, valueRound, onChange, textClassName, inputClassN
         case EditorType.COLOR_EDITOR:
             editor = ColorEditor;
             break;
+        case EditorType.MULTITEXT_EDITOR:
+            editor = MultitextEditor;
+            break;
 
         default:
             editor = null;
@@ -37,8 +37,9 @@ const Editor = ({ defaultValue, valueRound, onChange, textClassName, inputClassN
     }
 
     return valueRound ? 
-        editor ? editor({ defaultValue: !isNaN(+defaultValue) ? Math.round(+defaultValue).toString() : defaultValue, valueRound, onChange, textClassName, inputClassName }) : <></>
-        : editor ? editor({ defaultValue: defaultValue, valueRound, onChange, textClassName, inputClassName }) : <></>;
+        editor ? editor({ defaultValue: !isNaN(+defaultValue) ? Math.round(+defaultValue).toString() : defaultValue, field, 
+            valueRound, onChange, textClassName, inputClassName }) : <></>
+        : editor ? editor({ defaultValue: defaultValue, field, valueRound, onChange, textClassName, inputClassName }) : <></>;
 }
 
 export default Editor;
