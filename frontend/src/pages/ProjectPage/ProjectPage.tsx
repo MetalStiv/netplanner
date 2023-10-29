@@ -107,8 +107,14 @@ const ProjectPage: React.FC = observer(() => {
     }, []);
 
     const clickedShapePropsCallback = useCallback((shapeProps: IShapeProps) => {
-        setSelectedShapeProps(shapeProps);
+        if (projectStore.getProject()?.getCurrentPage().getCurrentLayer().getShapes().some(s => s.config.id === shapeProps.id)){
+            setSelectedShapeProps(shapeProps);
+        }
     }, []);
+
+    const clearSelectedShapes = () => {
+        setSelectedShapeProps(null)
+    }
 
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
@@ -272,8 +278,8 @@ const ProjectPage: React.FC = observer(() => {
                             <div style={{ minHeight: 150 }}>
                                 {
                                     (projectStore.getProject() && !projectStore.getProject()!.isLoading()) && <>
-                                        <PagesPanel />
-                                        <LayersPanel />
+                                        <PagesPanel onChange={clearSelectedShapes} />
+                                        <LayersPanel onChange={clearSelectedShapes} />
                                     </>
                                 }
                             </div>

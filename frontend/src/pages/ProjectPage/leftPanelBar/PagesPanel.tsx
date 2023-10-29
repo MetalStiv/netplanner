@@ -12,12 +12,12 @@ import { TProjectStore } from '../../../stores/projectStore';
 import { RenamePageAction } from '../../../model/actions/RenamePage';
 import { observer } from 'mobx-react-lite';
 
-// interface PagesPanelProps {
-//     currentProject: IProject,
-//     //updateProjectCallback: (pages: Page[]) => void,
-// }
+interface PagesPanelProps {
+    onChange: () => void,
+    //updateProjectCallback: (pages: Page[]) => void,
+}
 
-const PagesPanel = observer(() => {
+const PagesPanel = observer(({onChange}: PagesPanelProps) => {
     const [collapsePanelIsOpen, setCollapsePanelIsOpen] = useState<boolean>(false);
     const [editingPageIndex, setEditingPageIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
@@ -46,6 +46,7 @@ const PagesPanel = observer(() => {
     function selectPageHandler(pageID: string) {
         setCollapsePanelIsOpen(false);
         currentProject.setCurrentPage(pageID);
+        onChange();
         projectStore.update();
     }
 

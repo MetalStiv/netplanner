@@ -330,6 +330,11 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
   const svgDragNDrop = (e: React.PointerEvent<SVGGeometryElement>) => {
     // selectedShapes.forEach((shapeId: string) => {
     const cur = e.currentTarget;
+
+    if(!currentPage?.getCurrentLayer().getShapes().some(s => s.config.id === cur.dataset.id)){
+      return
+    }
+
     // if (selectedShapes.includes(cur.dataset.id!)) return;
     // const cur = currentPage?.getLayers().flatMap(layer=>layer.getShapes()).find(shape=>shape.config.id === shapeId)!;
     // const cur: SVGSVGElement = svgCanvas.current?.querySelector(`[data-id="${shapeId}"]`)!;
@@ -1162,7 +1167,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                     // svgSelect,
                     hideContour,
                     layer.getZIndex(),
-                    selectedShapes.includes(s.config.id!),
+                    selectedShapes.includes(s.config.id!) && layer.getID() === project?.getCurrentPage().getCurrentLayer().getID(),
                   );
                 }))}
                 {cursorAnimations.map(a => <animated.path

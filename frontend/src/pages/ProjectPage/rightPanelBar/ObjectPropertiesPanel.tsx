@@ -43,9 +43,10 @@ const ObjectPropertiesPanel = ({ shapeProps, onChange }: IObjectPropertiesPanelP
                                 .objectProperties[key as ObjectPropertyTypes]}</p>
                             {
                                 <Editor
+                                    key={shapeProps.id+key}
                                     type={obj.editorType}
                                     field={lang?.langText.projectPage.objectProperties[key as ObjectPropertyTypes]!}
-                                    defaultValue={obj.value === "" ? "-" : obj.value}
+                                    defaultValue={obj.value === "" ? "-" : JSON.parse(JSON.stringify(obj.value))}
                                     valueRound={false}
                                     textClassName="property-value"
                                     inputClassName={obj.editorType === EditorType.TEXT_EDITOR ? 'change-property-input' : undefined}

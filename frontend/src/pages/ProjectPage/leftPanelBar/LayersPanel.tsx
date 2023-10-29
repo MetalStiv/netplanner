@@ -10,12 +10,13 @@ import { RenameLayerAction } from '../../../model/actions/RenameLayer';
 import Layer from '../../../model/projectData/Layer';
 import { observer } from 'mobx-react-lite';
 
-// interface ILayersPanelProps {
-//     // currentPage: Page,
-//     //updatePageCallback: (page: Page) => void,
-// }
+interface ILayersPanelProps {
+    onChange: () => void,
+    // currentPage: Page,
+    //updatePageCallback: (page: Page) => void,
+}
 
-const LayersPanel = observer(() => {
+const LayersPanel = observer(({onChange}: ILayersPanelProps) => {
     const [editingLayerIndex, setEditingLayerIndex] = useState<number>(-1);
     const [draggableLayerIndex, setDraggableLayerIndex] = useState<number>(-1);
     const [title, setTitle] = useState<string>("");
@@ -142,6 +143,7 @@ const LayersPanel = observer(() => {
 
                             <div className={`layer${layer.isCurrent() ? ' current' : ''}`}
                                 onClick={function () {
+                                    onChange();
                                     setCurrentPage(new Page(currentPage.getID(), currentPage.getTitle(), currentPage.getLayers().map(item => {
                                         item.isCurrent() && item.setIsCurrent(false);
                                         item.getID() === layer.getID() && item.setIsCurrent(true);
