@@ -183,8 +183,11 @@ interface ILanguage {
             [ShapeType.WINDOW]: string,
             [ShapeType.URINAL]: string,
 
+            [ShapeType.SUBNET]: string,
+            [ShapeType.FIREWALL]: string,
             [ShapeType.ACCESS_POINT]: string,
             [ShapeType.DESKTOP]: string,
+            [ShapeType.PRINTER]: string,
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: string,

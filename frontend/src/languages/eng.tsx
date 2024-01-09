@@ -185,8 +185,11 @@ export const eng: ILanguage = {
             [ShapeType.WINDOW]: "Window",
             [ShapeType.URINAL]: "Urinal",
 
+            [ShapeType.SUBNET]: "Subnet",
+            [ShapeType.FIREWALL]: "Firewall",
             [ShapeType.ACCESS_POINT]: "Access point",
             [ShapeType.DESKTOP]: "Desktop",
+            [ShapeType.PRINTER]: "Printer",
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: "X",

@@ -26,6 +26,9 @@ import { commentInflater } from "./blockDiagramShapes/Comment";
 import { urinalInflater } from "./floorplanShapes/Urinal";
 import { accessPointInflater } from "./networkShapes/AccessPoint";
 import { desktopInflater } from "./networkShapes/Desktop";
+import { subnetInflater } from "./networkShapes/Subnet";
+import { firewallInflater } from "./networkShapes/Firewall";
+import { printerInflater } from "./networkShapes/Printer";
 
 export type TShapeInflater = (message: IMessageShape) => Promise<IShape | null>;
 
@@ -63,8 +66,11 @@ export const shapeInflaters: IShapeInflaters = {
         stoveInflater,
         urinalInflater,
 
+        subnetInflater,
+        firewallInflater,
         accessPointInflater,
         desktopInflater,
+        printerInflater,
     ],
     
     async inflate(message: IMessageShape) {

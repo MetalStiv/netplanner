@@ -185,8 +185,11 @@ export const ru: ILanguage = {
             [ShapeType.WINDOW]: "Окно",
             [ShapeType.URINAL]: "Писсуар",
 
+            [ShapeType.SUBNET]: "Подсеть",
+            [ShapeType.FIREWALL]: "Файерволл",
             [ShapeType.ACCESS_POINT]: "Точка доступа",
             [ShapeType.DESKTOP]: "Персональный компьютер",
+            [ShapeType.PRINTER]: "Принтер",
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: "X",

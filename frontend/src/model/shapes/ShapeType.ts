@@ -29,7 +29,10 @@ export enum ShapeType {
     BATH = "cj",
     URINAL = "ck",
 
+    SUBNET = "dc",
+    FIREWALL = "dd",
     ACCESS_POINT = "da",
-    DESKTOP = 'db',
+    DESKTOP = "db",
+    PRINTER = "de",
     // COMPOSITE = "d",
 }
