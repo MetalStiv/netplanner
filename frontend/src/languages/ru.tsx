@@ -190,6 +190,8 @@ export const ru: ILanguage = {
             [ShapeType.ACCESS_POINT]: "Точка доступа",
             [ShapeType.DESKTOP]: "Персональный компьютер",
             [ShapeType.PRINTER]: "Принтер",
+            [ShapeType.MFU]: "МФУ",
+            [ShapeType.SCANNER]: "Сканер",
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: "X",

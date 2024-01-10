@@ -190,6 +190,8 @@ export const eng: ILanguage = {
             [ShapeType.ACCESS_POINT]: "Access point",
             [ShapeType.DESKTOP]: "Desktop",
             [ShapeType.PRINTER]: "Printer",
+            [ShapeType.MFU]: "MFU",
+            [ShapeType.SCANNER]: "Scanner",
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: "X",

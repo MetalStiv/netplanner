@@ -34,5 +34,7 @@ export enum ShapeType {
     ACCESS_POINT = "da",
     DESKTOP = "db",
     PRINTER = "de",
+    MFU = "df",
+    SCANNER = "dg",
     // COMPOSITE = "d",
 }

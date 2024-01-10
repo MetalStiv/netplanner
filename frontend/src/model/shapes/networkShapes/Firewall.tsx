@@ -87,7 +87,7 @@ export const firewallInflater: TShapeInflater = async (messageShape: IMessageSha
 export class FirewallCreator implements IShapeCreator {
     type: ShapeType = ShapeType.FIREWALL;
     icon: string = `<g>
-            <path stroke='#ffffff' fill='#1561d3' stroke-width='2'
+            <path stroke='#ffffff' fill='#1561d3' stroke-width='1'
                 d='M 5 0 l 6 0 l 0 8 l -6 0 l 0 -8 m 6 0 l 10 0 l 0 8 l -10 0 l 0 -8 m 9 0 l 6 0 l 0 8 l -6 0 m 6 0 l -10 0 l 0 8 l 10 0 l 0 -8 m -10 0 l -11 0 l 0 8 l 11 0 l 0 -8 m -11 8 l 6 0 l 0 8 l -6 0 l 0 -8 m 6 0 l 10 0 l 0 8 l -10 0 l 0 -8 m 9 0 l 6 0 l 0 8 l -6 0' />
         </g>`
     create() {

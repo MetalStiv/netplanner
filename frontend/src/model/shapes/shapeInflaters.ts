@@ -29,6 +29,8 @@ import { desktopInflater } from "./networkShapes/Desktop";
 import { subnetInflater } from "./networkShapes/Subnet";
 import { firewallInflater } from "./networkShapes/Firewall";
 import { printerInflater } from "./networkShapes/Printer";
+import { mfuInflater } from "./networkShapes/Mfu";
+import { scannerInflater } from "./networkShapes/Scanner";
 
 export type TShapeInflater = (message: IMessageShape) => Promise<IShape | null>;
 
@@ -71,6 +73,8 @@ export const shapeInflaters: IShapeInflaters = {
         accessPointInflater,
         desktopInflater,
         printerInflater,
+        mfuInflater,
+        scannerInflater
     ],
     
     async inflate(message: IMessageShape) {

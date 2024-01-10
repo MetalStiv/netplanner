@@ -322,8 +322,8 @@ class Printer implements IShape {
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
                         : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 3)})`}
                 d={`
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5
@@ -332,19 +332,19 @@ class Printer implements IShape {
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)}
 
-                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5*0.3
+                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.3
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5*0.4
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.4
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.35
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.35*2/3
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5*-0.4
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.4
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.35
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.35*2/3
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                    
@@ -362,8 +362,8 @@ class Printer implements IShape {
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
                         : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value) / 2} 
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 3)})`}
                 d={`
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5
@@ -372,19 +372,19 @@ class Printer implements IShape {
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)}
 
-                    m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.35
+                    m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.35*2/3
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.60
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.60*2/3
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-1.5
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-1
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.60
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.60*2/3
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                    
@@ -402,8 +402,8 @@ class Printer implements IShape {
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
                         : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value) / 2} 
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 3)})`}
                 d={`
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5
@@ -412,21 +412,21 @@ class Printer implements IShape {
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)}
 
-                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5*0.26
+                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.26
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.75
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.75*2/3
                             *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5*0.48
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.48
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.25
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.25*2/3
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5*-0.48
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.48
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.25
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.25*2/3
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                    
@@ -444,8 +444,8 @@ class Printer implements IShape {
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
                         : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 3)})`}
                 d={`
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5
@@ -454,9 +454,9 @@ class Printer implements IShape {
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)}
 
-                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5*0.9
+                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.9
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.55
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.55*2/3
                             *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
                     a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04} 
@@ -491,8 +491,8 @@ class Printer implements IShape {
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
                         : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
-                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
+                    ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 3)})`}
                 d={`
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*2
@@ -501,16 +501,16 @@ class Printer implements IShape {
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*1.5
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*2/3
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-1.5
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-1
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-1
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-1*2/3
                         *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 `}
             />

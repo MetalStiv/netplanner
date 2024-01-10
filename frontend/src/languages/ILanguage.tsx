@@ -188,6 +188,8 @@ interface ILanguage {
             [ShapeType.ACCESS_POINT]: string,
             [ShapeType.DESKTOP]: string,
             [ShapeType.PRINTER]: string,
+            [ShapeType.MFU]: string,
+            [ShapeType.SCANNER]: string,
         },
         graphicalProperties: {
             [GraphicalPropertyTypes.X]: string,
