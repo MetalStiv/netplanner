@@ -24,35 +24,42 @@ export class DeletePageAction implements IAction {
                 newPage: {
                     id: this.page.getID(),
                     name: this.page.getTitle(),
-                    layers: this.page.getLayers().map(l => {return {
-                        id: l.getID(),
-                        name: l.getTitle(),
-                        zIndex: l.getZIndex(),
-                        isVisible: l.isVisible(),
-                        shapes: l.getShapes().map(s => {
-                            const messageGraphicalProperties: {l: string, v: string | string[]}[] = []
-                            let graphicalProperty: keyof typeof s.config.graphicalProperties; 
-                            for (graphicalProperty in s.config.graphicalProperties){
-                                messageGraphicalProperties.push({l: graphicalProperty, 
-                                    v: s.config.graphicalProperties[graphicalProperty].value})
-                            }
+                    layers: this.page.getLayers().map(l => {
+                        return {
+                            id: l.getID(),
+                            name: l.getTitle(),
+                            zIndex: l.getZIndex(),
+                            isVisible: l.isVisible(),
+                            shapes: l.getShapes().map(s => {
+                                const messageGraphicalProperties: { l: string, v: string | string[] }[] = []
+                                let graphicalProperty: keyof typeof s.config.graphicalProperties;
+                                for (graphicalProperty in s.config.graphicalProperties) {
+                                    messageGraphicalProperties.push({
+                                        l: graphicalProperty,
+                                        v: s.config.graphicalProperties[graphicalProperty].value
+                                    })
+                                }
 
-                            const messageObjectProperties: {l: string, v: string | string[]}[] = []
-                            let objectProperty: keyof typeof s.config.objectProperties; 
-                            for (objectProperty in s.config.objectProperties){
-                                messageObjectProperties.push({l: objectProperty, 
-                                    v: s.config.objectProperties[objectProperty].value})
-                            }
-    
-                            return {
-                                id: s.config.id,
-                                type: s.type,
-                                zIndex: s.config.zIndex!,
-                                graphicalProperties: messageGraphicalProperties,
-                                objectProperties: messageObjectProperties,
-                            }
-                        }),
-                    }})
+                                const messageObjectProperties: { l: string, v: string | string[] }[] = []
+                                let objectProperty: keyof typeof s.config.objectProperties;
+                                for (objectProperty in s.config.objectProperties) {
+                                    messageObjectProperties.push({
+                                        l: objectProperty,
+                                        v: s.config.objectProperties[objectProperty].value
+                                    })
+                                }
+
+                                return {
+                                    id: s.config.id,
+                                    type: s.type,
+                                    zIndex: s.config.zIndex!,
+                                    graphicalProperties: messageGraphicalProperties,
+                                    objectProperties: messageObjectProperties,
+                                    connectionPoints: s.config.connectionPoints ?? [],
+                                }
+                            }),
+                        }
+                    })
                 }
             }
         }

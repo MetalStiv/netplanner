@@ -83,7 +83,7 @@ const publicKey = fs.readFileSync("/app/RsaKeys/public.pem", "utf8");
 
 wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     let queryData = require('url').parse(req.url, true).query;
-    
+
     let token: string = queryData.token;
     let projectId: string = queryData.projectId;
 
@@ -95,7 +95,7 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     let userId: string = '';
     jwt.verify(token, publicKey, (err, decoded) => {
         if (err) {
-            ws.send(JSON.stringify({type: ActionType.NO_RIGHTS}));
+            ws.send(JSON.stringify({ type: ActionType.NO_RIGHTS }));
             ws.close();
         } else {
             userId = decoded.Id;
@@ -103,8 +103,8 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
     });
 
     const userRights: number = await userRightsChecker(userId, projectId, collections);
-    if (userRights === 2){
-        ws.send(JSON.stringify({type: ActionType.NO_RIGHTS}));
+    if (userRights === 2) {
+        ws.send(JSON.stringify({ type: ActionType.NO_RIGHTS }));
         ws.close();
         return
     }
@@ -126,6 +126,7 @@ wsServer.on('connection', async (ws: WebSocket, req: http.IncomingMessage) => {
                 zIndex: s.zIndex,
                 graphicalProperties: s.graphicalProperties,
                 objectProperties: s.objectProperties,
+                connectionPoints: s.connectionPoints.map(({ _id, ...p }) => ({ ...p, id: _id.toString() }))
             }))
             return {
                 id: l._id.toString(),

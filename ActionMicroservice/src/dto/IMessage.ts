@@ -3,6 +3,7 @@ import { IShapeTree } from "./IShapeTree";
 import { IGraphicalProperty, IShapeGraphicalProperties, IShapeObjectProperties } from "./IGraphicalProperty";
 import { ILayerTree } from "./ILayerTree";
 import { IPageTree } from "./IPageTree";
+import { IConnectionPointTree } from "./IConnectionPointTree";
 
 export interface IMessage {
     type: ActionType,
@@ -13,6 +14,8 @@ export interface IMessage {
     layerId?: string,
     shapeId?: string,
     data: {
+        shapesIds?: string[],
+        layersIds?: string[],
         pages?: IPageTree[],
         newShape?: IShapeTree,
         newLayer?: ILayerTree,
@@ -21,6 +24,8 @@ export interface IMessage {
         name?: string,
         graphicalProperties?: IShapeGraphicalProperties,
         objectProperties?: IShapeObjectProperties,
+        connectionPoints?: IConnectionPointTree[][],
+        // secondShapeConnectionPoints?: IConnectionPoint[],
         defaultName?: string,
     }
 }

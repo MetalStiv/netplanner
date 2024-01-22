@@ -6,10 +6,10 @@ export const renameLayerHandler: ActionHandler = async (collections, message) =>
     if (message.type !== ActionType.RENAME_LAYER) {
         return Promise.reject('Wrong handler');
     }
-    if (message.senderRights !== 0){
-        return Promise.reject('Not enough rigths');
+    if (message.senderRights !== 0) {
+        return Promise.reject('Not enough rights');
     }
-    
+
     collections.projectMetaCollection.findOneAndUpdate({
         _id: new ObjectId(message.projectId)
     },

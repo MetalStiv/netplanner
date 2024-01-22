@@ -6,8 +6,8 @@ export const changeGraphicalPropertiesHandler: ActionHandler = async (collection
     if (message.type !== ActionType.CHANGE_GRAPHICAL_PROPERTY) {
         return Promise.reject('Wrong handler');
     };
-    if (message.senderRights !== 0){
-        return Promise.reject('Not enough rigths');
+    if (message.senderRights !== 0) {
+        return Promise.reject('Not enough rights');
     }
 
     collections.projectMetaCollection.findOneAndUpdate({
@@ -16,7 +16,7 @@ export const changeGraphicalPropertiesHandler: ActionHandler = async (collection
         {
             $set: { lastModifyTime: new Date }
         });
-        
+
     await collections.shapeCollection.findOneAndUpdate(
         {
             layerId: new ObjectId(message.layerId),

@@ -1,3 +1,5 @@
+import { IConnectionPointTree } from "./IConnectionPointTree"
+
 export interface IShapeTree {
     id: string,
     type: string,
@@ -9,5 +11,6 @@ export interface IShapeTree {
     },
     objectProperties: {
         id: string,
-    }
+    },
+    connectionPoints: IConnectionPointTree[]
 }

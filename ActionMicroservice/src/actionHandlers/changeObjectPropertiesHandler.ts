@@ -6,8 +6,8 @@ export const changeObjectPropertiesHandler: ActionHandler = async (collections, 
     if (message.type !== ActionType.CHANGE_OBJECT_PROPERTY) {
         return Promise.reject('Wrong handler');
     };
-    if (message.senderRights !== 0){
-        return Promise.reject('Not enough rigths');
+    if (message.senderRights !== 0) {
+        return Promise.reject('Not enough rights');
     }
 
     collections.projectMetaCollection.findOneAndUpdate({
@@ -16,7 +16,7 @@ export const changeObjectPropertiesHandler: ActionHandler = async (collections, 
         {
             $set: { lastModifyTime: new Date }
         });
-        
+
     await collections.shapeCollection.findOneAndUpdate(
         {
             layerId: new ObjectId(message.layerId),

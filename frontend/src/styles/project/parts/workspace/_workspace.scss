@@ -50,6 +50,18 @@
                     outline: none !important;
                 }
 
+                [role="connection-area"] {
+                    stroke: $blue;
+                    stroke-width: 1px;
+                    fill: transparent;
+                }
+
+                [role="connection"] {
+                    stroke: $black;
+                    stroke-width: 1px;
+                    fill: $blue;
+                }
+
                 #controls {
                     #selectionContour {
                         stroke: $blue;

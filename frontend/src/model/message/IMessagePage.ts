@@ -1,4 +1,3 @@
-import { ILayer } from "../projectData/Layer";
 import { IMessageLayer } from "./IMessageLayer";
 
 export interface IMessagePage {
