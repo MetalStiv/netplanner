@@ -6,8 +6,8 @@ export const renamePageHandler: ActionHandler = async (collections, message) => 
     if (message.type !== ActionType.RENAME_PAGE) {
         return Promise.reject('Wrong handler');
     }
-    if (message.senderRights !== 0){
-        return Promise.reject('Not enough rigths');
+    if (message.senderRights !== 0) {
+        return Promise.reject('Not enough rights');
     }
 
     collections.projectMetaCollection.findOneAndUpdate({

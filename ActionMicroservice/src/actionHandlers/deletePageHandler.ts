@@ -8,8 +8,8 @@ export const deletePageHandler: ActionHandler = async (collections, message) => 
     if (message.type !== ActionType.DELETE_PAGE) {
         return Promise.reject('Wrong handler');
     };
-    if (message.senderRights !== 0){
-        return Promise.reject('Not enough rigths');
+    if (message.senderRights !== 0) {
+        return Promise.reject('Not enough rights');
     }
 
     collections.projectMetaCollection.findOneAndUpdate({
@@ -18,10 +18,10 @@ export const deletePageHandler: ActionHandler = async (collections, message) => 
         {
             $set: { lastModifyTime: new Date }
         });
-        
-    const pages: IPage[] =  await collections.pageCollection
-        .find({projectId: new ObjectId(message.projectId)}).toArray();
-    if (!pages.filter(p => p._id.toString() !== message.pageId!)[0]){
+
+    const pages: IPage[] = await collections.pageCollection
+        .find({ projectId: new ObjectId(message.projectId) }).toArray();
+    if (!pages.filter(p => p._id.toString() !== message.pageId!)[0]) {
         message.pageId = ""
         return message;
     }
@@ -32,13 +32,13 @@ export const deletePageHandler: ActionHandler = async (collections, message) => 
         },
     );
 
-    const layers: ILayer[] =  await collections.layerCollection
-        .find({pageId: new ObjectId(message.pageId)}).toArray();
+    const layers: ILayer[] = await collections.layerCollection
+        .find({ pageId: new ObjectId(message.pageId) }).toArray();
     layers.forEach(async l => await collections.shapeCollection.deleteMany(
-            {
-                layerId: l._id
-            }
-        )
+        {
+            layerId: l._id
+        }
+    )
     );
 
     await collections.layerCollection.deleteMany(

@@ -7,8 +7,8 @@ export const deleteLayerHandler: ActionHandler = async (collections, message) =>
     if (message.type !== ActionType.DELETE_LAYER) {
         return Promise.reject('Wrong handler');
     };
-    if (message.senderRights !== 0){
-        return Promise.reject('Not enough rigths');
+    if (message.senderRights !== 0) {
+        return Promise.reject('Not enough rights');
     }
 
     collections.projectMetaCollection.findOneAndUpdate({
@@ -18,10 +18,10 @@ export const deleteLayerHandler: ActionHandler = async (collections, message) =>
             $set: { lastModifyTime: new Date }
         });
 
-    const layer = await collections.layerCollection.findOne({_id: new ObjectId(message.layerId)})
-    const layers: ILayer[] =  await collections.layerCollection
-        .find({pageId: new ObjectId(layer.pageId)}).toArray();
-    if (!layers.filter(l => l._id.toString() !== message.layerId!)[0]){
+    const layer = await collections.layerCollection.findOne({ _id: new ObjectId(message.layerId) })
+    const layers: ILayer[] = await collections.layerCollection
+        .find({ pageId: new ObjectId(layer.pageId) }).toArray();
+    if (!layers.filter(l => l._id.toString() !== message.layerId!)[0]) {
         message.layerId = ""
         return message;
     }

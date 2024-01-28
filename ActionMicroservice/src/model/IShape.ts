@@ -1,6 +1,17 @@
 import { ObjectId } from "mongodb";
 // import { IGraphicalProperty } from "../dto/IGraphicalProperty";
 
+export interface IConnectionAddress {
+    shapeId: string,
+    pointId: string
+};
+
+export interface IConnectionPoint {
+    _id: ObjectId,
+    type: string,
+    connectedShapes: IConnectionAddress[] | null
+}
+
 export interface IShape {
     _id: ObjectId,
     type: string,
@@ -13,5 +24,6 @@ export interface IShape {
     },
     objectProperties: {
         id: string,
-    }
+    },
+    connectionPoints: IConnectionPoint[]
 }

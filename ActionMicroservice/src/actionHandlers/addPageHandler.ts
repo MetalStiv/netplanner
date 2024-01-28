@@ -2,13 +2,16 @@ import { ObjectId } from "mongodb";
 import { ActionType } from "../actionType";
 import { titleUniqueization } from "../helpers/titleUniqueization";
 import { ActionHandler } from "./actionHandlers";
+import { IShape } from "../model/IShape";
+import { ILayer } from "../model/ILayer";
+import { IMessage } from "../dto/IMessage";
 
 export const addPageHandler: ActionHandler = async (collections, message) => {
     if (message.type !== ActionType.ADD_PAGE) {
         return Promise.reject('Wrong handler');
     }
-    if (message.senderRights !== 0){
-        return Promise.reject('Not enough rigths');
+    if (message.senderRights !== 0) {
+        return Promise.reject('Not enough rights');
     }
 
     collections.projectMetaCollection.findOneAndUpdate({
@@ -19,8 +22,10 @@ export const addPageHandler: ActionHandler = async (collections, message) => {
         });
 
     function uniqPageTitle(name: string) {
-        return titleUniqueization({title: name.length ? name : message.data.defaultName, collection: collections.pageCollection, 
-            parentField: 'projectId', parentId: message.projectId});
+        return titleUniqueization({
+            title: name.length ? name : message.data.defaultName, collection: collections.pageCollection,
+            parentField: 'projectId', parentId: message.projectId
+        });
     }
 
     const uniqTitle = await uniqPageTitle(message.data.newPage.name);
@@ -31,30 +36,30 @@ export const addPageHandler: ActionHandler = async (collections, message) => {
         projectId: new ObjectId(message.projectId)
     };
 
-    const messageCopy = JSON.parse(JSON.stringify(message));
+    const messageCopy: IMessage = JSON.parse(JSON.stringify(message));
     messageCopy.data.newPage.id = newPage._id.toString();
     messageCopy.data.newPage.name = newPage.name;
 
-    let newLayers = [];
-    let newShapes = [];
+    let newLayers: ILayer[] = [];
+    let newShapes: IShape[] = [];
 
-    if (messageCopy.data.newPage.layers && messageCopy.data.newPage.layers.length) {
-        newLayers.push(messageCopy.data.newPage.layers.map(layer => {
-            const layerObjId = new ObjectId();
+    if (messageCopy.data.newPage.layers?.length) {
+        newLayers.push(...messageCopy.data.newPage.layers.map(layer => {
+            const layerObjId = layer.id.length ? new ObjectId(layer.id) : new ObjectId();
             layer.id = layerObjId.toString();
-            newShapes.push(
-                layer.shapes.map(shape => {
-                    const shapeObjId = new ObjectId();
-                    shape.id = shapeObjId.toString();
-                    return {
-                        _id: shapeObjId,
-                        type: shape.type,
-                        layerId: layerObjId,
-                        zIndex: shape.zIndex,
-                        graphicalProperties: shape.graphicalProperties,
-                        objectProperties: shape.objectProperties,
-                    }
-                })
+            newShapes.push(...layer.shapes.map(shape => {
+                const shapeObjId = new ObjectId();
+                shape.id = shapeObjId.toString();
+                return {
+                    _id: shapeObjId,
+                    type: shape.type,
+                    layerId: layerObjId,
+                    zIndex: shape.zIndex,
+                    graphicalProperties: shape.graphicalProperties,
+                    objectProperties: shape.objectProperties,
+                    connectionPoints: shape.connectionPoints.map(({ id, ...p }) => ({ ...p, _id: id.length ? new ObjectId(id) : new ObjectId() }))
+                }
+            })
             )
             return {
                 _id: layerObjId,

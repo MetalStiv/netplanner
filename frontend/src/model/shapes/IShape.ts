@@ -1,6 +1,7 @@
 import { ShapeType } from "./ShapeType";
 import { EditorType } from "../EditorType";
 import { IMessageProperty } from "../message/IMessageShape";
+import IConnectionPoint from "./IConnectionPoint";
 
 export enum GraphicalPropertyTypes {
     X = 'x',
@@ -80,7 +81,8 @@ export interface IShapeConfig {
     id?: string,
     graphicalProperties: IShapeGraphicalProps,
     objectProperties: IShapeObjectProps,
-    zIndex?: number
+    zIndex?: number,
+    connectionPoints?: IConnectionPoint[]
 }
 
 export interface IShape {

@@ -18,7 +18,6 @@ export const openProjectHandler: ActionHandler = async (project, message) => {
                     return shape
                 }))).filter((x): x is IShape => x !== null),
                 l.isVisible
-
             ))));
         newPage.setCurrentLayer(newPage.getLayers()[0].getID());
         return newPage;

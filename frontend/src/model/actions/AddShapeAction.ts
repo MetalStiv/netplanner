@@ -7,7 +7,7 @@ import { IAction } from "./IAction";
 export class AddShapeAction implements IAction {
     uid: string;
     storeHistory: boolean = true;
-    
+
     private shape: IShape;
     private currentLayer: Layer;
     private dropCoords: { x: number, y: number };
@@ -30,18 +30,22 @@ export class AddShapeAction implements IAction {
         this.shape.config.graphicalProperties[GraphicalPropertyTypes.X].value = this.dropCoords.x.toString();
         this.shape.config.graphicalProperties[GraphicalPropertyTypes.Y].value = this.dropCoords.y.toString();
 
-        const messageGraphicalProperties: {l: string, v: string | string[]}[] = []
-        let graphicalProperty: keyof typeof this.shape.config.graphicalProperties; 
-        for (graphicalProperty in this.shape.config.graphicalProperties){
-            messageGraphicalProperties.push({l: graphicalProperty, 
-                v: this.shape.config.graphicalProperties[graphicalProperty].value})
+        const messageGraphicalProperties: { l: string, v: string | string[] }[] = []
+        let graphicalProperty: keyof typeof this.shape.config.graphicalProperties;
+        for (graphicalProperty in this.shape.config.graphicalProperties) {
+            messageGraphicalProperties.push({
+                l: graphicalProperty,
+                v: this.shape.config.graphicalProperties[graphicalProperty].value
+            })
         }
 
-        const messageObjectProperties: {l: string, v: string | string[]}[] = []
-        let objectProperty: keyof typeof this.shape.config.objectProperties; 
-        for (objectProperty in this.shape.config.objectProperties){
-            messageObjectProperties.push({l: objectProperty, 
-                v: this.shape.config.objectProperties[objectProperty].value})
+        const messageObjectProperties: { l: string, v: string | string[] }[] = []
+        let objectProperty: keyof typeof this.shape.config.objectProperties;
+        for (objectProperty in this.shape.config.objectProperties) {
+            messageObjectProperties.push({
+                l: objectProperty,
+                v: this.shape.config.objectProperties[objectProperty].value
+            })
         }
 
         return {
@@ -54,6 +58,8 @@ export class AddShapeAction implements IAction {
                     type: this.shape.type,
                     graphicalProperties: messageGraphicalProperties,
                     objectProperties: messageObjectProperties,
+                    connectionPoints: (this.shape.config.connectionPoints ?? [])
+                        .map(({ id, type, connectedShapes }) => ({ id, type, connectedShapes })),
                 },
                 // zIndex: this.shape.config.zIndex?.toString()
             }

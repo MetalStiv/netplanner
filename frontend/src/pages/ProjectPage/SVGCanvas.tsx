@@ -18,6 +18,11 @@ import { TUsersStore } from '../../stores/usersStore';
 import { TUserStore } from '../../stores/userStore';
 import { DeleteShapeAction } from '../../model/actions/DeleteShapeAction';
 import { ChangeGraphicalPropertyAction } from '../../model/actions/ChangeGraphicalPropertyAction';
+import IConnectionPoint, { ConnectionPointTypes, IConnectionAddress } from '../../model/shapes/IConnectionPoint';
+import { changeConnectionPointsHandler } from '../../model/actionHandlers/changeConnectionPointHandler';
+import { ChangeConnectionPointsAction } from '../../model/actions/ChangeConnectionPointsAction';
+import Connection from '../../model/shapes/Connection';
+import ICoords from '../../common/model/ICoords';
 
 interface SVGCanvasProps {
   // currentPage: Page,
@@ -227,7 +232,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
           .filter((x): x is IShape => x !== undefined);
         shapes = JSON.parse(JSON.stringify(shapes))
         shapes.forEach(s => {
-          s.config.graphicalProperties.my.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.my.value.toString())*-1: -1).toString();
+          s.config.graphicalProperties.my.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.my.value.toString()) * -1 : -1).toString();
           var changeShapePropertyAction = new ChangeGraphicalPropertyAction(s, currentLayer.getID(), s.config.graphicalProperties);
           actionStore.push(changeShapePropertyAction);
         })
@@ -240,7 +245,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
           .filter((x): x is IShape => x !== undefined);
         shapes = JSON.parse(JSON.stringify(shapes))
         shapes.forEach(s => {
-          s.config.graphicalProperties.mx.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.mx.value.toString())*-1: -1).toString();
+          s.config.graphicalProperties.mx.value = (s.config.graphicalProperties.my.value ? parseInt(s.config.graphicalProperties.mx.value.toString()) * -1 : -1).toString();
           var changeShapePropertyAction = new ChangeGraphicalPropertyAction(s, currentLayer.getID(), s.config.graphicalProperties);
           actionStore.push(changeShapePropertyAction);
         })
@@ -331,7 +336,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
     // selectedShapes.forEach((shapeId: string) => {
     const cur = e.currentTarget;
 
-    if(!currentPage?.getCurrentLayer().getShapes().some(s => s.config.id === cur.dataset.id)){
+    if (!currentPage?.getCurrentLayer().getShapes().some(s => s.config.id === cur.dataset.id)) {
       return
     }
 
@@ -1031,9 +1036,9 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
       // const angles = initRotationAngles.map(initAngle => Math.atan2(cursor.x - centerCoords.x, -(cursor.y - centerCoords.y)) * (180 / Math.PI) + initAngle);
       shapes.forEach((shape, i) => {
         // shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value = angles[i].toString();
-        shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value = (initRotationAngles[i]+rotationAngle
-          *parseInt(shape!.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X].value.toString())
-          *parseInt(shape!.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value.toString())).toString();
+        shape!.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value = (initRotationAngles[i] + rotationAngle
+          * parseInt(shape!.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X].value.toString())
+          * parseInt(shape!.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y].value.toString())).toString();
 
         if (shapes.length > 1) {
           const initTranslateAngle = Math.atan2(centerCoords.y - initCoords[i].y, centerCoords.x - initCoords[i].x)
@@ -1081,6 +1086,97 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
       // controlsConfig.rotateDeg = 0;
     }
   }
+
+
+  const [startConnectionElement, setStartConnectionElement] = useState<{ shape: string, point: string } | null>(null);
+  const connectionStartHandler = (/*e: React.PointerEvent,*/ shapeId: string, point: IConnectionPoint) => {
+    const shape = currentPage?.getLayers().flatMap(layer => layer.getShapes()).find(shape => shape.config.id === shapeId);
+
+    setStartConnectionElement({
+      shape: shape?.config.id!,
+      point: point.id
+    });
+
+    // currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(s => {
+    //   s.config.connectionPoints?.map(p => {
+    //     console.log(p)
+    //     const firstPointCoords = {
+    //       x: +s.config.graphicalProperties[GraphicalPropertyTypes.X].value + p.relativeCoords.x,
+    //       y: +s.config.graphicalProperties[GraphicalPropertyTypes.Y].value + p.relativeCoords.y
+    //     };
+    //     if (p.connectedShape) {
+    //       const s2 = currentPage?.getLayers().flatMap(l => l.getShapes()).find(s => s.config.id === p.connectedShape)!;
+    //       const p2 = s2.config.connectionPoints!.find(p => p.connectedShape === s.config.id)!;
+    //       const secondPointCoords = {
+    //         x: +s2.config.graphicalProperties[GraphicalPropertyTypes.X].value + p2.relativeCoords.x,
+    //         y: +s2.config.graphicalProperties[GraphicalPropertyTypes.Y].value + p2.relativeCoords.y
+    //       };
+    //       console.log('first', firstPointCoords, 'second', secondPointCoords)
+    //     }
+    //   })
+    //   // return <rect />
+    // }))
+  };
+
+  const connectionEndHandler = (/*e: React.PointerEvent,*/ shapeId: string, point: IConnectionPoint) => {
+    const firstShapeId = startConnectionElement!.shape;
+    const secondShapeId = shapeId;
+    const firstShape = currentPage?.getLayers().flatMap(layer => layer.getShapes()).find(shape => shape.config.id === startConnectionElement!.shape);
+    const secondShape = currentPage?.getLayers().flatMap(layer => layer.getShapes()).find(shape => shape.config.id === shapeId);
+    // const firstLayerId = currentPage?.getLayers().find(layer => layer.getShapes().some(curShape => curShape === firstShape!))!.getID()!;
+    // const secondLayerId = currentPage?.getLayers().find(layer => layer.getShapes().some(curShape => curShape === secondShape!))!.getID()!;
+
+    // console.log(
+    //   firstShapeId,
+    //   secondShapeId
+    // );
+
+    const firstShapeConnectionPoints: IConnectionPoint[] = firstShape!.config.connectionPoints!
+      .map((p) => p.id === startConnectionElement?.point
+        ? { ...p, connectedShapes: [...(p.connectedShapes ?? []), { shapeId: secondShapeId!, pointId: point.id }] }
+        : p
+      );
+
+    const secondShapeConnectionPoints: IConnectionPoint[] = secondShape!.config.connectionPoints!
+      .map((p) => p.id === point.id
+        ? { ...p, connectedShapes: [...(p.connectedShapes ?? []), { shapeId: firstShapeId!, pointId: startConnectionElement!.point }] }
+        : p
+      );
+
+    const changeConnectionPointsAction = new ChangeConnectionPointsAction(
+      firstShape!,
+      secondShape!,
+      // firstLayerId,
+      // secondLayerId,
+      firstShapeConnectionPoints,
+      secondShapeConnectionPoints
+    );
+    actionStore.push(changeConnectionPointsAction);
+
+    setStartConnectionElement(null);
+    // };
+  };
+
+  // useEffect(() => {
+  //   currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(s => {
+  //     s.config.connectionPoints?.map(p => {
+  //       const firstPointCoords = {
+  //         x: +s.config.graphicalProperties[GraphicalPropertyTypes.X].value + p.relativeCoords.x,
+  //         y: +s.config.graphicalProperties[GraphicalPropertyTypes.Y].value + p.relativeCoords.y
+  //       };
+  //       if (p.connectedShape) {
+  //         const s2 = currentPage?.getLayers().flatMap(l => l.getShapes()).find(s => s.config.id === p.connectedShape)!;
+  //         const p2 = s2.config.connectionPoints!.find(p => p.connectedShape === s.config.id)!;
+  //         const secondPointCoords = {
+  //           x: +s2.config.graphicalProperties[GraphicalPropertyTypes.X].value + p2.relativeCoords.x,
+  //           y: +s2.config.graphicalProperties[GraphicalPropertyTypes.Y].value + p2.relativeCoords.y
+  //         };
+  //         console.log('first', firstPointCoords, 'second', secondPointCoords)
+  //       }
+  //     })
+  //     // return <rect />
+  //   }))
+  // }, []);
 
   return (
     <>
@@ -1134,7 +1230,6 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
               <rect width={canvasConfig.canvasWidth - canvasConfig.offsetX * 2} height={canvasConfig.canvasHeight - canvasConfig.offsetY * 2} fill="url(#gridPattern)" stroke={canvasConfig.sheetStrokeColor} strokeWidth={2} />
             </g>
           </defs>
-          {/* <g transform={`translate(-300,-300)`}> */}
           <g style={{ transform: `matrix(${scale}, 0, 0, ${scale}, ${translate.x}, ${translate.y}) ` }}>
             <use href="#gridRect" />
             <svg
@@ -1156,20 +1251,100 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                   operator="xor"
                 />
               </filter>
-              <g id="elementsGroup" style={{
-                // outline: '2px solid #000000',
-                // transform: `translate(-300, -3000)`,
-                // transformOrigin: 'center
-              }}>
+              <g id="elementsGroup"
+              // style={{
+              // outline: '2px solid #000000',
+              // transform: `translate(-300, -3000)`,
+              // transformOrigin: 'center
+              // }}
+              >
                 {currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(s => {
-                  return s.render(
-                    svgDragNDrop,
-                    // svgSelect,
-                    hideContour,
-                    layer.getZIndex(),
-                    selectedShapes.includes(s.config.id!) && layer.getID() === project?.getCurrentPage().getCurrentLayer().getID(),
-                  );
+                  return <g id={`shape-${s.config.id}`}>
+                    {s.render(
+                      svgDragNDrop,
+                      // svgSelect,
+                      hideContour,
+                      layer.getZIndex(),
+                      selectedShapes.includes(s.config.id!) && layer.getID() === project?.getCurrentPage().getCurrentLayer().getID(),
+                    )}
+                    {((selectedShapes.includes(s.config.id!) && selectedShapes.length === 1)
+                      || (startConnectionElement && startConnectionElement?.shape !== s.config.id))
+                      && <g id='connectionControls' transform={`translate(${s.config.graphicalProperties[GraphicalPropertyTypes.X].value},${s.config.graphicalProperties[GraphicalPropertyTypes.Y].value})`}>
+                        {s.config.connectionPoints?.map(point => {
+                          // console.log(point)
+                          return <g>
+                            {startConnectionElement && <circle role='connection-area' r={point.connectionAreaRadius + 10}
+                              transform={`translate(${point.relativeCoords.x + point.markerOffset.x},${point.relativeCoords.y + point.markerOffset.y})`}
+                              // data-owner={s.config.id}
+                              // data-connection={point.type}
+                              onPointerDown={() => startConnectionElement && connectionEndHandler(s.config.id!, point)}
+                            // onPointerDown={e => scaleControlHandler(e, ScaleControlType.LEFT_TOP)}
+                            // onBlur={hideContour}
+                            />}
+                            <circle role='connection' data-connection={point.type} r="5" tabIndex={-1}
+                              transform={`translate(${point.relativeCoords.x + point.markerOffset.x},${point.relativeCoords.y + point.markerOffset.y})`}
+                              onPointerDown={() => connectionStartHandler(s.config.id!, point)}
+                            // onBlur={hideContour}
+                            />
+                          </g>
+                        })}
+                      </g>}
+                  </g>
                 }))}
+                {(() => {
+                  const connections: Connection[] = [];
+                  const shapes: IShape[] = currentPage!.getLayers().flatMap((layer: ILayer) => layer.getShapes());
+                  const connectedShapes: [string, string][] = [];
+                  shapes.forEach((s: IShape) => {
+                    s.config.connectionPoints?.forEach(((p: IConnectionPoint) => {
+                      if (!p.connectedShapes) return;
+                      const startCoords: ICoords = {
+                        x: +s.config.graphicalProperties[GraphicalPropertyTypes.X].value + p.relativeCoords.x,
+                        y: +s.config.graphicalProperties[GraphicalPropertyTypes.Y].value + p.relativeCoords.y
+                      };
+                      p.connectedShapes.forEach(({ shapeId, pointId }) => {
+                        const s2 = shapes.find(s => s.config.id === shapeId);
+                        if (s2) {
+                          const p2 = s2.config.connectionPoints?.find(p => p.id === pointId);
+                          // const p2 = s2.config.connectionPoints!.find(p => p.connectedShapes?.some((i) => i.shapeId === s.config.id  && i.pointType === pointType));
+                          if (!p2) return;
+                          const endCoords: ICoords = {
+                            x: +s2.config.graphicalProperties[GraphicalPropertyTypes.X].value + p2.relativeCoords.x,
+                            y: +s2.config.graphicalProperties[GraphicalPropertyTypes.Y].value + p2.relativeCoords.y
+                          };
+                          console.log('first', startCoords, 'second', endCoords);
+                          if (!connectedShapes.some(tuple => tuple[0] === p2.id && tuple[1] === p.id)) {
+                            connections.push(new Connection(startCoords, endCoords));
+                            connectedShapes.push([p.id, p2.id]);
+                          }
+                        }
+                      })
+                    }));
+                  });
+                  // console.log(connections)
+                  return connections.map((c: Connection) => c.render());
+                })()
+                }
+                {/* {currentPage?.getLayers().map((layer: ILayer) => layer.getShapes().map(s => {
+                  s.config.connectionPoints?.map(p => {
+                    const firstPointCoords = {
+                      x: +s.config.graphicalProperties[GraphicalPropertyTypes.X].value + p.relativeCoords.x,
+                      y: +s.config.graphicalProperties[GraphicalPropertyTypes.Y].value + p.relativeCoords.y
+                    };
+                    if (p.connectedShape) {
+                      const s2 = currentPage?.getLayers().flatMap(l => l.getShapes()).find(s => s.config.id === p.connectedShape)!;
+                      const p2 = s2.config.connectionPoints!.find(p => p.connectedShape === s.config.id)!;
+                      const secondPointCoords = {
+                        x: +s2.config.graphicalProperties[GraphicalPropertyTypes.X].value + p2.relativeCoords.x,
+                        y: +s2.config.graphicalProperties[GraphicalPropertyTypes.Y].value + p2.relativeCoords.y
+                      };
+                      console.log('first', firstPointCoords, 'second', secondPointCoords);
+                      return <line x1={firstPointCoords.x} y1={firstPointCoords.y} x2={secondPointCoords.x} y2={secondPointCoords.y} />
+                    }
+                  })
+                  return null;
+                }))
+                } */}
                 {cursorAnimations.map(a => <animated.path
                   d={`M${a.cx.get()} ${a.cy.get()} l32 12 l-15 5 l-4 16Z`}
                   fill={a.fill} stroke="#5B5959" strokeWidth="2">

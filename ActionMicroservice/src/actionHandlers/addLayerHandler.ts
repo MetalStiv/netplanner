@@ -1,4 +1,4 @@
-import { Collection, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { ActionType } from "../actionType";
 import { ILayer } from "../model/ILayer";
 import { ActionHandler } from "./actionHandlers";
@@ -9,8 +9,8 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
     if (message.type !== ActionType.ADD_LAYER) {
         return Promise.reject('Wrong handler');
     }
-    if (message.senderRights !== 0){
-        return Promise.reject('Not enough rigths');
+    if (message.senderRights !== 0) {
+        return Promise.reject('Not enough rights');
     }
 
     collections.projectMetaCollection.findOneAndUpdate({
@@ -21,8 +21,10 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
         });
 
     function uniqLayerTitle(name: string) {
-        return titleUniqueization({title: name.length ? name : message.data.defaultName, collection: collections.layerCollection,
-            parentField: 'pageId', parentId: message.pageId});
+        return titleUniqueization({
+            title: name.length ? name : message.data.defaultName, collection: collections.layerCollection,
+            parentField: 'pageId', parentId: message.pageId
+        });
     }
 
     async function getZIndex(pageId: string) {
@@ -43,9 +45,8 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
 
     await collections.layerCollection.insertOne(newLayer);
 
-    if (message.data.newLayer.shapes){
-        for await (const s of message.data.newLayer.shapes)
-        {
+    if (message.data.newLayer.shapes) {
+        for await (const s of message.data.newLayer.shapes) {
             const newShape: IShape = {
                 _id: new ObjectId(s.id),
                 type: s.type,
@@ -53,8 +54,9 @@ export const addLayerHandler: ActionHandler = async (collections, message) => {
                 zIndex: s.zIndex,
                 graphicalProperties: s.graphicalProperties,
                 objectProperties: s.objectProperties,
+                connectionPoints: s.connectionPoints.map(({ id, ...p }) => ({ ...p, _id: id.length ? new ObjectId(id) : new ObjectId() })),
             };
-        
+
             await collections.shapeCollection.insertOne(newShape)
         }
     }

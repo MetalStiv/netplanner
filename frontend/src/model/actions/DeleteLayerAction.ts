@@ -26,18 +26,22 @@ export class DeleteLayerAction implements IAction {
                     zIndex: this.layer.getZIndex(),
                     isVisible: this.layer.isVisible(),
                     shapes: this.layer.getShapes().map(s => {
-                        const messageGraphicalProperties: {l: string, v: string | string[]}[] = []
-                        let graphicalProperty: keyof typeof s.config.graphicalProperties; 
-                        for (graphicalProperty in s.config.graphicalProperties){
-                            messageGraphicalProperties.push({l: graphicalProperty, 
-                                v: s.config.graphicalProperties[graphicalProperty].value})
+                        const messageGraphicalProperties: { l: string, v: string | string[] }[] = []
+                        let graphicalProperty: keyof typeof s.config.graphicalProperties;
+                        for (graphicalProperty in s.config.graphicalProperties) {
+                            messageGraphicalProperties.push({
+                                l: graphicalProperty,
+                                v: s.config.graphicalProperties[graphicalProperty].value
+                            })
                         }
 
-                        const messageObjectProperties: {l: string, v: string | string[]}[] = []
-                        let objectProperty: keyof typeof s.config.objectProperties; 
-                        for (objectProperty in s.config.objectProperties){
-                            messageGraphicalProperties.push({l: objectProperty, 
-                                v: s.config.objectProperties[objectProperty].value})
+                        const messageObjectProperties: { l: string, v: string | string[] }[] = []
+                        let objectProperty: keyof typeof s.config.objectProperties;
+                        for (objectProperty in s.config.objectProperties) {
+                            messageGraphicalProperties.push({
+                                l: objectProperty,
+                                v: s.config.objectProperties[objectProperty].value
+                            })
                         }
 
                         return {
@@ -46,6 +50,7 @@ export class DeleteLayerAction implements IAction {
                             zIndex: s.config.zIndex!,
                             graphicalProperties: messageGraphicalProperties,
                             objectProperties: messageObjectProperties,
+                            connectionPoints: s.config.connectionPoints ?? []
                         }
                     }),
                 }

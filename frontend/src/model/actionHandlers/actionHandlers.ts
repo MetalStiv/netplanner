@@ -14,6 +14,7 @@ import { renamePageHandler } from "./renamePageHandler";
 import { deleteLayerHandler } from "./deleteLayerHandler";
 import { deletePageHandler } from "./deletePageHandler";
 import { changeObjectPropertyHandler } from "./changeObjectPropertyHandler";
+import { changeConnectionPointsHandler } from "./changeConnectionPointHandler";
 
 export type ActionHandler = (project: Project, message: IMessage, actionStory: IAction[]) => Promise<Project>
 
@@ -36,7 +37,8 @@ export const actionHandlers: IActionHandlers = {
         deletePageHandler,
         changeGraphicalPropertyHandler,
         changeObjectPropertyHandler,
-        changeLayerVisibleHandler
+        changeLayerVisibleHandler,
+        changeConnectionPointsHandler
     ],
 
     async handle(project: Project, message: IMessage, actionStory: IAction[]) {

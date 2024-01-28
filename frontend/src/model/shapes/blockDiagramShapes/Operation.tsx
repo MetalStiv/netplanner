@@ -4,6 +4,8 @@ import { ShapeType } from "../ShapeType";
 import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShapeGraphicalProps, ObjectPropertyTypes } from "../IShape";
 import { IMessageProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
+import IConnectionPoint, { ConnectionPointTypes, calculateCPCoords, connectionPointsInflaters } from "../IConnectionPoint";
+// import { IBlockDiagramConnectionPoint } from "./BlockDiagramGroup";
 
 interface IOperationProps extends IShapeGraphicalProps {
     [GraphicalPropertyTypes.WIDTH]: IGraphicalProperty,
@@ -16,6 +18,7 @@ export interface IOperationConfig extends IShapeConfig {
     id?: string,
     graphicalProperties: IOperationProps,
     zIndex: number,
+    connectionPoints: IConnectionPoint[]
 }
 
 export const operationInflater: TShapeInflater = async (messageShape: IMessageShape) => {
@@ -76,17 +79,32 @@ export const operationInflater: TShapeInflater = async (messageShape: IMessageSh
             [ObjectPropertyTypes.ID]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
         },
+        connectionPoints: messageShape.connectionPoints.map(point => {
+            // const type: ConnectionPointTypes = ConnectionPointTypes[t as keyof typeof ConnectionPointTypes];
+            const pointObj = connectionPointsInflaters.inflate(point, 120, 80);
+            console.log(point, pointObj)
+            return pointObj!;
+            // console.log(point.type, type, ConnectionPointTypes.TOP)
+            // const { relativeCoords, markerOffset } = calculateCPCoords(type, 120, 80);
+            // return ({
+            //     ...point,
+            //     type,
+            //     relativeCoords,
+            //     markerOffset,
+            //     connectionAreaRadius: 10,
+            // })
+        })
     })
 }
 
 export class OperationCreator implements IShapeCreator {
     type: ShapeType = ShapeType.OPERATION;
-    icon: string = '<rect x="1" y="2" width="24" height="16" fill="white" stroke="black" stroke-width="2"/>';;
+    icon: string = '<rect x="1" y="2" width="24" height="16" fill="white" stroke="black" stroke-width="2"/>';
     create() {
         return new Operation({
             graphicalProperties: {
@@ -145,6 +163,44 @@ export class OperationCreator implements IShapeCreator {
                 },
             },
             zIndex: 0,
+            connectionPoints: [ConnectionPointTypes.TOP, ConnectionPointTypes.RIGHT, ConnectionPointTypes.BOTTOM, ConnectionPointTypes.LEFT]
+                .map(type => {
+                    const { relativeCoords, markerOffset } = calculateCPCoords(type, 120, 80);
+                    return ({
+                        id: '',
+                        type,
+                        relativeCoords,
+                        markerOffset,
+                        connectionAreaRadius: 10,
+                        connectedShapes: null
+                    });
+                })
+            //     [
+            //     {
+            //         type: ConnectionPointTypes.TOP,
+            //         relativeCoords: calculateCPRelativeCoords(ConnectionPointTypes.TOP, 120, 80),  //{ x: 120 / 2, y: -16 },
+            //         connectionAreaRadius: 10,
+            //         connectedShape: null
+            //     },
+            //     {
+            //         type: ConnectionPointTypes.RIGHT,
+            //         relativeCoords: calculateCPRelativeCoords(ConnectionPointTypes.RIGHT, 120, 80),//{ x: 120 + 16, y: 80 / 2 },
+            //         connectionAreaRadius: 10,
+            //         connectedShape: null
+            //     },
+            //     {
+            //         type: ConnectionPointTypes.BOTTOM,
+            //         relativeCoords: calculateCPRelativeCoords(ConnectionPointTypes.BOTTOM, 120, 80), //{ x: 120 / 2, y: 80 + 16 },
+            //         connectionAreaRadius: 10,
+            //         connectedShape: null
+            //     },
+            //     {
+            //         type: ConnectionPointTypes.LEFT,
+            //         relativeCoords: calculateCPRelativeCoords(ConnectionPointTypes.LEFT, 120, 80),//{ x: -16, y: 80 / 2 },
+            //         connectionAreaRadius: 10,
+            //         connectedShape: null
+            //     },
+            // ]
         });
     }
 }
@@ -158,15 +214,19 @@ class Operation implements IShape {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value =
-            this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
+        const newWidth = this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = newWidth;
+        this.config.connectionPoints =
+            this.config.connectionPoints.map(p => ({ ...p, relativeCoords: calculateCPCoords(p.type, +newWidth, this.overallHeight).relativeCoords }));
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
     }
     set overallHeight(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value =
-            this.validateProperty(value.toString(), GraphicalPropertyTypes.HEIGHT);
+        const newHeight = this.validateProperty(value.toString(), GraphicalPropertyTypes.HEIGHT);
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = newHeight;
+        this.config.connectionPoints =
+            this.config.connectionPoints.map(p => ({ ...p, relativeCoords: calculateCPCoords(p.type, this.overallWidth, +newHeight).relativeCoords }));
     }
 
     validateProperty(value: string, propertyType: GraphicalPropertyTypes) {
@@ -206,7 +266,7 @@ class Operation implements IShape {
             editorType: EditorType.TEXT_EDITOR
         };
     }
-    
+
     updateGraphicalProperties(m: IMessageProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
@@ -238,13 +298,11 @@ class Operation implements IShape {
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR
         };
-
         this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.FILL_COLOR_ONE)!.v,
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR
         };
-
         this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.MIRROR_X)!.v,
             isReadable: false,
@@ -277,10 +335,9 @@ class Operation implements IShape {
             onMouseDown={handlerMouseDown}
             // onFocus={handlerFocus}
             onBlur={handlerBlur}
-            transform={`rotate(${
-                this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
-                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
-                    : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
+            transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+                ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
+                : 360 - +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}
             d={`
