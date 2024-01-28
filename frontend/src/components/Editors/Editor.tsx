@@ -3,6 +3,7 @@ import { EditorType } from "../../model/EditorType";
 import TextEditor from "./TextEditor/TextEditor";
 import ColorEditor from "./ColorEditor/ColorEditor";
 import MultitextEditor from "./MultitextEditor/MultitextEditor";
+import CheckboxEditor from "./CheckboxEditor/ChecboxEditor";
 
 export interface IEditorProps {
     defaultValue: string | string[],
@@ -29,6 +30,9 @@ const Editor = ({ defaultValue, field, valueRound, onChange, textClassName, inpu
             break;
         case EditorType.MULTITEXT_EDITOR:
             editor = MultitextEditor;
+            break;
+        case EditorType.CHECKBOX_EDITOR:
+            editor = CheckboxEditor;
             break;
 
         default:

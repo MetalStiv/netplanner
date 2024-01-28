@@ -158,6 +158,7 @@ export const eng: ILanguage = {
             [GroupType.NETWORK]: "Network",
         },
         baseShapes: {
+            [ShapeType.TEXT]: "Text",
             [ShapeType.CIRCLE]: "Circle",
             [ShapeType.ELLIPS]: "Ellips",
             [ShapeType.LINE]: "Line",
@@ -208,6 +209,7 @@ export const eng: ILanguage = {
             [GraphicalPropertyTypes.RIGHT_WIDTH]: "Right wall width",
             [GraphicalPropertyTypes.TOP_WIDTH]: "Top wall width",
             [GraphicalPropertyTypes.BOTTOM_WIDTH]: "Bottom wall width",
+            [GraphicalPropertyTypes.SHOW_ROOM_NUMBER]: "Show room number",
         
             [GraphicalPropertyTypes.STROKE_COLOR]: "Stroke color",
             [GraphicalPropertyTypes.STROKE_WIDTH]: "Stroke wirth",
@@ -238,6 +240,8 @@ export const eng: ILanguage = {
             [ObjectPropertyTypes.SSID]: "SSID",
             [ObjectPropertyTypes.CONTACT_PERSON]: "Contact person",
             [ObjectPropertyTypes.SOFTWARE]: "Software",
+            [ObjectPropertyTypes.ROOM_NUMBER]: "Room number",
+            [ObjectPropertyTypes.TEXT]: "Text",
         },
 
         defaultPageName: 'Page',

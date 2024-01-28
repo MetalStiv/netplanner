@@ -5,10 +5,12 @@ import { EllipseCreator } from "./Ellipse";
 import { LineCreator } from "./Line";
 import { PolylineCreator } from "./Polyline";
 import { RectCreator } from "./Rect";
+import { TextCreator } from "./Text";
 
 const primitiveGroup: IShapeGroup = {
     labelName: GroupType.PRIMITIVES,
     shapes: [
+        new TextCreator(),
         new CircleCreator(),
         new EllipseCreator(),
         // new LineCreator(),

@@ -31,6 +31,7 @@ import { firewallInflater } from "./networkShapes/Firewall";
 import { printerInflater } from "./networkShapes/Printer";
 import { mfuInflater } from "./networkShapes/Mfu";
 import { scannerInflater } from "./networkShapes/Scanner";
+import { textInflater } from "./primitiveShapes/Text";
 
 export type TShapeInflater = (message: IMessageShape) => Promise<IShape | null>;
 
@@ -41,6 +42,7 @@ export interface IShapeInflaters {
 
 export const shapeInflaters: IShapeInflaters = {
     inflaters: [
+        textInflater,
         circleInflater,
         ellipseInflater,
         lineInflater,

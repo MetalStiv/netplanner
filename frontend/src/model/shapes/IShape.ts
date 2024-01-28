@@ -17,6 +17,7 @@ export enum GraphicalPropertyTypes {
     RIGHT_WIDTH = 'rw',
     TOP_WIDTH = 'tw',
     BOTTOM_WIDTH = 'bw',
+    SHOW_ROOM_NUMBER = 'n',
 
     STROKE_COLOR = 'sc',
     STROKE_WIDTH = 'sw',
@@ -48,6 +49,8 @@ export enum ObjectPropertyTypes {
     SSID = 'l5',
     CONTACT_PERSON = 'l6',
     SOFTWARE = 'l7',
+    ROOM_NUMBER = 'l8',
+    TEXT = 't',
 }
 
 export interface IShapeGraphicalProps {

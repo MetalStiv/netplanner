@@ -156,6 +156,7 @@ interface ILanguage {
             [GroupType.NETWORK]: string,
         },
         baseShapes: {
+            [ShapeType.TEXT]: string,
             [ShapeType.CIRCLE]: string,
             [ShapeType.ELLIPS]: string,
             [ShapeType.LINE]: string,
@@ -206,6 +207,7 @@ interface ILanguage {
             [GraphicalPropertyTypes.RIGHT_WIDTH]: string,
             [GraphicalPropertyTypes.TOP_WIDTH]: string,
             [GraphicalPropertyTypes.BOTTOM_WIDTH]: string,
+            [GraphicalPropertyTypes.SHOW_ROOM_NUMBER]: string,
         
             [GraphicalPropertyTypes.STROKE_COLOR]: string,
             [GraphicalPropertyTypes.STROKE_WIDTH]: string,
@@ -236,6 +238,8 @@ interface ILanguage {
             [ObjectPropertyTypes.SSID]: string,
             [ObjectPropertyTypes.CONTACT_PERSON]: string,
             [ObjectPropertyTypes.SOFTWARE]: string,
+            [ObjectPropertyTypes.ROOM_NUMBER]: string,
+            [ObjectPropertyTypes.TEXT]: string,
         },
 
         defaultPageName: string,

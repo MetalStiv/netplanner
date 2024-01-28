@@ -158,6 +158,7 @@ export const ru: ILanguage = {
             [GroupType.NETWORK]: "Сетевые устройства",
         },
         baseShapes: {
+            [ShapeType.TEXT]: "Текст",
             [ShapeType.CIRCLE]: "Круг",
             [ShapeType.ELLIPS]: "Эллипс",
             [ShapeType.LINE]: "Линия",
@@ -208,6 +209,7 @@ export const ru: ILanguage = {
             [GraphicalPropertyTypes.RIGHT_WIDTH]: "Ширина правой стенки",
             [GraphicalPropertyTypes.TOP_WIDTH]: "Ширина верхней стенки",
             [GraphicalPropertyTypes.BOTTOM_WIDTH]: "Ширина нижней стенки",
+            [GraphicalPropertyTypes.SHOW_ROOM_NUMBER]: "Показывать номер",
         
             [GraphicalPropertyTypes.STROKE_COLOR]: "Цвет границы",
             [GraphicalPropertyTypes.STROKE_WIDTH]: "Толщина границы",
@@ -238,6 +240,8 @@ export const ru: ILanguage = {
             [ObjectPropertyTypes.SSID]: "SSID",
             [ObjectPropertyTypes.CONTACT_PERSON]: "Контактное лицо",
             [ObjectPropertyTypes.SOFTWARE]: "ПО",
+            [ObjectPropertyTypes.ROOM_NUMBER]: "Номер комнаты",
+            [ObjectPropertyTypes.TEXT]: "Текст",
         },
 
         defaultPageName: "Страница",

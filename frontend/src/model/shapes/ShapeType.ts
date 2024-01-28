@@ -1,4 +1,5 @@
 export enum ShapeType {
+    TEXT = "ag",
     CIRCLE = "aa",
     RECTANGLE = "ab",
     ELLIPS = "ac",
