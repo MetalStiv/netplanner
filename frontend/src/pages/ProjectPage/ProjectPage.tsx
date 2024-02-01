@@ -44,6 +44,7 @@ import { ShapeType } from '../../model/shapes/ShapeType';
 import { AddShapeAction } from '../../model/actions/AddShapeAction';
 import ColorEditor from '../../components/Editors/ColorEditor/ColorEditor';
 import networkGroup from '../../model/shapes/networkShapes/NetworkGroup';
+import ICoords from '../../common/model/ICoords';
 // import { UndoAction } from '../../model/Action';
 
 export interface IShapeProps {
@@ -62,7 +63,7 @@ const ProjectPage: React.FC = observer(() => {
     const [params] = useSearchParams();
     const navigate = useNavigate();
 
-    const [canvasCursorCoords, setCanvasCursorCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+    const [canvasCursorCoords, setCanvasCursorCoords] = useState<ICoords>({ x: 0, y: 0 });
     const [selectedShapeProps, setSelectedShapeProps] = useState<IShapeProps | null>(null);
     const [currentCreator, setCurrentCreator] = useState<IShapeCreator | null>(null);
     const [orientation,] = useState<ICanvasConfig>(Portrait);
@@ -98,7 +99,7 @@ const ProjectPage: React.FC = observer(() => {
         updateProject(projectId);
     }, []);
 
-    const cursorCoordsCallback = useCallback((cursorCoords: { x: number, y: number }) => {
+    const cursorCoordsCallback = useCallback((cursorCoords: ICoords) => {
         setCanvasCursorCoords(cursorCoords);
     }, []);
 
@@ -107,7 +108,7 @@ const ProjectPage: React.FC = observer(() => {
     }, []);
 
     const clickedShapePropsCallback = useCallback((shapeProps: IShapeProps) => {
-        if (projectStore.getProject()?.getCurrentPage().getCurrentLayer().getShapes().some(s => s.config.id === shapeProps.id)){
+        if (projectStore.getProject()?.getCurrentPage().getCurrentLayer().getShapes().some(s => s.config.id === shapeProps.id)) {
             setSelectedShapeProps(shapeProps);
         }
     }, []);
@@ -305,7 +306,7 @@ const ProjectPage: React.FC = observer(() => {
                         {/* <div className="content"> */}
                         <VerticalPageSplit resize={Limit}>
                             <div style={{ minHeight: 150 }}>
-                                <ObjectPropertiesPanel shapeProps={selectedShapeProps} 
+                                <ObjectPropertiesPanel shapeProps={selectedShapeProps}
                                     onChange={(props) => setSelectedShapeProps({ ...selectedShapeProps!, objectProps: props })} />
                             </div>
                             <div style={{ minHeight: 150 }}>

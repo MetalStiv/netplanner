@@ -10,8 +10,6 @@ export class ChangeConnectionPointsAction implements IAction {
 
     private shape: IShape;
     private secondShape: IShape;
-    // private layerID: string;
-    // private secondLayerID: string;
     private oldConnectionPoints: IConnectionPoint[];
     private newConnectionPoints: IConnectionPoint[];
     private secondShapeOldConnectionPoints: IConnectionPoint[];
@@ -20,15 +18,11 @@ export class ChangeConnectionPointsAction implements IAction {
     constructor(
         shape: IShape,
         secondShape: IShape,
-        // layerID: string,
-        // secondLayerID: string,
         newPoints: IConnectionPoint[],
         secondShapeNewPoints: IConnectionPoint[]
     ) {
         this.shape = shape;
         this.secondShape = secondShape;
-        // this.layerID = layerID;
-        // this.secondLayerID = secondLayerID;
         this.oldConnectionPoints = JSON.parse(JSON.stringify(shape.config.connectionPoints));
         this.newConnectionPoints = newPoints;
         this.secondShapeOldConnectionPoints = JSON.parse(JSON.stringify(secondShape.config.connectionPoints));
@@ -41,25 +35,19 @@ export class ChangeConnectionPointsAction implements IAction {
             type: ActionType.CHANGE_CONNECTION_POINTS,
             data: {
                 shapesIds: [this.shape.config.id!, this.secondShape.config.id!],
-                // layersIds: [this.layerID, this.secondLayerID],
-                connectionPoints: [this.oldConnectionPoints, this.secondShapeOldConnectionPoints]
+                connectionPoints: [
+                    this.oldConnectionPoints,
+                    this.secondShapeOldConnectionPoints
+                ].map(points => points.map(({ id, type, connectedShapes }) => ({ id, type, connectedShapes })))
             }
         }
     }
 
     do(): IMessage {
-        console.log([
-            this.newConnectionPoints,
-            this.secondShapeNewConnectionPoints
-        ].map(points => points.map(({ id, type, connectedShapes }) => ({ id, type, connectedShapes }))))
         return {
             type: ActionType.CHANGE_CONNECTION_POINTS,
             data: {
                 shapesIds: [this.shape.config.id!, this.secondShape.config.id!],
-                // layersIds: [this.layerID, this.secondLayerID],
-                // connectionPoints: [{
-                //     id: this.newConnectionPoints
-                // }, this.secondShapeNewConnectionPoints]
                 connectionPoints: [
                     this.newConnectionPoints,
                     this.secondShapeNewConnectionPoints

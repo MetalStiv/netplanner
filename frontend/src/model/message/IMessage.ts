@@ -1,6 +1,7 @@
 import { IMessageProperty, IMessageConnectionPoint, IMessageShape } from "./IMessageShape"
 import { IMessageLayer } from "./IMessageLayer"
 import { IMessagePage } from "./IMessagePage"
+import ICoords from "../../common/model/ICoords"
 
 export interface IMessage {
     type: string,
@@ -26,7 +27,7 @@ export interface IMessage {
         objectProperties?: IMessageProperty[],
         connectionPoints?: IMessageConnectionPoint[][],
         // secondShapeConnectionPoints?: IConnectionPoint[],
-        coords?: { x: number, y: number },
+        coords?: ICoords,
         name?: string,
         defaultName?: string,
     }

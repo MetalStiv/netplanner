@@ -15,6 +15,7 @@ interface ILineConfig extends IShapeConfig {
     id?: string,
     graphicalProperties: ILineGraphicalProps,
     zIndex: number,
+    connectionPoints: null
 }
 
 export const lineInflater: TShapeInflater = async (messageShape: IMessageShape) => {
@@ -70,11 +71,12 @@ export const lineInflater: TShapeInflater = async (messageShape: IMessageShape) 
             [ObjectPropertyTypes.ID]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
         },
+        connectionPoints: null
     })
 }
 
@@ -132,6 +134,7 @@ export class LineCreator implements IShapeCreator {
                 },
             },
             zIndex: 0,
+            connectionPoints: null
         });
     }
 }
@@ -167,7 +170,7 @@ class Line implements IShape {
             editorType: EditorType.TEXT_EDITOR
         };
     }
-    
+
     updateGraphicalProperties(m: IMessageProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
@@ -199,7 +202,7 @@ class Line implements IShape {
             isReadable: true,
             editorType: EditorType.COLOR_EDITOR
         };
-        
+
         this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.MIRROR_X)!.v,
             isReadable: false,
@@ -213,7 +216,6 @@ class Line implements IShape {
     }
 
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
-        // handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
         layerZIndex: number,
         isSelected: boolean,
@@ -229,7 +231,6 @@ class Line implements IShape {
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
-            // onFocus={handlerFocus}
             onBlur={handlerBlur}
             transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.X2].value / 2)} 

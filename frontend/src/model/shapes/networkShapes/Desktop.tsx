@@ -4,6 +4,7 @@ import { ShapeType } from "../ShapeType";
 import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IObjectProperty, IShapeConfig, IShapeGraphicalProps, IShapeObjectProps, ObjectPropertyTypes } from "../IShape";
 import { IMessageProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
+import IConnectionPoint, { ConnectionPointTypes, calculateCPCoords, connectionPointsInflaters } from "../IConnectionPoint";
 
 interface IDesktopGraphicalProps extends IShapeGraphicalProps {
     [GraphicalPropertyTypes.WIDTH]: IGraphicalProperty,
@@ -27,6 +28,7 @@ export interface IDesktopConfig extends IShapeConfig {
     graphicalProperties: IDesktopGraphicalProps,
     objectProperties: IDesktopObjectProps,
     zIndex: number,
+    connectionPoints: IConnectionPoint[] | null
 }
 
 export const desktopInflater: TShapeInflater = async (messageShape: IMessageShape) => {
@@ -77,67 +79,84 @@ export const desktopInflater: TShapeInflater = async (messageShape: IMessageShap
             [ObjectPropertyTypes.ID]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
             [ObjectPropertyTypes.OS]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.OS) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.OS)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.OS)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
             [ObjectPropertyTypes.CPU]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.CPU) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.CPU)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.CPU)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
             [ObjectPropertyTypes.RAM]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.RAM) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.RAM)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.RAM)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
             [ObjectPropertyTypes.SOFTWARE]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.SOFTWARE) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.SOFTWARE)?.v! : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.SOFTWARE)?.v! : ''
                     : '',
                 editorType: EditorType.MULTITEXT_EDITOR
             },
             [ObjectPropertyTypes.HOST_NAME]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.HOST_NAME) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.HOST_NAME)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.HOST_NAME)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
             [ObjectPropertyTypes.IP]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.IP) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.IP)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.IP)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
             [ObjectPropertyTypes.MAC]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.MAC) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.MAC)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.MAC)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
             [ObjectPropertyTypes.CONTACT_PERSON]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.CONTACT_PERSON) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.CONTACT_PERSON)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.CONTACT_PERSON)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
-        }
+        },
+        connectionPoints: (() => {
+            const w = +messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v;
+            const h = +messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v / 2;
+
+            return messageShape?.connectionPoints.map(point => connectionPointsInflaters.inflate(point, w, h)!)
+                ?? [ConnectionPointTypes.CENTER].map(type => {
+                    const { relativeCoords, markerOffset } = calculateCPCoords(type, w, h);
+                    return ({
+                        id: '',
+                        type,
+                        relativeCoords,
+                        markerOffset,
+                        connectionAreaRadius: (w > h ? w : h) / 2 + 8,
+                        connectedShapes: null
+                    });
+                })
+        })()
     })
 }
 
@@ -161,7 +180,7 @@ export class DesktopCreator implements IShapeCreator {
                     editorType: EditorType.TEXT_EDITOR
                 },
                 [GraphicalPropertyTypes.WIDTH]: {
-                    value: '30',
+                    value: '80',
                     isReadable: true,
                     editorType: EditorType.TEXT_EDITOR
                 },
@@ -226,6 +245,18 @@ export class DesktopCreator implements IShapeCreator {
                 },
             },
             zIndex: 0,
+            connectionPoints: [ConnectionPointTypes.CENTER]
+                .map(type => {
+                    const { relativeCoords, markerOffset } = calculateCPCoords(type, 80, 40);
+                    return ({
+                        id: '',
+                        type,
+                        relativeCoords,
+                        markerOffset,
+                        connectionAreaRadius: 44,
+                        connectedShapes: null
+                    });
+                })
         });
     }
 }
@@ -239,15 +270,23 @@ class Desktop implements IShape {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value =
-            this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
+        const newWidth = this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = newWidth;
+        if (this.config.connectionPoints?.length) {
+            this.config.connectionPoints =
+                this.config.connectionPoints.map(p => ({ ...p, relativeCoords: calculateCPCoords(p.type, +newWidth, +newWidth / 2).relativeCoords }));
+        }
     }
     get overallHeight() {
-        return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
+        return +(this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value) / 2;
     }
     set overallHeight(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value =
-            this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
+        const newWidth = this.validateProperty((value * 2).toString(), GraphicalPropertyTypes.WIDTH);
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = newWidth;
+        if (this.config.connectionPoints?.length) {
+            this.config.connectionPoints =
+                this.config.connectionPoints.map(p => ({ ...p, relativeCoords: calculateCPCoords(p.type, +newWidth, +newWidth / 2).relativeCoords }));
+        }
     }
 
     validateProperty(value: string, propertyType: GraphicalPropertyTypes) {
@@ -350,7 +389,6 @@ class Desktop implements IShape {
     }
 
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
-        // handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
         layerZIndex: number,
         isSelected: boolean,
@@ -358,17 +396,16 @@ class Desktop implements IShape {
         return <g
             key={this.config.id}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
-            >
+        >
             <path
-                key={this.config.id+'_1'}
+                key={this.config.id + '_1'}
                 fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
                 stroke={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
                 fillRule="nonzero"
                 onBlur={handlerBlur}
-                transform={`rotate(${
-                    this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
-                        : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
+                transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
+                    : 360 - +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
@@ -376,34 +413,33 @@ class Desktop implements IShape {
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)},
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1' 
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value/2
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1'
+                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2
                         : 0)}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.25
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.25
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value/2
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.25
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.25
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.5
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.5
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 `}
             />
 
             <path
-                key={this.config.id+'_2'}
+                key={this.config.id + '_2'}
                 fill={"#ffffff"}
                 stroke={"#ffffff"}
                 fillRule="nonzero"
                 onBlur={handlerBlur}
-                transform={`rotate(${
-                    this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
-                        : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
+                transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
+                    : 360 - +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
@@ -411,51 +447,50 @@ class Desktop implements IShape {
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)},
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1' 
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value/2
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1'
+                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2
                         : 0)}
 
-                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.15/2
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.15/2
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.15 / 2
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.15 / 2
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.02} 
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.02}
-                        0 1,0 ${-1* +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}, 0
+                    a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.02} 
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.02}
+                        0 1,0 ${-1 * +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}, 0
                         
-                    a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.02} 
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.02}
-                        0 1,0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.04
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}, 0
+                    a ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.02} 
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.02}
+                        0 1,0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.04
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}, 0
 
-                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.035
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.06
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.035
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.06
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                     
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.175
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.175
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.08
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    m 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.08
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                     
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.175
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.175
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
                 `}
             />
 
             <path
-                key={this.config.id+'_3'}
+                key={this.config.id + '_3'}
                 fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
                 stroke={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
                 fillRule="nonzero"
                 onBlur={handlerBlur}
-                transform={`rotate(${
-                    this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
-                        : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
+                transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
+                    : 360 - +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
@@ -463,37 +498,36 @@ class Desktop implements IShape {
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)},
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1' 
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value/2
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1'
+                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2
                         : 0)}
 
-                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.35
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.35
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.65
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.65
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.375
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.375
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.65
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.65
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.375
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.375
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 `}
             />
 
             <path
-                key={this.config.id+'_4'}
+                key={this.config.id + '_4'}
                 fill={"#ffffff"}
                 stroke={"#ffffff"}
                 fillRule="nonzero"
                 onBlur={handlerBlur}
-                transform={`rotate(${
-                    this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
-                        : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
+                transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
+                    : 360 - +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
@@ -501,41 +535,40 @@ class Desktop implements IShape {
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)},
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1' 
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value/2
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1'
+                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2
                         : 0)}
 
-                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.375
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.025
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.375
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.025
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.6
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.6
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.325
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.325
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.6
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.6
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.325
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.325
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 `}
             />
 
             <path
-                key={this.config.id+'_5'}
+                key={this.config.id + '_5'}
                 stroke={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
-                strokeWidth={+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.03}
+                strokeWidth={+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.03}
                 strokeLinecap="round"
                 fillOpacity="0"
                 fillRule="nonzero"
                 onBlur={handlerBlur}
-                transform={`rotate(${
-                    this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
-                        : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
+                transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
+                    : 360 - +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
@@ -543,37 +576,37 @@ class Desktop implements IShape {
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)},
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1' 
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value/2
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1'
+                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2
                         : 0)}
 
-                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.675
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.375
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.675
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.375
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.075
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.075
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                     
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.25
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.05
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.25
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.05
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.25
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.05
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    m ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.25
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.05
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.25
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*0.05
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.25
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())}
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * 0.05
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 `}
             />
 
             <path
-                key={this.config.id+'_6'}
+                key={this.config.id + '_6'}
                 className={isSelected ? 'selected' : ''}
                 data-id={this.config.id}
                 data-type={this.type}
@@ -585,12 +618,10 @@ class Desktop implements IShape {
                 fillRule="nonzero"
                 onDragStart={(e) => e.preventDefault}
                 onMouseDown={handlerMouseDown}
-                // onFocus={handlerFocus}
                 onBlur={handlerBlur}
-                transform={`rotate(${
-                    this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
-                        : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
+                transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
+                    : 360 - +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                         
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value)} 
                     ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)})`}
@@ -598,21 +629,21 @@ class Desktop implements IShape {
                     M ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === '-1'
                         ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
                         : 0)},
-                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1' 
-                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value/2
+                        ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value === '-1'
+                        ? +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2
                         : 0)}
 
                     l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value/2
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
 
-                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.75
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
+                    l ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.75
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value.toString())} 0
 
-                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value*-0.5
-                        *parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
+                    l 0 ${+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value * -0.5
+                    * parseInt(this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value.toString())}
                 `}
             />
         </g>

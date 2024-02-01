@@ -79,7 +79,7 @@ export interface IShapeConfig {
     graphicalProperties: IShapeGraphicalProps,
     objectProperties: IShapeObjectProps,
     zIndex?: number,
-    connectionPoints?: IConnectionPoint[]
+    connectionPoints: IConnectionPoint[] | null
 }
 
 export interface IShape {
