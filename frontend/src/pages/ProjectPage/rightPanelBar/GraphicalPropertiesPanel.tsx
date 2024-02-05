@@ -8,6 +8,7 @@ import { EditorType } from "../../../model/EditorType";
 import ICanvasConfig from "../../../common/canvasConfig";
 import { fromCartesianCoordSystem, toCartesianCoordSystem } from "../../../common/helpers/CartesianCoordSystem";
 import { ChangeGraphicalPropertyAction } from "../../../model/actions/ChangeGraphicalPropertyAction";
+import ICoords from "../../../common/model/ICoords";
 
 interface IGraphicalPropertiesPanelProps {
     shapeProps: IShapeProps | null,
@@ -50,7 +51,7 @@ const GraphicalPropertiesPanel = ({ shapeProps, onChange, canvasProps }: IGraphi
                                     inputClassName={obj.editorType === EditorType.TEXT_EDITOR ? 'change-property-input' : undefined}
                                     onChange={value => {
                                         const changableShape = currentLayer?.getShapes().find(shape => shape.config.id === shapeProps.id);
-                                        let convertedCoords: { x: number, y: number } | null = null;
+                                        let convertedCoords: ICoords | null = null;
                                         let newVal = value;
                                         const isCoord = key === GraphicalPropertyTypes.X || key === GraphicalPropertyTypes.Y;
                                         if (isCoord) {
@@ -76,7 +77,7 @@ const GraphicalPropertiesPanel = ({ shapeProps, onChange, canvasProps }: IGraphi
                                 />
                             </div>
                         }
-                    )
+                        )
                 }
             </div>}
         </div>

@@ -25,6 +25,7 @@ export interface IRoomConfig extends IShapeConfig {
     graphicalProperties: IRoomProps,
     objectProperties: IRoomObjectProps,
     zIndex: number,
+    connectionPoints: null
 }
 
 export const roomInflater: TShapeInflater = async (messageShape: IMessageShape) => {
@@ -107,7 +108,7 @@ export const roomInflater: TShapeInflater = async (messageShape: IMessageShape) 
             [ObjectPropertyTypes.ID]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
@@ -119,6 +120,7 @@ export const roomInflater: TShapeInflater = async (messageShape: IMessageShape) 
                 editorType: EditorType.TEXT_EDITOR
             },
         },
+        connectionPoints: null
     })
 }
 
@@ -205,6 +207,7 @@ export class RoomCreator implements IShapeCreator {
                 },
             },
             zIndex: 0,
+            connectionPoints: null
         });
     }
 }
@@ -260,7 +263,7 @@ class Room implements IShape {
             editorType: EditorType.CHECKBOX_EDITOR
         };
     }
-    
+
     updateGraphicalProperties(m: IMessageProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
@@ -330,7 +333,6 @@ class Room implements IShape {
     }
 
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
-        // handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
         layerZIndex: number,
         isSelected: boolean,

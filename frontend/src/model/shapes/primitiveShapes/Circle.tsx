@@ -15,6 +15,7 @@ export interface ICircleConfig extends IShapeConfig {
     id?: string,
     graphicalProperties: ICircleGraphicalProps,
     zIndex: number,
+    connectionPoints: null
 }
 
 export const circleInflater: TShapeInflater = async (messageShape: IMessageShape) => {
@@ -70,11 +71,12 @@ export const circleInflater: TShapeInflater = async (messageShape: IMessageShape
             [ObjectPropertyTypes.ID]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
         },
+        connectionPoints: null
     })
 }
 
@@ -131,7 +133,8 @@ export class CircleCreator implements IShapeCreator {
                     editorType: EditorType.TEXT_EDITOR
                 },
             },
-            zIndex: 0
+            zIndex: 0,
+            connectionPoints: null
         });
     }
 }
@@ -184,7 +187,7 @@ class Circle implements IShape {
             editorType: EditorType.TEXT_EDITOR
         };
     }
-    
+
     updateGraphicalProperties(m: IMessageProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
@@ -230,7 +233,6 @@ class Circle implements IShape {
     }
 
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
-        // handlerFocus: (e: React.PointerEvent<SVGGeometryElement>) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
         layerZIndex: number,
         isSelected: boolean
@@ -245,11 +247,8 @@ class Circle implements IShape {
             stroke={this.config.graphicalProperties[GraphicalPropertyTypes.STROKE_COLOR].value.toString()}
             fill={this.config.graphicalProperties[GraphicalPropertyTypes.FILL_COLOR_ONE].value.toString()}
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
-            // filter={isSelected ? 'url(#outlineFilter)' : ''}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
-            // onPointerDown={handlerFocus}
-            // onFocus={handlerFocus}
             onBlur={handlerBlur}
             transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.R].value)} 

@@ -14,6 +14,7 @@ interface IPolylineProps extends IShapeConfig {
     id?: string,
     graphicalProperties: IPolylineGraphicalProps,
     zIndex: number,
+    connectionPoints: null
 }
 
 export const polylineInflater: TShapeInflater = async (messageShape: IMessageShape) => {
@@ -60,11 +61,12 @@ export const polylineInflater: TShapeInflater = async (messageShape: IMessageSha
             [ObjectPropertyTypes.ID]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
         },
+        connectionPoints: null
     })
 }
 
@@ -113,6 +115,7 @@ export class PolylineCreator implements IShapeCreator {
                 },
             },
             zIndex: 0,
+            connectionPoints: null
         });
     }
 }
@@ -148,7 +151,7 @@ class Polyline implements IShape {
             editorType: EditorType.TEXT_EDITOR
         };
     }
-    
+
     updateGraphicalProperties(m: IMessageProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,

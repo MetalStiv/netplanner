@@ -1,3 +1,4 @@
+import ICoords from "../../common/model/ICoords";
 import { IMessage } from "../message/IMessage";
 import Layer from "../projectData/Layer";
 import IShape, { GraphicalPropertyTypes } from "../shapes/IShape";
@@ -10,9 +11,9 @@ export class AddShapeAction implements IAction {
 
     private shape: IShape;
     private currentLayer: Layer;
-    private dropCoords: { x: number, y: number };
+    private dropCoords: ICoords;
 
-    constructor(shape: IShape, currentLayer: Layer, dropCoords: { x: number, y: number }) {
+    constructor(shape: IShape, currentLayer: Layer, dropCoords: ICoords) {
         this.shape = shape;
         this.currentLayer = currentLayer;
         this.dropCoords = dropCoords;

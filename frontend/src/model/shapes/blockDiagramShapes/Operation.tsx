@@ -5,7 +5,6 @@ import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShap
 import { IMessageProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
 import IConnectionPoint, { ConnectionPointTypes, calculateCPCoords, connectionPointsInflaters } from "../IConnectionPoint";
-// import { IBlockDiagramConnectionPoint } from "./BlockDiagramGroup";
 
 interface IOperationProps extends IShapeGraphicalProps {
     [GraphicalPropertyTypes.WIDTH]: IGraphicalProperty,
@@ -18,7 +17,7 @@ export interface IOperationConfig extends IShapeConfig {
     id?: string,
     graphicalProperties: IOperationProps,
     zIndex: number,
-    connectionPoints: IConnectionPoint[]
+    connectionPoints: IConnectionPoint[] | null
 }
 
 export const operationInflater: TShapeInflater = async (messageShape: IMessageShape) => {
@@ -84,21 +83,23 @@ export const operationInflater: TShapeInflater = async (messageShape: IMessageSh
                 editorType: EditorType.TEXT_EDITOR
             },
         },
-        connectionPoints: messageShape.connectionPoints.map(point => {
-            // const type: ConnectionPointTypes = ConnectionPointTypes[t as keyof typeof ConnectionPointTypes];
-            const pointObj = connectionPointsInflaters.inflate(point, 120, 80);
-            console.log(point, pointObj)
-            return pointObj!;
-            // console.log(point.type, type, ConnectionPointTypes.TOP)
-            // const { relativeCoords, markerOffset } = calculateCPCoords(type, 120, 80);
-            // return ({
-            //     ...point,
-            //     type,
-            //     relativeCoords,
-            //     markerOffset,
-            //     connectionAreaRadius: 10,
-            // })
-        })
+        connectionPoints: (() => {
+            const w = +messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v;
+            const h = +messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v;
+
+            return messageShape?.connectionPoints.map(point => connectionPointsInflaters.inflate(point, w, h)!)
+                ?? [ConnectionPointTypes.TOP, ConnectionPointTypes.BOTTOM].map(type => {
+                    const { relativeCoords, markerOffset } = calculateCPCoords(type, w, h);
+                    return ({
+                        id: '',
+                        type,
+                        relativeCoords,
+                        markerOffset,
+                        connectionAreaRadius: 10,
+                        connectedShapes: null
+                    });
+                })
+        })()
     })
 }
 
@@ -163,7 +164,7 @@ export class OperationCreator implements IShapeCreator {
                 },
             },
             zIndex: 0,
-            connectionPoints: [ConnectionPointTypes.TOP, ConnectionPointTypes.RIGHT, ConnectionPointTypes.BOTTOM, ConnectionPointTypes.LEFT]
+            connectionPoints: [ConnectionPointTypes.TOP, ConnectionPointTypes.BOTTOM]
                 .map(type => {
                     const { relativeCoords, markerOffset } = calculateCPCoords(type, 120, 80);
                     return ({
@@ -175,32 +176,6 @@ export class OperationCreator implements IShapeCreator {
                         connectedShapes: null
                     });
                 })
-            //     [
-            //     {
-            //         type: ConnectionPointTypes.TOP,
-            //         relativeCoords: calculateCPRelativeCoords(ConnectionPointTypes.TOP, 120, 80),  //{ x: 120 / 2, y: -16 },
-            //         connectionAreaRadius: 10,
-            //         connectedShape: null
-            //     },
-            //     {
-            //         type: ConnectionPointTypes.RIGHT,
-            //         relativeCoords: calculateCPRelativeCoords(ConnectionPointTypes.RIGHT, 120, 80),//{ x: 120 + 16, y: 80 / 2 },
-            //         connectionAreaRadius: 10,
-            //         connectedShape: null
-            //     },
-            //     {
-            //         type: ConnectionPointTypes.BOTTOM,
-            //         relativeCoords: calculateCPRelativeCoords(ConnectionPointTypes.BOTTOM, 120, 80), //{ x: 120 / 2, y: 80 + 16 },
-            //         connectionAreaRadius: 10,
-            //         connectedShape: null
-            //     },
-            //     {
-            //         type: ConnectionPointTypes.LEFT,
-            //         relativeCoords: calculateCPRelativeCoords(ConnectionPointTypes.LEFT, 120, 80),//{ x: -16, y: 80 / 2 },
-            //         connectionAreaRadius: 10,
-            //         connectedShape: null
-            //     },
-            // ]
         });
     }
 }
@@ -216,8 +191,10 @@ class Operation implements IShape {
     set overallWidth(value: number) {
         const newWidth = this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
         this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = newWidth;
-        this.config.connectionPoints =
-            this.config.connectionPoints.map(p => ({ ...p, relativeCoords: calculateCPCoords(p.type, +newWidth, this.overallHeight).relativeCoords }));
+        if (this.config.connectionPoints?.length) {
+            this.config.connectionPoints =
+                this.config.connectionPoints.map(p => ({ ...p, relativeCoords: calculateCPCoords(p.type, +newWidth, this.overallHeight).relativeCoords }));
+        }
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
@@ -225,8 +202,10 @@ class Operation implements IShape {
     set overallHeight(value: number) {
         const newHeight = this.validateProperty(value.toString(), GraphicalPropertyTypes.HEIGHT);
         this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = newHeight;
-        this.config.connectionPoints =
-            this.config.connectionPoints.map(p => ({ ...p, relativeCoords: calculateCPCoords(p.type, this.overallWidth, +newHeight).relativeCoords }));
+        if (this.config.connectionPoints?.length) {
+            this.config.connectionPoints =
+                this.config.connectionPoints.map(p => ({ ...p, relativeCoords: calculateCPCoords(p.type, this.overallWidth, +newHeight).relativeCoords }));
+        }
     }
 
     validateProperty(value: string, propertyType: GraphicalPropertyTypes) {
@@ -316,7 +295,6 @@ class Operation implements IShape {
     }
 
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
-        // handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
         layerZIndex: number,
         isSelected: boolean
@@ -333,7 +311,6 @@ class Operation implements IShape {
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
-            // onFocus={handlerFocus}
             onBlur={handlerBlur}
             transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
                 ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value

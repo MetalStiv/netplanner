@@ -1,3 +1,5 @@
+import ICoords from "../../common/model/ICoords";
+
 export enum ConnectionTypes {
     STRAIGHT = 'straight',
 }
@@ -15,10 +17,10 @@ class Connection {
     type: ConnectionTypes = ConnectionTypes.STRAIGHT;
     // firstShape: string | null = null;
     // secondShape: string | null = null;
-    startCoords: { x: number, y: number } | null = null;
-    endCoords: { x: number, y: number } | null = null;
+    startCoords: ICoords | null = null;
+    endCoords: ICoords | null = null;
 
-    constructor(startCoords: { x: number, y: number }, endCoords: { x: number, y: number }) {
+    constructor(startCoords: ICoords, endCoords: ICoords) {
         this.startCoords = startCoords;
         this.endCoords = endCoords;
     };

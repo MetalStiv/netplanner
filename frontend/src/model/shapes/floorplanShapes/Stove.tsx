@@ -16,6 +16,7 @@ export interface IStoveConfig extends IShapeConfig {
     id?: string,
     graphicalProperties: IStoveProps,
     zIndex: number,
+    connectionPoints: null
 }
 
 export const stoveInflater: TShapeInflater = async (messageShape: IMessageShape) => {
@@ -76,11 +77,12 @@ export const stoveInflater: TShapeInflater = async (messageShape: IMessageShape)
             [ObjectPropertyTypes.ID]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
         },
+        connectionPoints: null
     })
 }
 
@@ -147,6 +149,7 @@ export class StoveCreator implements IShapeCreator {
                 },
             },
             zIndex: 0,
+            connectionPoints: null
         });
     }
 }
@@ -198,7 +201,7 @@ class Stove implements IShape {
             editorType: EditorType.TEXT_EDITOR
         };
     }
-    
+
     updateGraphicalProperties(m: IMessageProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
@@ -250,7 +253,6 @@ class Stove implements IShape {
     }
 
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
-        // handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
         layerZIndex: number,
         isSelected: boolean,
@@ -268,12 +270,10 @@ class Stove implements IShape {
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
-            // onFocus={handlerFocus}
             onBlur={handlerBlur}
-            transform={`rotate(${
-                this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+            transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
                     ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
-                    : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
+                    : 360 - +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}

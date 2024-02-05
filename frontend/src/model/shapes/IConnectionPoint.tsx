@@ -116,7 +116,7 @@ const centerInflater: TConnectionPointInflater = (messageConnectionPoint, width 
         id: messageConnectionPoint.id,
         type: ConnectionPointTypes.CENTER,
         ...calculateCPCoords(ConnectionPointTypes.CENTER, width, height),
-        connectionAreaRadius: width > height ? width + 16 : height + 16,
+        connectionAreaRadius: (width > height ? width : height) / 2 + 8,
         connectedShapes: messageConnectionPoint.connectedShapes
     }
 };

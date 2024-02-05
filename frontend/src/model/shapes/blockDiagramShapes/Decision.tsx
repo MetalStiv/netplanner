@@ -4,6 +4,7 @@ import { ShapeType } from "../ShapeType";
 import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IShapeConfig, IShapeGraphicalProps, ObjectPropertyTypes } from "../IShape";
 import { IMessageProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
+import IConnectionPoint, { ConnectionPointTypes, calculateCPCoords, connectionPointsInflaters } from "../IConnectionPoint";
 
 interface IDecisionProps extends IShapeGraphicalProps {
     [GraphicalPropertyTypes.WIDTH]: IGraphicalProperty,
@@ -16,6 +17,7 @@ export interface IDecisionConfig extends IShapeConfig {
     id?: string,
     graphicalProperties: IDecisionProps,
     zIndex: number,
+    connectionPoints: IConnectionPoint[] | null
 }
 
 export const decisionInflater: TShapeInflater = async (messageShape: IMessageShape) => {
@@ -76,11 +78,28 @@ export const decisionInflater: TShapeInflater = async (messageShape: IMessageSha
             [ObjectPropertyTypes.ID]: {
                 value: messageShape.objectProperties ?
                     messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID) ?
-                    messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
+                        messageShape.objectProperties.find(p => p.l === ObjectPropertyTypes.ID)!.v : ''
                     : '',
                 editorType: EditorType.TEXT_EDITOR
             },
         },
+        connectionPoints: (() => {
+            const w = +messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.WIDTH)!.v;
+            const h = +messageShape.graphicalProperties.find(p => p.l === GraphicalPropertyTypes.HEIGHT)!.v;
+
+            return messageShape?.connectionPoints.map(point => connectionPointsInflaters.inflate(point, w, h)!)
+                ?? [ConnectionPointTypes.TOP, ConnectionPointTypes.RIGHT, ConnectionPointTypes.BOTTOM, ConnectionPointTypes.LEFT].map(type => {
+                    const { relativeCoords, markerOffset } = calculateCPCoords(type, w, h);
+                    return ({
+                        id: '',
+                        type,
+                        relativeCoords,
+                        markerOffset,
+                        connectionAreaRadius: 10,
+                        connectedShapes: null
+                    });
+                })
+        })()
     })
 }
 
@@ -146,6 +165,18 @@ export class DecisionCreator implements IShapeCreator {
                 },
             },
             zIndex: 0,
+            connectionPoints: [ConnectionPointTypes.TOP, ConnectionPointTypes.RIGHT, ConnectionPointTypes.BOTTOM, ConnectionPointTypes.LEFT]
+                .map(type => {
+                    const { relativeCoords, markerOffset } = calculateCPCoords(type, 120, 80);
+                    return ({
+                        id: '',
+                        type,
+                        relativeCoords,
+                        markerOffset,
+                        connectionAreaRadius: 10,
+                        connectedShapes: null
+                    });
+                })
         });
     }
 }
@@ -159,15 +190,23 @@ class Decision implements IShape {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value;
     }
     set overallWidth(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value =
-            this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
+        const newWidth = this.validateProperty(value.toString(), GraphicalPropertyTypes.WIDTH);
+        this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value = newWidth;
+        if (this.config.connectionPoints?.length) {
+            this.config.connectionPoints =
+                this.config.connectionPoints.map(p => ({ ...p, relativeCoords: calculateCPCoords(p.type, +newWidth, this.overallHeight).relativeCoords }));
+        }
     }
     get overallHeight() {
         return +this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value;
     }
     set overallHeight(value: number) {
-        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value =
-            this.validateProperty(value.toString(), GraphicalPropertyTypes.HEIGHT);
+        const newHeight = this.validateProperty(value.toString(), GraphicalPropertyTypes.HEIGHT);
+        this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value = newHeight;
+        if (this.config.connectionPoints?.length) {
+            this.config.connectionPoints =
+                this.config.connectionPoints.map(p => ({ ...p, relativeCoords: calculateCPCoords(p.type, this.overallWidth, +newHeight).relativeCoords }));
+        }
     }
 
     validateProperty(value: string, propertyType: GraphicalPropertyTypes) {
@@ -197,7 +236,7 @@ class Decision implements IShape {
             editorType: EditorType.TEXT_EDITOR
         };
     }
-    
+
     updateGraphicalProperties(m: IMessageProperty[]) {
         this.config.graphicalProperties[GraphicalPropertyTypes.X] = {
             value: m.find(p => p.l === GraphicalPropertyTypes.X)!.v,
@@ -249,7 +288,6 @@ class Decision implements IShape {
     }
 
     render(handlerMouseDown: (e: React.PointerEvent<SVGGeometryElement>) => void,
-        // handlerFocus: (e: React.FocusEvent<SVGGeometryElement>) => void,
         handlerBlur: (e: React.FocusEvent<SVGGeometryElement>) => void,
         layerZIndex: number,
         isSelected: boolean
@@ -266,12 +304,10 @@ class Decision implements IShape {
             style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}
             onDragStart={(e) => e.preventDefault}
             onMouseDown={handlerMouseDown}
-            // onFocus={handlerFocus}
             onBlur={handlerBlur}
-            transform={`rotate(${
-                this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
-                    ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
-                    : 360-+this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
+            transform={`rotate(${this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_Y]!.value === this.config.graphicalProperties[GraphicalPropertyTypes.MIRROR_X]!.value
+                ? +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value
+                : 360 - +this.config.graphicalProperties[GraphicalPropertyTypes.PIVOT].value}
                     
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.X].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.WIDTH].value / 2)} 
                 ${+this.config.graphicalProperties[GraphicalPropertyTypes.Y].value + (+this.config.graphicalProperties[GraphicalPropertyTypes.HEIGHT].value / 2)})`}

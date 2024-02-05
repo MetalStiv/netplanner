@@ -2,6 +2,7 @@ import Page from "./Page";
 import IShapesGroup from "../shapes/IShapeGroup";
 import UserCursor from "./UserCursor";
 import { cursorLiveTime } from "../../common/constants";
+import ICoords from "../../common/model/ICoords";
 
 const idSym: unique symbol = Symbol();
 const titleSym: unique symbol = Symbol();
@@ -33,7 +34,7 @@ export interface IProject {
     getCursors: () => UserCursor[],
     setCursors: (userCursors: UserCursor[]) => void,
     addCursor: (userCursor: UserCursor) => void,
-    moveCursor: (userId: string, coord: {x: number, y: number}) => Promise<void>,
+    moveCursor: (userId: string, coord: ICoords) => Promise<void>,
     killOldCursors: () => void,
 }
 
@@ -104,33 +105,33 @@ class Project implements IProject {
         this.setPages([...this.getPages(), newPage]);
     }
 
-    deletePageById(id: string){
+    deletePageById(id: string) {
         const ind = this[pagesSym].findIndex(p => p.getID() === id)
-        this[pagesSym] = [...this[pagesSym].slice(0, ind), ...this[pagesSym].slice(ind+1, this[pagesSym].length)]
+        this[pagesSym] = [...this[pagesSym].slice(0, ind), ...this[pagesSym].slice(ind + 1, this[pagesSym].length)]
     }
 
-    getCursors(){
+    getCursors() {
         return this[userCursorsSym];
     }
 
-    setCursors(userCursors: UserCursor[]){
+    setCursors(userCursors: UserCursor[]) {
         this[userCursorsSym] = userCursors;
     }
 
-    addCursor(userCursor: UserCursor){
-        if (!this[userCursorsSym].find(c => c.userId === userCursor.userId)){
+    addCursor(userCursor: UserCursor) {
+        if (!this[userCursorsSym].find(c => c.userId === userCursor.userId)) {
             this[userCursorsSym] = [...this[userCursorsSym], userCursor]
         }
     }
 
-    async moveCursor(userId: string, coord: {x: number, y: number}){
+    async moveCursor(userId: string, coord: ICoords) {
         await this[userCursorsSym].find(c => c.userId === userId)
             ?.moveCursor(coord);
     }
 
-    killOldCursors(){
+    killOldCursors() {
         this[userCursorsSym] = this[userCursorsSym]
-            .filter(c => (Date.now()-c.actionTime) < cursorLiveTime)
+            .filter(c => (Date.now() - c.actionTime) < cursorLiveTime)
     }
 }
 
