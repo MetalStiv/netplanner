@@ -23,6 +23,7 @@ interface ITextConfig extends IShapeConfig {
     graphicalProperties: ITextGraphicalProps,
     objectProperties: ITextObjectProps,
     zIndex: number,
+    connectionPoints: null,
 }
 
 export const textInflater: TShapeInflater = async (messageShape: IMessageShape) => {
@@ -95,6 +96,7 @@ export const textInflater: TShapeInflater = async (messageShape: IMessageShape) 
                 editorType: EditorType.TEXT_EDITOR
             },
         },
+        connectionPoints: null,
     })
 }
 
@@ -161,6 +163,7 @@ export class TextCreator implements IShapeCreator {
                 },
             },
             zIndex: 0,
+            connectionPoints: null,
         });
     }
 }
