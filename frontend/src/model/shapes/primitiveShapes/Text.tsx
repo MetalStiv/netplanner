@@ -4,6 +4,7 @@ import IShape, { GraphicalPropertyTypes, IGraphicalProperty, IObjectProperty, IS
 import { TShapeInflater } from "../shapeInflaters";
 import { IMessageProperty, IMessageShape } from "../../message/IMessageShape";
 import { EditorType } from "../../EditorType";
+import SvgTextInputProps from "../../../components/SvgTextInput/SvgTextInput";
 
 interface ITextGraphicalProps extends IShapeGraphicalProps {
     [GraphicalPropertyTypes.STROKE_COLOR]: IGraphicalProperty,
@@ -278,10 +279,11 @@ class Text implements IShape {
         if (!isSelected){
             this.isEditable = false;
         }
+        
         return <g
                 className={isSelected ? 'selected' : ''}
                 data-id={this.config.id}
-                key={this.config.id}
+                key={this.config.id+'_1'}
                 onDragStart={(e) => e.preventDefault}
                 onMouseDown={handlerMouseDown}
                 onDoubleClick={() => this.isEditable = !this.isEditable}
@@ -298,19 +300,28 @@ class Text implements IShape {
 
                 style={{ display: this.isVisible ? 'inline' : 'none', zIndex: this.config.zIndex + +layerZIndex }}>
             {
-                this.isEditable && isSelected ? <text
-                        key={this.config.id+'_1'}
-                        x={this.config.graphicalProperties[GraphicalPropertyTypes.X].value.toString()} 
-                        y={this.config.graphicalProperties[GraphicalPropertyTypes.Y].value.toString()}>
-                        Input
-                    </text>
+                this.isEditable && isSelected ?
+                    <SvgTextInputProps 
+                        keyVal={this.config.id+'_2'} 
+                        x={this.config.graphicalProperties[GraphicalPropertyTypes.X].value.toString()}
+                        y={this.config.graphicalProperties[GraphicalPropertyTypes.Y].value.toString()}
+                        value={Array.isArray(this.config.objectProperties[ObjectPropertyTypes.TEXT].value) ? '' 
+                            : this.config.objectProperties[ObjectPropertyTypes.TEXT].value}
+                        shape={this}
+                        onExit={() => {
+                            this.isEditable = false;
+                            isSelected = false;
+                        }}
+                    />
                     : <text
-                        key={this.config.id+'_1'}
+                        key={this.config.id+'_3'}
                         x={this.config.graphicalProperties[GraphicalPropertyTypes.X].value.toString()} 
                         y={this.config.graphicalProperties[GraphicalPropertyTypes.Y].value.toString()}
-                >
-                    {this.config.objectProperties[ObjectPropertyTypes.TEXT].value}
-                </text>
+                        role='text'
+                        filter='none'
+                    >
+                        {this.config.objectProperties[ObjectPropertyTypes.TEXT].value}
+                    </text>
             }
         </g>
     }

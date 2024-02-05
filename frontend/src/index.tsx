@@ -9,12 +9,12 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <React.StrictMode>
+  <div>
     <div id='plug'>
       <p>К сожалению, приложение не рассчитано на ваш размер дисплея</p>
     </div>
     <App />
-  </React.StrictMode>
+  </div>
 );
 
 // If you want to start measuring performance in your app, pass a function

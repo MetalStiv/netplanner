@@ -23,6 +23,7 @@ import { changeConnectionPointsHandler } from '../../model/actionHandlers/change
 import { ChangeConnectionPointsAction } from '../../model/actions/ChangeConnectionPointsAction';
 import Connection from '../../model/shapes/Connection';
 import ICoords from '../../common/model/ICoords';
+import { TSvgInputStore } from '../../stores/svgInputStore';
 
 interface SVGCanvasProps {
   // currentPage: Page,
@@ -55,6 +56,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
   const projectStore: TProjectStore = useRootStore().getProjectStore();
   const usersStore: TUsersStore = useRootStore()!.getUsersStore();
   const userStore: TUserStore = useRootStore()!.getUserStore();
+  const svgInputStore: TSvgInputStore = useRootStore()!.getSvgInputStore();
   const project = projectStore.getProject();
   const actionStore: TActionStore = useRootStore().getActionStore();
 
@@ -250,6 +252,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
           actionStore.push(changeShapePropertyAction);
         })
       }
+      svgInputStore.addInputKey(e);
     }
 
     document.addEventListener('keydown', onKeyDown);
@@ -1312,7 +1315,7 @@ const SVGCanvas: React.FC<SVGCanvasProps> = observer(({ canvasConfig,
                             x: +s2.config.graphicalProperties[GraphicalPropertyTypes.X].value + p2.relativeCoords.x,
                             y: +s2.config.graphicalProperties[GraphicalPropertyTypes.Y].value + p2.relativeCoords.y
                           };
-                          console.log('first', startCoords, 'second', endCoords);
+                          // console.log('first', startCoords, 'second', endCoords);
                           if (!connectedShapes.some(tuple => tuple[0] === p2.id && tuple[1] === p.id)) {
                             connections.push(new Connection(startCoords, endCoords));
                             connectedShapes.push([p.id, p2.id]);
